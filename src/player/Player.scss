@@ -4,7 +4,11 @@ audio {
 
 .player {
   &-container {
-    width: 100%;
+    position: fixed;
+    width: 70%;
+    bottom: 0;
+    right: 0;
+    height: 5vmin;
   }
 
   &-seek {

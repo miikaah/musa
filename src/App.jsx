@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Library from './library/Library'
 import Player from './player/Player'
+import Playlist from './playlist/Playlist'
 import './App.scss'
 
 const electron = window.require("electron")
@@ -21,8 +22,9 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <Library className="library" />
-        <Player className="player" src={this.state.dataUrl} />
+        <Library />
+        <Playlist />
+        <Player src={this.state.dataUrl} />
       </div>
     )
   }

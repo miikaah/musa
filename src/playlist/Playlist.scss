@@ -1,0 +1,9 @@
+@import '../scss/colors';
+
+.playlist {
+  flex: 70%;
+  color: $musa-white;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}

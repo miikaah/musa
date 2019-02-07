@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { addToPlaylist } from '../reducers/playlist.reducer'
 import './LibraryItem.scss'
 
 const electron = window.require("electron")
@@ -7,11 +9,11 @@ const ipcRenderer = electron.ipcRenderer
 class LibraryItem extends Component {
   render() {
     const name = this.props.item.name.toString()
-    const path = this.props.item.path.toString()
+    // const path = this.props.item.path.toString()
     return (
       <li
         key={name + "-" + Date.now()} className="library-item"
-        onClick={() => this.playSong(path)}
+        onDoubleClick={() => this.props.dispatch(addToPlaylist(this.props.item))}
       >
         {name}
       </li>
@@ -24,4 +26,11 @@ class LibraryItem extends Component {
   }
 }
 
-export default LibraryItem
+const mapState = state => ({})
+
+const mapDispatch = dispatch => ({ dispatch })
+
+export default connect(
+  mapState,
+  mapDispatch
+)(LibraryItem)

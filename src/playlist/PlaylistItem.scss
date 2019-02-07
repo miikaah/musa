@@ -1,0 +1,11 @@
+@import '../scss/colors';
+
+.playlist-item {
+  cursor: pointer;
+  padding: 2px 4px;
+
+  &:hover {
+    background-color: $musa-highlight-secondary;
+    color: $musa-highlight-text;
+  }
+}

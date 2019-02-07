@@ -3,4 +3,7 @@
 .library {
   background-color: $musa-white;
   user-select: none;
+  flex: 30%;
+  min-height: 100vmin;
+  overflow-y: scroll;
 }

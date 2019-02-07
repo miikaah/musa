@@ -4,18 +4,4 @@
   min-height: 100vmin;
   max-height: 100vmin;
   display: flex;
-
-  .library {
-    width: 30%;
-    flex: 30%;
-    min-height: 100vmin;
-    overflow-y: scroll;
-  }
-
-  .player {
-    position: fixed;
-    width: 70%;
-    bottom: 0;
-    height: 5vmin;
-  }
 }
