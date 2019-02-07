@@ -1,4 +1,6 @@
 import { combineReducers } from "redux";
-import playlist from "./playlist.reducer";
+import player from "./player.reducer";
 
-export default combineReducers({ playlist });
+export default combineReducers({
+  player
+});

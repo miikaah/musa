@@ -1,33 +1,19 @@
-import React, { Component } from 'react'
-import Library from './library/Library'
-import Player from './player/Player'
-import Playlist from './playlist/Playlist'
-import './App.scss'
-
-const electron = window.require("electron")
-const ipcRenderer = electron.ipcRenderer
+import React, { Component } from "react";
+import Library from "./library/Library";
+import Player from "./player/Player";
+import Playlist from "./playlist/Playlist";
+import "./App.scss";
 
 class App extends Component {
-  state = {
-    dataUrl: ''
-  }
-
-  componentDidMount() {
-    ipcRenderer.on("songAsDataUrl", (event, dataUrl) => {
-      console.log(dataUrl.length)
-      this.setState({ dataUrl })
-    })
-  }
-
   render() {
     return (
       <div className="app">
         <Library />
         <Playlist />
-        <Player src={this.state.dataUrl} />
+        <Player />
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;
