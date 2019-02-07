@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import PlaylistItem from "./PlaylistItem";
-import "./Playlist.scss";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import PlaylistItem from "./PlaylistItem"
+import "./Playlist.scss"
 
 class Playlist extends Component {
   render() {
@@ -15,12 +15,12 @@ class Playlist extends Component {
           />
         ))}
       </ul>
-    );
+    )
   }
 }
 
 const mapState = state => ({
   playlist: state.player.items
-});
+})
 
-export default connect(mapState)(Playlist);
+export default connect(mapState)(Playlist)

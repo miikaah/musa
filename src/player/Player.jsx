@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { playNext } from "../reducers/player.reducer";
-import { get, isNaN } from "lodash-es";
-import "./Player.scss";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { playNext } from "../reducers/player.reducer"
+import { get, isNaN } from "lodash-es"
+import "./Player.scss"
 
 class Player extends Component {
   state = {
@@ -10,27 +10,27 @@ class Player extends Component {
     currentTime: 0,
     volume: 50,
     seekUpdater: undefined
-  };
+  }
   constructor(props) {
-    super(props);
-    this.player = React.createRef();
+    super(props)
+    this.player = React.createRef()
   }
 
   componentDidMount() {
-    this.player.current.volume = this.getVolumeForAudioEl();
+    this.player.current.volume = this.getVolumeForAudioEl()
     this.player.current.addEventListener("loadeddata", () => {
       this.setState({
         duration: this.getDurationOrTime("duration"),
         seekUpdater: setInterval(() => {
-          this.setState({ currentTime: this.getDurationOrTime("currentTime") });
+          this.setState({ currentTime: this.getDurationOrTime("currentTime") })
         }, 1000)
-      });
-      this.player.current.play();
-    });
+      })
+      this.player.current.play()
+    })
     this.player.current.addEventListener("ended", () => {
-      console.log("ended");
-      this.props.dispatch(playNext());
-    });
+      console.log("ended")
+      this.props.dispatch(playNext())
+    })
   }
 
   render() {
@@ -59,31 +59,31 @@ class Player extends Component {
           />
         </div>
       </div>
-    );
+    )
   }
 
   getVolumeForAudioEl() {
-    return this.state.volume / 100;
+    return this.state.volume / 100
   }
 
   setVolume(event) {
-    this.setState({ volume: event.target.value });
-    this.player.current.volume = this.getVolumeForAudioEl();
+    this.setState({ volume: event.target.value })
+    this.player.current.volume = this.getVolumeForAudioEl()
   }
 
   getDurationOrTime(prop) {
-    const duration = get(this, ["player", "current", prop], 0.0);
-    return Math.floor(isNaN(duration) ? 0 : duration);
+    const duration = get(this, ["player", "current", prop], 0.0)
+    return Math.floor(isNaN(duration) ? 0 : duration)
   }
 
   seek(event) {
-    clearInterval(this.state.seekUpdater);
-    this.player.current.currentTime = event.target.value;
+    clearInterval(this.state.seekUpdater)
+    this.player.current.currentTime = event.target.value
     this.setState({
       seekUpdater: setInterval(() => {
-        this.setState({ currentTime: this.getDurationOrTime("currentTime") });
+        this.setState({ currentTime: this.getDurationOrTime("currentTime") })
       }, 10)
-    });
+    })
   }
 }
 
@@ -92,4 +92,4 @@ export default connect(
     src: state.player.src
   }),
   dispatch => ({ dispatch })
-)(Player);
+)(Player)
