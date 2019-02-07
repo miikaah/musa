@@ -1,0 +1,13 @@
+audio {
+  display: none;
+}
+
+.player {
+  &-container {
+    width: 100%;
+  }
+
+  &-seek {
+    width: 50%;
+  }
+}
