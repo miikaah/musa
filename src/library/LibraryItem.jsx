@@ -5,11 +5,6 @@ const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer
 
 class LibraryItem extends Component {
-  playSong = path => {
-    console.log(path)
-    ipcRenderer.send("getSongAsDataUrl", path)
-  }
-
   render() {
     const name = this.props.item.name.toString()
     const path = this.props.item.path.toString()
@@ -21,6 +16,11 @@ class LibraryItem extends Component {
         {name}
       </li>
     )
+  }
+
+  playSong = path => {
+    console.log(path)
+    ipcRenderer.send("getSongAsDataUrl", path)
   }
 }
 

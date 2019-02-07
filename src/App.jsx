@@ -17,6 +17,7 @@ class App extends Component {
       this.setState({ dataUrl })
     })
   }
+
   render() {
     return (
       <div className="app">

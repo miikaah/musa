@@ -1,11 +1,15 @@
 .app {
   text-align: center;
   background-color: #282c34;
-  min-height: 100vmax;
+  min-height: 100vmin;
+  max-height: 100vmin;
   display: flex;
 
   .library {
-    width: 33%;
+    width: 30%;
+    flex: 30%;
+    min-height: 100vmin;
+    overflow-y: scroll;
   }
 
   .player {
