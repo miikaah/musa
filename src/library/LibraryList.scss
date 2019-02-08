@@ -6,15 +6,18 @@
   list-style-type: none;
   text-align: left;
   padding-left: 12px;
-  font-size: .8rem;
+  font-size: .85rem;
 
   &-folder {
     cursor: pointer;
   }
 
+  li {
+    padding: 2px 12px;
+  }
+
   li:hover {
     background-color: $musa-highlight;
     color: $musa-highlight-text;
-    font-weight: bold;
   }
 }

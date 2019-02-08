@@ -1,9 +1,14 @@
 import { store } from "../";
-import { isNumber } from "lodash-es";
+import { isNumber, isEmpty } from "lodash-es";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
-export const play = (item, index) => ({
-  type: PLAY,
+export const play = () => ({
+  type: PLAY
+});
+
+export const PLAY_ITEM = "MUSA/PLAYER/PLAY_ITEM";
+export const playItem = (item, index) => ({
+  type: PLAY_ITEM,
   item,
   index
 });
@@ -24,6 +29,12 @@ export const setSource = src => ({
   src
 });
 
+export const SET_CURRENT_TIME = "MUSA/PLAYER/SET_CURRENT_TIME";
+export const setCurrentTime = time => ({
+  type: SET_CURRENT_TIME,
+  time
+});
+
 export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD";
 export const addToPlaylist = item => ({
   type: ADD_TO_PLAYLIST,
@@ -40,14 +51,32 @@ const initialState = {
   items: [],
   currentItem: {},
   currentIndex: 0,
+  currentTime: 0,
   src: "",
-  isPlaying: false,
-  isPaused: false
+  isPlaying: false
 };
 
 const player = (state = initialState, action) => {
   switch (action.type) {
     case PLAY:
+      // * If play is paused and playlist has items resume playback
+      // * else take the first song in the playlist
+      const item = !isEmpty(state.currentItem)
+        ? state.currentItem
+        : state.items[0];
+      if (!isEmpty(item)) {
+        playSong(item.path.toString());
+        return {
+          ...state,
+          currentItem: item,
+          isPlaying: true
+        };
+      }
+      return {
+        ...state,
+        isPlaying: false
+      };
+    case PLAY_ITEM:
     case PLAY_NEXT:
       const newIndex = isNumber(action.index)
         ? action.index
@@ -59,27 +88,28 @@ const player = (state = initialState, action) => {
           ...state,
           currentItem: newItem,
           currentIndex: newIndex,
-          isPlaying: true,
-          isPaused: false
-        };
-      } else {
-        // We've reached end of playlist
-        return {
-          ...state,
-          isPlaying: false,
-          isPaused: true
+          isPlaying: true
         };
       }
+      // We've reached end of playlist
+      return {
+        ...state,
+        isPlaying: false
+      };
     case PAUSE:
       return {
         ...state,
-        isPlaying: false,
-        isPaused: true
+        isPlaying: false
       };
     case SET_SOURCE:
       return {
         ...state,
         src: action.src
+      };
+    case SET_CURRENT_TIME:
+      return {
+        ...state,
+        currentTime: action.time
       };
     case ADD_TO_PLAYLIST:
       return {
