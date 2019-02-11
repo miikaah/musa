@@ -1,9 +1,10 @@
 @import '../scss/colors';
 
 .library {
-  background-color: $musa-white;
+  background-color: $musa-bg-library-color;
   user-select: none;
   flex: 30%;
   min-height: 100vmin;
   overflow-y: scroll;
+  color: $musa-white;
 }

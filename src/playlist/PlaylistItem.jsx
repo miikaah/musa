@@ -7,10 +7,16 @@ class PlaylistItem extends Component {
   render() {
     return (
       <li
-        className="playlist-item"
-        onDoubleClick={() =>
-          this.props.dispatch(playItem(this.props.item, this.props.index))
+        className={
+          this.props.index === this.props.activeIndex
+            ? "playlist-item active"
+            : "playlist-item"
         }
+        onDoubleClick={() => {
+          this.props.dispatch(playItem(this.props.item, this.props.index));
+          this.props.onSetActiveIndex(this.props.index);
+        }}
+        onClick={() => this.props.onSetActiveIndex(this.props.index)}
       >
         {this.props.item.name}
       </li>

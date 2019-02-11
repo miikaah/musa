@@ -119,7 +119,7 @@ const player = (state = initialState, action) => {
     case REMOVE_FROM_PLAYLIST:
       return {
         ...state,
-        items: state.items.splice(action.index, 1)
+        items: state.items.filter((_, index) => index !== action.index)
       };
     default:
       return state;
