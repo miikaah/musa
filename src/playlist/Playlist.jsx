@@ -30,13 +30,13 @@ class Playlist extends Component {
     return (
       <ul className="playlist">
         <li className="playlist-header">
-          <div className="cell cell-xs" />
-          <div className="cell cell-xs">Track</div>
-          <div className="cell cell-sm">Title</div>
-          <div className="cell cell-sm">Artist</div>
-          <div className="cell cell-sm">Album</div>
-          <div className="cell cell-xs">Length</div>
-          <div className="cell cell-xs">Date</div>
+          <div className="cell cell-xxs" />
+          <div className="cell cell-sm left">Artist</div>
+          <div className="cell cell-sm left">Album</div>
+          <div className="cell cell-xs right">Tr</div>
+          <div className="cell cell-md left">Title</div>
+          <div className="cell cell-xs left">Length</div>
+          <div className="cell cell-xs right">Date</div>
         </li>
         {this.props.playlist.map((item, index) => (
           <PlaylistItem

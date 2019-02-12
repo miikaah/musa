@@ -2,12 +2,28 @@
   .cell {
     padding: 2px 4px;
 
+    &-xxs {
+      flex: 0 0 2.5%;
+    }
+
     &-xs {
-      flex: 0 1 5%;
+      flex: 0 0 5%;
     }
 
     &-sm {
       flex: 0 1 25%;
     }
+
+    &-md {
+      flex: 0 0 35%;
+    }
+  }
+
+  .left {
+    text-align: left;
+  }
+
+  .right {
+    text-align: right;
   }
 }

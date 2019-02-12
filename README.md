@@ -7,6 +7,7 @@ UI for Musa-Electron.
 ####
 
 - Play / Pause with space bar
+- Mute / Unmute with volume button
 - Parse year to date if the date is an ISO dates
 
 ####
@@ -42,8 +43,9 @@ UI for Musa-Electron.
 
 ## Done
 
-#####12.2.2019
+##### 12.2.2019
 
+- ~~Tweak playlist styles~~
 - ~~Volume icon to player~~
 - ~~Indicate duration in player (played / duration)~~
 - ~~Indicate currently playing song in playlist~~
@@ -52,7 +54,7 @@ UI for Musa-Electron.
 - ~~Use song metadata in front~~
 - ~~Better song metadata parsing~~
 
-#####11.2.2019
+##### 11.2.2019
 
 - ~~Read metadata from songs in backend~~
 - ~~Remove song from playlist~~

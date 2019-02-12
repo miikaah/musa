@@ -20,7 +20,7 @@ class PlaylistItem extends Component {
         }}
         onClick={() => this.props.onSetActiveIndex(this.props.index)}
       >
-        <div className="cell cell-xs">
+        <div className="cell cell-xxs">
           {this.props.index === this.props.currentIndex &&
           this.props.isPlaying ? (
             <FontAwesomeIcon icon="play" />
@@ -28,22 +28,22 @@ class PlaylistItem extends Component {
             ""
           )}
         </div>
-        <div className="cell cell-xs">
-          {get(this.props.item, "metadata.track", "")}
-        </div>
-        <div className="cell cell-sm">
-          {get(this.props.item, "metadata.title", this.props.item.name)}
-        </div>
-        <div className="cell cell-sm">
+        <div className="cell cell-sm left">
           {get(this.props.item, "metadata.artist", "")}
         </div>
-        <div className="cell cell-sm">
+        <div className="cell cell-sm left">
           {get(this.props.item, "metadata.album", "")}
         </div>
-        <div className="cell cell-xs">
+        <div className="cell cell-xs right">
+          {get(this.props.item, "metadata.track", "")}
+        </div>
+        <div className="cell cell-md left">
+          {get(this.props.item, "metadata.title", this.props.item.name)}
+        </div>
+        <div className="cell cell-xs left">
           {get(this.props.item, "metadata.duration", "")}
         </div>
-        <div className="cell cell-xs">
+        <div className="cell cell-xs right">
           {get(this.props.item, "metadata.date", "")}
         </div>
       </li>
