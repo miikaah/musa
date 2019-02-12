@@ -4,20 +4,38 @@ UI for Musa-Electron.
 
 ## Todo
 
-- Indicate duration in player (played / duration)
+####
+
+- Volume icon to player
 - Play / Pause with space bar
+- Parse year to date if the date is an ISO dates
+
+####
 
 - Get artist / album name from directory songs' metadata
 - Consolidate multiple disc album directories to one album dir
 - Better persistence (some kind of hashing? for updating)
+
+####
+
 - Select & Add multiple songs to playlist
-- Indicate folder in library
-- Add currently playing song info to Player UI
+- Remove multiple songs from playlist
+
+####
+
+- Cooler library list items
+- Indicate album in library
 - Show / hide library
+
+####
+
+- Cooler Player UI (time played / left, icon for volume)
+- Add currently playing song info to Player UI
+
+####
+
 - Persist playlist
 - Multiple playlists
-- Cooler Player UI (time played / left, icon for volume)
-- Cooler library list items
 - Fancier list items
 - Support flac and ogg
 - Add a view that recommends random music from library and shows them nicely
@@ -25,13 +43,19 @@ UI for Musa-Electron.
 
 ## Done
 
-- ~~Indicate currently playing song in playlist~~ 12.2.2019
-- ~~Parse duration to 00:00:00 format~~ 12.2.2019
-- ~~Parse track metadata to [disc.]track / total tracks~~ 12.2.2019
-- ~~Use song metadata in front~~ 12.2.2019
-- ~~Better song metadata parsing~~ 12.2.2019
-- ~~Read metadata from songs in backend~~ 11.2.2019
-- ~~Remove song from playlist~~ 11.2.2019
+#####12.2.2019
+
+- ~~Indicate duration in player (played / duration)~~
+- ~~Indicate currently playing song in playlist~~
+- ~~Parse duration to 00:00:00 format~~
+- ~~Parse track metadata to [disc.]track / total tracks~~
+- ~~Use song metadata in front~~
+- ~~Better song metadata parsing~~
+
+#####11.2.2019
+
+- ~~Read metadata from songs in backend~~
+- ~~Remove song from playlist~~
 
 ## Settings todo
 

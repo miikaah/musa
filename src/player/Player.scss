@@ -11,6 +11,8 @@ audio {
     bottom: 0;
     right: 0;
     height: 5vmin;
+    color: $musa-white;
+    font-size: .8rem;
   }
 
   &-seek {
@@ -23,5 +25,15 @@ audio {
     background-color: $musa-bg-color;
     cursor: pointer;
     border: 0;
+  }
+
+  &-time-display {
+    padding-left: 12px;
+  }
+
+  &-played {
+    min-width: 32px;
+    display: inline-block;
+    text-align: left;
   }
 }

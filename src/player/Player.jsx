@@ -70,6 +70,15 @@ class Player extends Component {
             value={this.props.currentTime}
             onChange={this.seek.bind(this)}
           />
+          <span className="player-time-display">
+            <span className="player-played">
+              {this.formatCurrentTime(this.props.currentTime)}
+            </span>
+            <span> / </span>
+            <span>
+              {get(this.props, "currentItem.metadata.duration", "00:00")}
+            </span>
+          </span>
         </div>
       </div>
     );
@@ -112,6 +121,23 @@ class Player extends Component {
     if (!isEmpty(this.props.src)) this.player.current.play();
     this.props.dispatch(play());
   }
+
+  formatCurrentTime(duration) {
+    let output = "";
+    if (duration >= 3600) {
+      output += this.prefixNumber(Math.floor(duration / 3600)) + ":";
+    }
+    if (Math.floor(duration) % 3600 === 0) output += "00:";
+    else
+      output +=
+        this.prefixNumber(Math.floor((Math.floor(duration) % 3600) / 60)) + ":";
+    output += this.prefixNumber(Math.floor(duration % 60));
+    return output;
+  }
+
+  prefixNumber(value) {
+    return value < 10 ? `0${value}` : `${value}`;
+  }
 }
 
 export default connect(
@@ -119,7 +145,8 @@ export default connect(
     src: state.player.src,
     isPlaying: state.player.isPlaying,
     playlist: state.player.items,
-    currentTime: state.player.currentTime
+    currentTime: state.player.currentTime,
+    currentItem: state.player.currentItem
   }),
   dispatch => ({ dispatch })
 )(Player);

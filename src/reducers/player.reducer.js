@@ -124,11 +124,16 @@ const player = (state = initialState, action) => {
         ...state,
         items: [...state.items, action.item]
       };
-    case REMOVE_FROM_PLAYLIST:
+    case REMOVE_FROM_PLAYLIST: {
       return {
         ...state,
-        items: state.items.filter((_, index) => index !== action.index)
+        items: state.items.filter((_, index) => index !== action.index),
+        currentIndex:
+          action.index < state.currentIndex
+            ? state.currentIndex - 1
+            : state.currentIndex
       };
+    }
     default:
       return state;
   }
