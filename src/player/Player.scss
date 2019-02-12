@@ -15,16 +15,49 @@ audio {
     font-size: .8rem;
   }
 
-  &-seek {
-    width: 50%;
+  &-volume {
+    margin-right: 16px;
   }
 
-  &-play-pause {
+  &-seek {
+    width: 50%;
+    margin-right: 16px;
+  }
+
+  input[type='range'] {
+    overflow: hidden;
+    appearance: none;
+    background-color: lighten($musa-bg-color, 15%);
+    cursor: pointer;
+  }
+
+  input[type='range']:focus {
+    outline: none;
+  }
+
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 10px;
+    appearance: none;
+    color: $musa-highlight;
+    margin-top: -1px;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    width: 4px;
+    appearance: none;
+    box-shadow: -10000px 0 0 10000px lighten($musa-highlight, 10%);
+  }
+
+  &-play-pause,
+  &-volume-btn {
     font-size: 1rem;
     color: $musa-white;
     background-color: $musa-bg-color;
     cursor: pointer;
     border: 0;
+    padding: 0;
+    margin-right: 16px;
+    width: 20px;
   }
 
   &-time-display {
@@ -32,7 +65,7 @@ audio {
   }
 
   &-played {
-    min-width: 32px;
+    min-width: 36px;
     display: inline-block;
     text-align: left;
   }

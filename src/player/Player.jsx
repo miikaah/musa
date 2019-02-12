@@ -44,15 +44,18 @@ class Player extends Component {
   render() {
     return (
       <div className="player-container">
-        <audio controls src={this.props.src} ref={this.player}>
-          Your browser does not support the <code>audio</code> element.
-        </audio>
+        <audio controls src={this.props.src} ref={this.player} />
         <div className="player">
           <button
             className="player-play-pause"
             onClick={this.playOrPause.bind(this)}
           >
             <FontAwesomeIcon icon={this.props.isPlaying ? "pause" : "play"} />
+          </button>
+          <button className="player-volume-btn">
+            <FontAwesomeIcon
+              icon={this.state.volume > 0 ? "volume-up" : "volume-mute"}
+            />
           </button>
           <input
             className="player-volume"

@@ -3,10 +3,15 @@ import Library from "./library/Library";
 import Player from "./player/Player";
 import Playlist from "./playlist/Playlist";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faPause,
+  faVolumeUp,
+  faVolumeMute
+} from "@fortawesome/free-solid-svg-icons";
 import "./App.scss";
 
-library.add(faPlay, faPause);
+library.add(faPlay, faPause, faVolumeUp, faVolumeMute);
 
 class App extends Component {
   render() {

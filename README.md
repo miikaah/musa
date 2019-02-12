@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 ####
 
-- Volume icon to player
 - Play / Pause with space bar
 - Parse year to date if the date is an ISO dates
 
@@ -45,6 +44,7 @@ UI for Musa-Electron.
 
 #####12.2.2019
 
+- ~~Volume icon to player~~
 - ~~Indicate duration in player (played / duration)~~
 - ~~Indicate currently playing song in playlist~~
 - ~~Parse duration to 00:00:00 format~~
