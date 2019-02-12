@@ -4,7 +4,10 @@ UI for Musa-Electron.
 
 ## Todo
 
-- Use song metadata in front
+- Parse track metadata to track / total tracks
+- Get artist / album name from directory songs' metadata
+- Consolidate multiple disc album directories to one album dir
+- Better persistence (some kind of hashing? for updating)
 - Select & Add multiple songs to playlist
 - Play / Pause with space bar
 - Indicate folder in library
@@ -22,6 +25,8 @@ UI for Musa-Electron.
 
 ## Done
 
+- ~~Use song metadata in front~~ 12.2.2019
+- ~~Better song metadata parsing~~ 12.2.2019
 - ~~Read metadata from songs in backend~~ 11.2.2019
 - ~~Remove song from playlist~~ 11.2.2019
 

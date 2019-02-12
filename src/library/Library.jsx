@@ -13,7 +13,7 @@ class Library extends Component {
 
   componentDidMount() {
     ipcRenderer.on("libraryListing", (event, listing) => {
-      // console.log(listing)
+      console.log(listing);
       this.setState({
         listing: [...this.state.listing, listing]
       });

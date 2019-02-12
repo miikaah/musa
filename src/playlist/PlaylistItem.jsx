@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { get } from "lodash-es";
 import { playItem } from "../reducers/player.reducer";
 import "./PlaylistItem.scss";
 
@@ -18,7 +19,25 @@ class PlaylistItem extends Component {
         }}
         onClick={() => this.props.onSetActiveIndex(this.props.index)}
       >
-        {this.props.item.name}
+        <div className="cell cell-xs" />
+        <div className="cell cell-xs">
+          {get(this.props.item, "metadata.track", "")}
+        </div>
+        <div className="cell cell-sm">
+          {get(this.props.item, "metadata.title", this.props.item.name)}
+        </div>
+        <div className="cell cell-sm">
+          {get(this.props.item, "metadata.artist", "")}
+        </div>
+        <div className="cell cell-sm">
+          {get(this.props.item, "metadata.album", "")}
+        </div>
+        <div className="cell cell-xs">
+          {get(this.props.item, "metadata.duration", "")}
+        </div>
+        <div className="cell cell-xs">
+          {get(this.props.item, "metadata.date", "")}
+        </div>
       </li>
     );
   }
