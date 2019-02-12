@@ -76,7 +76,8 @@ class Player extends Component {
   }
 
   getVolumeForAudioEl() {
-    return this.state.volume / 100;
+    const vol = this.state.volume / 100;
+    return vol < 0.02 ? 0 : vol;
   }
 
   setVolume(event) {

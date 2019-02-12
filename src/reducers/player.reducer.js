@@ -58,17 +58,23 @@ const initialState = {
 
 const player = (state = initialState, action) => {
   switch (action.type) {
-    case PLAY:
+    case PLAY: {
       // * If play is paused and playlist has items resume playback
       // * else take the first song in the playlist
-      const item = !isEmpty(state.currentItem)
-        ? state.currentItem
-        : state.items[0];
-      if (!isEmpty(item)) {
-        playSong(item.path.toString());
+      let newItem, newIndex;
+      if (!isEmpty(state.currentItem)) {
+        newItem = state.currentItem;
+        newIndex = state.currentIndex;
+      } else {
+        newItem = state.items[0];
+        newIndex = 0;
+      }
+      if (!isEmpty(newItem)) {
+        playSong(newItem.path.toString());
         return {
           ...state,
-          currentItem: item,
+          currentItem: newItem,
+          currentIndex: newIndex,
           isPlaying: true
         };
       }
@@ -76,8 +82,9 @@ const player = (state = initialState, action) => {
         ...state,
         isPlaying: false
       };
+    }
     case PLAY_ITEM:
-    case PLAY_NEXT:
+    case PLAY_NEXT: {
       const newIndex = isNumber(action.index)
         ? action.index
         : state.currentIndex + 1;
@@ -96,6 +103,7 @@ const player = (state = initialState, action) => {
         ...state,
         isPlaying: false
       };
+    }
     case PAUSE:
       return {
         ...state,

@@ -1,0 +1,13 @@
+@mixin tableCell {
+  .cell {
+    padding: 2px 4px;
+
+    &-xs {
+      flex: 0 1 5%;
+    }
+
+    &-sm {
+      flex: 0 1 25%;
+    }
+  }
+}

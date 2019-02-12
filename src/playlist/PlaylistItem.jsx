@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { get } from "lodash-es";
 import { playItem } from "../reducers/player.reducer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./PlaylistItem.scss";
 
 class PlaylistItem extends Component {
@@ -19,7 +20,14 @@ class PlaylistItem extends Component {
         }}
         onClick={() => this.props.onSetActiveIndex(this.props.index)}
       >
-        <div className="cell cell-xs" />
+        <div className="cell cell-xs">
+          {this.props.index === this.props.currentIndex &&
+          this.props.isPlaying ? (
+            <FontAwesomeIcon icon="play" />
+          ) : (
+            ""
+          )}
+        </div>
         <div className="cell cell-xs">
           {get(this.props.item, "metadata.track", "")}
         </div>
@@ -44,6 +52,9 @@ class PlaylistItem extends Component {
 }
 
 export default connect(
-  () => ({}),
+  state => ({
+    currentIndex: state.player.currentIndex,
+    isPlaying: state.player.isPlaying
+  }),
   dispatch => ({ dispatch })
 )(PlaylistItem);

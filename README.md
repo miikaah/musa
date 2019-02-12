@@ -4,14 +4,14 @@ UI for Musa-Electron.
 
 ## Todo
 
-- Parse track metadata to track / total tracks
+- Indicate duration in player (played / duration)
+- Play / Pause with space bar
+
 - Get artist / album name from directory songs' metadata
 - Consolidate multiple disc album directories to one album dir
 - Better persistence (some kind of hashing? for updating)
 - Select & Add multiple songs to playlist
-- Play / Pause with space bar
 - Indicate folder in library
-- Indicate currently playing song in playlist
 - Add currently playing song info to Player UI
 - Show / hide library
 - Persist playlist
@@ -25,6 +25,9 @@ UI for Musa-Electron.
 
 ## Done
 
+- ~~Indicate currently playing song in playlist~~ 12.2.2019
+- ~~Parse duration to 00:00:00 format~~ 12.2.2019
+- ~~Parse track metadata to [disc.]track / total tracks~~ 12.2.2019
 - ~~Use song metadata in front~~ 12.2.2019
 - ~~Better song metadata parsing~~ 12.2.2019
 - ~~Read metadata from songs in backend~~ 11.2.2019

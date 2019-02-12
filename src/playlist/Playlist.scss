@@ -1,7 +1,8 @@
 @import '../scss/colors';
+@import '../scss/mixins';
 
 .playlist {
-  flex: 70%;
+  flex: 75%;
   color: $musa-white;
   background-color: $musa-bg-color;
   list-style-type: none;
@@ -10,4 +11,13 @@
   margin: 0;
   overflow: scroll;
   height: 95vmin;
+  font-size: .9rem;
+
+  &-header {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  @include tableCell;
 }
