@@ -61,13 +61,15 @@ const player = (state = initialState, action) => {
     case PLAY: {
       // * If play is paused and playlist has items resume playback
       // * else take the first song in the playlist
-      let newItem, newIndex;
+      let newItem, newIndex, newTime;
       if (!isEmpty(state.currentItem)) {
         newItem = state.currentItem;
         newIndex = state.currentIndex;
+        newTime = state.currentTime;
       } else {
         newItem = state.items[0];
         newIndex = 0;
+        newTime = 0;
       }
       if (!isEmpty(newItem)) {
         playSong(newItem.path.toString());
@@ -75,6 +77,7 @@ const player = (state = initialState, action) => {
           ...state,
           currentItem: newItem,
           currentIndex: newIndex,
+          currentTime: newTime,
           isPlaying: true
         };
       }
@@ -98,10 +101,11 @@ const player = (state = initialState, action) => {
           isPlaying: true
         };
       }
-      // We've reached end of playlist
+      // We've reached end of playlist.
+      // Start it from the beginning.
       return {
-        ...state,
-        isPlaying: false
+        ...initialState,
+        items: state.items
       };
     }
     case PAUSE:

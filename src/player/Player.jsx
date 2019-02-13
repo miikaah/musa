@@ -10,6 +10,8 @@ import { get, isNaN, isEmpty } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Player.scss";
 
+const SPACE = 32;
+
 class Player extends Component {
   state = {
     duration: 0,
@@ -20,7 +22,18 @@ class Player extends Component {
   constructor(props) {
     super(props);
     this.player = React.createRef();
+    window.addEventListener("keydown", this.handleKeyDown);
   }
+
+  handleKeyDown = event => {
+    switch (event.keyCode) {
+      case SPACE:
+        this.playOrPause();
+        return false; // Return false to prevent scrolling with space bar
+      default:
+        break;
+    }
+  };
 
   componentDidMount() {
     this.player.current.volume = this.getVolumeForAudioEl(50);
@@ -36,7 +49,6 @@ class Player extends Component {
       this.player.current.play();
     });
     this.player.current.addEventListener("ended", () => {
-      console.log("ended");
       this.props.dispatch(playNext());
     });
   }
@@ -100,8 +112,9 @@ class Player extends Component {
   }
 
   getDurationOrTime(prop) {
-    const duration = get(this, ["player", "current", prop], 0.0);
-    return Math.floor(isNaN(duration) ? 0 : duration);
+    const duration = get(this, ["player", "current", prop], 0);
+    if (isNaN(duration)) console.log(duration); // See if this is at fault for pause->play starting from beginning
+    return isNaN(duration) ? 0 : duration;
   }
 
   seek(event) {
@@ -123,18 +136,24 @@ class Player extends Component {
       this.props.dispatch(pause());
       return;
     }
-    if (!isEmpty(this.props.src)) this.player.current.play();
+    if (!isEmpty(this.props.src)) {
+      this.player.current.currentTime = this.props.currentTime; // See if this fixes pause->play starting from beginning
+      this.player.current.play();
+      this.props.dispatch(play());
+      return;
+    }
+    // Dispatch first play action that gets the song as data url from backend
     this.props.dispatch(play());
   }
 
   formatCurrentTime(duration) {
-    if (duration === 0) return "0:00";
+    if (duration < 1) return "0:00";
     let output = "";
     if (duration >= 3600) {
       output += this.prefixNumber(Math.floor(duration / 3600)) + ":";
-    }
-    if (Math.floor(duration) % 3600 === 0) output += "00:";
-    else output += Math.floor((Math.floor(duration) % 3600) / 60) + ":";
+      output +=
+        this.prefixNumber(Math.floor((Math.floor(duration) % 3600) / 60)) + ":";
+    } else output += Math.floor((Math.floor(duration) % 3600) / 60) + ":";
     output += this.prefixNumber(Math.floor(duration % 60));
     return output;
   }

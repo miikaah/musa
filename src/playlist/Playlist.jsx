@@ -17,7 +17,6 @@ class Playlist extends Component {
   }
 
   handleKeyDown = event => {
-    console.log(event.keyCode, this.state.activeIndex);
     switch (event.keyCode) {
       case BACKSPACE:
         return this.props.dispatch(removeFromPlaylist(this.state.activeIndex));
