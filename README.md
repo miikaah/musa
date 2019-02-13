@@ -6,15 +6,15 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Set volume by replaygain
-- fix: Bug where play and seek input onChange handlers fire twice
+- feat: Prevent scroll with space bar
 - feat: Support flac and ogg
-- feat: Mute / Unmute with volume button
+- feat: Mute / Unmute with volume button & M key
 - feat: Show pause icon in playlist when paused
 - fix: Bug where playback resumes from beginning after pausing
 - feat: Parse year to date if the date is an ISO date
 - feat: Restart currently paused song from beginning by double clicking playlist item
 - feat: Add a view that recommends random music from library and shows them nicely
+- feat: Support replaygain album gain
 
 #### Backend
 
@@ -23,6 +23,7 @@ UI for Musa-Electron.
 - feat: Better persistence (some kind of hashing? for updating)
 - feat: Persist playlist
 - feat: Multiple playlists
+- feat: Persist volume
 
 #### Playlist
 
@@ -38,17 +39,21 @@ UI for Musa-Electron.
 
 #### Player
 
+- feat: Show DR and loudness reduction gauge in player
 - feat: Add currently playing song info to Player UI
 - feat: Cooler Player UI
 
-## Settings todo
+#### Settings
 
 - feat: Customise music library folder
+- feat: Set Replaygain (track / audio / off)
 
 ## Done
 
 ##### 13.2.2019
 
+- ~~feat: Set volume by replaygain~~
+- ~~fix: Bug where play and seek input onChange handlers fire twice~~
 - ~~feat: Play / Pause with space bar~~
 - ~~fix: Duration formatting~~
 - ~~feat: Remove zero prefix if duration is under 10 min~~

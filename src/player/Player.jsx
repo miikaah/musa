@@ -6,16 +6,18 @@ import {
   playNext,
   setCurrentTime
 } from "../reducers/player.reducer";
-import { get, isNaN, isEmpty } from "lodash-es";
+import { get, isNaN, isEmpty, isNumber } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Player.scss";
+
+const DEFAULT_VOLUME = 50;
 
 const SPACE = 32;
 
 class Player extends Component {
   state = {
     duration: 0,
-    volume: 50,
+    volume: DEFAULT_VOLUME,
     seekUpdater: undefined
   };
 
@@ -38,6 +40,7 @@ class Player extends Component {
   componentDidMount() {
     this.player.current.volume = this.getVolumeForAudioEl(50);
     this.player.current.addEventListener("loadeddata", () => {
+      this.setRealVolume();
       this.setState({
         duration: this.getDurationOrTime("duration"),
         seekUpdater: setInterval(() => {
@@ -66,7 +69,7 @@ class Player extends Component {
           </button>
           <button className="player-volume-btn">
             <FontAwesomeIcon
-              icon={this.state.volume > 0 ? "volume-up" : "volume-mute"}
+              icon={this.state.volume > 4 ? "volume-up" : "volume-mute"}
             />
           </button>
           <input
@@ -106,14 +109,38 @@ class Player extends Component {
     return vol < 0.02 ? 0 : vol;
   }
 
+  setRealVolume(v) {
+    const vol = isNumber(v) ? v : this.state.volume;
+    const trackGainPercentage = Math.pow(
+      10,
+      this.getReplaygainTrackGainDb() / 20
+    );
+    const realVolume = Math.min(
+      100,
+      Math.max(1, vol * parseFloat(trackGainPercentage))
+    );
+    this.player.current.volume = this.getVolumeForAudioEl(realVolume);
+  }
+
   setVolume(event) {
-    this.setState({ volume: event.target.value });
-    this.player.current.volume = this.getVolumeForAudioEl(event.target.value);
+    const vol = parseInt(event.target.value, 10);
+    const volume = vol === 5 ? 0 : vol;
+    this.setState({ volume });
+    this.setRealVolume(volume);
+  }
+
+  getReplaygainTrackGainDb() {
+    const dbString = get(
+      this.props.currentItem,
+      "metadata.replaygainTrackGain",
+      ""
+    ).replace(/ dB+/, "");
+    return parseFloat(!isEmpty(dbString) ? dbString : 0);
   }
 
   getDurationOrTime(prop) {
     const duration = get(this, ["player", "current", prop], 0);
-    return isNaN(duration) ? 0 : duration;
+    return Math.floor(isNaN(duration) ? 0 : duration);
   }
 
   seek(event) {
