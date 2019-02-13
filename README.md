@@ -6,6 +6,7 @@ UI for Musa-Electron.
 
 ####
 
+- Remove zero prefix if duration is under 10 min
 - Play / Pause with space bar
 - Mute / Unmute with volume button
 - Parse year to date if the date is an ISO dates
@@ -20,6 +21,7 @@ UI for Musa-Electron.
 
 - Select & Add multiple songs to playlist
 - Remove multiple songs from playlist
+- Rearrange playlist items
 
 ####
 
@@ -42,6 +44,10 @@ UI for Musa-Electron.
 - Set volume by replaygain
 
 ## Done
+
+##### 13.2.2019
+
+- ~~Add steps to volume and seek range inputs~~
 
 ##### 12.2.2019
 

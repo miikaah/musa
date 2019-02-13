@@ -23,7 +23,7 @@ class Player extends Component {
   }
 
   componentDidMount() {
-    this.player.current.volume = this.getVolumeForAudioEl();
+    this.player.current.volume = this.getVolumeForAudioEl(50);
     this.player.current.addEventListener("loadeddata", () => {
       this.setState({
         duration: this.getDurationOrTime("duration"),
@@ -62,6 +62,7 @@ class Player extends Component {
             type="range"
             min="0"
             max="100"
+            step="5"
             value={this.state.volume}
             onChange={this.setVolume.bind(this)}
           />
@@ -70,6 +71,7 @@ class Player extends Component {
             type="range"
             min="0"
             max={this.state.duration}
+            step="1"
             value={this.props.currentTime}
             onChange={this.seek.bind(this)}
           />
@@ -87,14 +89,14 @@ class Player extends Component {
     );
   }
 
-  getVolumeForAudioEl() {
-    const vol = this.state.volume / 100;
+  getVolumeForAudioEl(volume) {
+    const vol = volume / 100;
     return vol < 0.02 ? 0 : vol;
   }
 
   setVolume(event) {
     this.setState({ volume: event.target.value });
-    this.player.current.volume = this.getVolumeForAudioEl();
+    this.player.current.volume = this.getVolumeForAudioEl(event.target.value);
   }
 
   getDurationOrTime(prop) {

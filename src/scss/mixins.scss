@@ -1,6 +1,7 @@
 @mixin tableCell {
   .cell {
     padding: 2px 4px;
+    font-size: .85rem;
 
     &-xxs {
       flex: 0 0 2.5%;
