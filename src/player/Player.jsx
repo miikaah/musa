@@ -113,7 +113,6 @@ class Player extends Component {
 
   getDurationOrTime(prop) {
     const duration = get(this, ["player", "current", prop], 0);
-    if (isNaN(duration)) console.log(duration); // See if this is at fault for pause->play starting from beginning
     return isNaN(duration) ? 0 : duration;
   }
 

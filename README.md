@@ -4,70 +4,67 @@ UI for Musa-Electron.
 
 ## Todo
 
-####
+#### Frontend
 
-- Mute / Unmute with volume button
-- Show pause icon in playlist when paused
-- Fix bug where playback resumes from beginning after pausing
-- Parse year to date if the date is an ISO date
+- feat: Set volume by replaygain
+- feat: Support flac and ogg
+- feat: Mute / Unmute with volume button
+- feat: Show pause icon in playlist when paused
+- fix: Bug where playback resumes from beginning after pausing
+- feat: Parse year to date if the date is an ISO date
+- feat: Restart currently paused song from beginning by double clicking playlist item
+- feat: Add a view that recommends random music from library and shows them nicely
 
-####
+#### Backend
 
-- Get artist / album name from directory songs' metadata
-- Consolidate multiple disc album directories to one album dir
-- Better persistence (some kind of hashing? for updating)
+- feat: Get artist / album name from directory songs' metadata
+- feat: Consolidate multiple disc album directories to one album dir
+- feat: Better persistence (some kind of hashing? for updating)
+- feat: Persist playlist
+- feat: Multiple playlists
 
-####
+#### Playlist
 
-- Select & Add multiple songs to playlist
-- Remove multiple songs from playlist
-- Rearrange playlist items
+- feat: Remove multiple songs from playlist
+- feat: Rearrange playlist items
 
-####
+#### Library
 
-- Cooler library list items
-- Indicate album in library
-- Show / hide library
+- feat: Add multiple songs to playlist by selection
+- feat: Indicate album in library
+- feat: Cooler library list items
+- feat: Show / hide library
 
-####
+#### Player
 
-- Cooler Player UI (time played / left, icon for volume)
-- Add currently playing song info to Player UI
+- feat: Add currently playing song info to Player UI
+- feat: Cooler Player UI
 
-####
+## Settings todo
 
-- Persist playlist
-- Multiple playlists
-- Fancier list items
-- Support flac and ogg
-- Add a view that recommends random music from library and shows them nicely
-- Set volume by replaygain
+- feat: Customise music library folder
 
 ## Done
 
 ##### 13.2.2019
 
-- ~~Play / Pause with space bar~~
-- ~~Fix duration formatting~~
-- ~~Remove zero prefix if duration is under 10 min~~
-- ~~Add steps to volume and seek range inputs~~
+- ~~feat: Play / Pause with space bar~~
+- ~~fix: Duration formatting~~
+- ~~feat: Remove zero prefix if duration is under 10 min~~
+- ~~feat: Add steps to volume and seek range inputs~~
 
 ##### 12.2.2019
 
-- ~~Tweak playlist styles~~
-- ~~Volume icon to player~~
-- ~~Indicate duration in player (played / duration)~~
-- ~~Indicate currently playing song in playlist~~
-- ~~Parse duration to 00:00:00 format~~
-- ~~Parse track metadata to [disc.]track / total tracks~~
-- ~~Use song metadata in front~~
-- ~~Better song metadata parsing~~
+- ~~feat: Tweak playlist styles~~
+- ~~feat: Volume icon to player~~
+- ~~feat: Indicate duration in player (played / duration)~~
+- ~~feat: Indicate currently playing song in playlist~~
+- ~~feat: Parse duration to 00:00:00 format~~
+- ~~feat: Parse track metadata to [disc.]track / total tracks~~
+- ~~feat: Use song metadata in front~~
+- ~~feat: Better song metadata parsing~~
 
 ##### 11.2.2019
 
-- ~~Read metadata from songs in backend~~
-- ~~Remove song from playlist~~
-
-## Settings todo
-
-- Customise music library folder
+- ~~feat: Read metadata from songs in backend~~
+- ~~feat: Remove song from playlist~~
