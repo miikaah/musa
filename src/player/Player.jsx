@@ -81,7 +81,7 @@ class Player extends Component {
             </span>
             <span> / </span>
             <span>
-              {get(this.props, "currentItem.metadata.duration", "00:00")}
+              {get(this.props, "currentItem.metadata.duration", "0:00")}
             </span>
           </span>
         </div>
@@ -128,14 +128,13 @@ class Player extends Component {
   }
 
   formatCurrentTime(duration) {
+    if (duration === 0) return "0:00";
     let output = "";
     if (duration >= 3600) {
       output += this.prefixNumber(Math.floor(duration / 3600)) + ":";
     }
     if (Math.floor(duration) % 3600 === 0) output += "00:";
-    else
-      output +=
-        this.prefixNumber(Math.floor((Math.floor(duration) % 3600) / 60)) + ":";
+    else output += Math.floor((Math.floor(duration) % 3600) / 60) + ":";
     output += this.prefixNumber(Math.floor(duration % 60));
     return output;
   }

@@ -6,7 +6,7 @@ UI for Musa-Electron.
 
 ####
 
-- Remove zero prefix if duration is under 10 min
+- Remove bug where playback resumes from beginning after pausing
 - Play / Pause with space bar
 - Mute / Unmute with volume button
 - Parse year to date if the date is an ISO dates
@@ -47,6 +47,7 @@ UI for Musa-Electron.
 
 ##### 13.2.2019
 
+- ~~Remove zero prefix if duration is under 10 min~~
 - ~~Add steps to volume and seek range inputs~~
 
 ##### 12.2.2019
