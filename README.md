@@ -7,6 +7,7 @@ UI for Musa-Electron.
 #### Frontend
 
 - feat: Set volume by replaygain
+- fix: Bug where play and seek input onChange handlers fire twice
 - feat: Support flac and ogg
 - feat: Mute / Unmute with volume button
 - feat: Show pause icon in playlist when paused
