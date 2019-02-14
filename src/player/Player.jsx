@@ -38,7 +38,8 @@ class Player extends Component {
     switch (event.keyCode) {
       case KEYS.Space:
         this.playOrPause();
-        return false; // Return false to prevent scrolling with space bar
+        event.preventDefault();
+        return;
       case KEYS.M:
         this.muteOrUnmute();
         return;

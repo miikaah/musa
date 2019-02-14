@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Prevent scroll with space bar
 - feat: Support flac and ogg
 - feat: Show pause icon in playlist when paused
 - fix: Bug where playback resumes from beginning after pausing
@@ -51,6 +50,7 @@ UI for Musa-Electron.
 
 ##### 14.2.2019
 
+- ~~feat: Prevent scroll with space bar~~
 - ~~feat: Mute / Unmute with volume button & M key~~
 
 ##### 13.2.2019
