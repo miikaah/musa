@@ -8,7 +8,6 @@ UI for Musa-Electron.
 
 - feat: Prevent scroll with space bar
 - feat: Support flac and ogg
-- feat: Mute / Unmute with volume button & M key
 - feat: Show pause icon in playlist when paused
 - fix: Bug where playback resumes from beginning after pausing
 - feat: Parse year to date if the date is an ISO date
@@ -49,6 +48,10 @@ UI for Musa-Electron.
 - feat: Set Replaygain (track / audio / off)
 
 ## Done
+
+##### 14.2.2019
+
+- ~~feat: Mute / Unmute with volume button & M key~~
 
 ##### 13.2.2019
 

@@ -10,14 +10,21 @@ import { get, isNaN, isEmpty, isNumber } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Player.scss";
 
-const DEFAULT_VOLUME = 50;
+const VOLUME_DEFAULT = 50;
+const VOLUME_MUTED = 0;
+const VOLUME_STEP = 5;
 
-const SPACE = 32;
+const KEYS = {
+  Space: 32,
+  M: 77
+};
 
 class Player extends Component {
   state = {
     duration: 0,
-    volume: DEFAULT_VOLUME,
+    volume: VOLUME_DEFAULT,
+    volumeBeforeMuting: VOLUME_DEFAULT,
+    isMuted: () => this.state.volume === VOLUME_MUTED,
     seekUpdater: undefined
   };
 
@@ -29,9 +36,12 @@ class Player extends Component {
 
   handleKeyDown = event => {
     switch (event.keyCode) {
-      case SPACE:
+      case KEYS.Space:
         this.playOrPause();
         return false; // Return false to prevent scrolling with space bar
+      case KEYS.M:
+        this.muteOrUnmute();
+        return;
       default:
         break;
     }
@@ -67,9 +77,16 @@ class Player extends Component {
           >
             <FontAwesomeIcon icon={this.props.isPlaying ? "pause" : "play"} />
           </button>
-          <button className="player-volume-btn">
+          <button
+            className="player-volume-btn"
+            onClick={this.muteOrUnmute.bind(this)}
+          >
             <FontAwesomeIcon
-              icon={this.state.volume > 4 ? "volume-up" : "volume-mute"}
+              icon={
+                this.state.volume > VOLUME_STEP - 1
+                  ? "volume-up"
+                  : "volume-mute"
+              }
             />
           </button>
           <input
@@ -77,7 +94,7 @@ class Player extends Component {
             type="range"
             min="0"
             max="100"
-            step="5"
+            step={VOLUME_STEP}
             value={this.state.volume}
             onChange={this.setVolume.bind(this)}
           />
@@ -106,7 +123,7 @@ class Player extends Component {
 
   getVolumeForAudioEl(volume) {
     const vol = volume / 100;
-    return vol < 0.02 ? 0 : vol;
+    return vol < 0.02 ? VOLUME_MUTED : vol;
   }
 
   setRealVolume(v) {
@@ -124,7 +141,7 @@ class Player extends Component {
 
   setVolume(event) {
     const vol = parseInt(event.target.value, 10);
-    const volume = vol === 5 ? 0 : vol;
+    const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol;
     this.setState({ volume });
     this.setRealVolume(volume);
   }
@@ -186,6 +203,19 @@ class Player extends Component {
 
   prefixNumber(value) {
     return value < 10 ? `0${value}` : `${value}`;
+  }
+
+  muteOrUnmute() {
+    if (this.state.isMuted()) {
+      this.setRealVolume(this.state.volumeBeforeMuting);
+      this.setState({ volume: this.state.volumeBeforeMuting });
+      return;
+    }
+    this.setRealVolume(VOLUME_MUTED);
+    this.setState({
+      volume: VOLUME_MUTED,
+      volumeBeforeMuting: this.state.volume
+    });
   }
 }
 
