@@ -7,11 +7,12 @@ import {
   faPlay,
   faPause,
   faVolumeUp,
-  faVolumeMute
+  faVolumeMute,
+  faCaretRight
 } from "@fortawesome/free-solid-svg-icons";
 import "./App.scss";
 
-library.add(faPlay, faPause, faVolumeUp, faVolumeMute);
+library.add(faPlay, faPause, faVolumeUp, faVolumeMute, faCaretRight);
 
 class App extends Component {
   render() {

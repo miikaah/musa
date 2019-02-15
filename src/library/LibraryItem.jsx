@@ -7,14 +7,12 @@ import "./LibraryItem.scss";
 class LibraryItem extends Component {
   render() {
     const item = this.props.item;
-    const name = item.name.toString();
+    const name = item.name;
     return (
       <li
         key={name + "-" + Date.now()}
         className="library-item"
-        onDoubleClick={() =>
-          this.props.dispatch(addToPlaylist(this.props.item))
-        }
+        onDoubleClick={() => this.props.dispatch(addToPlaylist(item))}
       >
         {get(item, "metadata.title", item.name)}
       </li>

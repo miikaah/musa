@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import LibraryItem from "./LibraryItem";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./LibraryList.scss";
 
 class LibraryList extends Component {
@@ -9,29 +10,36 @@ class LibraryList extends Component {
 
   render() {
     const item = this.props.item;
-    if (Array.isArray(item.children)) {
-      return (
+    const isAlbum = Array.isArray(item.albums);
+    const isSongs = Array.isArray(item.songs);
+    const isUndefinedItemName = item.name === "undefined";
+    if (isAlbum || isSongs) {
+      return isUndefinedItemName ? (
+        item.songs.map(child => (
+          <LibraryItem key={child.name + "-" + Date.now()} item={child} />
+        ))
+      ) : (
         <ul className="library-list">
           <li
             className="library-list-folder"
             key={item.name}
             onClick={this.toggleFolder.bind(this)}
           >
-            {item.name}
+            {parseInt(item.date, 10) === 0 && (
+              <FontAwesomeIcon className="caret-right" icon="caret-right" />
+            )}
+            {isSongs && parseInt(item.date, 10) > 0
+              ? `${item.date} - ${item.name}`
+              : item.name}
           </li>
           {this.state.showFolderItems &&
-            item.children.map(child => (
-              <LibraryList
-                key={child.name.toString() + "-" + Date.now()}
-                item={child}
-              />
+            (item.albums || item.songs).map(child => (
+              <LibraryList key={child.name + "-" + Date.now()} item={child} />
             ))}
         </ul>
       );
     }
-    return (
-      <LibraryItem key={item.name.toString() + "-" + Date.now()} item={item} />
-    );
+    return <LibraryItem key={item.name + "-" + Date.now()} item={item} />;
   }
 
   toggleFolder(event) {

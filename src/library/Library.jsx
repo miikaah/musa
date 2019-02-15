@@ -43,6 +43,7 @@ class Library extends Component {
           this.state.listing.forEach(listing => libraryObjStore.put(listing));
         });
         if (isEmpty(dbListing)) ipcRenderer.send("getLibraryListing");
+        // ipcRenderer.send("getLibraryListing");
       };
     };
   }
@@ -56,7 +57,7 @@ class Library extends Component {
     return [
       ...this.state.listing.filter(artist => artist.path !== listing.path),
       listing
-    ];
+    ].sort((a, b) => a.path.localeCompare(b.path));
   }
 
   render() {
