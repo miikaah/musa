@@ -1,4 +1,3 @@
-import { store } from "../";
 import { isNumber, isEmpty } from "lodash-es";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
@@ -72,13 +71,13 @@ const player = (state = initialState, action) => {
         newTime = 0;
       }
       if (!isEmpty(newItem)) {
-        playSong(newItem.path.toString());
         return {
           ...state,
           currentItem: newItem,
           currentIndex: newIndex,
           currentTime: newTime,
-          isPlaying: true
+          isPlaying: true,
+          src: `file://${newItem.path}`
         };
       }
       return {
@@ -93,12 +92,12 @@ const player = (state = initialState, action) => {
         : state.currentIndex + 1;
       const newItem = state.items[newIndex];
       if (newItem) {
-        playSong(newItem.path.toString());
         return {
           ...state,
           currentItem: newItem,
           currentIndex: newIndex,
-          isPlaying: true
+          isPlaying: true,
+          src: `file://${newItem.path}`
         };
       }
       // We've reached end of playlist.
@@ -142,18 +141,5 @@ const player = (state = initialState, action) => {
       return state;
   }
 };
-
-// Electron side-effects
-
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
-
-function playSong(path) {
-  ipcRenderer.send("getSongAsDataUrl", path);
-}
-
-ipcRenderer.on("songAsDataUrl", (event, dataUrl) => {
-  store.dispatch(setSource(dataUrl));
-});
 
 export default player;
