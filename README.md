@@ -6,7 +6,8 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Support flac and ogg
+- feat: Add progress meter from initial scan
+- feat: Persist volume to localStorage
 - feat: Show pause icon in playlist when paused
 - fix: Bug where playback resumes from beginning after pausing
 - feat: Parse year to date if the date is an ISO date
@@ -16,12 +17,9 @@ UI for Musa-Electron.
 
 #### Backend
 
-- feat: Get artist / album name from directory songs' metadata
-- feat: Consolidate multiple disc album directories to one album dir
-- feat: Better persistence (some kind of hashing? for updating)
+- feat: Send progress info to frontend
 - feat: Persist playlist
 - feat: Multiple playlists
-- feat: Persist volume
 
 #### Playlist
 
@@ -43,10 +41,18 @@ UI for Musa-Electron.
 
 #### Settings
 
-- feat: Customise music library folder
+- feat: Customise music library folder path
 - feat: Set Replaygain (track / audio / off)
 
 ## Done
+
+##### 15.2.2019
+
+- ~~refactor: Restructure library listing data~~
+- ~~feat: Consolidate multiple disc album directories to one album dir~~
+- ~~feat: Get artist / album name from directory songs' metadata~~
+- ~~refactor: Remove NeDB and other big dependencies~~
+- ~~feat: Persist library to IndexedDB~~
 
 ##### 14.2.2019
 

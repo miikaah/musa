@@ -51,6 +51,7 @@ class Player extends Component {
   componentDidMount() {
     this.player.current.volume = this.getVolumeForAudioEl(50);
     this.player.current.addEventListener("loadeddata", () => {
+      console.log("loadeddata");
       this.setRealVolume();
       this.setState({
         duration: this.getDurationOrTime("duration"),
