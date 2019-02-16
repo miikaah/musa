@@ -44,6 +44,10 @@ UI for Musa-Electron.
 - feat: Customise music library folder path
 - feat: Set Replaygain (track / audio / off)
 
+#### General
+
+- feat: Create packaging script
+
 ## Done
 
 ##### 15.2.2019

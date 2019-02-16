@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import LibraryList from "./LibraryList";
-import { isEqual, isEmpty, negate } from "lodash-es";
+import { isEqual, isEmpty } from "lodash-es";
 import "./Library.scss";
 
 const electron = window.require("electron");
@@ -16,6 +16,7 @@ class Library extends Component {
   };
 
   componentDidMount() {
+    ipcRenderer.on("error", (event, error) => console.error(error));
     idbRequest.onerror = event => console.error(event);
     idbRequest.onupgradeneeded = event => {
       event.target.result.createObjectStore("library", { keyPath: "path" });
