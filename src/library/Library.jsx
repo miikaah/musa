@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import LibraryList from "./LibraryList";
-import { isEqual, isEmpty } from "lodash-es";
+import { isEqual, isEmpty, get } from "lodash-es";
 import "./Library.scss";
 
 const electron = window.require("electron");
@@ -19,10 +19,29 @@ class Library extends Component {
     ipcRenderer.on("error", (event, error) => console.error(error));
     idbRequest.onerror = event => console.error(event);
     idbRequest.onupgradeneeded = event => {
+      event.target.result.createObjectStore("songList", { keyPath: "key" });
       event.target.result.createObjectStore("library", { keyPath: "path" });
     };
     idbRequest.onsuccess = event => {
       const db = event.target.result;
+      const songListStore = db
+        .transaction("songList", "readwrite")
+        .objectStore("songList");
+
+      const songListStoreRequest = songListStore.get("list");
+
+      songListStoreRequest.onsuccess = event => {
+        ipcRenderer.on("updateSongList", (event, songList) => {
+          const songListOS = db
+            .transaction("songList", "readwrite")
+            .objectStore("songList");
+          songListOS.put({ key: "list", list: songList });
+        });
+        const dbSongList = songListStoreRequest.result;
+        ipcRenderer.send("initLibrary", get(dbSongList, "list", []));
+      };
+
+      /////
       const objectStore = db
         .transaction("library", "readwrite")
         .objectStore("library");
@@ -43,8 +62,15 @@ class Library extends Component {
             .objectStore("library");
           this.state.listing.forEach(listing => libraryObjStore.put(listing));
         });
-        if (isEmpty(dbListing)) ipcRenderer.send("getLibraryListing");
-        // ipcRenderer.send("getLibraryListing");
+        ipcRenderer.on("updateSongMetadata", (event, song) => {
+          // console.log(song);
+          console.log("update");
+        });
+        ipcRenderer.on("updateSongMetadataEnd", (event, song) => {
+          console.log("finished updating songs");
+        });
+        // if (isEmpty(dbListing)) ipcRenderer.send("initLibrary");
+        // ipcRenderer.send("initLibrary");
       };
     };
   }
