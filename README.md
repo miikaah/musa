@@ -19,7 +19,6 @@ UI for Musa-Electron.
 
 #### Backend
 
-- feat: Add watchers for adding & removing of files in library
 - feat: Parse year from date if the date is an ISO date
 - feat: Send progress info to frontend
 
@@ -54,6 +53,7 @@ UI for Musa-Electron.
 
 ##### 18.2.2019
 
+- feat: Add watchers for adding, modifying & removing of files in library
 - feat: Change font to Tahoma
 - feat: Add new songs to library during startup
 - feat: Remove deleted songs from library during startup
