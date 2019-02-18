@@ -65,6 +65,18 @@ class Library extends Component {
           libraryOS.put(listing);
         });
 
+        ipcRenderer.on("deleteLibraryListings", (event, keyPaths) => {
+          const libraryOS = db
+            .transaction("library", "readwrite")
+            .objectStore("library");
+          this.setState({
+            listing: this.state.listing.filter(
+              artist => !keyPaths.includes(artist.path)
+            )
+          });
+          keyPaths.forEach(key => libraryOS.delete(key));
+        });
+
         ipcRenderer.on("updateSongMetadata", (event, song) => {
           const artistOS = db
             .transaction("library", "readwrite")
