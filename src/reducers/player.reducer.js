@@ -22,12 +22,6 @@ export const pause = () => ({
   type: PAUSE
 });
 
-export const SET_SOURCE = "MUSA/PLAYER/SET_SOURCE";
-export const setSource = src => ({
-  type: SET_SOURCE,
-  src
-});
-
 export const SET_CURRENT_TIME = "MUSA/PLAYER/SET_CURRENT_TIME";
 export const setCurrentTime = time => ({
   type: SET_CURRENT_TIME,
@@ -111,11 +105,6 @@ const player = (state = initialState, action) => {
       return {
         ...state,
         isPlaying: false
-      };
-    case SET_SOURCE:
-      return {
-        ...state,
-        src: action.src
       };
     case SET_CURRENT_TIME:
       return {
