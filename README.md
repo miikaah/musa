@@ -17,8 +17,7 @@ UI for Musa-Electron.
 
 #### Backend
 
-- feat: Add new songs to library during startup
-- feat: Remove deleted songs from library during startup
+- feat: Add watchers for add / remove of files in library
 - feat: Send progress info to frontend
 - feat: Persist playlist
 - feat: Multiple playlists
@@ -54,6 +53,8 @@ UI for Musa-Electron.
 
 ##### 18.2.2019
 
+- ~~feat: Add new songs to library during startup~~
+- ~~feat: Remove deleted songs from library during startup~~
 - ~~feat: Update modified songs in library during startup~~
 
 ##### 16.2.2019
