@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import LibraryList from "./LibraryList";
-import { isEqual, isEmpty, get } from "lodash-es";
+import { isEqual, isEmpty, get, defaultTo, flatten } from "lodash-es";
 import "./Library.scss";
 
 const electron = window.require("electron");
@@ -53,24 +53,28 @@ class Library extends Component {
         this.setState({ listing: dbListing });
 
         ipcRenderer.on("libraryListing", (event, listing) => {
-          console.log(listing);
-          this.setState({ listing: this.getNewListing(listing) });
-        });
-        ipcRenderer.on("libraryListingEnd", () => {
-          const libraryObjStore = db
+          const libraryOS = db
             .transaction("library", "readwrite")
             .objectStore("library");
-          this.state.listing.forEach(listing => libraryObjStore.put(listing));
+          this.setState({ listing: this.getNewListing(listing) });
+          libraryOS.put(listing);
         });
+
         ipcRenderer.on("updateSongMetadata", (event, song) => {
-          // console.log(song);
-          console.log("update");
+          const artistOS = db
+            .transaction("library", "readwrite")
+            .objectStore("library");
+          const artistReq = artistOS.get(song.artistPath);
+          artistReq.onsuccess = event => {
+            const artist = artistReq.result;
+            const oldSong = flatten(
+              defaultTo(artist.albums, []).map(a => a.songs)
+            ).find(s => s.path === song.path);
+            oldSong.metadata = song.metadata;
+            artistOS.put(artist);
+            this.setState({ listing: this.getNewListing(artist) });
+          };
         });
-        ipcRenderer.on("updateSongMetadataEnd", (event, song) => {
-          console.log("finished updating songs");
-        });
-        // if (isEmpty(dbListing)) ipcRenderer.send("initLibrary");
-        // ipcRenderer.send("initLibrary");
       };
     };
   }

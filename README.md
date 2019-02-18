@@ -17,6 +17,8 @@ UI for Musa-Electron.
 
 #### Backend
 
+- feat: Add new songs to library during startup
+- feat: Remove deleted songs from library during startup
 - feat: Send progress info to frontend
 - feat: Persist playlist
 - feat: Multiple playlists
@@ -49,6 +51,15 @@ UI for Musa-Electron.
 - feat: Create packaging script
 
 ## Done
+
+##### 18.2.2019
+
+- ~~feat: Update modified songs in library during startup~~
+
+##### 16.2.2019
+
+- ~~feat: Use chokidar for initial scan~~
+- ~~feat: Use IndexedDB in front for persistence of library~~
 
 ##### 15.2.2019
 
