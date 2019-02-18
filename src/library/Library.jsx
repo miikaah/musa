@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import LibraryList from "./LibraryList";
-import { isEqual, isEmpty, get, defaultTo, flatten } from "lodash-es";
+import { isEqual, isEmpty, get, flatten } from "lodash-es";
 import "./Library.scss";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 const dbName = "musa_db";
+const dbVersion = 1;
 
-const idbRequest = indexedDB.open(dbName, 1);
+const idbRequest = indexedDB.open(dbName, dbVersion);
 
 class Library extends Component {
   state = {
@@ -19,8 +20,10 @@ class Library extends Component {
     ipcRenderer.on("error", (event, error) => console.error(error));
     idbRequest.onerror = event => console.error(event);
     idbRequest.onupgradeneeded = event => {
-      event.target.result.createObjectStore("songList", { keyPath: "key" });
-      event.target.result.createObjectStore("library", { keyPath: "path" });
+      if (event.oldVersion <= dbVersion) {
+        event.target.result.createObjectStore("songList", { keyPath: "key" });
+        event.target.result.createObjectStore("library", { keyPath: "path" });
+      }
     };
     idbRequest.onsuccess = event => {
       const db = event.target.result;
@@ -68,7 +71,7 @@ class Library extends Component {
           artistReq.onsuccess = event => {
             const artist = artistReq.result;
             const oldSong = flatten(
-              defaultTo(artist.albums, []).map(a => a.songs)
+              get(artist, "albums", []).map(a => a.songs)
             ).find(s => s.path === song.path);
             oldSong.metadata = song.metadata;
             artistOS.put(artist);
