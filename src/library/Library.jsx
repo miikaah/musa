@@ -7,7 +7,7 @@ const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 const dbName = "musa_db";
-const dbVersion = 1;
+const dbVersion = 3;
 
 const idbRequest = indexedDB.open(dbName, dbVersion);
 
@@ -20,10 +20,12 @@ class Library extends Component {
     ipcRenderer.on("error", (event, error) => console.error(error));
     idbRequest.onerror = event => console.error(event);
     idbRequest.onupgradeneeded = event => {
-      if (event.oldVersion <= dbVersion) {
+      try {
         event.target.result.createObjectStore("songList", { keyPath: "key" });
+      } catch {}
+      try {
         event.target.result.createObjectStore("library", { keyPath: "path" });
-      }
+      } catch {}
     };
     idbRequest.onsuccess = event => {
       const db = event.target.result;
