@@ -1,10 +1,35 @@
 @import '../scss/colors';
+@import '../scss/variables';
+@import '../scss/mixins';
 
 .library {
   background-color: $musa-bg-library-color;
   user-select: none;
-  flex: 25%;
   min-height: 100vmin;
+  max-height: 100vmin;
   overflow-y: scroll;
   color: $musa-white;
+
+  &-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    min-width: $musa-menu-left-width;
+    max-width: $musa-menu-left-width;
+    text-align: left;
+  }
+
+  &-tools {
+    @include toolbarButton;
+
+    padding: $musa-toolbar-padding;
+  }
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
 }

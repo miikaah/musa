@@ -27,3 +27,10 @@
     text-align: right;
   }
 }
+
+@mixin toolbarButton {
+  button {
+    font-size: 1.4rem;
+    margin-right: 12px;
+  }
+}

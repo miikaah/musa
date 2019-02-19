@@ -1,9 +1,28 @@
+@import './scss/colors';
+@import './scss/variables';
+
 .app {
-  text-align: center;
-  background-color: #282c34;
+  text-align: left;
+  background-color: $musa-bg-color;
   min-height: 100vmin;
   max-height: 100vmin;
-  display: flex;
   overflow: hidden;
-  color: #000;
+  color: $musa-white;
+
+  &-wrapper {
+    display: flex;
+  }
+
+  &-right {
+    flex: 75%;
+    padding: 0 16px;
+  }
+
+  button {
+    color: $musa-white;
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
 }

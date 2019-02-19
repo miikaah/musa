@@ -7,7 +7,7 @@ UI for Musa-Electron.
 #### Frontend
 
 - feat: Show pause icon in playlist when paused
-- feat: Add progress meter from initial scan
+- feat: Add progress meter for initial scan
 - fix: Bug where playback resumes from beginning after pausing
 - feat: Restart currently paused song from beginning by double clicking playlist item
 - feat: Generate playlist (genre, random)

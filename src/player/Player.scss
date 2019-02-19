@@ -5,14 +5,16 @@ audio {
 }
 
 .player {
+  padding: 16px 0;
+
   &-container {
-    position: fixed;
-    width: 75%;
-    bottom: 0;
-    right: 0;
-    height: 5vmin;
+    text-align: center;
     color: $musa-white;
     font-size: .8rem;
+  }
+
+  img {
+    display: block;
   }
 
   &-volume {

@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import LibraryList from "./LibraryList";
 import { isEqual, isEmpty, get, flatten } from "lodash-es";
+import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toggleLibrary } from "../reducers/library.reducer";
 import "./Library.scss";
 
 const electron = window.require("electron");
@@ -22,10 +25,14 @@ class Library extends Component {
     idbRequest.onupgradeneeded = event => {
       try {
         event.target.result.createObjectStore("songList", { keyPath: "key" });
-      } catch {}
+      } catch (e) {
+        console.log(e);
+      }
       try {
         event.target.result.createObjectStore("library", { keyPath: "path" });
-      } catch {}
+      } catch (e) {
+        console.log(e);
+      }
     };
     idbRequest.onsuccess = event => {
       const db = event.target.result;
@@ -97,7 +104,7 @@ class Library extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !isEqual(this.state, nextState);
+    return !isEqual(this.state, nextState) || !isEqual(this.props, nextProps);
   }
 
   getNewListing(listing) {
@@ -110,13 +117,36 @@ class Library extends Component {
 
   render() {
     return (
-      <div className="library">
-        {this.state.listing.map((item, index) => (
-          <LibraryList key={item.name + "-" + index} item={item} />
-        ))}
+      <div
+        className={`library-container ${
+          this.props.isVisible ? "show" : "hide"
+        }`}
+      >
+        <div className="library">
+          <div className="library-tools">
+            <button type="button" className="library-toggle-settings">
+              <FontAwesomeIcon icon="cog" />
+            </button>
+            <button
+              type="button"
+              className="library-toggle-library"
+              onClick={() => this.props.dispatch(toggleLibrary())}
+            >
+              <FontAwesomeIcon icon="bars" />
+            </button>
+          </div>
+          {this.state.listing.map((item, index) => (
+            <LibraryList key={item.name + "-" + index} item={item} />
+          ))}
+        </div>
       </div>
     );
   }
 }
 
-export default Library;
+export default connect(
+  state => ({
+    isVisible: state.library.isVisible
+  }),
+  dispatch => ({ dispatch })
+)(Library);

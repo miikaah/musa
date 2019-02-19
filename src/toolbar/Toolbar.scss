@@ -1,0 +1,12 @@
+@import '../scss/mixins';
+@import '../scss/variables';
+
+.toolbar {
+  display: flex;
+  justify-content: flex-start;
+  padding: $musa-toolbar-padding;
+  width: 100%;
+  z-index: 10;
+
+  @include toolbarButton;
+}

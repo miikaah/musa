@@ -2,16 +2,11 @@
 @import '../scss/mixins';
 
 .playlist {
-  flex: 75%;
   color: $musa-white;
-  background-color: $musa-bg-color;
-  list-style-type: none;
-  user-select: none;
   padding: 0;
   margin: 0;
   overflow: scroll;
-  height: 95vmin;
-  font-size: .95rem;
+  font-size: .85rem;
 
   &-header {
     display: flex;

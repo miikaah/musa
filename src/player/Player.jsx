@@ -25,7 +25,9 @@ class Player extends Component {
     volume: VOLUME_DEFAULT,
     volumeBeforeMuting: VOLUME_DEFAULT,
     isMuted: () => this.state.volume === VOLUME_MUTED,
-    seekUpdater: undefined
+    seekUpdater: undefined,
+    cover:
+      "file:///Users/miika.henttonen/Documents/musat/Neil Young/Hitchhiker/Hitchhiker.jpg"
   };
 
   constructor(props) {
@@ -76,6 +78,7 @@ class Player extends Component {
     return (
       <div className="player-container">
         <audio controls src={this.props.src} ref={this.player} />
+        <img alt="" width="400" height="400" src={this.props.cover} />
         <div className="player">
           <button
             className="player-play-pause"
@@ -232,7 +235,8 @@ export default connect(
     isPlaying: state.player.isPlaying,
     playlist: state.player.items,
     currentTime: state.player.currentTime,
-    currentItem: state.player.currentItem
+    currentItem: state.player.currentItem,
+    cover: state.player.cover
   }),
   dispatch => ({ dispatch })
 )(Player);
