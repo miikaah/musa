@@ -6,7 +6,7 @@ import {
   playNext,
   setCurrentTime
 } from "../reducers/player.reducer";
-import { get, isNaN, isEmpty, isNumber } from "lodash-es";
+import { get, isNaN, isEmpty, isNumber, defaultTo } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./Player.scss";
 
@@ -49,7 +49,11 @@ class Player extends Component {
   };
 
   componentDidMount() {
-    this.player.current.volume = this.getVolumeForAudioEl(50);
+    this.setVolume({
+      target: {
+        value: defaultTo(localStorage.getItem("volume"), VOLUME_DEFAULT)
+      }
+    });
     this.player.current.addEventListener("loadeddata", () => {
       console.log("loadeddata");
       this.setRealVolume();
@@ -146,6 +150,7 @@ class Player extends Component {
     const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol;
     this.setState({ volume });
     this.setRealVolume(volume);
+    localStorage.setItem("volume", volume);
   }
 
   getReplaygainTrackGainDb() {

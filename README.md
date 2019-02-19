@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Persist volume to localStorage
 - feat: Show pause icon in playlist when paused
 - feat: Add progress meter from initial scan
 - fix: Bug where playback resumes from beginning after pausing
@@ -50,6 +49,10 @@ UI for Musa-Electron.
 - feat: Create packaging script
 
 ## Done
+
+##### 19.2.2019
+
+- feat: Persist volume to localStorage
 
 ##### 18.2.2019
 
