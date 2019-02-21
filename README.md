@@ -53,6 +53,7 @@ UI for Musa-Electron.
 
 ##### 21.2.2019
 
+- refactor: replace child_process fork with electron-remote
 - feat: update new visual look
 - feat: Add path to album cover
 - fix: Bug where playback resumes from beginning after pausing (seems to be fixed)

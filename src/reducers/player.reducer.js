@@ -73,7 +73,7 @@ const player = (state = initialState, action) => {
           currentTime: newTime,
           isPlaying: true,
           src: `file://${newItem.path}`,
-          cover: `file://${newItem.cover}`
+          cover: isEmpty(newItem.cover) ? "" : `file://${newItem.cover}`
         };
       }
       return {
@@ -94,7 +94,7 @@ const player = (state = initialState, action) => {
           currentIndex: newIndex,
           isPlaying: true,
           src: `file://${newItem.path}`,
-          cover: `file://${newItem.cover}`
+          cover: isEmpty(newItem.cover) ? "" : `file://${newItem.cover}`
         };
       }
       // We've reached end of playlist.

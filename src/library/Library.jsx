@@ -3,7 +3,7 @@ import LibraryList from "./LibraryList";
 import { isEqual, isEmpty, get, flatten } from "lodash-es";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toggleLibrary, setAlbums } from "../reducers/library.reducer";
+import { toggleLibrary } from "../reducers/library.reducer";
 import "./Library.scss";
 
 const electron = window.require("electron");
@@ -20,6 +20,7 @@ class Library extends Component {
   };
 
   componentDidMount() {
+    ipcRenderer.on("log", (event, log) => console.log("(main)", log));
     ipcRenderer.on("error", (event, error) => console.error(error));
     idbRequest.onerror = event => console.error(event);
     idbRequest.onupgradeneeded = event => {
