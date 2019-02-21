@@ -6,7 +6,7 @@ import "./LibraryItem.scss";
 
 class LibraryItem extends Component {
   render() {
-    const item = this.props.item;
+    const item = { ...this.props.item, cover: this.props.cover };
     const name = item.name;
     return (
       <li

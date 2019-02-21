@@ -13,8 +13,10 @@ audio {
     font-size: .8rem;
   }
 
-  img {
+  &-cover {
     display: block;
+    min-height: 400px;
+    margin: auto;
   }
 
   &-volume {

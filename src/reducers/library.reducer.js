@@ -10,10 +10,6 @@ const initialState = {
 const library = (state = initialState, action) => {
   switch (action.type) {
     case TOGGLE: {
-      console.log({
-        ...state,
-        isVisible: !state.isVisible
-      });
       return {
         ...state,
         isVisible: !state.isVisible

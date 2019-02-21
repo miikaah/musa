@@ -46,6 +46,7 @@ const initialState = {
   currentIndex: 0,
   currentTime: 0,
   src: "",
+  cover: "",
   isPlaying: false
 };
 
@@ -65,7 +66,6 @@ const player = (state = initialState, action) => {
         newTime = 0;
       }
       if (!isEmpty(newItem)) {
-        console.log(newItem);
         return {
           ...state,
           currentItem: newItem,
@@ -73,9 +73,7 @@ const player = (state = initialState, action) => {
           currentTime: newTime,
           isPlaying: true,
           src: `file://${newItem.path}`,
-          cover: `file://${newItem.path.replace(newItem.name, "")}/${
-            newItem.metadata.album
-          }.jpg`
+          cover: `file://${newItem.cover}`
         };
       }
       return {
@@ -96,9 +94,7 @@ const player = (state = initialState, action) => {
           currentIndex: newIndex,
           isPlaying: true,
           src: `file://${newItem.path}`,
-          cover: `file://${newItem.path.replace(newItem.name, "")}/${
-            newItem.metadata.album
-          }.jpg`
+          cover: `file://${newItem.cover}`
         };
       }
       // We've reached end of playlist.

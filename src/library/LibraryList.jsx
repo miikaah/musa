@@ -11,12 +11,12 @@ class LibraryList extends Component {
   render() {
     const item = this.props.item;
     const isAlbum = Array.isArray(item.albums);
-    const isSongs = Array.isArray(item.songs);
+    const hasSongs = Array.isArray(item.songs);
     const isUndefinedItemName = item.name === "undefined";
-    if (isAlbum || isSongs) {
+    if (isAlbum || hasSongs) {
       return isUndefinedItemName ? (
-        item.songs.map(child => (
-          <LibraryItem key={child.name + "-" + Date.now()} item={child} />
+        item.songs.map(song => (
+          <LibraryItem key={song.name + "-" + Date.now()} item={song} />
         ))
       ) : (
         <ul className="library-list">
@@ -28,18 +28,28 @@ class LibraryList extends Component {
             {parseInt(item.date, 10) === 0 && (
               <FontAwesomeIcon className="caret-right" icon="caret-right" />
             )}
-            {isSongs && parseInt(item.date, 10) > 0
+            {hasSongs && parseInt(item.date, 10) > 0
               ? `${item.date} - ${item.name}`
               : item.name}
           </li>
           {this.state.showFolderItems &&
             (item.albums || item.songs).map(child => (
-              <LibraryList key={child.name + "-" + Date.now()} item={child} />
+              <LibraryList
+                key={child.name + "-" + Date.now()}
+                item={child}
+                cover={item.cover}
+              />
             ))}
         </ul>
       );
     }
-    return <LibraryItem key={item.name + "-" + Date.now()} item={item} />;
+    return (
+      <LibraryItem
+        key={item.name + "-" + Date.now()}
+        item={item}
+        cover={this.props.cover}
+      />
+    );
   }
 
   toggleFolder(event) {

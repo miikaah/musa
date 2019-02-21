@@ -8,17 +8,18 @@ UI for Musa-Electron.
 
 - feat: Show pause icon in playlist when paused
 - feat: Add progress meter for initial scan
-- fix: Bug where playback resumes from beginning after pausing
 - feat: Restart currently paused song from beginning by double clicking playlist item
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
 - feat: Persist playlist
 - feat: Multiple playlists
+- fix: A bug where Electron Helper starts using tons of CPU
 - feat: Add a view that recommends random music from library and shows them nicely
 
 #### Backend
 
 - feat: Parse year from date if the date is an ISO date
+- feat: Add path to cover for album
 - feat: Send progress info to frontend
 
 #### Playlist
@@ -50,9 +51,16 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 21.2.2019
+
+- feat: update new visual look
+- feat: Add path to album cover
+- fix: Bug where playback resumes from beginning after pausing (seems to be fixed)
+
 ##### 19.2.2019
 
 - feat: Persist volume to localStorage
+- feat: Start creating a new visual look
 
 ##### 18.2.2019
 

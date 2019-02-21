@@ -3,7 +3,7 @@ import LibraryList from "./LibraryList";
 import { isEqual, isEmpty, get, flatten } from "lodash-es";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toggleLibrary } from "../reducers/library.reducer";
+import { toggleLibrary, setAlbums } from "../reducers/library.reducer";
 import "./Library.scss";
 
 const electron = window.require("electron");
