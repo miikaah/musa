@@ -3,7 +3,7 @@ import Library from "./library/Library";
 import Player from "./player/Player";
 import Playlist from "./playlist/Playlist";
 import Toolbar from "./toolbar/Toolbar";
-import LeftMenu from "./left-menu/LeftMenu";
+// import LeftMenu from "./left-menu/LeftMenu";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
@@ -31,11 +31,14 @@ class App extends Component {
     return (
       <div className="app">
         <Toolbar />
-        <Library />
         <div className="app-wrapper">
-          <LeftMenu />
-          <div className="app-right">
+          <div className="app-left">
+            <Library />
+          </div>
+          <div className="app-center">
             <Player />
+          </div>
+          <div className="app-right">
             <Playlist />
           </div>
         </div>

@@ -8,14 +8,24 @@
   max-height: 100vmin;
   overflow: hidden;
   color: $musa-white;
+  user-select: none;
 
   &-wrapper {
     display: flex;
   }
 
+  &-left {
+    flex: 22.5%;
+    height: 100vmax;
+  }
+
+  &-center {
+    flex: 40%;
+    height: 100vmax;
+  }
+
   &-right {
-    flex: 75%;
-    padding: 0 16px;
+    flex: 37.5%;
   }
 
   button {

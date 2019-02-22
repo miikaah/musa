@@ -1,11 +1,11 @@
-@import '../scss/colors';
 @import '../scss/mixins';
 
 .playlist {
-  color: $musa-white;
-  padding: 0;
+  padding: 0 12px;
   margin: 0;
-  overflow: scroll;
+  min-height: 100vmin;
+  max-height: 100vmin;
+  overflow-y: scroll;
   font-size: .85rem;
 
   &-header {

@@ -124,18 +124,6 @@ class Library extends Component {
         }`}
       >
         <div className="library">
-          <div className="library-tools">
-            <button type="button" className="library-toggle-settings">
-              <FontAwesomeIcon icon="cog" />
-            </button>
-            <button
-              type="button"
-              className="library-toggle-library"
-              onClick={() => this.props.dispatch(toggleLibrary())}
-            >
-              <FontAwesomeIcon icon="bars" />
-            </button>
-          </div>
           {this.state.listing.map((item, index) => (
             <LibraryList key={item.name + "-" + index} item={item} />
           ))}

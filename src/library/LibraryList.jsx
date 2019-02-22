@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import LibraryItem from "./LibraryItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { flatten } from "lodash-es";
+import { addToPlaylist } from "../reducers/player.reducer";
 import "./LibraryList.scss";
 
 class LibraryList extends Component {
@@ -10,10 +13,11 @@ class LibraryList extends Component {
 
   render() {
     const item = this.props.item;
-    const isAlbum = Array.isArray(item.albums);
-    const hasSongs = Array.isArray(item.songs);
+    const dispatch = this.props.dispatch;
+    const isArtist = Array.isArray(item.albums);
+    const isAlbum = Array.isArray(item.songs);
     const isUndefinedItemName = item.name === "undefined";
-    if (isAlbum || hasSongs) {
+    if (isArtist || isAlbum) {
       return isUndefinedItemName ? (
         item.songs.map(song => (
           <LibraryItem key={song.name + "-" + Date.now()} item={song} />
@@ -24,11 +28,14 @@ class LibraryList extends Component {
             className="library-list-folder"
             key={item.name}
             onClick={this.toggleFolder.bind(this)}
+            onDoubleClick={() =>
+              this.addArtistOrAlbumToPlaylist(dispatch, item, isArtist, isAlbum)
+            }
           >
             {parseInt(item.date, 10) === 0 && (
               <FontAwesomeIcon className="caret-right" icon="caret-right" />
             )}
-            {hasSongs && parseInt(item.date, 10) > 0
+            {isAlbum && parseInt(item.date, 10) > 0
               ? `${item.date} - ${item.name}`
               : item.name}
           </li>
@@ -38,6 +45,7 @@ class LibraryList extends Component {
                 key={child.name + "-" + Date.now()}
                 item={child}
                 cover={item.cover}
+                dispatch={this.props.dispatch}
               />
             ))}
         </ul>
@@ -58,6 +66,20 @@ class LibraryList extends Component {
       showFolderItems: !this.state.showFolderItems
     });
   }
+
+  addArtistOrAlbumToPlaylist(dispatch, item, isArtist, isAlbum) {
+    if (isArtist)
+      return flatten(item.albums.map(a => a.songs)).forEach(song =>
+        this.props.dispatch(addToPlaylist(song))
+      );
+    if (isAlbum)
+      return item.songs.forEach(song =>
+        this.props.dispatch(addToPlaylist(song))
+      );
+  }
 }
 
-export default LibraryList;
+export default connect(
+  () => ({}),
+  dispatch => ({ dispatch })
+)(LibraryList);

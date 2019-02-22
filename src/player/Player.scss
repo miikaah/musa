@@ -15,7 +15,7 @@ audio {
 
   &-cover {
     display: block;
-    min-height: 400px;
+    height: 400px;
     margin: auto;
   }
 
@@ -24,7 +24,7 @@ audio {
   }
 
   &-seek {
-    width: 50%;
+    width: 40%;
     margin-right: 16px;
   }
 

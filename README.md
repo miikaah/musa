@@ -6,6 +6,7 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- feat: Persist volume to indexedDB since localStorage doesn't work
 - feat: Show pause icon in playlist when paused
 - feat: Add progress meter for initial scan
 - feat: Restart currently paused song from beginning by double clicking playlist item
