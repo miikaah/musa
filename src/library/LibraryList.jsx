@@ -16,6 +16,7 @@ class LibraryList extends Component {
     const dispatch = this.props.dispatch;
     const isArtist = Array.isArray(item.albums);
     const isAlbum = Array.isArray(item.songs);
+    const isRoot = this.props.isRoot;
     const isUndefinedItemName = item.name === "undefined";
     if (isArtist || isAlbum) {
       return isUndefinedItemName ? (
@@ -23,7 +24,7 @@ class LibraryList extends Component {
           <LibraryItem key={song.name + "-" + Date.now()} item={song} />
         ))
       ) : (
-        <ul className="library-list">
+        <ul className={`library-list ${isRoot ? "root" : ""}`}>
           <li
             className="library-list-folder"
             key={item.name}

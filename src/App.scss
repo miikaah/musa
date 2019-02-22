@@ -4,8 +4,8 @@
 .app {
   text-align: left;
   background-color: $musa-bg-color;
-  min-height: 100vmin;
-  max-height: 100vmin;
+  min-height: 100vh;
+  max-height: 100vh;
   overflow: hidden;
   color: $musa-white;
   user-select: none;
@@ -16,12 +16,10 @@
 
   &-left {
     flex: 22.5%;
-    height: 100vmax;
   }
 
   &-center {
     flex: 40%;
-    height: 100vmax;
   }
 
   &-right {

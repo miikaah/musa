@@ -3,13 +3,14 @@
 @import '../scss/mixins';
 
 .library {
-  min-height: 100vmin;
-  max-height: 100vmin;
-  overflow-y: scroll;
+  text-align: left;
+  margin-bottom: 80px;
 
-  &-container {
-    text-align: left;
+  &-root {
+    padding-left: 0;
   }
+
+  @include listOverflow;
 }
 
 .show {

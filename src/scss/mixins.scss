@@ -34,3 +34,16 @@
     margin-right: 12px;
   }
 }
+
+@mixin listOverflow {
+  max-height: 94vh;
+  overflow-y: scroll;
+
+  @media (max-height: 800px) {
+    max-height: 92vh;
+  }
+
+  @media (max-height: 600px) {
+    max-height: 90vh;
+  }
+}

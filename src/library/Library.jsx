@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import LibraryList from "./LibraryList";
 import { isEqual, isEmpty, get, flatten } from "lodash-es";
 import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toggleLibrary } from "../reducers/library.reducer";
 import "./Library.scss";
 
 const electron = window.require("electron");
@@ -118,16 +116,14 @@ class Library extends Component {
 
   render() {
     return (
-      <div
-        className={`library-container ${
-          this.props.isVisible ? "show" : "hide"
-        }`}
-      >
-        <div className="library">
-          {this.state.listing.map((item, index) => (
-            <LibraryList key={item.name + "-" + index} item={item} />
-          ))}
-        </div>
+      <div className={`library ${this.props.isVisible ? "show" : "hide"}`}>
+        {this.state.listing.map((item, index) => (
+          <LibraryList
+            key={item.name + "-" + index}
+            item={item}
+            isRoot={true}
+          />
+        ))}
       </div>
     );
   }
