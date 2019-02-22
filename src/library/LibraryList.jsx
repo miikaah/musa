@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import LibraryItem from "./LibraryItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { flatten } from "lodash-es";
+import { flatten, defaultTo } from "lodash-es";
 import { addToPlaylist } from "../reducers/player.reducer";
 import "./LibraryList.scss";
 
@@ -69,12 +69,16 @@ class LibraryList extends Component {
 
   addArtistOrAlbumToPlaylist(dispatch, item, isArtist, isAlbum) {
     if (isArtist)
-      return flatten(item.albums.map(a => a.songs)).forEach(song =>
-        this.props.dispatch(addToPlaylist(song))
+      return flatten(
+        item.albums.map(a =>
+          defaultTo(a.songs, []).map(s => ({ ...s, cover: a.cover }))
+        )
+      ).forEach(song =>
+        this.props.dispatch(addToPlaylist({ ...song, cover: song.cover }))
       );
     if (isAlbum)
       return item.songs.forEach(song =>
-        this.props.dispatch(addToPlaylist(song))
+        this.props.dispatch(addToPlaylist({ ...song, cover: item.cover }))
       );
   }
 }

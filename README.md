@@ -30,7 +30,6 @@ UI for Musa-Electron.
 
 #### Library
 
-- feat: Add multiple songs to playlist by selection
 - feat: Indicate album in library
 - feat: Cooler library list items
 - feat: Show / hide library
@@ -51,6 +50,11 @@ UI for Musa-Electron.
 - feat: Create packaging script
 
 ## Done
+
+##### 22.2.2019
+
+- feat: new layout
+- feat: Add all artist or album songs to playlist by double clicking
 
 ##### 21.2.2019
 
