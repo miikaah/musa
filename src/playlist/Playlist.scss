@@ -1,11 +1,16 @@
 @import '../scss/mixins';
+@import '../scss/colors';
+@import '../scss/variables';
 
 .playlist {
-  padding: 0 8px;
+  padding: 0 8px 0 0;
   margin: 0;
-  max-height: 94vh;
-  overflow-y: scroll;
   font-size: .85rem;
+  border: 0 solid lighten($musa-highlight-secondary, 10%);
+  border-left-width: 1px;
+  border-right-width: 3px;
+  background-color: $musa-bg-color;
+  box-shadow: -22px 10px 31px -16px rgba(0, 0, 0, .75);
 
   &-header {
     display: flex;
@@ -15,4 +20,10 @@
 
   @include listOverflow;
   @include tableCell;
+
+  @media screen and (max-width: $musa-breakpoint-lg) {
+    overflow: hidden;
+    border-left-width: 3px;
+    max-height: none;
+  }
 }

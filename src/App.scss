@@ -1,5 +1,6 @@
 @import './scss/colors';
 @import './scss/variables';
+@import './scss/mixins';
 
 .app {
   text-align: left;
@@ -12,18 +13,21 @@
 
   &-wrapper {
     display: flex;
+    flex-direction: row;
   }
 
   &-left {
-    flex: 22.5%;
+    // flex: 22.5%;
   }
 
   &-center {
     flex: 40%;
+    padding: 0;
+    background-color: darken($musa-bg-color, 5%);
   }
 
   &-right {
-    flex: 37.5%;
+    flex: 60%;
   }
 
   button {
@@ -33,4 +37,33 @@
     padding: 0;
     cursor: pointer;
   }
+
+  @media screen and (max-width: $musa-breakpoint-lg) {
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-left {
+      flex: 0%;
+    }
+
+    &-center {
+      flex: 100%;
+      padding: 0;
+      @include listOverflow;
+    }
+
+    &-right {
+      flex: 100%;
+    }
+  }
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
 }

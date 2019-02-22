@@ -47,13 +47,14 @@ UI for Musa-Electron.
 
 #### General
 
+- feat: Create an icon
 - feat: Create packaging script
 
 ## Done
 
 ##### 22.2.2019
 
-- feat: new layout
+- feat: new kickass layout
 - feat: Add all artist or album songs to playlist by double clicking
 
 ##### 21.2.2019

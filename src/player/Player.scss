@@ -1,11 +1,12 @@
 @import '../scss/colors';
+@import '../scss/variables';
 
 audio {
   display: none;
 }
 
 .player {
-  padding: 16px 0;
+  padding: 6px 0 12px 0;
 
   &-container {
     text-align: center;
@@ -15,7 +16,12 @@ audio {
 
   &-cover {
     display: block;
-    height: 400px;
+    height: auto;
+    width: auto;
+    min-height: 600px;
+    max-height: 600px;
+    min-width: 600px;
+    max-width: 600px;
     margin: auto;
   }
 
@@ -72,5 +78,9 @@ audio {
     min-width: 36px;
     display: inline-block;
     text-align: left;
+  }
+
+  @media screen and (max-width: $musa-breakpoint-lg) {
+    padding: 12px 0 8px;
   }
 }

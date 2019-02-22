@@ -1,22 +1,20 @@
-@import '../scss/colors';
-@import '../scss/variables';
 @import '../scss/mixins';
+@import '../scss/variables';
+@import '../scss/colors';
 
 .library {
   text-align: left;
-  margin-bottom: 80px;
+  border: 0 solid $musa-highlight;
+  border-left-width: 4px;
+  border-right-width: 1px;
+  background-color: $musa-bg-color;
+  box-shadow: 25px 10px 31px -17px rgba(0, 0, 0, .75);
+  position: absolute;
+  min-width: 400px;
 
   &-root {
     padding-left: 0;
   }
 
   @include listOverflow;
-}
-
-.show {
-  display: block;
-}
-
-.hide {
-  display: none;
 }

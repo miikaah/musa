@@ -76,7 +76,6 @@ class Player extends Component {
     return (
       <div className="player-container">
         <audio controls src={this.props.src} ref={this.player} />
-        <img alt="" className="player-cover" src={this.props.cover} />
         <div className="player">
           <button
             className="player-play-pause"
@@ -124,6 +123,7 @@ class Player extends Component {
             </span>
           </span>
         </div>
+        <img alt="" className="player-cover" src={this.props.cover} />
       </div>
     );
   }
