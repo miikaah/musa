@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Persist volume to indexedDB since localStorage doesn't work
 - feat: Show pause icon in playlist when paused
 - feat: Add progress meter for initial scan
 - feat: Restart currently paused song from beginning by double clicking playlist item
@@ -14,13 +13,13 @@ UI for Musa-Electron.
 - feat: Support replaygain album gain
 - feat: Persist playlist
 - feat: Multiple playlists
-- fix: A bug where Electron Helper starts using tons of CPU
+- fix: A bug where Electron Helper starts using tons of CPU (???)
+- feat: Search
 - feat: Add a view that recommends random music from library and shows them nicely
 
 #### Backend
 
 - feat: Parse year from date if the date is an ISO date
-- feat: Add path to cover for album
 - feat: Send progress info to frontend
 
 #### Playlist
@@ -32,7 +31,6 @@ UI for Musa-Electron.
 
 - feat: Indicate album in library
 - feat: Cooler library list items
-- feat: Show / hide library
 
 #### Player
 
@@ -52,8 +50,13 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 26.2.2019
+
+- feat: improve album cover scanning
+
 ##### 22.2.2019
 
+- feat: Show / hide library
 - feat: new kickass layout
 - feat: Add all artist or album songs to playlist by double clicking
 

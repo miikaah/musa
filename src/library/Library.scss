@@ -11,6 +11,7 @@
   box-shadow: 25px 10px 31px -17px rgba(10, 10, 10, .75);
   position: absolute;
   min-width: 400px;
+  z-index: 10;
 
   &-root {
     padding-left: 0;

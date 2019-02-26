@@ -123,7 +123,9 @@ class Player extends Component {
             </span>
           </span>
         </div>
-        <img alt="" className="player-cover" src={this.props.cover} />
+        <div className="player-cover-wrapper">
+          <img alt="" className="player-cover" src={this.props.cover} />
+        </div>
       </div>
     );
   }

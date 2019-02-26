@@ -23,8 +23,9 @@
   @include tableCell;
 
   @media screen and (max-width: $musa-breakpoint-lg) {
-    overflow: hidden;
+    overflow-y: scroll;
     border-left-width: 3px;
     max-height: none;
+    height: auto;
   }
 }
