@@ -14,6 +14,7 @@ import {
   faCog
 } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
+import { get, defaultTo } from "lodash-es";
 import "./App.scss";
 
 library.add(
@@ -40,7 +41,13 @@ class App extends Component {
 
   render() {
     return (
-      <div className="app">
+      <div
+        className="app"
+        style={{
+          backgroundColor: `rgb(${get(this.props.bgSwatch, "rgb", "#21252b")})`,
+          color: defaultTo(this.props.color, "#fff")
+        }}
+      >
         <Toolbar />
         <div>
           {this.state.windowWidth > 1279 ? (
@@ -78,7 +85,9 @@ class App extends Component {
 
 export default connect(
   state => ({
-    isLibraryVisible: state.library.isVisible
+    isLibraryVisible: state.library.isVisible,
+    bgSwatch: state.palette.backgroundSwatch,
+    color: state.palette.color
   }),
   dispatch => ({ dispatch })
 )(App);

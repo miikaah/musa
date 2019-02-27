@@ -116,7 +116,21 @@ class Library extends Component {
 
   render() {
     return (
-      <div className={`library ${this.props.isVisible ? "show" : "hide"}`}>
+      <div
+        className={`library ${this.props.isVisible ? "show" : "hide"}`}
+        style={{
+          backgroundColor: `rgb(${get(
+            this.props.backgroundSwatch,
+            "rgb",
+            "#21252b"
+          )})`,
+          borderColor: `rgb(${get(
+            this.props.primaryHighlightSwatch,
+            "rgb",
+            "#753597"
+          )})`
+        }}
+      >
         {this.state.listing.map((item, index) => (
           <LibraryList
             key={item.name + "-" + index}
@@ -131,7 +145,9 @@ class Library extends Component {
 
 export default connect(
   state => ({
-    isVisible: state.library.isVisible
+    isVisible: state.library.isVisible,
+    backgroundSwatch: state.palette.backgroundSwatch,
+    primaryHighlightSwatch: state.palette.primaryHighlightSwatch
   }),
   dispatch => ({ dispatch })
 )(Library);

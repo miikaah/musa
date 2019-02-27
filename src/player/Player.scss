@@ -10,7 +10,6 @@ audio {
 
   &-container {
     text-align: center;
-    color: $musa-white;
     font-size: .8rem;
   }
 
@@ -76,8 +75,6 @@ audio {
   &-play-pause,
   &-volume-btn {
     font-size: 1rem;
-    color: $musa-white;
-    background-color: $musa-bg-color;
     cursor: pointer;
     border: 0;
     padding: 0;
