@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- fix: A bug where Electron Helper starts using tons of CPU (???)
 - feat: Show pause icon in playlist when paused
 - feat: Add progress meter for initial scan
 - feat: Restart currently paused song from beginning by double clicking playlist item
@@ -49,6 +48,18 @@ UI for Musa-Electron.
 - feat: Create packaging script
 
 ## Done
+
+##### 28.2.2019
+
+- fix: A bug where Electron Helper starts using tons of CPU.
+
+```
+It was caused by chokidar, not being able to use the native FSEvents
+module for Mac and it falling back to polling.
+See: https://github.com/paulmillr/chokidar/issues/447
+
+Fixed the issue by rebuilding fsevents with electron-rebuild.
+```
 
 ##### 27.2.2019
 
