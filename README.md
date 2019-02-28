@@ -6,6 +6,7 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- fix: A bug where Electron Helper starts using tons of CPU (???)
 - feat: Show pause icon in playlist when paused
 - feat: Add progress meter for initial scan
 - feat: Restart currently paused song from beginning by double clicking playlist item
@@ -13,7 +14,6 @@ UI for Musa-Electron.
 - feat: Support replaygain album gain
 - feat: Persist playlist
 - feat: Multiple playlists
-- fix: A bug where Electron Helper starts using tons of CPU (???)
 - feat: Search
 - feat: Add a view that recommends random music from library and shows them nicely
 
