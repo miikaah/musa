@@ -50,6 +50,11 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 27.2.2019
+
+- feat: start implementing color scheme by album cover
+- fix: dont blow up if folder has no songs + see if not recreating TaskPool all the time helps with Electron CPU usage
+
 ##### 26.2.2019
 
 - feat: improve album cover scanning

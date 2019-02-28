@@ -28,6 +28,7 @@ import "./Player.scss";
 const VOLUME_DEFAULT = 50;
 const VOLUME_MUTED = 0;
 const VOLUME_STEP = 5;
+const SEEK_REFRESH_RATE = 500;
 
 const KEYS = {
   Space: 32,
@@ -79,7 +80,7 @@ class Player extends Component {
           this.props.dispatch(
             setCurrentTime(this.getDurationOrTime("currentTime"))
           );
-        }, 10)
+        }, SEEK_REFRESH_RATE)
       });
       this.player.current.play();
     });
@@ -276,13 +277,7 @@ class Player extends Component {
   seek(event) {
     clearInterval(this.state.seekUpdater);
     this.player.current.currentTime = event.target.value;
-    this.setState({
-      seekUpdater: setInterval(() => {
-        this.props.dispatch(
-          setCurrentTime(this.getDurationOrTime("currentTime"))
-        );
-      }, 10)
-    });
+    this.setSeekUpdater();
   }
 
   playOrPause() {
@@ -290,16 +285,28 @@ class Player extends Component {
     if (this.props.isPlaying) {
       this.player.current.pause();
       this.props.dispatch(pause());
+      clearInterval(this.state.seekUpdater);
       return;
     }
     if (!isEmpty(this.props.src)) {
       this.player.current.currentTime = this.props.currentTime; // See if this fixes pause->play starting from beginning
       this.player.current.play();
       this.props.dispatch(play());
+      this.setSeekUpdater();
       return;
     }
     // Dispatch first play action that gets the song as data url from backend
     this.props.dispatch(play());
+  }
+
+  setSeekUpdater() {
+    this.setState({
+      seekUpdater: setInterval(() => {
+        this.props.dispatch(
+          setCurrentTime(this.getDurationOrTime("currentTime"))
+        );
+      }, SEEK_REFRESH_RATE)
+    });
   }
 
   formatCurrentTime(duration) {
