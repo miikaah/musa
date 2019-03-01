@@ -51,7 +51,8 @@ UI for Musa-Electron.
 
 ##### 28.2.2019
 
-- fix: A bug where Electron Helper starts using tons of CPU.
+- feat: Add currently playing song info to document title
+- fix: A bug where Electron Helper starts using tons of CPU
 
 ```
 It was caused by chokidar, not being able to use the native FSEvents
@@ -60,6 +61,8 @@ See: https://github.com/paulmillr/chokidar/issues/447
 
 Fixed the issue by rebuilding fsevents with electron-rebuild.
 ```
+
+- fix: Don't blow up if song metadata can't be read
 
 ##### 27.2.2019
 

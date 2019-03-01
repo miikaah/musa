@@ -11,6 +11,7 @@ import {
   isNaN,
   isEmpty,
   isNumber,
+  isNull,
   defaultTo,
   sortBy,
   some
@@ -71,8 +72,8 @@ class Player extends Component {
         value: defaultTo(localStorage.getItem("volume"), VOLUME_DEFAULT)
       }
     });
+
     this.player.current.addEventListener("loadeddata", () => {
-      console.log("loadeddata");
       this.setRealVolume();
       this.setState({
         duration: this.getDurationOrTime("duration"),
@@ -83,8 +84,11 @@ class Player extends Component {
         }, SEEK_REFRESH_RATE)
       });
       this.player.current.play();
+      this.setDocumentTitle();
     });
+
     this.player.current.addEventListener("ended", () => {
+      document.title = "Musa";
       this.props.dispatch(playNext());
     });
 
@@ -145,6 +149,14 @@ class Player extends Component {
       this.props.dispatch(setSecondaryHighlightSwatch(secondary));
       this.props.dispatch(setTextColor(color));
     });
+  }
+
+  setDocumentTitle() {
+    const metadata = get(this.props, "currentItem.metadata", null);
+    if (isNull(metadata)) return;
+    document.title = `${metadata.artist} - [${metadata.album} #${
+      metadata.track
+    }] - ${metadata.title} [Musa]`;
   }
 
   isVibrantCover(mostPopularSwatch) {

@@ -20,6 +20,7 @@ audio {
     margin: auto;
     max-height: 800px;
     max-width: 800px;
+    margin-bottom: 25px;
 
     &-wrapper {
       min-height: 600px;
@@ -93,6 +94,6 @@ audio {
   }
 
   @media screen and (max-width: $musa-breakpoint-lg) {
-    padding: 12px 0 8px;
+    padding: 10px 0 16px;
   }
 }
