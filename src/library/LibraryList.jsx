@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import Radium from "radium";
 import { connect } from "react-redux";
 import LibraryItem from "./LibraryItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { flatten, defaultTo } from "lodash-es";
+import { flatten, defaultTo, get } from "lodash-es";
 import { addToPlaylist } from "../reducers/player.reducer";
 import "./LibraryList.scss";
 
@@ -12,6 +13,16 @@ class LibraryList extends Component {
   };
 
   render() {
+    const styles = {
+      ":hover": {
+        backgroundColor: `rgb(${get(
+          this.props.primaryHighlight,
+          "rgb",
+          "#753597"
+        )})`
+      }
+    };
+
     const item = this.props.item;
     const dispatch = this.props.dispatch;
     const isArtist = Array.isArray(item.albums);
@@ -32,6 +43,7 @@ class LibraryList extends Component {
             onDoubleClick={() =>
               this.addArtistOrAlbumToPlaylist(dispatch, item, isArtist, isAlbum)
             }
+            style={styles}
           >
             {parseInt(item.date, 10) === 0 && (
               <FontAwesomeIcon className="caret-right" icon="caret-right" />
@@ -85,6 +97,8 @@ class LibraryList extends Component {
 }
 
 export default connect(
-  () => ({}),
+  state => ({
+    primaryHighlight: state.palette.primaryHighlightSwatch
+  }),
   dispatch => ({ dispatch })
-)(LibraryList);
+)(Radium(LibraryList));

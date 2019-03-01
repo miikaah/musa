@@ -6,11 +6,11 @@ audio {
 }
 
 .player {
-  padding: 6px 0 12px 0;
-
   &-container {
     text-align: center;
     font-size: .8rem;
+    padding: 6px;
+    width: 600px;
   }
 
   &-cover {
@@ -91,9 +91,5 @@ audio {
     min-width: 36px;
     display: inline-block;
     text-align: left;
-  }
-
-  @media screen and (max-width: $musa-breakpoint-lg) {
-    padding: 10px 0 16px;
   }
 }

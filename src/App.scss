@@ -7,6 +7,7 @@
   background-color: $musa-bg-color;
   min-height: 100vh;
   max-height: 100vh;
+  min-width: 600px;
   overflow: hidden;
   color: $musa-white;
   user-select: none;
@@ -23,7 +24,6 @@
   &-center {
     flex: 40%;
     padding: 0;
-    background-color: darken($musa-bg-color, 3%);
     height: 100vh;
   }
 

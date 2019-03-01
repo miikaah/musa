@@ -28,14 +28,6 @@
   }
 }
 
-@mixin toolbarButton {
-  button {
-    font-size: 1.4rem;
-    margin-right: 12px;
-    outline: none;
-  }
-}
-
 @mixin listOverflow {
   max-height: 95vh;
   overflow-y: scroll;

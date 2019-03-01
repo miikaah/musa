@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Library from "./library/Library";
-import Player from "./player/Player";
 import Playlist from "./playlist/Playlist";
 import Toolbar from "./toolbar/Toolbar";
+import Cover from "./cover/Cover";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
@@ -58,7 +58,7 @@ class App extends Component {
                 <Library />
               </div>
               <div className="app-center">
-                <Player />
+                <Cover />
               </div>
               <div className="app-right">
                 <Playlist />
@@ -72,7 +72,7 @@ class App extends Component {
                 <Library />
               </div>
               <div className="app-center">
-                <Player />
+                <Cover />
                 <Playlist />
               </div>
             </div>

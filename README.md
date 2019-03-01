@@ -55,7 +55,7 @@ UI for Musa-Electron.
 - fix: A bug where Electron Helper starts using tons of CPU
 
 ```
-It was caused by chokidar, not being able to use the native FSEvents
+It was caused by Chokidar not being able to use the native FSEvents
 module for Mac and it falling back to polling.
 See: https://github.com/paulmillr/chokidar/issues/447
 
