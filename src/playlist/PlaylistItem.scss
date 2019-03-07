@@ -4,10 +4,12 @@
   justify-content: center;
 
   &:hover {
-    background-color: var(--color-secondary-highlight);
+    background-color: var(--color-primary-highlight);
+    color: var(--color-typography-primary);
   }
 }
 
 .active {
-  background-color: var(--color-secondary-highlight);
+  background-color: var(--color-primary-highlight);
+  color: var(--color-typography-primary);
 }

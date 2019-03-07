@@ -54,6 +54,14 @@ class App extends Component {
       Colors.Secondary
     );
     document.body.style.setProperty("--color-typography", Colors.Typography);
+    document.body.style.setProperty(
+      "--color-typography-primary",
+      Colors.Typography
+    );
+    document.body.style.setProperty(
+      "--color-typography-secondary",
+      Colors.Typography
+    );
   }
 
   render() {

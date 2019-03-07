@@ -5,13 +5,13 @@ import {
   setBackgroundSwatch,
   setPrimaryHighlightSwatch,
   setSecondaryHighlightSwatch,
-  setTextColor
+  setTextColors
 } from "../reducers/palette.reducer";
 import Palette from "img-palette";
 import { Colors } from "../App.jsx";
 import "./Cover.scss";
 
-class Player extends Component {
+class Cover extends Component {
   constructor(props) {
     super(props);
     this.cover = React.createRef();
@@ -20,53 +20,73 @@ class Player extends Component {
   componentDidMount() {
     this.cover.current.addEventListener("load", event => {
       const palette = new Palette(event.target);
-      console.log(palette);
       const mostPopularSwatch = palette.swatches.find(
         s => s.population === palette.highestPopulation
       );
-      console.log("isVibrant", this.isVibrantCover(mostPopularSwatch));
       const swatchesByPopulationDesc = sortBy(
         palette.swatches,
         s => -s.population
       );
-      let bg,
+      console.log(palette);
+      console.log("isVibrant", this.isVibrantCover(mostPopularSwatch));
+
+      // Defualts are for dark covers
+      let bg = mostPopularSwatch,
         primary,
         secondary,
-        color = Colors.Typography;
-      if (this.isVibrantCover(mostPopularSwatch)) {
-        bg = mostPopularSwatch;
-        console.log(this.contrast([255, 255, 255], bg.rgb) < 3.5);
-        if (this.contrast([255, 255, 255], bg.rgb) < 3.4)
-          color = Colors.TypographyLight;
-      } else {
-        const primarySwatches = [
+        color = Colors.Typography,
+        primaryColor = Colors.Typography,
+        secondaryColor = Colors.Typography,
+        primarySwatches = [
           defaultTo(palette.vibrantSwatch, {}),
           defaultTo(palette.lightVibrantSwatch, {}),
           defaultTo(palette.lightMutedSwatch, {})
-        ];
-        const secondarySwatches = [
+        ],
+        secondarySwatches = [
           defaultTo(palette.mutedSwatch, {}),
           defaultTo(palette.darkMutedSwatch, {})
         ];
-        const primaryPop = Math.max.apply(
-          Math,
-          primarySwatches.map(s => defaultTo(s.population, 0))
-        );
-        const secondaryPop = Math.max.apply(
-          Math,
-          secondarySwatches.map(s => defaultTo(s.population, 0))
-        );
-        bg = mostPopularSwatch;
-        primary = defaultTo(
-          swatchesByPopulationDesc.find(s => s.population === primaryPop),
-          swatchesByPopulationDesc[1]
-        );
-        secondary = defaultTo(
-          swatchesByPopulationDesc.find(s => s.population === secondaryPop),
-          swatchesByPopulationDesc[2]
-        );
+
+      // Set different colors for a light cover
+      if (this.isVibrantCover(mostPopularSwatch)) {
+        console.log(this.contrast([255, 255, 255], bg.rgb) < 3.4);
+        if (this.contrast([255, 255, 255], bg.rgb) < 3.4)
+          color = Colors.TypographyLight;
+        primarySwatches = [
+          defaultTo(palette.vibrantSwatch, {}),
+          defaultTo(palette.lightVibrantSwatch, {})
+        ];
+        secondarySwatches = [
+          defaultTo(palette.lightVibrantSwatch, {}),
+          defaultTo(palette.lightMutedSwatch, {})
+        ];
       }
+
+      const primaryPop = Math.max.apply(
+        Math,
+        primarySwatches.map(s => defaultTo(s.population, 0))
+      );
+      const secondaryPop = Math.max.apply(
+        Math,
+        secondarySwatches.map(s => defaultTo(s.population, 0))
+      );
+      primary = defaultTo(
+        swatchesByPopulationDesc.find(s => s.population === primaryPop),
+        swatchesByPopulationDesc[1]
+      );
+      secondary = defaultTo(
+        swatchesByPopulationDesc.find(s => s.population === secondaryPop),
+        primary
+      );
       console.log("ratio: ", this.contrast([255, 255, 255], bg.rgb));
+      console.log("ratio: ", this.contrast([255, 255, 255], primary.rgb));
+      console.log("ratio: ", this.contrast([255, 255, 255], secondary.rgb));
+
+      if (this.contrast([255, 255, 255], primary.rgb) < 2.6)
+        primaryColor = Colors.TypographyLight;
+      if (this.contrast([255, 255, 255], secondary.rgb) < 2.6)
+        secondaryColor = Colors.TypographyLight;
+
       // console.log(swatchesByPopulationDesc)
       // console.log(mostPopularSwatch)
       console.log(primary);
@@ -74,7 +94,7 @@ class Player extends Component {
       this.props.dispatch(setBackgroundSwatch(bg));
       this.props.dispatch(setPrimaryHighlightSwatch(primary));
       this.props.dispatch(setSecondaryHighlightSwatch(secondary));
-      this.props.dispatch(setTextColor(color));
+      this.props.dispatch(setTextColors([color, primaryColor, secondaryColor]));
     });
   }
 
@@ -117,4 +137,4 @@ export default connect(
     bgSwatch: state.palette.backgroundSwatch
   }),
   dispatch => ({ dispatch })
-)(Player);
+)(Cover);

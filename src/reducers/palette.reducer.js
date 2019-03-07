@@ -21,10 +21,12 @@ export const setSecondaryHighlightSwatch = swatch => ({
   swatch
 });
 
-export const SET_TEXT_COLOR = "MUSA/PALETTE/SET_TEXT_COLOR";
-export const setTextColor = color => ({
-  type: SET_TEXT_COLOR,
-  color
+export const SET_TEXT_COLORS = "MUSA/PALETTE/SET_TEXT_COLORS";
+export const setTextColors = colors => ({
+  type: SET_TEXT_COLORS,
+  color: colors[0],
+  primaryTextColor: colors[1],
+  secondaryTextColor: colors[2]
 });
 
 const initialState = {
@@ -66,10 +68,18 @@ const palette = (state = initialState, action) => {
         secondaryHighlightSwatch: action.swatch
       };
     }
-    case SET_TEXT_COLOR: {
+    case SET_TEXT_COLORS: {
       document.body.style.setProperty(
         "--color-typography",
         get(action, "color", Colors.Typography)
+      );
+      document.body.style.setProperty(
+        "--color-typography-primary",
+        get(action, "primaryTextColor", Colors.Typography)
+      );
+      document.body.style.setProperty(
+        "--color-typography-secondary",
+        get(action, "secondaryTextColor", Colors.Typography)
       );
       return {
         ...state,
