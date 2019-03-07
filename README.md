@@ -49,6 +49,10 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 7.3.2019
+
+- refactor: replace Radium with CSS Variables
+
 ##### 1.3.2019
 
 - refactor: separate cover to its own component
