@@ -49,6 +49,11 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 1.3.2019
+
+- refactor: separate cover to its own component
+- refactor: move player to toolbar
+
 ##### 28.2.2019
 
 - feat: Add currently playing song info to document title

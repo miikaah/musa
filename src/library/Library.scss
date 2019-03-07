@@ -1,13 +1,12 @@
 @import '../scss/mixins';
 @import '../scss/variables';
-@import '../scss/colors';
 
 .library {
   text-align: left;
-  border: 0 solid $musa-highlight;
+  border: 0 solid var(--color-primary-highlight);
   border-left-width: 4px;
   border-right-width: 1px;
-  background-color: $musa-bg-color;
+  background-color: var(--color-bg);
   box-shadow: 25px 10px 31px -17px rgba(10, 10, 10, .75);
   position: absolute;
   min-width: 400px;

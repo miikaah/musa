@@ -1,15 +1,13 @@
-@import '../scss/colors';
-
 .playlist-item {
   cursor: pointer;
   display: flex;
   justify-content: center;
 
   &:hover {
-    background-color: $musa-highlight-secondary;
+    background-color: var(--color-secondary-highlight);
   }
 }
 
 .active {
-  background-color: $musa-highlight-secondary;
+  background-color: var(--color-secondary-highlight);
 }

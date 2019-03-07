@@ -14,7 +14,6 @@ import {
   faCog
 } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
-import { get, defaultTo } from "lodash-es";
 import "./App.scss";
 
 library.add(
@@ -27,6 +26,14 @@ library.add(
   faCog
 );
 
+export const Colors = {
+  Bg: "#21252b",
+  Primary: "#753597",
+  Secondary: "#21737e",
+  Typography: "#fff",
+  TypographyLight: "#000"
+};
+
 class App extends Component {
   state = {
     windowWidth: 1600
@@ -37,17 +44,21 @@ class App extends Component {
     window.addEventListener("resize", () =>
       this.setState({ windowWidth: window.innerWidth })
     );
+    document.body.style.setProperty("--color-bg", Colors.Bg);
+    document.body.style.setProperty(
+      "--color-primary-highlight",
+      Colors.Primary
+    );
+    document.body.style.setProperty(
+      "--color-secondary-highlight",
+      Colors.Secondary
+    );
+    document.body.style.setProperty("--color-typography", Colors.Typography);
   }
 
   render() {
     return (
-      <div
-        className="app"
-        style={{
-          backgroundColor: `rgb(${get(this.props.bgSwatch, "rgb", "#21252b")})`,
-          color: defaultTo(this.props.color, "#fff")
-        }}
-      >
+      <div className="app">
         <Toolbar />
         <div>
           {this.state.windowWidth > 1279 ? (
@@ -85,9 +96,7 @@ class App extends Component {
 
 export default connect(
   state => ({
-    isLibraryVisible: state.library.isVisible,
-    bgSwatch: state.palette.backgroundSwatch,
-    color: state.palette.color
+    isLibraryVisible: state.library.isVisible
   }),
   dispatch => ({ dispatch })
 )(App);

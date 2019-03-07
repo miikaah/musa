@@ -1,15 +1,14 @@
 @import '../scss/mixins';
-@import '../scss/colors';
 @import '../scss/variables';
 
 .playlist {
   padding: 0 8px 0 0;
   margin: 0;
   font-size: .85rem;
-  border: 0 solid $musa-highlight-secondary;
+  border: 0 solid var(--color-secondary-highlight);
   border-left-width: 1px;
   border-right-width: 3px;
-  background-color: $musa-bg-color;
+  background-color: var(--color-bg);
   box-shadow: -22px 10px 31px -16px rgba(10, 10, 10, .75);
   height: 100vh;
 

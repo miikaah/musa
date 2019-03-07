@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { removeFromPlaylist } from "../reducers/player.reducer";
 import PlaylistItem from "./PlaylistItem";
-import { get } from "lodash-es";
 import "./Playlist.scss";
 
 const BACKSPACE = 8;
@@ -28,21 +27,7 @@ class Playlist extends Component {
 
   render() {
     return (
-      <ul
-        className="playlist"
-        style={{
-          backgroundColor: `rgb(${get(
-            this.props.backgroundSwatch,
-            "rgb",
-            "#21252b"
-          )})`,
-          borderColor: `rgb(${get(
-            this.props.secondaryHighlightSwatch,
-            "rgb",
-            "#21737e"
-          )})`
-        }}
-      >
+      <ul className="playlist">
         <li className="playlist-header">
           <div className="cell cell-xxs" />
           <div className="cell cell-sm left">Artist</div>
@@ -68,9 +53,7 @@ class Playlist extends Component {
 
 export default connect(
   state => ({
-    playlist: state.player.items,
-    backgroundSwatch: state.palette.backgroundSwatch,
-    secondaryHighlightSwatch: state.palette.secondaryHighlightSwatch
+    playlist: state.player.items
   }),
   dispatch => ({ dispatch })
 )(Playlist);

@@ -1,15 +1,14 @@
-@import './scss/colors';
 @import './scss/variables';
 @import './scss/mixins';
 
 .app {
   text-align: left;
-  background-color: $musa-bg-color;
+  background-color: var(--color-bg);
   min-height: 100vh;
   max-height: 100vh;
   min-width: 600px;
   overflow: hidden;
-  color: $musa-white;
+  color: var(--color-typography);
   user-select: none;
 
   &-wrapper {

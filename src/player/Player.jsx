@@ -199,7 +199,8 @@ class Player extends Component {
       return;
     }
     if (!isEmpty(this.props.src)) {
-      this.player.current.currentTime = this.props.currentTime; // See if this fixes pause->play starting from beginning
+      // BUGFIX: pause->play starting from beginning
+      this.player.current.currentTime = this.props.currentTime;
       this.player.current.play();
       this.props.dispatch(play());
       this.setSeekUpdater();

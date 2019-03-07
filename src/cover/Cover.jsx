@@ -8,6 +8,7 @@ import {
   setTextColor
 } from "../reducers/palette.reducer";
 import Palette from "img-palette";
+import { Colors } from "../App.jsx";
 import "./Cover.scss";
 
 class Player extends Component {
@@ -31,11 +32,12 @@ class Player extends Component {
       let bg,
         primary,
         secondary,
-        color = "#fff";
+        color = Colors.Typography;
       if (this.isVibrantCover(mostPopularSwatch)) {
         bg = mostPopularSwatch;
         console.log(this.contrast([255, 255, 255], bg.rgb) < 3.5);
-        if (this.contrast([255, 255, 255], bg.rgb) < 3.4) color = "#000";
+        if (this.contrast([255, 255, 255], bg.rgb) < 3.4)
+          color = Colors.TypographyLight;
       } else {
         const primarySwatches = [
           defaultTo(palette.vibrantSwatch, {}),
@@ -67,8 +69,8 @@ class Player extends Component {
       console.log("ratio: ", this.contrast([255, 255, 255], bg.rgb));
       // console.log(swatchesByPopulationDesc)
       // console.log(mostPopularSwatch)
-      // console.log(primary)
-      // console.log(secondary)
+      console.log(primary);
+      console.log(secondary);
       this.props.dispatch(setBackgroundSwatch(bg));
       this.props.dispatch(setPrimaryHighlightSwatch(primary));
       this.props.dispatch(setSecondaryHighlightSwatch(secondary));
