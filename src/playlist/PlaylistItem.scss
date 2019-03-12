@@ -9,7 +9,8 @@
   }
 }
 
-.active {
+.active,
+.selected {
   background-color: var(--color-primary-highlight);
   color: var(--color-typography-primary);
 }

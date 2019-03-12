@@ -6,9 +6,10 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- feat: Make sure highlights have enough contrast compared to background and colors
+- feat: Restart currently paused song from beginning by double clicking playlist item
 - feat: Show pause icon in playlist when paused
 - feat: Add progress meter for initial scan
-- feat: Restart currently paused song from beginning by double clicking playlist item
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
 - feat: Persist playlist
@@ -23,11 +24,11 @@ UI for Musa-Electron.
 
 #### Playlist
 
-- feat: Remove multiple songs from playlist
 - feat: Rearrange playlist items
 
 #### Library
 
+- feat: Drag to specific index in playlist
 - feat: Indicate album in library
 - feat: Cooler library list items
 
@@ -42,6 +43,10 @@ UI for Musa-Electron.
 - feat: Customise music library folder path
 - feat: Set Replaygain (track / album / off)
 
+#### Themes
+
+- feat: Create a theme library
+
 #### General
 
 - feat: Create an icon
@@ -51,6 +56,8 @@ UI for Musa-Electron.
 
 ##### 12.3.2019
 
+- feat: Watch for image file changes as well
+- feat: Select multiple songs in playlist
 - feat: Close library when clicking outside of it
 - feat: Drag & drop from library to playlist
 

@@ -7,18 +7,18 @@ import "./PlaylistItem.scss";
 
 class PlaylistItem extends Component {
   render() {
+    const classes = this.getClassNames();
     return (
       <li
-        className={
-          this.props.index === this.props.activeIndex
-            ? "playlist-item active"
-            : "playlist-item"
-        }
+        className={classes}
         onDoubleClick={() => {
           this.props.dispatch(playItem(this.props.item, this.props.index));
           this.props.onSetActiveIndex(this.props.index);
         }}
         onClick={() => this.props.onSetActiveIndex(this.props.index)}
+        onMouseOver={() => this.props.onMouseOverItem(this.props.index)}
+        onMouseDown={() => this.props.onMouseDownItem(this.props.index)}
+        onMouseUp={() => this.props.onMouseUpItem(this.props.index)}
       >
         <div className="cell cell-xxs">
           {this.props.index === this.props.currentIndex &&
@@ -48,6 +48,16 @@ class PlaylistItem extends Component {
         </div>
       </li>
     );
+  }
+
+  getClassNames() {
+    let className = "playlist-item";
+    const start = Math.min(this.props.startIndex, this.props.endIndex);
+    const end = Math.max(this.props.startIndex, this.props.endIndex);
+    if (this.props.index === this.props.activeIndex) className += " active";
+    if (this.props.index >= start && this.props.index <= end)
+      className += " selected";
+    return className;
   }
 }
 
