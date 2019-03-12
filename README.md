@@ -51,6 +51,7 @@ UI for Musa-Electron.
 
 ##### 12.3.2019
 
+- feat: Close library when clicking outside of it
 - feat: Drag & drop from library to playlist
 
 ##### 7.3.2019

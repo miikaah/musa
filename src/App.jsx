@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import { addToPlaylist } from "./reducers/player.reducer";
+import { hideLibrary } from "./reducers/library.reducer";
 import "./App.scss";
 
 library.add(
@@ -81,6 +82,7 @@ class App extends Component {
                 className="app-center"
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
+                onClick={() => this.props.dispatch(hideLibrary())}
               >
                 <Cover />
               </div>
@@ -88,6 +90,7 @@ class App extends Component {
                 className="app-right"
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
+                onClick={() => this.props.dispatch(hideLibrary())}
               >
                 <Playlist />
               </div>
@@ -103,6 +106,7 @@ class App extends Component {
                 className="app-center"
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
+                onClick={() => this.props.dispatch(hideLibrary())}
               >
                 <Cover />
                 <Playlist />

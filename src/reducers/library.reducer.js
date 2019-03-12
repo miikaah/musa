@@ -3,6 +3,11 @@ export const toggleLibrary = () => ({
   type: TOGGLE
 });
 
+export const HIDE = "MUSA/LIBRARY/HIDE";
+export const hideLibrary = () => ({
+  type: HIDE
+});
+
 const initialState = {
   isVisible: true
 };
@@ -13,6 +18,12 @@ const library = (state = initialState, action) => {
       return {
         ...state,
         isVisible: !state.isVisible
+      };
+    }
+    case HIDE: {
+      return {
+        ...state,
+        isVisible: false
       };
     }
     default:
