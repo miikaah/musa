@@ -49,6 +49,10 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 12.3.2019
+
+- feat: Drag & drop from library to playlist
+
 ##### 7.3.2019
 
 - refactor: replace Radium with CSS Variables

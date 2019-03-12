@@ -12,11 +12,18 @@ class LibraryItem extends Component {
       <li
         key={name + "-" + Date.now()}
         className="library-item"
+        draggable
+        onDragStart={event => this.onDragStart(event, item)}
         onDoubleClick={() => this.props.dispatch(addToPlaylist(item))}
       >
         {get(item, "metadata.title", item.name)}
       </li>
     );
+  }
+
+  onDragStart(event, item) {
+    event.dataTransfer.setData("text/plain", JSON.stringify(item));
+    event.stopPropagation();
   }
 }
 

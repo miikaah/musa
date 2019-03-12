@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import LibraryItem from "./LibraryItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { flatten, defaultTo } from "lodash-es";
-import { addToPlaylist } from "../reducers/player.reducer";
 import "./LibraryList.scss";
 
 class LibraryList extends Component {
@@ -13,7 +12,6 @@ class LibraryList extends Component {
 
   render() {
     const item = this.props.item;
-    const dispatch = this.props.dispatch;
     const isArtist = Array.isArray(item.albums);
     const isAlbum = Array.isArray(item.songs);
     const isRoot = this.props.isRoot;
@@ -24,14 +22,17 @@ class LibraryList extends Component {
           <LibraryItem key={song.name + "-" + Date.now()} item={song} />
         ))
       ) : (
-        <ul className={`library-list ${isRoot ? "root" : ""}`}>
+        <ul
+          className={`library-list ${isRoot ? "root" : ""}`}
+          draggable
+          onDragStart={event =>
+            this.onDragStart(event, item, isArtist, isAlbum)
+          }
+        >
           <li
             className="library-list-folder"
             key={item.name}
             onClick={this.toggleFolder.bind(this)}
-            onDoubleClick={() =>
-              this.addArtistOrAlbumToPlaylist(dispatch, item, isArtist, isAlbum)
-            }
           >
             {parseInt(item.date, 10) === 0 && (
               <FontAwesomeIcon className="caret-right" icon="caret-right" />
@@ -68,19 +69,23 @@ class LibraryList extends Component {
     });
   }
 
-  addArtistOrAlbumToPlaylist(dispatch, item, isArtist, isAlbum) {
+  getArtistOrAlbumSongs(item, isArtist, isAlbum) {
     if (isArtist)
       return flatten(
         item.albums.map(a =>
           defaultTo(a.songs, []).map(s => ({ ...s, cover: a.cover }))
         )
-      ).forEach(song =>
-        this.props.dispatch(addToPlaylist({ ...song, cover: song.cover }))
       );
     if (isAlbum)
-      return item.songs.forEach(song =>
-        this.props.dispatch(addToPlaylist({ ...song, cover: item.cover }))
-      );
+      return item.songs.map(song => ({ ...song, cover: item.cover }));
+  }
+
+  onDragStart(event, item, isArtist, isAlbum) {
+    event.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify(this.getArtistOrAlbumSongs(item, isArtist, isAlbum))
+    );
+    event.stopPropagation();
   }
 }
 

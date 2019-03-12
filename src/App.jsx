@@ -14,6 +14,7 @@ import {
   faCog
 } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
+import { addToPlaylist } from "./reducers/player.reducer";
 import "./App.scss";
 
 library.add(
@@ -76,10 +77,18 @@ class App extends Component {
               >
                 <Library />
               </div>
-              <div className="app-center">
+              <div
+                className="app-center"
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
+              >
                 <Cover />
               </div>
-              <div className="app-right">
+              <div
+                className="app-right"
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
+              >
                 <Playlist />
               </div>
             </div>
@@ -90,7 +99,11 @@ class App extends Component {
               >
                 <Library />
               </div>
-              <div className="app-center">
+              <div
+                className="app-center"
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
+              >
                 <Cover />
                 <Playlist />
               </div>
@@ -100,6 +113,19 @@ class App extends Component {
       </div>
     );
   }
+
+  onDragOver = event => {
+    event.preventDefault();
+  };
+
+  onDrop = event => {
+    const item = JSON.parse(event.dataTransfer.getData("text"));
+    if (Array.isArray(item)) {
+      item.forEach(song => this.props.dispatch(addToPlaylist(song)));
+      return;
+    }
+    this.props.dispatch(addToPlaylist(item));
+  };
 }
 
 export default connect(
