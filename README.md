@@ -7,7 +7,6 @@ UI for Musa-Electron.
 #### Frontend
 
 - feat: Make sure highlights have enough contrast compared to background and colors
-- feat: Show pause icon in playlist when paused
 - feat: Add progress meter for initial scan
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
@@ -23,6 +22,7 @@ UI for Musa-Electron.
 
 #### Playlist
 
+- feat: Show pause icon in playlist when paused
 - feat: Select items with Shift + up / down
 - feat: Select items with Shift + click
 - feat: Select items with Ctrl + click
@@ -47,6 +47,7 @@ UI for Musa-Electron.
 #### Settings
 
 - feat: Customise music library folder path
+- feat: Add a button to run initial scan again
 - feat: Set Replaygain (track / album / off)
 
 #### Themes
@@ -56,7 +57,7 @@ UI for Musa-Electron.
 #### General
 
 - feat: Create an icon
-- feat: Create packaging script
+- feat: Create a packaging script
 
 ## Done
 
