@@ -25,9 +25,10 @@ class Playlist extends Component {
   }
 
   handleKeyDown = event => {
+    console.log(event.keyCode);
     switch (event.keyCode) {
+      // REMOVE
       case KEYS.Backspace: {
-        // REMOVE
         if (this.state.activeIndex > -1)
           this.props.dispatch(removeFromPlaylist(this.state.activeIndex));
         if (!isNaN(this.state.startIndex) && !isNaN(this.state.endIndex)) {
@@ -38,14 +39,29 @@ class Playlist extends Component {
         }
         return;
       }
+      // SELECT ALL
       case KEYS.A: {
-        // SELECT ALL
         if (event.ctrlKey || event.metaKey) {
           this.setState({
             startIndex: 0,
             endIndex: this.props.playlist.length - 1
           });
         }
+        return;
+      }
+      // MOVE UP
+      case KEYS.Up: {
+        event.preventDefault();
+        const activeIndex = this.state.activeIndex - 1;
+        if (activeIndex > -1) this.setState({ activeIndex });
+        return;
+      }
+      // MOVE DOWN
+      case KEYS.Down: {
+        event.preventDefault();
+        const activeIndex = this.state.activeIndex + 1;
+        if (activeIndex < this.props.playlist.length)
+          this.setState({ activeIndex });
         return;
       }
       default:

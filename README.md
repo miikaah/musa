@@ -24,7 +24,7 @@ UI for Musa-Electron.
 
 #### Playlist
 
-- feat: Move active index up / down with keyboard
+- feat: Start playing item with Enter
 - feat: Select items with Shift + up / down
 - feat: Select items with Shift + click
 - feat: Select items with Ctrl + click
@@ -64,6 +64,7 @@ UI for Musa-Electron.
 
 ##### 13.3.2019
 
+- feat: Move active index up / down with keyboard
 - feat: Improve mouse selection in playlist
 - feat: Select all with Ctrl + A in playlist
 
