@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
   removeFromPlaylist,
-  removeRangeFromPlaylist
+  removeRangeFromPlaylist,
+  playIndex
 } from "../reducers/player.reducer";
 import PlaylistItem from "./PlaylistItem";
 import { isNaN } from "lodash-es";
@@ -53,15 +54,29 @@ class Playlist extends Component {
       case KEYS.Up: {
         event.preventDefault();
         const activeIndex = this.state.activeIndex - 1;
-        if (activeIndex > -1) this.setState({ activeIndex });
+        if (activeIndex > -1) {
+          this.setState({ activeIndex });
+          return;
+        }
+        if (this.props.playlist.length)
+          this.setState({ activeIndex: this.props.playlist.length - 1 });
         return;
       }
       // MOVE DOWN
       case KEYS.Down: {
         event.preventDefault();
         const activeIndex = this.state.activeIndex + 1;
-        if (activeIndex < this.props.playlist.length)
+        if (activeIndex < this.props.playlist.length) {
           this.setState({ activeIndex });
+          return;
+        }
+        if (this.props.playlist.length) this.setState({ activeIndex: 0 });
+        return;
+      }
+      // PLAY ACTIVE ITEM
+      case KEYS.Enter: {
+        if (this.state.activeIndex < 0) return;
+        this.props.dispatch(playIndex(this.state.activeIndex));
         return;
       }
       default:

@@ -7,7 +7,6 @@ UI for Musa-Electron.
 #### Frontend
 
 - feat: Make sure highlights have enough contrast compared to background and colors
-- feat: Restart currently paused song from beginning by double clicking playlist item
 - feat: Show pause icon in playlist when paused
 - feat: Add progress meter for initial scan
 - feat: Generate playlist (genre, random)
@@ -24,7 +23,7 @@ UI for Musa-Electron.
 
 #### Playlist
 
-- feat: Start playing item with Enter
+- feat: Restart currently paused song from beginning by double clicking playlist item
 - feat: Select items with Shift + up / down
 - feat: Select items with Shift + click
 - feat: Select items with Ctrl + click
@@ -64,6 +63,7 @@ UI for Musa-Electron.
 
 ##### 13.3.2019
 
+- feat: Start playing item with Enter
 - feat: Move active index up / down with keyboard
 - feat: Improve mouse selection in playlist
 - feat: Select all with Ctrl + A in playlist

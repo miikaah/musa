@@ -5,10 +5,9 @@ export const play = () => ({
   type: PLAY
 });
 
-export const PLAY_ITEM = "MUSA/PLAYER/PLAY_ITEM";
-export const playItem = (item, index) => ({
-  type: PLAY_ITEM,
-  item,
+export const PLAY_INDEX = "MUSA/PLAYER/PLAY_INDEX";
+export const playIndex = index => ({
+  type: PLAY_INDEX,
   index
 });
 
@@ -88,7 +87,7 @@ const player = (state = initialState, action) => {
         isPlaying: false
       };
     }
-    case PLAY_ITEM:
+    case PLAY_INDEX:
     case PLAY_NEXT: {
       const newIndex = isNumber(action.index)
         ? action.index

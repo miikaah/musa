@@ -202,7 +202,7 @@ class Player extends Component {
       this.setSeekUpdater();
       return;
     }
-    // Dispatch first play action that gets the song as data url from backend
+    // Dispatch first play action
     this.props.dispatch(play());
   }
 
