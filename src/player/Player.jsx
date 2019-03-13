@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  play,
-  pause,
-  playNext,
-  setCurrentTime
-} from "../reducers/player.reducer";
+import { play, replay, pause, playNext } from "../reducers/player.reducer";
 import { get, isNaN, isEmpty, isNumber, isNull, defaultTo } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { KEYS } from "../util";
+import { store } from "..";
 import "./Player.scss";
 
 const VOLUME_DEFAULT = 50;
@@ -23,14 +19,32 @@ class Player extends Component {
     volumeBeforeMuting: VOLUME_DEFAULT,
     isMuted: () => this.state.volume === VOLUME_MUTED,
     seekUpdater: undefined,
-    titleUpdater: undefined
+    titleUpdater: undefined,
+    currentTime: 0
   };
 
   constructor(props) {
     super(props);
+    this.storeSub = store.subscribe(this.handleStoreChange.bind(this));
     this.player = React.createRef();
     this.cover = React.createRef();
     window.addEventListener("keydown", this.handleKeyDown);
+  }
+
+  handleStoreChange() {
+    const state = store.getState().player;
+    const shouldReplay = state.replay;
+    if (shouldReplay) {
+      this.player.current.currentTime = 0;
+      this.setState({ currentTime: 0 });
+
+      if (!state.isPlaying) {
+        // Double click has a delay in it so run this the next time
+        // mixrotask queue gets emptied
+        setTimeout(() => this.playOrPause());
+      }
+      this.props.dispatch(replay(false));
+    }
   }
 
   handleKeyDown = event => {
@@ -59,9 +73,9 @@ class Player extends Component {
       this.setState({
         duration: this.getDurationOrTime("duration"),
         seekUpdater: setInterval(() => {
-          this.props.dispatch(
-            setCurrentTime(this.getDurationOrTime("currentTime"))
-          );
+          this.setState({
+            currentTime: this.player.current.currentTime
+          });
         }, SEEK_REFRESH_RATE)
       });
       this.player.current.play();
@@ -74,6 +88,10 @@ class Player extends Component {
       });
       this.props.dispatch(playNext());
     });
+  }
+
+  componentWillUnmount() {
+    this.storeSub.unsubsribe();
   }
 
   setDocumentTitle() {
@@ -123,12 +141,12 @@ class Player extends Component {
             min="0"
             max={this.state.duration}
             step="1"
-            value={this.props.currentTime}
+            value={this.state.currentTime}
             onChange={this.seek.bind(this)}
           />
           <span className="player-time-display">
             <span className="player-played">
-              {this.formatCurrentTime(this.props.currentTime)}
+              {this.formatCurrentTime(this.state.currentTime)}
             </span>
             <span> / </span>
             <span>
@@ -192,11 +210,12 @@ class Player extends Component {
       this.player.current.pause();
       this.props.dispatch(pause());
       clearInterval(this.state.seekUpdater);
+      this.setState({ currentTime: this.player.current.currentTime });
       return;
     }
     if (!isEmpty(this.props.src)) {
       // BUGFIX: pause->play starting from beginning
-      this.player.current.currentTime = this.props.currentTime;
+      this.player.current.currentTime = this.state.currentTime;
       this.player.current.play();
       this.props.dispatch(play());
       this.setSeekUpdater();
@@ -209,9 +228,9 @@ class Player extends Component {
   setSeekUpdater() {
     this.setState({
       seekUpdater: setInterval(() => {
-        this.props.dispatch(
-          setCurrentTime(this.getDurationOrTime("currentTime"))
-        );
+        this.setState({
+          currentTime: this.player.current.currentTime
+        });
       }, SEEK_REFRESH_RATE)
     });
   }
@@ -251,7 +270,6 @@ export default connect(
     src: state.player.src,
     isPlaying: state.player.isPlaying,
     playlist: state.player.items,
-    currentTime: state.player.currentTime,
     currentItem: state.player.currentItem
   }),
   dispatch => ({ dispatch })

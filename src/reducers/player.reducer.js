@@ -16,15 +16,15 @@ export const playNext = () => ({
   type: PLAY_NEXT
 });
 
+export const REPLAY = "MUSA/PLAYER/REPLAY";
+export const replay = replay => ({
+  type: REPLAY,
+  replay
+});
+
 export const PAUSE = "MUSA/PLAYER/PAUSE";
 export const pause = () => ({
   type: PAUSE
-});
-
-export const SET_CURRENT_TIME = "MUSA/PLAYER/SET_CURRENT_TIME";
-export const setCurrentTime = time => ({
-  type: SET_CURRENT_TIME,
-  time
 });
 
 export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD";
@@ -50,10 +50,10 @@ const initialState = {
   items: [],
   currentItem: {},
   currentIndex: 0,
-  currentTime: 0,
   src: "",
   cover: "",
-  isPlaying: false
+  isPlaying: false,
+  replay: false
 };
 
 const player = (state = initialState, action) => {
@@ -61,25 +61,18 @@ const player = (state = initialState, action) => {
     case PLAY: {
       // * If play is paused and playlist has items resume playback
       // * else take the first song in the playlist
-      let newItem, newIndex, newTime;
+      let newItem, newIndex;
       if (!isEmpty(state.currentItem)) {
         newItem = state.currentItem;
         newIndex = state.currentIndex;
-        newTime = state.currentTime;
       } else {
         newItem = state.items[0];
         newIndex = 0;
-        newTime = 0;
       }
       if (!isEmpty(newItem)) {
         return {
           ...state,
-          currentItem: newItem,
-          currentIndex: newIndex,
-          currentTime: newTime,
-          isPlaying: true,
-          src: `file://${newItem.path}`,
-          cover: isEmpty(newItem.cover) ? "" : `file://${newItem.cover}`
+          ...getPlayBase(newItem, newIndex)
         };
       }
       return {
@@ -96,11 +89,7 @@ const player = (state = initialState, action) => {
       if (newItem) {
         return {
           ...state,
-          currentItem: newItem,
-          currentIndex: newIndex,
-          isPlaying: true,
-          src: `file://${newItem.path}`,
-          cover: isEmpty(newItem.cover) ? "" : `file://${newItem.cover}`
+          ...getPlayBase(newItem, newIndex)
         };
       }
       // We've reached end of playlist.
@@ -110,15 +99,15 @@ const player = (state = initialState, action) => {
         items: state.items
       };
     }
+    case REPLAY:
+      return {
+        ...state,
+        replay: action.replay
+      };
     case PAUSE:
       return {
         ...state,
         isPlaying: false
-      };
-    case SET_CURRENT_TIME:
-      return {
-        ...state,
-        currentTime: action.time
       };
     case ADD_TO_PLAYLIST:
       return {
@@ -151,5 +140,15 @@ const player = (state = initialState, action) => {
       return state;
   }
 };
+
+function getPlayBase(newItem, newIndex) {
+  return {
+    currentItem: newItem,
+    currentIndex: newIndex,
+    isPlaying: true,
+    src: `file://${newItem.path}`,
+    cover: isEmpty(newItem.cover) ? "" : `file://${newItem.cover}`
+  };
+}
 
 export default player;

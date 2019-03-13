@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { get, isNaN } from "lodash-es";
-import { playIndex } from "../reducers/player.reducer";
+import { playIndex, replay } from "../reducers/player.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./PlaylistItem.scss";
 
@@ -17,6 +17,10 @@ class PlaylistItem extends Component {
       <li
         className={classes}
         onDoubleClick={() => {
+          if (this.props.index === this.props.currentIndex) {
+            this.props.dispatch(replay(true));
+            return;
+          }
           this.props.dispatch(playIndex(this.props.index));
           this.props.onSetActiveIndex(this.props.index);
         }}

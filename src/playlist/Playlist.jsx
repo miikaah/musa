@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import {
   removeFromPlaylist,
   removeRangeFromPlaylist,
-  playIndex
+  playIndex,
+  replay
 } from "../reducers/player.reducer";
 import PlaylistItem from "./PlaylistItem";
 import { isNaN } from "lodash-es";
@@ -26,7 +27,6 @@ class Playlist extends Component {
   }
 
   handleKeyDown = event => {
-    console.log(event.keyCode);
     switch (event.keyCode) {
       // REMOVE
       case KEYS.Backspace: {
@@ -73,9 +73,13 @@ class Playlist extends Component {
         if (this.props.playlist.length) this.setState({ activeIndex: 0 });
         return;
       }
-      // PLAY ACTIVE ITEM
+      // PLAY OR REPLAY ACTIVE ITEM
       case KEYS.Enter: {
         if (this.state.activeIndex < 0) return;
+        if (this.state.activeIndex === this.props.currentIndex) {
+          this.props.dispatch(replay(true));
+          return;
+        }
         this.props.dispatch(playIndex(this.state.activeIndex));
         return;
       }
@@ -172,7 +176,8 @@ class Playlist extends Component {
 
 export default connect(
   state => ({
-    playlist: state.player.items
+    playlist: state.player.items,
+    currentIndex: state.player.currentIndex
   }),
   dispatch => ({ dispatch })
 )(Playlist);

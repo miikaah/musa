@@ -23,7 +23,6 @@ UI for Musa-Electron.
 
 #### Playlist
 
-- feat: Restart currently paused song from beginning by double clicking playlist item
 - feat: Select items with Shift + up / down
 - feat: Select items with Shift + click
 - feat: Select items with Ctrl + click
@@ -63,6 +62,7 @@ UI for Musa-Electron.
 
 ##### 13.3.2019
 
+- feat: Replay currently active song with Enter & Double Click
 - feat: Start playing item with Enter
 - feat: Move active index up / down with keyboard
 - feat: Improve mouse selection in playlist
