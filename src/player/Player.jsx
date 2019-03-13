@@ -8,17 +8,13 @@ import {
 } from "../reducers/player.reducer";
 import { get, isNaN, isEmpty, isNumber, isNull, defaultTo } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { KEYS } from "../util";
 import "./Player.scss";
 
 const VOLUME_DEFAULT = 50;
 const VOLUME_MUTED = 0;
 const VOLUME_STEP = 5;
 const SEEK_REFRESH_RATE = 500;
-
-const KEYS = {
-  Space: 32,
-  M: 77
-};
 
 class Player extends Component {
   state = {

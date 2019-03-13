@@ -24,7 +24,15 @@ UI for Musa-Electron.
 
 #### Playlist
 
+- feat: Move active index up / down with keyboard
+- feat: Select items with Shift + up / down
+- feat: Select items with Shift + click
+- feat: Select items with Ctrl + click
+- feat: Cut items with Ctrl + X
+- feat: Copy items with Ctrl + C
+- feat: Paste items with Ctrl + V
 - feat: Rearrange playlist items
+- feat: Highlight with border the index when rearranging / adding items
 
 #### Library
 
@@ -53,6 +61,11 @@ UI for Musa-Electron.
 - feat: Create packaging script
 
 ## Done
+
+##### 13.3.2019
+
+- feat: Improve mouse selection in playlist
+- feat: Select all with Ctrl + A in playlist
 
 ##### 12.3.2019
 

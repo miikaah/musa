@@ -1,13 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { get } from "lodash-es";
+import { get, isNaN } from "lodash-es";
 import { playItem } from "../reducers/player.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./PlaylistItem.scss";
 
 class PlaylistItem extends Component {
   render() {
-    const classes = this.getClassNames();
+    const classes = this.getClassNames(
+      this.props.index,
+      this.props.activeIndex,
+      this.props.startIndex,
+      this.props.endIndex
+    );
     return (
       <li
         className={classes}
@@ -17,8 +22,14 @@ class PlaylistItem extends Component {
         }}
         onClick={() => this.props.onSetActiveIndex(this.props.index)}
         onMouseOver={() => this.props.onMouseOverItem(this.props.index)}
-        onMouseDown={() => this.props.onMouseDownItem(this.props.index)}
-        onMouseUp={() => this.props.onMouseUpItem(this.props.index)}
+        onMouseDown={event => {
+          this.props.onMouseDownItem(this.props.index);
+          event.stopPropagation();
+        }}
+        onMouseUp={event => {
+          this.props.onMouseUpItem(this.props.index);
+          event.stopPropagation();
+        }}
       >
         <div className="cell cell-xxs">
           {this.props.index === this.props.currentIndex &&
@@ -50,12 +61,17 @@ class PlaylistItem extends Component {
     );
   }
 
-  getClassNames() {
+  getClassNames(index, activeIndex, startIndex, endIndex) {
     let className = "playlist-item";
-    const start = Math.min(this.props.startIndex, this.props.endIndex);
-    const end = Math.max(this.props.startIndex, this.props.endIndex);
-    if (this.props.index === this.props.activeIndex) className += " active";
-    if (this.props.index >= start && this.props.index <= end)
+    const start = Math.min(startIndex, endIndex);
+    const end = Math.max(startIndex, endIndex);
+    if (index === activeIndex) className += " active";
+    if (
+      !isNaN(startIndex) &&
+      !isNaN(endIndex) &&
+      index >= start &&
+      index <= end
+    )
       className += " selected";
     return className;
   }

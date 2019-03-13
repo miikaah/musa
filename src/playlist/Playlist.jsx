@@ -6,9 +6,10 @@ import {
 } from "../reducers/player.reducer";
 import PlaylistItem from "./PlaylistItem";
 import { isNaN } from "lodash-es";
+import { KEYS } from "../util";
 import "./Playlist.scss";
 
-const BACKSPACE = 8;
+const PLAYLIST_CLASSNAME = "playlist";
 
 class Playlist extends Component {
   state = {
@@ -25,7 +26,8 @@ class Playlist extends Component {
 
   handleKeyDown = event => {
     switch (event.keyCode) {
-      case BACKSPACE: {
+      case KEYS.Backspace: {
+        // REMOVE
         if (this.state.activeIndex > -1)
           this.props.dispatch(removeFromPlaylist(this.state.activeIndex));
         if (!isNaN(this.state.startIndex) && !isNaN(this.state.endIndex)) {
@@ -36,6 +38,16 @@ class Playlist extends Component {
         }
         return;
       }
+      case KEYS.A: {
+        // SELECT ALL
+        if (event.ctrlKey || event.metaKey) {
+          this.setState({
+            startIndex: 0,
+            endIndex: this.props.playlist.length - 1
+          });
+        }
+        return;
+      }
       default:
         break;
     }
@@ -43,40 +55,47 @@ class Playlist extends Component {
 
   render() {
     return (
-      <div>
-        <ul className="playlist">
-          <li className="playlist-header">
-            <div className="cell cell-xxs" />
-            <div className="cell cell-sm left">Artist</div>
-            <div className="cell cell-sm left">Album</div>
-            <div className="cell cell-xs right">Tr</div>
-            <div className="cell cell-md left">Title</div>
-            <div className="cell cell-xs left">Length</div>
-            <div className="cell cell-xs right">Date</div>
-          </li>
-          {this.props.playlist.map((item, index) => (
-            <PlaylistItem
-              key={item.name.toString() + "-" + index}
-              item={item}
-              index={index}
-              activeIndex={this.state.activeIndex}
-              startIndex={this.state.startIndex}
-              endIndex={this.state.endIndex}
-              onSetActiveIndex={activeIndex =>
-                this.setState({
-                  activeIndex,
-                  startIndex: NaN,
-                  endIndex: NaN
-                })
-              }
-              onMouseOverItem={index => this.updateEndIndex(index)}
-              onMouseDownItem={index => this.onMouseDown(index)}
-              onMouseUpItem={index => this.onMouseUp(index)}
-            />
-          ))}
-        </ul>
-        <div ref={this.selectArea} className="playlist-select-area" />
-      </div>
+      <ul
+        className={PLAYLIST_CLASSNAME}
+        onMouseDown={event => {
+          this.onMouseDown(
+            event.target.className === PLAYLIST_CLASSNAME
+              ? this.props.playlist.length - 1
+              : 0
+          );
+        }}
+        onMouseUp={() => this.clearSelection()}
+      >
+        <li className="playlist-header">
+          <div className="cell cell-xxs" />
+          <div className="cell cell-sm left">Artist</div>
+          <div className="cell cell-sm left">Album</div>
+          <div className="cell cell-xs right">Tr</div>
+          <div className="cell cell-md left">Title</div>
+          <div className="cell cell-xs left">Length</div>
+          <div className="cell cell-xs right">Date</div>
+        </li>
+        {this.props.playlist.map((item, index) => (
+          <PlaylistItem
+            key={item.name.toString() + "-" + index}
+            item={item}
+            index={index}
+            activeIndex={this.state.activeIndex}
+            startIndex={this.state.startIndex}
+            endIndex={this.state.endIndex}
+            onSetActiveIndex={activeIndex =>
+              this.setState({
+                activeIndex,
+                startIndex: NaN,
+                endIndex: NaN
+              })
+            }
+            onMouseOverItem={index => this.updateEndIndex(index)}
+            onMouseDownItem={index => this.onMouseDown(index)}
+            onMouseUpItem={index => this.onMouseUp(index)}
+          />
+        ))}
+      </ul>
     );
   }
 
@@ -88,9 +107,8 @@ class Playlist extends Component {
   onMouseDown(index) {
     this.setState({
       isMouseDown: true,
-      activeIndex: index,
       startIndex: index,
-      endIndex: index
+      endIndex: NaN
     });
   }
 
@@ -103,6 +121,21 @@ class Playlist extends Component {
       startIndex,
       endIndex
     });
+  }
+
+  clearSelection() {
+    if (this.state.startIndex === this.state.endIndex)
+      this.setState({
+        isMouseDown: false,
+        activeIndex: -1,
+        startIndex: NaN,
+        endIndex: NaN
+      });
+    else
+      this.setState({
+        isMouseDown: false,
+        activeIndex: -1
+      });
   }
 }
 
