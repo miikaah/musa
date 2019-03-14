@@ -30,14 +30,6 @@
     flex: 60%;
   }
 
-  button {
-    color: inherit;
-    background-color: transparent;
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-  }
-
   @media screen and (max-width: $musa-breakpoint-lg) {
     &-wrapper {
       display: flex;

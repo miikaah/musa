@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toggleLibrary } from "../reducers/library.reducer";
+import { toggleSettings } from "../reducers/settings.reducer";
 import Player from "../player/Player";
 import "./Toolbar.scss";
 
@@ -20,6 +21,7 @@ class Toolbar extends Component {
         <button
           type="button"
           className="toolbar-toggle-settings toolbar-button"
+          onClick={() => this.props.dispatch(toggleSettings())}
         >
           <FontAwesomeIcon icon="cog" />
         </button>

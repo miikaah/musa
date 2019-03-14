@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Library from "./library/Library";
+import Settings from "./settings/Settings";
 import Playlist from "./playlist/Playlist";
 import Toolbar from "./toolbar/Toolbar";
 import Cover from "./cover/Cover";
@@ -74,9 +75,18 @@ class App extends Component {
     return (
       <div className="app">
         <Toolbar />
+        <div className={`${this.props.isSettingsVisible ? "show" : "hide"}`}>
+          <Settings />
+        </div>
         <div>
           {this.state.windowWidth > 1279 ? (
-            <div className="app-wrapper">
+            <div
+              className={`${
+                !this.props.isSettingsVisible
+                  ? "app-wrapper show"
+                  : "app-wrapper hide"
+              }`}
+            >
               <div
                 className={`${this.props.isLibraryVisible ? "show" : "hide"}`}
               >
@@ -100,7 +110,13 @@ class App extends Component {
               </div>
             </div>
           ) : (
-            <div className="app-wrapper">
+            <div
+              className={`${
+                !this.props.isSettingsVisible
+                  ? "app-wrapper show"
+                  : "app-wrapper hide"
+              }`}
+            >
               <div
                 className={`${this.props.isLibraryVisible ? "show" : "hide"}`}
               >
@@ -138,7 +154,8 @@ class App extends Component {
 
 export default connect(
   state => ({
-    isLibraryVisible: state.library.isVisible
+    isLibraryVisible: state.library.isVisible,
+    isSettingsVisible: state.settings.isVisible
   }),
   dispatch => ({ dispatch })
 )(App);

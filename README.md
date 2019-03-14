@@ -13,11 +13,9 @@ UI for Musa-Electron.
 - feat: Persist playlist
 - feat: Multiple playlists
 - feat: Search
-- feat: Add a view that recommends random music from library and shows them nicely
 
 #### Backend
 
-- feat: Parse year from date if the date is an ISO date
 - feat: Send progress info to frontend
 
 #### Playlist
@@ -30,6 +28,7 @@ UI for Musa-Electron.
 - feat: Paste items with Ctrl + V
 - feat: Rearrange playlist items with drag & drop
 - feat: Highlight with border the index when rearranging / adding items
+- feat: Follow active index with scroll
 
 #### Library
 
@@ -38,13 +37,13 @@ UI for Musa-Electron.
 #### Library 2.0
 
 - feat: Create a different kind of library view that shows album covers
+- feat: Recommend random music from library and show them nicely
 
 #### Player
 
 #### Settings
 
 - feat: Customise music library folder path
-- feat: Add a button to run initial scan again
 - feat: Set Replaygain (track / album / off)
 
 #### Themes
@@ -60,6 +59,9 @@ UI for Musa-Electron.
 
 ##### 14.3.2019
 
+- feat: Add a button to settings to run initial scan again
+- feat: Add settings view
+- feat: Parse year from date if the date is an ISO date + add bit rate to metadata
 - feat: Show DR gauge in player
 - feat: Show pause icon in playlist when paused
 
