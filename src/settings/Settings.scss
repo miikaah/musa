@@ -1,3 +1,12 @@
+@import '../scss/variables';
+
 .settings-wrapper {
-  padding: 0 20px;
+  padding: 0 16px;
+  max-width: 1000px;
+  min-width: 344px;
+  margin: auto;
+
+  @media screen and (max-width: $musa-breakpoint-xs) {
+    padding: 0 8px;
+  }
 }

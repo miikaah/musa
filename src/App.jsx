@@ -83,7 +83,7 @@ class App extends Component {
             <div
               className={`${
                 !this.props.isSettingsVisible
-                  ? "app-wrapper show"
+                  ? "app-wrapper show-flex"
                   : "app-wrapper hide"
               }`}
             >
@@ -113,7 +113,7 @@ class App extends Component {
             <div
               className={`${
                 !this.props.isSettingsVisible
-                  ? "app-wrapper show"
+                  ? "app-wrapper show-flex"
                   : "app-wrapper hide"
               }`}
             >

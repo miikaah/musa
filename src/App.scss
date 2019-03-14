@@ -6,7 +6,7 @@
   background-color: var(--color-bg);
   min-height: 100vh;
   max-height: 100vh;
-  min-width: 600px;
+  min-width: 360px;
   overflow: hidden;
   color: var(--color-typography);
   user-select: none;
@@ -58,4 +58,8 @@
 
 .hide {
   display: none;
+}
+
+.show-flex {
+  display: flex;
 }
