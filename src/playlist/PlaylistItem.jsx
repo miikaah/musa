@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { get, isNaN } from "lodash-es";
+import { get, isNaN, isEqual } from "lodash-es";
 import { playIndex, replay } from "../reducers/player.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./PlaylistItem.scss";
@@ -17,7 +17,7 @@ class PlaylistItem extends Component {
       <li
         className={classes}
         onDoubleClick={() => {
-          if (this.props.index === this.props.currentIndex) {
+          if (this.shouldReplaySong()) {
             this.props.dispatch(replay(true));
             return;
           }
@@ -35,14 +35,7 @@ class PlaylistItem extends Component {
           event.stopPropagation();
         }}
       >
-        <div className="cell cell-xxs">
-          {this.props.index === this.props.currentIndex &&
-          this.props.isPlaying ? (
-            <FontAwesomeIcon icon="play" />
-          ) : (
-            ""
-          )}
-        </div>
+        <div className="cell cell-xxs">{this.renderPlayOrPauseIcon()}</div>
         <div className="cell cell-sm left">
           {get(this.props.item, "metadata.artist", "")}
         </div>
@@ -79,10 +72,33 @@ class PlaylistItem extends Component {
       className += " selected";
     return className;
   }
+
+  shouldReplaySong() {
+    return this.isIndexCurrentIndex() && this.hasEqualItemAndCurrentItem();
+  }
+
+  isIndexCurrentIndex() {
+    return this.props.index === this.props.currentIndex;
+  }
+
+  hasEqualItemAndCurrentItem() {
+    return isEqual(this.props.item, this.props.currentItem);
+  }
+
+  renderPlayOrPauseIcon() {
+    if (!this.isIndexCurrentIndex() || !this.hasEqualItemAndCurrentItem())
+      return;
+    return this.props.isPlaying ? (
+      <FontAwesomeIcon icon="play" />
+    ) : (
+      <FontAwesomeIcon icon="pause" />
+    );
+  }
 }
 
 export default connect(
   state => ({
+    currentItem: state.player.currentItem,
     currentIndex: state.player.currentIndex,
     isPlaying: state.player.isPlaying
   }),

@@ -7,7 +7,7 @@ import {
   replay
 } from "../reducers/player.reducer";
 import PlaylistItem from "./PlaylistItem";
-import { isNaN } from "lodash-es";
+import { isNaN, isEqual } from "lodash-es";
 import { KEYS } from "../util";
 import "./Playlist.scss";
 
@@ -76,7 +76,7 @@ class Playlist extends Component {
       // PLAY OR REPLAY ACTIVE ITEM
       case KEYS.Enter: {
         if (this.state.activeIndex < 0) return;
-        if (this.state.activeIndex === this.props.currentIndex) {
+        if (this.shouldReplaySong()) {
           this.props.dispatch(replay(true));
           return;
         }
@@ -87,6 +87,16 @@ class Playlist extends Component {
         break;
     }
   };
+
+  shouldReplaySong() {
+    return (
+      this.state.activeIndex === this.props.currentIndex &&
+      isEqual(
+        this.props.currentItem,
+        this.props.playlist[this.state.activeIndex]
+      )
+    );
+  }
 
   render() {
     return (
@@ -177,6 +187,7 @@ class Playlist extends Component {
 export default connect(
   state => ({
     playlist: state.player.items,
+    currentItem: state.player.currentItem,
     currentIndex: state.player.currentIndex
   }),
   dispatch => ({ dispatch })

@@ -49,7 +49,7 @@ export const removeRangeFromPlaylist = (startIndex, endIndex) => ({
 const initialState = {
   items: [],
   currentItem: {},
-  currentIndex: 0,
+  currentIndex: -1,
   src: "",
   cover: "",
   isPlaying: false,

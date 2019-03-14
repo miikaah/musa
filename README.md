@@ -22,7 +22,6 @@ UI for Musa-Electron.
 
 #### Playlist
 
-- feat: Show pause icon in playlist when paused
 - feat: Select items with Shift + up / down
 - feat: Select items with Shift + click
 - feat: Select items with Ctrl + click
@@ -40,7 +39,7 @@ UI for Musa-Electron.
 
 #### Player
 
-- feat: Show DR and loudness reduction gauge in player
+- feat: Show DR and loudness reduction gauges in player
 - feat: Add currently playing song info to Player UI
 - feat: Cooler Player UI
 
@@ -60,6 +59,10 @@ UI for Musa-Electron.
 - feat: Create a packaging script
 
 ## Done
+
+##### 14.3.2019
+
+- feat: Show pause icon in playlist when paused
 
 ##### 13.3.2019
 
