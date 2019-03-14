@@ -28,20 +28,18 @@ UI for Musa-Electron.
 - feat: Cut items with Ctrl + X
 - feat: Copy items with Ctrl + C
 - feat: Paste items with Ctrl + V
-- feat: Rearrange playlist items
+- feat: Rearrange playlist items with drag & drop
 - feat: Highlight with border the index when rearranging / adding items
 
 #### Library
 
 - feat: Drag to specific index in playlist
-- feat: Indicate album in library
-- feat: Cooler library list items
+
+#### Library 2.0
+
+- feat: Create a different kind of library view that shows album covers
 
 #### Player
-
-- feat: Show DR and loudness reduction gauges in player
-- feat: Add currently playing song info to Player UI
-- feat: Cooler Player UI
 
 #### Settings
 
@@ -62,6 +60,7 @@ UI for Musa-Electron.
 
 ##### 14.3.2019
 
+- feat: Show DR gauge in player
 - feat: Show pause icon in playlist when paused
 
 ##### 13.3.2019

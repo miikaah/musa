@@ -32,8 +32,11 @@ export const Colors = {
   Bg: "#21252b",
   Primary: "#753597",
   Secondary: "#21737e",
-  Typography: "#fff",
-  TypographyLight: "#000"
+  Typography: "#fbfbfb",
+  TypographyLight: "#000",
+  DrGood: "#90ff00",
+  DrMediocre: "#ffe02f",
+  DrBad: "#f00"
 };
 
 class App extends Component {
@@ -64,6 +67,7 @@ class App extends Component {
       "--color-typography-secondary",
       Colors.Typography
     );
+    document.body.style.setProperty("--color-dr-level", Colors.Typography);
   }
 
   render() {
