@@ -52,7 +52,7 @@ audio {
   input[type='range'] {
     overflow: hidden;
     appearance: none;
-    background-color: lighten($musa-bg-color, 15%);
+    background-color: $musa-slider-track;
     cursor: pointer;
   }
 
@@ -69,7 +69,7 @@ audio {
   input[type='range']::-webkit-slider-thumb {
     width: 4px;
     appearance: none;
-    box-shadow: -10000px 0 0 10000px var(--color-primary-highlight);
+    box-shadow: -10000px 0 0 10000px var(--color-slider);
   }
 
   &-play-pause,

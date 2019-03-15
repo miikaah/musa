@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { defaultTo, sortBy, some } from "lodash-es";
+import { defaultTo, sortBy, some, isEqual } from "lodash-es";
 import Palette from "img-palette";
 import { Colors } from "../App.jsx";
 import "./Cover.scss";
@@ -22,7 +22,7 @@ class Cover extends Component {
         s => -s.population
       );
       console.log(palette);
-      console.log("isVibrant", this.isVibrantCover(mostPopularSwatch));
+      // console.log("isVibrant", this.isVibrantCover(mostPopularSwatch));
 
       // Defualts are for dark covers
       let bg = mostPopularSwatch,
@@ -43,8 +43,8 @@ class Cover extends Component {
 
       // Set different colors for a light cover
       if (this.isVibrantCover(mostPopularSwatch)) {
-        console.log(this.contrast([255, 255, 255], bg.rgb) < 3.4);
-        if (this.contrast([255, 255, 255], bg.rgb) < 3.4)
+        // console.log(this.contrast(Colors.WhiteRgb, bg.rgb) < 3.4);
+        if (this.contrast(Colors.WhiteRgb, bg.rgb) < 3.4)
           color = Colors.TypographyLight;
         primarySwatches = [
           defaultTo(palette.vibrantSwatch, {}),
@@ -64,27 +64,46 @@ class Cover extends Component {
         Math,
         secondarySwatches.map(s => defaultTo(s.population, 0))
       );
-      primary = defaultTo(
-        swatchesByPopulationDesc.find(s => s.population === primaryPop),
-        swatchesByPopulationDesc[1]
-      );
-      secondary = defaultTo(
-        swatchesByPopulationDesc.find(s => s.population === secondaryPop),
-        primary
-      );
-      console.log("ratio: ", this.contrast([255, 255, 255], bg.rgb));
-      console.log("ratio: ", this.contrast([255, 255, 255], primary.rgb));
-      console.log("ratio: ", this.contrast([255, 255, 255], secondary.rgb));
+      // Make sure highlights are different than background
+      primary = swatchesByPopulationDesc.find(s => s.population === primaryPop);
+      if (!primary || isEqual(primary.rgb, bg.rgb))
+        for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
+          primary = swatchesByPopulationDesc[i];
+          if (!isEqual(primary.rgb, bg.rgb)) break;
+        }
+      if (!primary || isEqual(primary.rgb, bg.rgb))
+        primary = { rgb: Colors.PrimaryRgb };
 
-      if (this.contrast([255, 255, 255], primary.rgb) < 2.6)
+      secondary = swatchesByPopulationDesc.find(
+        s => s.population === secondaryPop
+      );
+      if (!secondary || isEqual(secondary.rgb, bg.rgb))
+        for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
+          secondary = swatchesByPopulationDesc[i];
+          if (
+            !isEqual(secondary.rgb, bg.rgb) &&
+            !isEqual(secondary.rgb, primary.rgb)
+          )
+            break;
+        }
+      if (!secondary || isEqual(secondary.rgb, bg.rgb))
+        secondary = { rgb: Colors.PrimaryRgb };
+
+      // Set slider highlight to a different color if not enough contrast to slider track
+      // or background color
+      let slider = primary;
+      if (
+        this.contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2 ||
+        this.contrast(slider.rgb, bg.rgb) < 1.2
+      )
+        slider = secondary;
+
+      // Switch to dark text for light covers
+      if (this.contrast(Colors.WhiteRgb, primary.rgb) < 2.6)
         primaryColor = Colors.TypographyLight;
-      if (this.contrast([255, 255, 255], secondary.rgb) < 2.6)
+      if (this.contrast(Colors.WhiteRgb, secondary.rgb) < 2.6)
         secondaryColor = Colors.TypographyLight;
 
-      // console.log(swatchesByPopulationDesc)
-      // console.log(mostPopularSwatch)
-      console.log(primary);
-      console.log(secondary);
       // Set CSS Variables
       document.body.style.setProperty(
         "--color-bg",
@@ -98,6 +117,7 @@ class Cover extends Component {
         "--color-secondary-highlight",
         `rgb(${defaultTo(secondary.rgb, Colors.Secondary)})`
       );
+      document.body.style.setProperty("--color-slider", `rgb(${slider.rgb})`);
       document.body.style.setProperty(
         "--color-typography",
         defaultTo(color, Colors.Typography)

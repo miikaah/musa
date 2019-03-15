@@ -6,13 +6,13 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Make sure highlights have enough contrast compared to background and colors
 - feat: Add progress meter for initial scan
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
 - feat: Persist playlist
 - feat: Multiple playlists
 - feat: Search
+- feat: Scale cover images that are too high
 
 #### Backend
 
@@ -29,6 +29,10 @@ UI for Musa-Electron.
 - feat: Rearrange playlist items with drag & drop
 - feat: Highlight with border the index when rearranging / adding items
 - feat: Follow active index with scroll
+
+#### Playlist 2.0
+
+-feat: Create a smaller playlist with album covers
 
 #### Library
 
@@ -56,6 +60,11 @@ UI for Musa-Electron.
 - feat: Create a packaging script
 
 ## Done
+
+##### 15.3.2019
+
+- feat: Make sure highlights have enough contrast compared to background and colors
+- refactor: Remove redundant palette reducer
 
 ##### 14.3.2019
 

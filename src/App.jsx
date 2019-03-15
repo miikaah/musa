@@ -37,7 +37,11 @@ export const Colors = {
   TypographyLight: "#000",
   DrGood: "#90ff00",
   DrMediocre: "#ffe02f",
-  DrBad: "#f00"
+  DrBad: "#f00",
+  PrimaryRgb: [117, 53, 151],
+  SliderTrack: "#424a56",
+  SliderTrackRgb: [66, 74, 86],
+  WhiteRgb: [255, 255, 255]
 };
 
 class App extends Component {
@@ -68,6 +72,7 @@ class App extends Component {
       "--color-typography-secondary",
       Colors.Typography
     );
+    document.body.style.setProperty("--color-slider", Colors.Primary);
     document.body.style.setProperty("--color-dr-level", Colors.Typography);
   }
 
