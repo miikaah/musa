@@ -16,6 +16,7 @@ $margin-bottom: 20px;
     min-width: 600px;
     padding-bottom: 54%;
     overflow: hidden;
+    background-color: var(--color-bg);
 
     @media screen and (max-width: $musa-breakpoint-lg) {
       padding-bottom: 0;

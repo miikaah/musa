@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { defaultTo, sortBy, some, get } from "lodash-es";
-import {
-  setBackgroundSwatch,
-  setPrimaryHighlightSwatch,
-  setSecondaryHighlightSwatch,
-  setTextColors
-} from "../reducers/palette.reducer";
+import { defaultTo, sortBy, some } from "lodash-es";
 import Palette from "img-palette";
 import { Colors } from "../App.jsx";
 import "./Cover.scss";
@@ -91,10 +85,31 @@ class Cover extends Component {
       // console.log(mostPopularSwatch)
       console.log(primary);
       console.log(secondary);
-      this.props.dispatch(setBackgroundSwatch(bg));
-      this.props.dispatch(setPrimaryHighlightSwatch(primary));
-      this.props.dispatch(setSecondaryHighlightSwatch(secondary));
-      this.props.dispatch(setTextColors([color, primaryColor, secondaryColor]));
+      // Set CSS Variables
+      document.body.style.setProperty(
+        "--color-bg",
+        `rgb(${defaultTo(bg.rgb, Colors.Bg)})`
+      );
+      document.body.style.setProperty(
+        "--color-primary-highlight",
+        `rgb(${defaultTo(primary.rgb, Colors.Primary)})`
+      );
+      document.body.style.setProperty(
+        "--color-secondary-highlight",
+        `rgb(${defaultTo(secondary.rgb, Colors.Secondary)})`
+      );
+      document.body.style.setProperty(
+        "--color-typography",
+        defaultTo(color, Colors.Typography)
+      );
+      document.body.style.setProperty(
+        "--color-typography-primary",
+        defaultTo(primaryColor, Colors.Typography)
+      );
+      document.body.style.setProperty(
+        "--color-typography-secondary",
+        defaultTo(secondaryColor, Colors.Typography)
+      );
     });
   }
 
@@ -119,12 +134,7 @@ class Cover extends Component {
 
   render() {
     return (
-      <div
-        className="cover-wrapper"
-        style={{
-          backgroundColor: `rgb(${get(this.props.bgSwatch, "rgb", "#21252b")})`
-        }}
-      >
+      <div className="cover-wrapper">
         <img alt="" className="cover" src={this.props.cover} ref={this.cover} />
       </div>
     );
@@ -133,8 +143,7 @@ class Cover extends Component {
 
 export default connect(
   state => ({
-    cover: state.player.cover,
-    bgSwatch: state.palette.backgroundSwatch
+    cover: state.player.cover
   }),
   dispatch => ({ dispatch })
 )(Cover);
