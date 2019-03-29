@@ -6,6 +6,8 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- feat: pause music if playlist is empty
+- fix: Seeking happening on mouse up as well
 - feat: Add progress meter for initial scan
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
