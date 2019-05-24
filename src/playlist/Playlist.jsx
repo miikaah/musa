@@ -55,7 +55,21 @@ class Playlist extends Component {
         event.preventDefault();
         const activeIndex = this.state.activeIndex - 1;
         if (activeIndex > -1) {
-          this.setState({ activeIndex });
+          if (event.shiftKey) {
+            this.setState({
+              startIndex: !isNaN(this.state.startIndex)
+                ? this.state.startIndex
+                : activeIndex + 1,
+              endIndex: activeIndex,
+              activeIndex
+            });
+            return;
+          }
+          this.setState({
+            startIndex: NaN,
+            endIndex: NaN,
+            activeIndex
+          });
           return;
         }
         if (this.props.playlist.length)
@@ -67,7 +81,21 @@ class Playlist extends Component {
         event.preventDefault();
         const activeIndex = this.state.activeIndex + 1;
         if (activeIndex < this.props.playlist.length) {
-          this.setState({ activeIndex });
+          if (event.shiftKey) {
+            this.setState({
+              startIndex: !isNaN(this.state.startIndex)
+                ? this.state.startIndex
+                : activeIndex - 1,
+              endIndex: activeIndex,
+              activeIndex
+            });
+            return;
+          }
+          this.setState({
+            startIndex: NaN,
+            endIndex: NaN,
+            activeIndex
+          });
           return;
         }
         if (this.props.playlist.length) this.setState({ activeIndex: 0 });

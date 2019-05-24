@@ -6,8 +6,7 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: pause music if playlist is empty
-- fix: Seeking happening on mouse up as well
+- feat: Pause music if playlist is empty
 - feat: Add progress meter for initial scan
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
@@ -22,7 +21,6 @@ UI for Musa-Electron.
 
 #### Playlist
 
-- feat: Select items with Shift + up / down
 - feat: Select items with Shift + click
 - feat: Select items with Ctrl + click
 - feat: Cut items with Ctrl + X
@@ -30,7 +28,7 @@ UI for Musa-Electron.
 - feat: Paste items with Ctrl + V
 - feat: Rearrange playlist items with drag & drop
 - feat: Highlight with border the index when rearranging / adding items
-- feat: Follow active index with scroll
+- feat: Scroll to active index if inde goes out of viewport
 
 #### Playlist 2.0
 
@@ -62,6 +60,11 @@ UI for Musa-Electron.
 - feat: Create a packaging script
 
 ## Done
+
+##### 24.5.2019
+
+- feat: Select items with Shift + up / down
+- fix: Seeking happening on mouse up as well
 
 ##### 15.3.2019
 
