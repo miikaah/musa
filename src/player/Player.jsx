@@ -21,7 +21,8 @@ class Player extends Component {
     isMuted: () => this.state.volume === VOLUME_MUTED,
     seekUpdater: undefined,
     titleUpdater: undefined,
-    currentTime: 0
+    currentTime: 0,
+    prevCurrentTime: 0
   };
 
   constructor(props) {
@@ -226,9 +227,21 @@ class Player extends Component {
   }
 
   seek(event) {
+    if (this.state.prevCurrentTime === event.target.value) return;
     clearInterval(this.state.seekUpdater);
     this.player.current.currentTime = event.target.value;
+    this.setState({
+      currentTime: event.target.value,
+      prevCurrentTime: event.target.value
+    });
     this.setSeekUpdater();
+    // Makes it possible to seek back to same spot after timeout
+    // to prevent multiple seeks
+    setTimeout(() => {
+      this.setState({
+        prevCurrentTime: -1
+      });
+    }, 500);
   }
 
   playOrPause() {
