@@ -30,12 +30,22 @@ class Playlist extends Component {
     switch (event.keyCode) {
       // REMOVE
       case KEYS.Backspace: {
-        if (this.state.activeIndex > -1)
+        if (
+          this.state.activeIndex > -1 &&
+          isNaN(this.state.startIndex) &&
+          isNaN(this.state.endIndex)
+        ) {
           this.props.dispatch(removeFromPlaylist(this.state.activeIndex));
+          return;
+        }
+
         if (!isNaN(this.state.startIndex) && !isNaN(this.state.endIndex)) {
-          this.props.dispatch(
-            removeRangeFromPlaylist(this.state.startIndex, this.state.endIndex)
+          const startIndex = Math.min(
+            this.state.startIndex,
+            this.state.endIndex
           );
+          const endIndex = Math.max(this.state.startIndex, this.state.endIndex);
+          this.props.dispatch(removeRangeFromPlaylist(startIndex, endIndex));
           this.setState({ startIndex: NaN, endIndex: NaN });
         }
         return;
@@ -131,13 +141,15 @@ class Playlist extends Component {
       <ul
         className={PLAYLIST_CLASSNAME}
         onMouseDown={event => {
-          this.onMouseDown(
-            event.target.className === PLAYLIST_CLASSNAME
-              ? this.props.playlist.length - 1
-              : 0
-          );
+          this.onMouseDown({
+            index:
+              event.target.className === PLAYLIST_CLASSNAME
+                ? this.props.playlist.length - 1
+                : 0,
+            isShiftDown: event.shiftKey
+          });
         }}
-        onMouseUp={() => this.clearSelection()}
+        onMouseUp={this.clearSelection.bind(this)}
       >
         <li className="playlist-header">
           <div className="cell cell-xxs" />
@@ -158,14 +170,12 @@ class Playlist extends Component {
             endIndex={this.state.endIndex}
             onSetActiveIndex={activeIndex =>
               this.setState({
-                activeIndex,
-                startIndex: NaN,
-                endIndex: NaN
+                activeIndex
               })
             }
-            onMouseOverItem={index => this.updateEndIndex(index)}
-            onMouseDownItem={index => this.onMouseDown(index)}
-            onMouseUpItem={index => this.onMouseUp(index)}
+            onMouseOverItem={this.updateEndIndex.bind(this)}
+            onMouseDownItem={this.onMouseDown.bind(this)}
+            onMouseUpItem={this.onMouseUp.bind(this)}
           />
         ))}
       </ul>
@@ -177,31 +187,29 @@ class Playlist extends Component {
     this.setState({ endIndex });
   }
 
-  onMouseDown(index) {
+  onMouseDown(options) {
+    if (options.isShiftDown) return;
     this.setState({
       isMouseDown: true,
-      startIndex: index,
-      endIndex: NaN
+      startIndex: options.index,
+      endIndex: options.index
     });
   }
 
-  onMouseUp(index) {
-    const startIndex = Math.min(this.state.startIndex, this.state.endIndex);
-    const endIndex = Math.max(this.state.startIndex, this.state.endIndex);
+  onMouseUp(options) {
     this.setState({
       isMouseDown: false,
       activeIndex: -1,
-      startIndex,
-      endIndex
+      startIndex: this.state.startIndex,
+      endIndex: options.index
     });
   }
 
-  clearSelection() {
-    if (this.state.startIndex === this.state.endIndex)
+  clearSelection(event) {
+    if (this.state.startIndex === this.state.endIndex && !event.shiftKey)
       this.setState({
         isMouseDown: false,
         activeIndex: -1,
-        startIndex: NaN,
         endIndex: NaN
       });
     else

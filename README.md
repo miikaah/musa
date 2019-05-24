@@ -21,7 +21,6 @@ UI for Musa-Electron.
 
 #### Playlist
 
-- feat: Select items with Shift + click
 - feat: Select items with Ctrl + click
 - feat: Cut items with Ctrl + X
 - feat: Copy items with Ctrl + C
@@ -63,6 +62,7 @@ UI for Musa-Electron.
 
 ##### 24.5.2019
 
+- feat: Select items with Shift + click
 - feat: Select items with Shift + up / down
 - fix: Seeking happening on mouse up as well
 

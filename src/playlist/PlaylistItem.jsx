@@ -24,14 +24,22 @@ class PlaylistItem extends Component {
           this.props.dispatch(playIndex(this.props.index));
           this.props.onSetActiveIndex(this.props.index);
         }}
-        onClick={() => this.props.onSetActiveIndex(this.props.index)}
+        onClick={event => {
+          if (!event.shiftKey) this.props.onSetActiveIndex(this.props.index);
+        }}
         onMouseOver={() => this.props.onMouseOverItem(this.props.index)}
         onMouseDown={event => {
-          this.props.onMouseDownItem(this.props.index);
+          this.props.onMouseDownItem({
+            index: this.props.index,
+            isShiftDown: event.shiftKey
+          });
           event.stopPropagation();
         }}
         onMouseUp={event => {
-          this.props.onMouseUpItem(this.props.index);
+          this.props.onMouseUpItem({
+            index: this.props.index,
+            isShiftDown: event.shiftKey
+          });
           event.stopPropagation();
         }}
       >
