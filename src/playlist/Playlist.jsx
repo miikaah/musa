@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import {
   pasteToPlaylist,
   removeRangeFromPlaylist,
-  removeIndexesFromPaylist,
+  removeIndexesFromPlaylist,
   playIndex,
   replay
 } from "../reducers/player.reducer";
@@ -272,7 +272,7 @@ class Playlist extends Component {
 
     switch (type) {
       case "remove": {
-        this.props.dispatch(removeIndexesFromPaylist(indexes));
+        this.props.dispatch(removeIndexesFromPlaylist(indexes));
         this.setState({
           selectedIndexes: new Set(),
           startIndex: NaN,

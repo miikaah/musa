@@ -55,7 +55,7 @@ export const removeRangeFromPlaylist = (startIndex, endIndex) => ({
 
 export const REMOVE_INDEXES_FROM_PLAYLIST =
   "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST";
-export const removeIndexesFromPaylist = indexes => ({
+export const removeIndexesFromPlaylist = indexes => ({
   type: REMOVE_INDEXES_FROM_PLAYLIST,
   indexes
 });

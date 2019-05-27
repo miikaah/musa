@@ -17,6 +17,7 @@ UI for Musa-Electron.
 
 #### Backend
 
+- fix: Some songs not playing (utf-8 character problem?)
 - feat: Send progress info to frontend
 
 #### Playlist
