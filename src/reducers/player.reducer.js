@@ -46,6 +46,13 @@ export const removeRangeFromPlaylist = (startIndex, endIndex) => ({
   endIndex
 });
 
+export const REMOVE_INDEXES_FROM_PLAYLIST =
+  "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST";
+export const removeIndexesFromPaylist = indexes => ({
+  type: REMOVE_INDEXES_FROM_PLAYLIST,
+  indexes
+});
+
 const initialState = {
   items: [],
   currentItem: {},
@@ -134,6 +141,16 @@ const player = (state = initialState, action) => {
           action.startIndex < state.currentIndex
             ? state.currentIndex - 1
             : state.currentIndex
+      };
+    }
+    case REMOVE_INDEXES_FROM_PLAYLIST: {
+      const newItems = state.items.filter(
+        (_, index) => !action.indexes.includes(index)
+      );
+      return {
+        ...state,
+        items: newItems,
+        currentIndex: -1
       };
     }
     default:

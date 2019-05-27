@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {
   removeFromPlaylist,
   removeRangeFromPlaylist,
+  removeIndexesFromPaylist,
   playIndex,
   replay
 } from "../reducers/player.reducer";
@@ -18,7 +19,8 @@ class Playlist extends Component {
     activeIndex: -1,
     isMouseDown: false,
     startIndex: NaN,
-    endIndex: NaN
+    endIndex: NaN,
+    selectedIndexes: new Set()
   };
 
   constructor() {
@@ -30,16 +32,23 @@ class Playlist extends Component {
     switch (event.keyCode) {
       // REMOVE
       case KEYS.Backspace: {
+        // Active item
         if (
           this.state.activeIndex > -1 &&
           isNaN(this.state.startIndex) &&
-          isNaN(this.state.endIndex)
+          isNaN(this.state.endIndex) &&
+          this.state.selectedIndexes.size < 2
         ) {
           this.props.dispatch(removeFromPlaylist(this.state.activeIndex));
           return;
         }
 
-        if (!isNaN(this.state.startIndex) && !isNaN(this.state.endIndex)) {
+        // Continuous selection
+        if (
+          !isNaN(this.state.startIndex) &&
+          !isNaN(this.state.endIndex) &&
+          this.state.selectedIndexes.size < 2
+        ) {
           const startIndex = Math.min(
             this.state.startIndex,
             this.state.endIndex
@@ -47,7 +56,24 @@ class Playlist extends Component {
           const endIndex = Math.max(this.state.startIndex, this.state.endIndex);
           this.props.dispatch(removeRangeFromPlaylist(startIndex, endIndex));
           this.setState({ startIndex: NaN, endIndex: NaN });
+          return;
         }
+
+        // Selected indexes
+        if (this.state.selectedIndexes.size > 1) {
+          this.props.dispatch(
+            removeIndexesFromPaylist(
+              Array.from(this.state.selectedIndexes.values())
+            )
+          );
+          this.setState({
+            selectedIndexes: new Set(),
+            startIndex: NaN,
+            endIndex: NaN,
+            activeIndex: -1
+          });
+        }
+
         return;
       }
       // SELECT ALL
@@ -168,6 +194,7 @@ class Playlist extends Component {
             activeIndex={this.state.activeIndex}
             startIndex={this.state.startIndex}
             endIndex={this.state.endIndex}
+            isSelected={this.state.selectedIndexes.has(index)}
             onSetActiveIndex={activeIndex =>
               this.setState({
                 activeIndex
@@ -188,15 +215,24 @@ class Playlist extends Component {
   }
 
   onMouseDown(options) {
-    if (options.isShiftDown) return;
+    if (options.isShiftDown || options.isCtrlDown) return;
     this.setState({
       isMouseDown: true,
       startIndex: options.index,
-      endIndex: options.index
+      endIndex: options.index,
+      selectedIndexes: new Set([options.index])
     });
   }
 
   onMouseUp(options) {
+    if (options.isCtrlDown) {
+      this.setState({
+        isMouseDown: false,
+        activeIndex: -1,
+        selectedIndexes: new Set([...this.state.selectedIndexes, options.index])
+      });
+      return;
+    }
     this.setState({
       isMouseDown: false,
       activeIndex: -1,
@@ -210,7 +246,8 @@ class Playlist extends Component {
       this.setState({
         isMouseDown: false,
         activeIndex: -1,
-        endIndex: NaN
+        endIndex: NaN,
+        selectedIndexes: new Set()
       });
     else
       this.setState({

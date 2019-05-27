@@ -11,7 +11,8 @@ class PlaylistItem extends Component {
       this.props.index,
       this.props.activeIndex,
       this.props.startIndex,
-      this.props.endIndex
+      this.props.endIndex,
+      this.props.isSelected
     );
     return (
       <li
@@ -31,14 +32,16 @@ class PlaylistItem extends Component {
         onMouseDown={event => {
           this.props.onMouseDownItem({
             index: this.props.index,
-            isShiftDown: event.shiftKey
+            isShiftDown: event.shiftKey,
+            isCtrlDown: event.ctrlKey || event.metaKey
           });
           event.stopPropagation();
         }}
         onMouseUp={event => {
           this.props.onMouseUpItem({
             index: this.props.index,
-            isShiftDown: event.shiftKey
+            isShiftDown: event.shiftKey,
+            isCtrlDown: event.ctrlKey || event.metaKey
           });
           event.stopPropagation();
         }}
@@ -66,16 +69,17 @@ class PlaylistItem extends Component {
     );
   }
 
-  getClassNames(index, activeIndex, startIndex, endIndex) {
+  getClassNames(index, activeIndex, startIndex, endIndex, isSelected) {
     let className = "playlist-item";
     const start = Math.min(startIndex, endIndex);
     const end = Math.max(startIndex, endIndex);
     if (index === activeIndex) className += " active";
     if (
-      !isNaN(startIndex) &&
-      !isNaN(endIndex) &&
-      index >= start &&
-      index <= end
+      (!isNaN(startIndex) &&
+        !isNaN(endIndex) &&
+        index >= start &&
+        index <= end) ||
+      isSelected
     )
       className += " selected";
     return className;
