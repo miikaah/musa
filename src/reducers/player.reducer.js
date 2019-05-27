@@ -33,6 +33,13 @@ export const addToPlaylist = item => ({
   item
 });
 
+export const PASTE_TO_PLAYLIST = "MUSA/PLAYER/PASTE_TO_PLAYLIST";
+export const pasteToPlaylist = (items, index) => ({
+  type: PASTE_TO_PLAYLIST,
+  items,
+  index
+});
+
 export const REMOVE_FROM_PLAYLIST = "MUSA/PLAYER/REMOVE";
 export const removeFromPlaylist = index => ({
   type: REMOVE_FROM_PLAYLIST,
@@ -121,6 +128,17 @@ const player = (state = initialState, action) => {
         ...state,
         items: [...state.items, action.item]
       };
+    case PASTE_TO_PLAYLIST: {
+      const playlistStart = state.items.slice(0, action.index + 1);
+      const playlistEnd = state.items.slice(
+        action.index + 1,
+        state.items.length
+      );
+      return {
+        ...state,
+        items: [...playlistStart, ...action.items, ...playlistEnd]
+      };
+    }
     case REMOVE_FROM_PLAYLIST: {
       return {
         ...state,

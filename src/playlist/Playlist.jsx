@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
-  removeFromPlaylist,
+  pasteToPlaylist,
   removeRangeFromPlaylist,
   removeIndexesFromPaylist,
   playIndex,
@@ -20,7 +20,8 @@ class Playlist extends Component {
     isMouseDown: false,
     startIndex: NaN,
     endIndex: NaN,
-    selectedIndexes: new Set()
+    selectedIndexes: new Set(),
+    clipboard: []
   };
 
   constructor() {
@@ -30,62 +31,16 @@ class Playlist extends Component {
 
   handleKeyDown = event => {
     switch (event.keyCode) {
-      // REMOVE
-      case KEYS.Backspace: {
-        // Active item
-        if (
-          this.state.activeIndex > -1 &&
-          isNaN(this.state.startIndex) &&
-          isNaN(this.state.endIndex) &&
-          this.state.selectedIndexes.size < 2
-        ) {
-          this.props.dispatch(removeFromPlaylist(this.state.activeIndex));
-          return;
-        }
-
-        // Continuous selection
-        if (
-          !isNaN(this.state.startIndex) &&
-          !isNaN(this.state.endIndex) &&
-          this.state.selectedIndexes.size < 2
-        ) {
-          const startIndex = Math.min(
-            this.state.startIndex,
-            this.state.endIndex
-          );
-          const endIndex = Math.max(this.state.startIndex, this.state.endIndex);
-          this.props.dispatch(removeRangeFromPlaylist(startIndex, endIndex));
-          this.setState({ startIndex: NaN, endIndex: NaN });
-          return;
-        }
-
-        // Selected indexes
-        if (this.state.selectedIndexes.size > 1) {
-          this.props.dispatch(
-            removeIndexesFromPaylist(
-              Array.from(this.state.selectedIndexes.values())
-            )
-          );
-          this.setState({
-            selectedIndexes: new Set(),
-            startIndex: NaN,
-            endIndex: NaN,
-            activeIndex: -1
-          });
-        }
-
-        return;
-      }
       // SELECT ALL
       case KEYS.A: {
-        if (event.ctrlKey || event.metaKey) {
-          this.setState({
-            startIndex: 0,
-            endIndex: this.props.playlist.length - 1
-          });
-        }
+        if (!this.isCtrlDown(event)) return;
+        this.setState({
+          startIndex: 0,
+          endIndex: this.props.playlist.length - 1
+        });
         return;
       }
+
       // MOVE UP
       case KEYS.Up: {
         event.preventDefault();
@@ -112,6 +67,7 @@ class Playlist extends Component {
           this.setState({ activeIndex: this.props.playlist.length - 1 });
         return;
       }
+
       // MOVE DOWN
       case KEYS.Down: {
         event.preventDefault();
@@ -137,8 +93,32 @@ class Playlist extends Component {
         if (this.props.playlist.length) this.setState({ activeIndex: 0 });
         return;
       }
-      // PLAY OR REPLAY ACTIVE ITEM
+
       case KEYS.Enter: {
+        // CREATE NEW PLAYLIST FROM SELECTION
+        if (
+          this.isContinuousSelection() ||
+          this.state.selectedIndexes.size > 1
+        ) {
+          let selItems;
+          if (this.isContinuousSelection()) {
+            const { selectedItems } = this.getContinuousSelData(true);
+            selItems = selectedItems;
+          }
+          if (this.state.selectedIndexes.size > 1) {
+            const { selectedItems } = this.getIndexesSelData(true);
+            selItems = selectedItems;
+          }
+
+          this.props.dispatch(
+            removeRangeFromPlaylist(0, this.props.playlist.length - 1)
+          );
+          this.props.dispatch(pasteToPlaylist(selItems, 0));
+          this.setState({ startIndex: NaN, endIndex: NaN });
+          return;
+        }
+
+        // PLAY OR REPLAY ACTIVE ITEM
         if (this.state.activeIndex < 0) return;
         if (this.shouldReplaySong()) {
           this.props.dispatch(replay(true));
@@ -147,10 +127,179 @@ class Playlist extends Component {
         this.props.dispatch(playIndex(this.state.activeIndex));
         return;
       }
+
+      // REMOVE
+      case KEYS.Backspace: {
+        if (this.isContinuousSelection()) {
+          this.handleContinuousSelection({
+            type: "remove",
+            getSelected: false
+          });
+          return;
+        }
+        if (this.isIndexesSelection()) {
+          this.handleIndexesSelection({ type: "remove", getSelected: false });
+          return;
+        }
+        return;
+      }
+
+      // CUT
+      case KEYS.X: {
+        if (!this.isCtrlDown(event)) return;
+        if (this.isContinuousSelection()) {
+          this.handleContinuousSelection({ type: "remove" });
+          return;
+        }
+        if (this.isIndexesSelection()) {
+          this.handleIndexesSelection({ type: "remove" });
+          return;
+        }
+        return;
+      }
+
+      // COPY
+      case KEYS.C: {
+        if (!this.isCtrlDown(event)) return;
+        if (this.isContinuousSelection()) {
+          this.handleContinuousSelection({ type: "copy" });
+          return;
+        }
+        if (this.isIndexesSelection()) {
+          this.handleIndexesSelection({ type: "copy" });
+          return;
+        }
+        return;
+      }
+
+      // DUPLICATE
+      case KEYS.D: {
+        if (!this.isCtrlDown(event) || !event.shiftKey) return;
+        if (this.isContinuousSelection()) {
+          this.handleContinuousSelection({ type: "duplicate" });
+          return;
+        }
+        if (this.isIndexesSelection()) {
+          this.handleIndexesSelection({ type: "duplicate" });
+          return;
+        }
+        return;
+      }
+
+      // PASTE
+      case KEYS.V: {
+        if (!this.isCtrlDown(event)) return;
+        this.props.dispatch(
+          pasteToPlaylist(
+            this.state.clipboard,
+            event.shiftKey ? this.state.activeIndex - 1 : this.state.activeIndex
+          )
+        );
+        return;
+      }
+
       default:
         break;
     }
   };
+
+  isContinuousSelection() {
+    return (
+      !isNaN(this.state.startIndex) &&
+      !isNaN(this.state.endIndex) &&
+      this.state.startIndex !== this.state.endIndex &&
+      this.state.selectedIndexes.size < 2
+    );
+  }
+
+  getContinuousSelData(getSelected) {
+    const startIndex = Math.min(this.state.startIndex, this.state.endIndex);
+    const endIndex = Math.max(this.state.startIndex, this.state.endIndex);
+    const selectedItems = getSelected
+      ? this.props.playlist.filter(
+          (_, index) => index >= startIndex && index <= endIndex
+        )
+      : this.state.clipboard;
+    return { startIndex, endIndex, selectedItems };
+  }
+
+  handleContinuousSelection({ type, getSelected = true }) {
+    const { startIndex, endIndex, selectedItems } = this.getContinuousSelData(
+      getSelected
+    );
+
+    switch (type) {
+      case "remove": {
+        this.props.dispatch(removeRangeFromPlaylist(startIndex, endIndex));
+        this.setState({
+          startIndex: NaN,
+          endIndex: NaN,
+          clipboard: selectedItems
+        });
+        return;
+      }
+
+      case "duplicate": {
+        this.props.dispatch(
+          pasteToPlaylist(selectedItems, this.state.activeIndex)
+        );
+        return;
+      }
+
+      default: {
+        this.setState({ clipboard: selectedItems });
+      }
+    }
+  }
+
+  isIndexesSelection() {
+    return this.state.activeIndex > -1 || this.state.selectedIndexes.size > 0;
+  }
+
+  getIndexesSelData(getSelected) {
+    const indexes =
+      this.state.selectedIndexes.size > 0
+        ? Array.from(this.state.selectedIndexes.values())
+        : [this.state.activeIndex];
+    const selectedItems = getSelected
+      ? indexes.map(i => this.props.playlist[i])
+      : this.state.clipboard;
+    return { indexes, selectedItems };
+  }
+
+  handleIndexesSelection({ type, getSelected = true }) {
+    const { indexes, selectedItems } = this.getIndexesSelData(getSelected);
+
+    switch (type) {
+      case "remove": {
+        this.props.dispatch(removeIndexesFromPaylist(indexes));
+        this.setState({
+          selectedIndexes: new Set(),
+          startIndex: NaN,
+          endIndex: NaN,
+          activeIndex:
+            this.state.selectedIndexes.size > 1 ? -1 : this.state.activeIndex,
+          clipboard: selectedItems
+        });
+        return;
+      }
+
+      case "duplicate": {
+        this.props.dispatch(
+          pasteToPlaylist(selectedItems, this.state.activeIndex)
+        );
+        return;
+      }
+
+      default: {
+        this.setState({ clipboard: selectedItems });
+      }
+    }
+  }
+
+  isCtrlDown(event) {
+    return event.ctrlKey || event.metaKey;
+  }
 
   shouldReplaySong() {
     return (
@@ -194,12 +343,8 @@ class Playlist extends Component {
             activeIndex={this.state.activeIndex}
             startIndex={this.state.startIndex}
             endIndex={this.state.endIndex}
+            onSetActiveIndex={activeIndex => this.setState({ activeIndex })}
             isSelected={this.state.selectedIndexes.has(index)}
-            onSetActiveIndex={activeIndex =>
-              this.setState({
-                activeIndex
-              })
-            }
             onMouseOverItem={this.updateEndIndex.bind(this)}
             onMouseDownItem={this.onMouseDown.bind(this)}
             onMouseUpItem={this.onMouseUp.bind(this)}
@@ -220,6 +365,7 @@ class Playlist extends Component {
       isMouseDown: true,
       startIndex: options.index,
       endIndex: options.index,
+      activeIndex: options.index,
       selectedIndexes: new Set([options.index])
     });
   }
@@ -235,7 +381,6 @@ class Playlist extends Component {
     }
     this.setState({
       isMouseDown: false,
-      activeIndex: -1,
       startIndex: this.state.startIndex,
       endIndex: options.index
     });

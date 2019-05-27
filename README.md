@@ -21,11 +21,7 @@ UI for Musa-Electron.
 
 #### Playlist
 
-- feat: Cut items with Ctrl + X
-- feat: Copy items with Ctrl + C
-- feat: Paste items with Ctrl + V
-- feat: Duplicate items with Ctrl + Shift + D
-- feat: Create a new playlist from selected items + Enter
+- feat: Proper handling of active index
 - feat: Rearrange playlist items with drag & drop
 - feat: Highlight with border the index when rearranging / adding items
 - feat: Scroll to active index if it goes out of viewport
@@ -63,6 +59,12 @@ UI for Musa-Electron.
 
 ##### 27.5.2019
 
+- feat: Cut items with Ctrl + X
+- feat: Copy items with Ctrl + C
+- feat: Paste items with Ctrl + V
+- feat: Paste items above current index with Ctrl + Shift + V
+- feat: Duplicate items with Ctrl + Shift + D
+- feat: Create a new playlist from selected items + Enter
 - feat: Select items with Ctrl + click
 
 ##### 24.5.2019
