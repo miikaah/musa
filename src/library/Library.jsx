@@ -14,7 +14,9 @@ const idbRequest = indexedDB.open(dbName, dbVersion);
 
 class Library extends Component {
   state = {
-    listing: []
+    listing: [],
+    scanLength: 0,
+    scannedLength: -1
   };
 
   componentDidMount() {
@@ -99,6 +101,16 @@ class Library extends Component {
           };
         });
       };
+
+      ipcRenderer.on("startInitialScan", (event, scanLength) => {
+        this.setState({ scanLength });
+      });
+      ipcRenderer.on("updateInitialScan", (event, scannedLength) => {
+        this.setState({ scannedLength });
+      });
+      ipcRenderer.on("endInitialScan", () => {
+        this.setState({ scanLength: 0, scannedLength: -1 });
+      });
     };
   }
 
@@ -116,15 +128,22 @@ class Library extends Component {
 
   render() {
     return (
-      <div className={`library ${this.props.isVisible ? "show" : "hide"}`}>
-        {this.state.listing.map((item, index) => (
-          <LibraryList
-            key={item.name + "-" + index}
-            item={item}
-            isRoot={true}
-          />
-        ))}
-      </div>
+      <>
+        <progress
+          max={this.state.scanLength}
+          value={this.state.scannedLength}
+          className="library-scan-progress"
+        />
+        <div className={`library ${this.props.isVisible ? "show" : "hide"}`}>
+          {this.state.listing.map((item, index) => (
+            <LibraryList
+              key={item.name + "-" + index}
+              item={item}
+              isRoot={true}
+            />
+          ))}
+        </div>
+      </>
     );
   }
 }

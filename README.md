@@ -6,8 +6,8 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- feat: Better styles for progress bar
 - feat: Pause music if playlist is empty
-- feat: Add progress meter for initial scan
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
 - feat: Persist playlist
@@ -16,8 +16,6 @@ UI for Musa-Electron.
 - feat: Scale cover images that are too high
 
 #### Backend
-
-- feat: Send progress info to frontend
 
 #### Playlist
 
@@ -58,6 +56,9 @@ UI for Musa-Electron.
 
 ##### 28.5.2019
 
+- fix: Problem with filenames that have # chars in them
+- feat: Add progress meter for initial scan
+- feat: Send progress info to frontend during initial scan
 - feat: Proper handling of active index
 
 ##### 27.5.2019

@@ -17,5 +17,12 @@
     padding-left: 0;
   }
 
+  &-scan-progress {
+    position: fixed;
+    top: 0;
+    text-align: center;
+    width: 100%;
+  }
+
   @include listOverflow;
 }

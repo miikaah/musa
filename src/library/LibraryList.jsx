@@ -18,9 +18,9 @@ class LibraryList extends Component {
     const isUndefinedItemName = item.name === "undefined";
     if (isArtist || isAlbum) {
       return isUndefinedItemName ? (
-        item.songs.map(song => (
-          <LibraryItem key={song.name + "-" + Date.now()} item={song} />
-        ))
+        item.songs.filter(Boolean).map((song, i) => {
+          return <LibraryItem key={`${song.name}-${i}`} item={song} />;
+        })
       ) : (
         <ul
           className={`library-list ${isRoot ? "root" : ""}`}
@@ -42,9 +42,9 @@ class LibraryList extends Component {
               : item.name}
           </li>
           {this.state.showFolderItems &&
-            (item.albums || item.songs).map(child => (
+            (item.albums || item.songs).map((child, i) => (
               <LibraryList
-                key={child.name + "-" + Date.now()}
+                key={`${child.name}-${i}`}
                 item={child}
                 cover={item.cover}
                 dispatch={this.props.dispatch}

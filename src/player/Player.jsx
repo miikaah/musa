@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { play, replay, pause, playNext } from "../reducers/player.reducer";
 import { get, isNaN, isEmpty, isNumber, isNull, defaultTo } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { KEYS } from "../util";
+import { KEYS, prefixNumber } from "../util";
 import { store } from "..";
 import { Colors } from "../App.jsx";
 import "./Player.scss";
@@ -180,7 +180,7 @@ class Player extends Component {
     return (
       <span className={className}>
         <span className="player-dynamic-range">
-          {isEmpty(dr) ? "DR00" : `DR${this.prefixNumber(dr)}`}
+          {isEmpty(dr) ? "DR00" : `DR${prefixNumber(dr)}`}
         </span>
       </span>
     );
@@ -279,16 +279,12 @@ class Player extends Component {
     if (duration < 1) return "0:00";
     let output = "";
     if (duration >= 3600) {
-      output += this.prefixNumber(Math.floor(duration / 3600)) + ":";
+      output += prefixNumber(Math.floor(duration / 3600)) + ":";
       output +=
-        this.prefixNumber(Math.floor((Math.floor(duration) % 3600) / 60)) + ":";
+        prefixNumber(Math.floor((Math.floor(duration) % 3600) / 60)) + ":";
     } else output += Math.floor((Math.floor(duration) % 3600) / 60) + ":";
-    output += this.prefixNumber(Math.floor(duration % 60));
+    output += prefixNumber(Math.floor(duration % 60));
     return output;
-  }
-
-  prefixNumber(value) {
-    return value < 10 ? `0${value}` : `${value}`;
   }
 
   muteOrUnmute() {

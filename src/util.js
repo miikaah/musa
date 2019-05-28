@@ -11,3 +11,11 @@ export const KEYS = {
   V: 86,
   X: 88
 };
+
+export function prefixNumber(value) {
+  return value < 10 ? `0${value}` : `${value}`;
+}
+
+export function encodeFileUri(path) {
+  return path.replace("#", "%23");
+}
