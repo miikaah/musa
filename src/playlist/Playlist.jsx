@@ -232,9 +232,11 @@ class Playlist extends Component {
       case "remove": {
         this.props.dispatch(removeRangeFromPlaylist(startIndex, endIndex));
         this.setState({
+          selectedIndexes: new Set(),
           startIndex: NaN,
           endIndex: NaN,
-          clipboard: selectedItems
+          clipboard: selectedItems,
+          activeIndex: -1
         });
         return;
       }

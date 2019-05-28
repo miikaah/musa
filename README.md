@@ -17,12 +17,10 @@ UI for Musa-Electron.
 
 #### Backend
 
-- fix: Some songs not playing (utf-8 character problem?)
 - feat: Send progress info to frontend
 
 #### Playlist
 
-- feat: Proper handling of active index
 - feat: Rearrange playlist items with drag & drop
 - feat: Highlight with border the index when rearranging / adding items
 - feat: Scroll to active index if it goes out of viewport
@@ -57,6 +55,10 @@ UI for Musa-Electron.
 - feat: Create a packaging script
 
 ## Done
+
+##### 28.5.2019
+
+- feat: Proper handling of active index
 
 ##### 27.5.2019
 
