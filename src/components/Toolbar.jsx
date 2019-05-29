@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { toggleLibrary } from "../reducers/library.reducer";
-import { toggleSettings } from "../reducers/settings.reducer";
-import Player from "../player/Player";
-import "./Toolbar.scss";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { toggleLibrary } from "../reducers/library.reducer"
+import { toggleSettings } from "../reducers/settings.reducer"
+import Player from "./Player"
+import "./Toolbar.scss"
 
 class Toolbar extends Component {
   render() {
@@ -26,11 +26,11 @@ class Toolbar extends Component {
           <FontAwesomeIcon icon="cog" />
         </button>
       </div>
-    );
+    )
   }
 }
 
 export default connect(
   state => ({}),
   dispatch => ({ dispatch })
-)(Toolbar);
+)(Toolbar)

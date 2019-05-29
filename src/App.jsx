@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import Library from "./library/Library";
-import Settings from "./settings/Settings";
-import Playlist from "./playlist/Playlist";
-import Toolbar from "./toolbar/Toolbar";
-import Cover from "./cover/Cover";
-import ProgressBar from "./progress-bar/ProgressBar";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import React, { Component } from "react"
+import Library from "./components/Library"
+import Settings from "./components/Settings"
+import Playlist from "./components/Playlist"
+import Toolbar from "./components/Toolbar"
+import Cover from "./components/Cover"
+import ProgressBar from "./components/ProgressBar"
+import { library } from "@fortawesome/fontawesome-svg-core"
 import {
   faPlay,
   faPause,
@@ -14,11 +14,11 @@ import {
   faCaretRight,
   faBars,
   faCog
-} from "@fortawesome/free-solid-svg-icons";
-import { connect } from "react-redux";
-import { addToPlaylist } from "./reducers/player.reducer";
-import { hideLibrary } from "./reducers/library.reducer";
-import "./App.scss";
+} from "@fortawesome/free-solid-svg-icons"
+import { connect } from "react-redux"
+import { addToPlaylist } from "./reducers/player.reducer"
+import { hideLibrary } from "./reducers/library.reducer"
+import "./App.scss"
 
 library.add(
   faPlay,
@@ -28,7 +28,7 @@ library.add(
   faCaretRight,
   faBars,
   faCog
-);
+)
 
 export const Colors = {
   Bg: "#21252b",
@@ -43,38 +43,35 @@ export const Colors = {
   SliderTrack: "#424a56",
   SliderTrackRgb: [66, 74, 86],
   WhiteRgb: [255, 255, 255]
-};
+}
 
 class App extends Component {
   state = {
     windowWidth: 1600
-  };
+  }
 
   componentDidMount() {
-    this.setState({ windowWidth: window.innerWidth });
+    this.setState({ windowWidth: window.innerWidth })
     window.addEventListener("resize", () =>
       this.setState({ windowWidth: window.innerWidth })
-    );
-    document.body.style.setProperty("--color-bg", Colors.Bg);
-    document.body.style.setProperty(
-      "--color-primary-highlight",
-      Colors.Primary
-    );
+    )
+    document.body.style.setProperty("--color-bg", Colors.Bg)
+    document.body.style.setProperty("--color-primary-highlight", Colors.Primary)
     document.body.style.setProperty(
       "--color-secondary-highlight",
       Colors.Secondary
-    );
-    document.body.style.setProperty("--color-typography", Colors.Typography);
+    )
+    document.body.style.setProperty("--color-typography", Colors.Typography)
     document.body.style.setProperty(
       "--color-typography-primary",
       Colors.Typography
-    );
+    )
     document.body.style.setProperty(
       "--color-typography-secondary",
       Colors.Typography
-    );
-    document.body.style.setProperty("--color-slider", Colors.Primary);
-    document.body.style.setProperty("--color-dr-level", Colors.Typography);
+    )
+    document.body.style.setProperty("--color-slider", Colors.Primary)
+    document.body.style.setProperty("--color-dr-level", Colors.Typography)
   }
 
   render() {
@@ -142,21 +139,21 @@ class App extends Component {
           )}
         </div>
       </div>
-    );
+    )
   }
 
   onDragOver = event => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   onDrop = event => {
-    const item = JSON.parse(event.dataTransfer.getData("text"));
+    const item = JSON.parse(event.dataTransfer.getData("text"))
     if (Array.isArray(item)) {
-      item.forEach(song => this.props.dispatch(addToPlaylist(song)));
-      return;
+      item.forEach(song => this.props.dispatch(addToPlaylist(song)))
+      return
     }
-    this.props.dispatch(addToPlaylist(item));
-  };
+    this.props.dispatch(addToPlaylist(item))
+  }
 }
 
 export default connect(
@@ -165,4 +162,4 @@ export default connect(
     isSettingsVisible: state.settings.isVisible
   }),
   dispatch => ({ dispatch })
-)(App);
+)(App)

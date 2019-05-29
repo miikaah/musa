@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { get } from "lodash-es";
-import { addToPlaylist } from "../reducers/player.reducer";
-import "./LibraryItem.scss";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { get } from "lodash-es"
+import { addToPlaylist } from "../reducers/player.reducer"
+import "./LibraryItem.scss"
 
 class LibraryItem extends Component {
   render() {
-    const item = { ...this.props.item, cover: this.props.cover };
-    const name = item.name;
+    const item = { ...this.props.item, cover: this.props.cover }
+    const name = item.name
     return (
       <li
         key={name + "-" + Date.now()}
@@ -18,16 +18,16 @@ class LibraryItem extends Component {
       >
         {get(item, "metadata.title", item.name)}
       </li>
-    );
+    )
   }
 
   onDragStart(event, item) {
-    event.dataTransfer.setData("text/plain", JSON.stringify(item));
-    event.stopPropagation();
+    event.dataTransfer.setData("text/plain", JSON.stringify(item))
+    event.stopPropagation()
   }
 }
 
 export default connect(
   () => ({}),
   dispatch => ({ dispatch })
-)(LibraryItem);
+)(LibraryItem)

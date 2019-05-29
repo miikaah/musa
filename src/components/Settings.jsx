@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import "./Settings.scss";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import "./Settings.scss"
 
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
+const electron = window.require("electron")
+const ipcRenderer = electron.ipcRenderer
 
 class Settings extends Component {
   render() {
@@ -17,11 +17,11 @@ class Settings extends Component {
           Re-run initial scan
         </button>
       </div>
-    );
+    )
   }
 }
 
 export default connect(
   state => ({}),
   dispatch => ({ dispatch })
-)(Settings);
+)(Settings)

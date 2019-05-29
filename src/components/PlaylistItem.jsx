@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { get, isNaN, isEqual } from "lodash-es";
-import { playIndex, replay } from "../reducers/player.reducer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./PlaylistItem.scss";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { get, isNaN, isEqual } from "lodash-es"
+import { playIndex, replay } from "../reducers/player.reducer"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import "./PlaylistItem.scss"
 
 class PlaylistItem extends Component {
   render() {
@@ -13,17 +13,17 @@ class PlaylistItem extends Component {
       this.props.startIndex,
       this.props.endIndex,
       this.props.isSelected
-    );
+    )
     return (
       <li
         className={classes}
         onDoubleClick={() => {
           if (this.shouldReplaySong()) {
-            this.props.dispatch(replay(true));
-            return;
+            this.props.dispatch(replay(true))
+            return
           }
-          this.props.dispatch(playIndex(this.props.index));
-          this.props.onSetActiveIndex(this.props.index);
+          this.props.dispatch(playIndex(this.props.index))
+          this.props.onSetActiveIndex(this.props.index)
         }}
         onMouseOver={() => this.props.onMouseOverItem(this.props.index)}
         onMouseDown={event => {
@@ -31,16 +31,16 @@ class PlaylistItem extends Component {
             index: this.props.index,
             isShiftDown: event.shiftKey,
             isCtrlDown: event.ctrlKey || event.metaKey
-          });
-          event.stopPropagation();
+          })
+          event.stopPropagation()
         }}
         onMouseUp={event => {
           this.props.onMouseUpItem({
             index: this.props.index,
             isShiftDown: event.shiftKey,
             isCtrlDown: event.ctrlKey || event.metaKey
-          });
-          event.stopPropagation();
+          })
+          event.stopPropagation()
         }}
       >
         <div className="cell cell-xxs">{this.renderPlayOrPauseIcon()}</div>
@@ -63,14 +63,14 @@ class PlaylistItem extends Component {
           {get(this.props.item, "metadata.date", "")}
         </div>
       </li>
-    );
+    )
   }
 
   getClassNames(index, activeIndex, startIndex, endIndex, isSelected) {
-    let className = "playlist-item";
-    const start = Math.min(startIndex, endIndex);
-    const end = Math.max(startIndex, endIndex);
-    if (index === activeIndex) className += " active";
+    let className = "playlist-item"
+    const start = Math.min(startIndex, endIndex)
+    const end = Math.max(startIndex, endIndex)
+    if (index === activeIndex) className += " active"
     if (
       (!isNaN(startIndex) &&
         !isNaN(endIndex) &&
@@ -78,30 +78,30 @@ class PlaylistItem extends Component {
         index <= end) ||
       isSelected
     )
-      className += " selected";
-    return className;
+      className += " selected"
+    return className
   }
 
   shouldReplaySong() {
-    return this.isIndexCurrentIndex() && this.hasEqualItemAndCurrentItem();
+    return this.isIndexCurrentIndex() && this.hasEqualItemAndCurrentItem()
   }
 
   isIndexCurrentIndex() {
-    return this.props.index === this.props.currentIndex;
+    return this.props.index === this.props.currentIndex
   }
 
   hasEqualItemAndCurrentItem() {
-    return isEqual(this.props.item, this.props.currentItem);
+    return isEqual(this.props.item, this.props.currentItem)
   }
 
   renderPlayOrPauseIcon() {
     if (!this.isIndexCurrentIndex() || !this.hasEqualItemAndCurrentItem())
-      return;
+      return
     return this.props.isPlaying ? (
       <FontAwesomeIcon icon="play" />
     ) : (
       <FontAwesomeIcon icon="pause" />
-    );
+    )
   }
 }
 
@@ -112,4 +112,4 @@ export default connect(
     isPlaying: state.player.isPlaying
   }),
   dispatch => ({ dispatch })
-)(PlaylistItem);
+)(PlaylistItem)
