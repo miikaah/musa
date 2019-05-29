@@ -1,18 +1,34 @@
-import React, { Component } from "react"
+import React, { useRef, useEffect } from "react"
 import { connect } from "react-redux"
 import { defaultTo, sortBy, some, isEqual } from "lodash-es"
 import Palette from "img-palette"
 import { Colors } from "../App.jsx"
 import "./Cover.scss"
 
-class Cover extends Component {
-  constructor(props) {
-    super(props)
-    this.cover = React.createRef()
+const Cover = ({ coverSrc }) => {
+  const cover = useRef()
+
+  const isVibrantCover = mostPopularSwatch => {
+    return some(mostPopularSwatch.rgb, value => value > 125)
   }
 
-  componentDidMount() {
-    this.cover.current.addEventListener("load", event => {
+  const luminance = (r, g, b) => {
+    const a = [r, g, b].map(v => {
+      v /= 255
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+    })
+    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722
+  }
+
+  const contrast = (rgb1, rgb2) => {
+    return (
+      (luminance(rgb1[0], rgb1[1], rgb1[2]) + 0.05) /
+      (luminance(rgb2[0], rgb2[1], rgb2[2]) + 0.05)
+    )
+  }
+
+  useEffect(() => {
+    cover.current.addEventListener("load", event => {
       const palette = new Palette(event.target)
       const mostPopularSwatch = palette.swatches.find(
         s => s.population === palette.highestPopulation
@@ -21,10 +37,8 @@ class Cover extends Component {
         palette.swatches,
         s => -s.population
       )
-      console.log(palette)
-      // console.log("isVibrant", this.isVibrantCover(mostPopularSwatch));
 
-      // Defualts are for dark covers
+      // Defaults are for dark covers
       let bg = mostPopularSwatch,
         primary,
         secondary,
@@ -42,9 +56,8 @@ class Cover extends Component {
         ]
 
       // Set different colors for a light cover
-      if (this.isVibrantCover(mostPopularSwatch)) {
-        // console.log(this.contrast(Colors.WhiteRgb, bg.rgb) < 3.4);
-        if (this.contrast(Colors.WhiteRgb, bg.rgb) < 3.4)
+      if (isVibrantCover(mostPopularSwatch)) {
+        if (contrast(Colors.WhiteRgb, bg.rgb) < 3.4)
           color = Colors.TypographyLight
         primarySwatches = [
           defaultTo(palette.vibrantSwatch, {}),
@@ -93,15 +106,15 @@ class Cover extends Component {
       // or background color
       let slider = primary
       if (
-        this.contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2 ||
-        this.contrast(slider.rgb, bg.rgb) < 1.2
+        contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2 ||
+        contrast(slider.rgb, bg.rgb) < 1.2
       )
         slider = secondary
 
       // Switch to dark text for light covers
-      if (this.contrast(Colors.WhiteRgb, primary.rgb) < 2.6)
+      if (contrast(Colors.WhiteRgb, primary.rgb) < 2.6)
         primaryColor = Colors.TypographyLight
-      if (this.contrast(Colors.WhiteRgb, secondary.rgb) < 2.6)
+      if (contrast(Colors.WhiteRgb, secondary.rgb) < 2.6)
         secondaryColor = Colors.TypographyLight
 
       // Set CSS Variables
@@ -131,39 +144,18 @@ class Cover extends Component {
         defaultTo(secondaryColor, Colors.Typography)
       )
     })
-  }
+  })
 
-  isVibrantCover(mostPopularSwatch) {
-    return some(mostPopularSwatch.rgb, value => value > 125)
-  }
-
-  contrast(rgb1, rgb2) {
-    return (
-      (this.luminance(rgb1[0], rgb1[1], rgb1[2]) + 0.05) /
-      (this.luminance(rgb2[0], rgb2[1], rgb2[2]) + 0.05)
-    )
-  }
-
-  luminance(r, g, b) {
-    const a = [r, g, b].map(function(v) {
-      v /= 255
-      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
-    })
-    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722
-  }
-
-  render() {
-    return (
-      <div className="cover-wrapper">
-        <img alt="" className="cover" src={this.props.cover} ref={this.cover} />
-      </div>
-    )
-  }
+  return (
+    <div className="cover-wrapper">
+      <img alt="" className="cover" src={coverSrc} ref={cover} />
+    </div>
+  )
 }
 
 export default connect(
   state => ({
-    cover: state.player.cover
+    coverSrc: state.player.cover
   }),
   dispatch => ({ dispatch })
 )(Cover)
