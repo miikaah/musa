@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Better styles for progress bar
 - feat: Pause music if playlist is empty
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
@@ -38,6 +37,8 @@ UI for Musa-Electron.
 
 #### Player
 
+- fix: Bug where playback doesn't continue to items added later than the playback of the last element started
+
 #### Settings
 
 - feat: Customise music library folder path
@@ -53,6 +54,10 @@ UI for Musa-Electron.
 - feat: Create a packaging script
 
 ## Done
+
+##### 29.5.2019
+
+- feat: Add progress bar component
 
 ##### 28.5.2019
 

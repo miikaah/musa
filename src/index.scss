@@ -35,14 +35,7 @@ button {
   font-weight: bold;
 
   &-primary {
-    background-color: $musa-highlight;
-
-    &:hover {
-      background-color: lighten($musa-highlight, 10%);
-    }
-
-    &:focus {
-      outline: 1px solid lighten($musa-highlight, 30%);
-    }
+    background-color: var(--color-primary-highlight);
+    color: var(--color-typography-primary);
   }
 }

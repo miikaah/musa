@@ -4,6 +4,7 @@ import Settings from "./settings/Settings";
 import Playlist from "./playlist/Playlist";
 import Toolbar from "./toolbar/Toolbar";
 import Cover from "./cover/Cover";
+import ProgressBar from "./progress-bar/ProgressBar";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
@@ -79,6 +80,7 @@ class App extends Component {
   render() {
     return (
       <div className="app">
+        <ProgressBar />
         <Toolbar />
         <div className={`${this.props.isSettingsVisible ? "show" : "hide"}`}>
           <Settings />

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import LibraryList from "./LibraryList";
 import { isEqual, isEmpty, get, flatten } from "lodash-es";
 import { connect } from "react-redux";
+import { setScanProps } from "../reducers/library.reducer";
 import "./Library.scss";
 
 const electron = window.require("electron");
@@ -14,9 +15,7 @@ const idbRequest = indexedDB.open(dbName, dbVersion);
 
 class Library extends Component {
   state = {
-    listing: [],
-    scanLength: 0,
-    scannedLength: -1
+    listing: []
   };
 
   componentDidMount() {
@@ -103,13 +102,13 @@ class Library extends Component {
       };
 
       ipcRenderer.on("startInitialScan", (event, scanLength) => {
-        this.setState({ scanLength });
+        this.props.dispatch(setScanProps({ scanLength }));
       });
       ipcRenderer.on("updateInitialScan", (event, scannedLength) => {
-        this.setState({ scannedLength });
+        this.props.dispatch(setScanProps({ scannedLength }));
       });
       ipcRenderer.on("endInitialScan", () => {
-        this.setState({ scanLength: 0, scannedLength: -1 });
+        this.props.dispatch(setScanProps({ reset: true }));
       });
     };
   }
@@ -128,22 +127,15 @@ class Library extends Component {
 
   render() {
     return (
-      <>
-        <progress
-          max={this.state.scanLength}
-          value={this.state.scannedLength}
-          className="library-scan-progress"
-        />
-        <div className={`library ${this.props.isVisible ? "show" : "hide"}`}>
-          {this.state.listing.map((item, index) => (
-            <LibraryList
-              key={item.name + "-" + index}
-              item={item}
-              isRoot={true}
-            />
-          ))}
-        </div>
-      </>
+      <div className={`library ${this.props.isVisible ? "show" : "hide"}`}>
+        {this.state.listing.map((item, index) => (
+          <LibraryList
+            key={item.name + "-" + index}
+            item={item}
+            isRoot={true}
+          />
+        ))}
+      </div>
     );
   }
 }

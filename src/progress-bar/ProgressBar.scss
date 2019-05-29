@@ -1,0 +1,15 @@
+@import '../scss/variables';
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  text-align: center;
+  width: 100%;
+  font-size: $musa-font-size-sm;
+
+  &-value {
+    background-color: var(--color-primary-highlight);
+    width: 0%;
+    height: 4px;
+  }
+}
