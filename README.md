@@ -60,6 +60,7 @@ UI for Musa-Electron.
 
 - chore: update packages
 - fix: Caret not showing in albums that don't have a date
+- refactor: Settings & Toolbar to function components
 - refactor: LibraryList to function component
 - refactor: LibraryItem to function component
 - refactor: Library to function component
