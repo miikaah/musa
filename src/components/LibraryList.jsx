@@ -81,9 +81,7 @@ const LibraryList = ({ item, cover, isRoot, dispatch }) => {
       ? renderItemsWithoutAlbum()
       : renderArtistsAndAlbums()
   }
-  return (
-    <LibraryItem key={item.name + "-" + Date.now()} item={item} cover={cover} />
-  )
+  return <LibraryItem item={item} cover={cover} />
 }
 
 export default connect(
