@@ -59,12 +59,14 @@ UI for Musa-Electron.
 ##### 31.5.2019
 
 - chore: update packages
+- fix: Caret not showing in albums that don't have a date
+- refactor: LibraryList to function component
 - refactor: LibraryItem to function component
-- refactor: Convert Library to function component
+- refactor: Library to function component
 
 ##### 29.5.2019
 
-- refactor: Convert Cover to function component
+- refactor: Cover to function component
 - feat: Add progress bar component
 
 ##### 28.5.2019
