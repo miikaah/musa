@@ -52,8 +52,7 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
     }, SEEK_REFRESH_RATE)
 
   const playOrPause = () => {
-    if (isEmpty(playlist)) return
-    if (isPlaying) {
+    if (isPlaying || isEmpty(playlist)) {
       player.current.pause()
       dispatch(pause())
       clearInterval(seekUpdater)
