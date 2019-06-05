@@ -58,6 +58,7 @@ UI for Musa-Electron.
 
 ##### 5.6.2019
 
+- refactor: Playlist to function component
 - refactor: Player to function component
 
 ##### 31.5.2019
