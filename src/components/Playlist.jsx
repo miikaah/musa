@@ -268,7 +268,16 @@ const Playlist = ({ playlist, currentItem, currentIndex, dispatch }) => {
       window.removeEventListener("keydown", handleKeyDown)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex, startIndex, endIndex, selectedIndexes, clipboard])
+  }, [
+    activeIndex,
+    startIndex,
+    endIndex,
+    currentItem,
+    currentIndex,
+    selectedIndexes,
+    clipboard,
+    playlist
+  ])
 
   const updateEndIndex = endIndex => {
     if (!isMouseDown) return
