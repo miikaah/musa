@@ -174,6 +174,7 @@ const Playlist = ({ playlist, currentItem, currentIndex, dispatch }) => {
             dispatch(pasteToPlaylist(selItems, 0))
             setStartIndex(NaN)
             setEndIndex(NaN)
+            setActiveIndex(0)
             return
           }
 
