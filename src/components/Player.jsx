@@ -1,7 +1,7 @@
-import React, { Component } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import { play, replay, pause, playNext } from "../reducers/player.reducer"
-import { get, isNaN, isEmpty, isNumber, isNull, defaultTo } from "lodash-es"
+import { get, isNaN, isEmpty, isNumber, defaultTo } from "lodash-es"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { KEYS, prefixNumber } from "../util"
 import { store } from ".."
@@ -13,101 +13,113 @@ const VOLUME_MUTED = 0
 const VOLUME_STEP = 5
 const SEEK_REFRESH_RATE = 500
 
-class Player extends Component {
-  state = {
-    duration: 0,
-    volume: VOLUME_DEFAULT,
-    volumeBeforeMuting: VOLUME_DEFAULT,
-    isMuted: () => this.state.volume === VOLUME_MUTED,
-    seekUpdater: undefined,
-    titleUpdater: undefined,
-    currentTime: 0,
-    prevCurrentTime: 0
-  }
+const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
+  const [duration, setDuration] = useState(0)
+  const [volume, setVolume] = useState(
+    defaultTo(parseInt(localStorage.getItem("volume"), 10), VOLUME_DEFAULT)
+  )
+  const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT)
+  const [seekUpdater, setSeekUpdater] = useState(null)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [prevCurrentTime, setPrevCurrentTime] = useState(0)
 
-  constructor(props) {
-    super(props)
-    this.storeSub = store.subscribe(this.handleStoreChange.bind(this))
-    this.player = React.createRef()
-    this.cover = React.createRef()
-    window.addEventListener("keydown", this.handleKeyDown)
-  }
+  const player = useRef(null)
 
-  handleStoreChange() {
+  const isMuted = () => volume === VOLUME_MUTED
+
+  const handleStoreChange = () => {
     const state = store.getState().player
     const shouldReplay = state.replay
+
     if (shouldReplay) {
-      this.player.current.currentTime = 0
-      this.setState({ currentTime: 0 })
+      player.current.currentTime = 0
+      setCurrentTime(0)
 
       if (!state.isPlaying) {
         // Double click has a delay in it so run this the next time
         // mixrotask queue gets emptied
-        setTimeout(() => this.playOrPause())
+        setTimeout(() => playOrPause())
       }
-      this.props.dispatch(replay(false))
+      dispatch(replay(false))
     }
   }
 
-  handleKeyDown = event => {
-    switch (event.keyCode) {
-      case KEYS.Space:
-        this.playOrPause()
-        event.preventDefault()
-        return
-      case KEYS.M:
-        this.muteOrUnmute()
-        return
-      default:
-        break
+  store.subscribe(handleStoreChange)
+
+  const getSeekUpdater = () =>
+    setInterval(() => {
+      setCurrentTime(player.current.currentTime)
+    }, SEEK_REFRESH_RATE)
+
+  const playOrPause = () => {
+    if (isEmpty(playlist)) return
+    if (isPlaying) {
+      player.current.pause()
+      dispatch(pause())
+      clearInterval(seekUpdater)
+      setCurrentTime(player.current.currentTime)
+      return
     }
+    if (!isEmpty(src)) {
+      // BUGFIX: pause->play starting from beginning
+      player.current.currentTime = currentTime
+      player.current.play()
+      dispatch(play())
+      setSeekUpdater(getSeekUpdater())
+      return
+    }
+    // Dispatch first play action
+    dispatch(play())
   }
 
-  componentDidMount() {
-    this.setVolume({
-      target: {
-        value: defaultTo(localStorage.getItem("volume"), VOLUME_DEFAULT)
-      }
-    })
-
-    this.player.current.addEventListener("loadeddata", () => {
-      this.setRealVolume()
-      this.setState({
-        duration: this.getDurationOrTime("duration"),
-        seekUpdater: setInterval(() => {
-          this.setState({
-            currentTime: this.player.current.currentTime
-          })
-        }, SEEK_REFRESH_RATE)
-      })
-      this.player.current.play()
-      this.setDocumentTitle()
-      this.setDrLevelColor()
-    })
-
-    this.player.current.addEventListener("ended", () => {
-      this.setState({
-        titleUpdater: setTimeout(() => (document.title = "Musa"), 2000)
-      })
-      this.props.dispatch(playNext())
-    })
+  const getReplaygainTrackGainDb = () => {
+    const dbString = get(
+      currentItem,
+      "metadata.replaygainTrackGain",
+      ""
+    ).replace(/ dB+/, "")
+    return parseFloat(!isEmpty(dbString) ? dbString : 0)
   }
 
-  componentWillUnmount() {
-    this.storeSub.unsubsribe()
+  const getVolumeForAudioEl = volume => {
+    const vol = volume / 100
+    return vol < 0.02 ? VOLUME_MUTED : vol
   }
 
-  setDocumentTitle() {
-    const metadata = get(this.props, "currentItem.metadata", null)
-    if (isNull(metadata)) return
-    clearTimeout(this.state.titleUpdater)
-    document.title = `${metadata.artist} - [${metadata.album} #${
-      metadata.track
-    }] - ${metadata.title} [Musa]`
+  const setVolumeForStateAndPlayer = v => {
+    const vol = isNumber(v) ? v : volume
+    const trackGainPercentage = Math.pow(10, getReplaygainTrackGainDb() / 20)
+    const realVolume = Math.min(
+      100,
+      Math.max(1, vol * parseFloat(trackGainPercentage))
+    )
+    player.current.volume = getVolumeForAudioEl(realVolume)
+    setVolume(vol)
   }
 
-  setDrLevelColor() {
-    const dr = get(this.props, "currentItem.metadata.dynamicRange")
+  const muteOrUnmute = () => {
+    if (isMuted()) {
+      setVolumeForStateAndPlayer(volumeBeforeMuting)
+      return
+    }
+    setVolumeBeforeMuting(volume)
+    setVolumeForStateAndPlayer(VOLUME_MUTED)
+  }
+
+  const setVolumeByEvent = event => {
+    const vol = parseInt(event.target.value, 10)
+    const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol
+    setVolumeForStateAndPlayer(volume)
+    localStorage.setItem("volume", volume)
+  }
+
+  const getDuration = () => {
+    const duration = get(player, "current.duration", 0)
+    return Math.floor(isNaN(duration) ? 0 : duration)
+  }
+
+  const setDrLevelColor = () => {
+    const dr = get(currentItem, "metadata.dynamicRange")
     if (!dr) return
 
     let color
@@ -117,165 +129,64 @@ class Player extends Component {
     document.body.style.setProperty("--color-dr-level", color)
   }
 
-  render() {
-    return (
-      <div className="player-container">
-        <audio controls src={this.props.src} ref={this.player} />
-        <div className="player">
-          <button
-            className="player-play-pause"
-            onClick={this.playOrPause.bind(this)}
-          >
-            <FontAwesomeIcon icon={this.props.isPlaying ? "pause" : "play"} />
-          </button>
-          <button
-            className="player-volume-btn"
-            onClick={this.muteOrUnmute.bind(this)}
-          >
-            <FontAwesomeIcon
-              icon={
-                this.state.volume > VOLUME_STEP - 1
-                  ? "volume-up"
-                  : "volume-mute"
-              }
-            />
-          </button>
-          <input
-            className="player-volume"
-            type="range"
-            min="0"
-            max="100"
-            step={VOLUME_STEP}
-            value={this.state.volume}
-            onChange={this.setVolume.bind(this)}
-          />
-          <input
-            className="player-seek"
-            type="range"
-            min="0"
-            max={this.state.duration}
-            step="1"
-            value={this.state.currentTime}
-            onChange={this.seek.bind(this)}
-          />
-          <span className="player-time-display">
-            <span className="player-played">
-              {this.formatCurrentTime(this.state.currentTime)}
-            </span>
-            <span> / </span>
-            <span>
-              {get(this.props, "currentItem.metadata.duration", "0:00")}
-            </span>
-          </span>
-          {this.renderDrGauge()}
-        </div>
-      </div>
-    )
-  }
+  useEffect(() => {
+    const handleKeyDown = event => {
+      switch (event.keyCode) {
+        case KEYS.Space:
+          playOrPause()
+          event.preventDefault()
+          return
+        case KEYS.M:
+          muteOrUnmute()
+          return
+        default:
+          break
+      }
+    }
 
-  renderDrGauge() {
-    const dr = get(this.props, "currentItem.metadata.dynamicRange", "")
-    let className = "player-dynamic-range-wrapper"
-    if (isEmpty(dr)) className += " hidden"
-    return (
-      <span className={className}>
-        <span className="player-dynamic-range">
-          {isEmpty(dr) ? "DR00" : `DR${prefixNumber(dr)}`}
-        </span>
-      </span>
-    )
-  }
+    window.addEventListener("keydown", handleKeyDown)
 
-  getVolumeForAudioEl(volume) {
-    const vol = volume / 100
-    return vol < 0.02 ? VOLUME_MUTED : vol
-  }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    volume,
+    volumeBeforeMuting,
+    playlist,
+    isPlaying,
+    seekUpdater,
+    currentTime
+  ])
 
-  setRealVolume(v) {
-    const vol = isNumber(v) ? v : this.state.volume
-    const trackGainPercentage = Math.pow(
-      10,
-      this.getReplaygainTrackGainDb() / 20
-    )
-    const realVolume = Math.min(
-      100,
-      Math.max(1, vol * parseFloat(trackGainPercentage))
-    )
-    this.player.current.volume = this.getVolumeForAudioEl(realVolume)
-  }
+  useEffect(() => {
+    const handleLoadedData = event => {
+      setVolumeForStateAndPlayer()
+      setDuration(getDuration())
+      setSeekUpdater(getSeekUpdater())
+      setDrLevelColor()
+      player.current.play()
+    }
+    const dispatchPlayNext = () => dispatch(playNext())
 
-  setVolume(event) {
-    const vol = parseInt(event.target.value, 10)
-    const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol
-    this.setState({ volume })
-    this.setRealVolume(volume)
-    localStorage.setItem("volume", volume)
-  }
+    player.current.addEventListener("loadeddata", handleLoadedData)
+    player.current.addEventListener("ended", dispatchPlayNext)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [player, volume, currentItem])
 
-  getReplaygainTrackGainDb() {
-    const dbString = get(
-      this.props.currentItem,
-      "metadata.replaygainTrackGain",
-      ""
-    ).replace(/ dB+/, "")
-    return parseFloat(!isEmpty(dbString) ? dbString : 0)
-  }
-
-  getDurationOrTime(prop) {
-    const duration = get(this, ["player", "current", prop], 0)
-    return Math.floor(isNaN(duration) ? 0 : duration)
-  }
-
-  seek(event) {
-    if (this.state.prevCurrentTime === event.target.value) return
-    clearInterval(this.state.seekUpdater)
-    this.player.current.currentTime = event.target.value
-    this.setState({
-      currentTime: event.target.value,
-      prevCurrentTime: event.target.value
-    })
-    this.setSeekUpdater()
+  const seek = event => {
+    if (prevCurrentTime === event.target.value) return
+    clearInterval(seekUpdater)
+    player.current.currentTime = event.target.value
+    setCurrentTime(event.target.value)
+    setPrevCurrentTime(event.target.value)
+    setSeekUpdater(getSeekUpdater())
     // Makes it possible to seek back to same spot after timeout
     // to prevent multiple seeks
-    setTimeout(() => {
-      this.setState({
-        prevCurrentTime: -1
-      })
-    }, 500)
+    setTimeout(() => setPrevCurrentTime(-1), 500)
   }
 
-  playOrPause() {
-    if (isEmpty(this.props.playlist)) return
-    if (this.props.isPlaying) {
-      this.player.current.pause()
-      this.props.dispatch(pause())
-      clearInterval(this.state.seekUpdater)
-      this.setState({ currentTime: this.player.current.currentTime })
-      return
-    }
-    if (!isEmpty(this.props.src)) {
-      // BUGFIX: pause->play starting from beginning
-      this.player.current.currentTime = this.state.currentTime
-      this.player.current.play()
-      this.props.dispatch(play())
-      this.setSeekUpdater()
-      return
-    }
-    // Dispatch first play action
-    this.props.dispatch(play())
-  }
-
-  setSeekUpdater() {
-    this.setState({
-      seekUpdater: setInterval(() => {
-        this.setState({
-          currentTime: this.player.current.currentTime
-        })
-      }, SEEK_REFRESH_RATE)
-    })
-  }
-
-  formatCurrentTime(duration) {
+  const formatCurrentTime = duration => {
     if (duration < 1) return "0:00"
     let output = ""
     if (duration >= 3600) {
@@ -287,18 +198,60 @@ class Player extends Component {
     return output
   }
 
-  muteOrUnmute() {
-    if (this.state.isMuted()) {
-      this.setRealVolume(this.state.volumeBeforeMuting)
-      this.setState({ volume: this.state.volumeBeforeMuting })
-      return
-    }
-    this.setRealVolume(VOLUME_MUTED)
-    this.setState({
-      volume: VOLUME_MUTED,
-      volumeBeforeMuting: this.state.volume
-    })
+  const renderDrGauge = () => {
+    const dr = get(currentItem, "metadata.dynamicRange", "")
+    let className = "player-dynamic-range-wrapper"
+    if (isEmpty(dr)) className += " hidden"
+    return (
+      <span className={className}>
+        <span className="player-dynamic-range">
+          {isEmpty(dr) ? "DR00" : `DR${prefixNumber(dr)}`}
+        </span>
+      </span>
+    )
   }
+
+  return (
+    <div className="player-container">
+      <audio controls src={src} ref={player} />
+      <div className="player">
+        <button className="player-play-pause" onClick={playOrPause}>
+          <FontAwesomeIcon icon={isPlaying ? "pause" : "play"} />
+        </button>
+        <button className="player-volume-btn" onClick={muteOrUnmute}>
+          <FontAwesomeIcon
+            icon={volume > VOLUME_STEP - 1 ? "volume-up" : "volume-mute"}
+          />
+        </button>
+        <input
+          className="player-volume"
+          type="range"
+          min="0"
+          max="100"
+          step={VOLUME_STEP}
+          value={volume}
+          onChange={setVolumeByEvent}
+        />
+        <input
+          className="player-seek"
+          type="range"
+          min="0"
+          max={duration}
+          step="1"
+          value={currentTime}
+          onChange={seek}
+        />
+        <span className="player-time-display">
+          <span className="player-played">
+            {formatCurrentTime(currentTime)}
+          </span>
+          <span> / </span>
+          <span>{get(currentItem, "metadata.duration", "0:00")}</span>
+        </span>
+        {renderDrGauge()}
+      </div>
+    </div>
+  )
 }
 
 export default connect(

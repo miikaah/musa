@@ -56,6 +56,10 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 5.6.2019
+
+- refactor: Player to function component
+
 ##### 31.5.2019
 
 - chore: update packages
