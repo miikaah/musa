@@ -7,7 +7,6 @@ UI for Musa-Electron.
 #### Frontend
 
 - fix: Initial scan only showing the currently updated artist
-- feat: Pause music if playlist is empty
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
 - feat: Persist playlist
@@ -58,6 +57,7 @@ UI for Musa-Electron.
 
 ##### 5.6.2019
 
+- feat: Pause music if playlist is empty
 - refactor: App to function component
 - refactor: PlaylistItem to function component
 - refactor: Playlist to function component
