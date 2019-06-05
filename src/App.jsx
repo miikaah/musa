@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState, useEffect } from "react"
 import Library from "./components/Library"
 import Settings from "./components/Settings"
 import Playlist from "./components/Playlist"
@@ -45,115 +45,99 @@ export const Colors = {
   WhiteRgb: [255, 255, 255]
 }
 
-class App extends Component {
-  state = {
-    windowWidth: 1600
+const initCssVars = () => {
+  document.body.style.setProperty("--color-bg", Colors.Bg)
+  document.body.style.setProperty("--color-primary-highlight", Colors.Primary)
+  document.body.style.setProperty(
+    "--color-secondary-highlight",
+    Colors.Secondary
+  )
+  document.body.style.setProperty("--color-typography", Colors.Typography)
+  document.body.style.setProperty(
+    "--color-typography-primary",
+    Colors.Typography
+  )
+  document.body.style.setProperty(
+    "--color-typography-secondary",
+    Colors.Typography
+  )
+  document.body.style.setProperty("--color-slider", Colors.Primary)
+  document.body.style.setProperty("--color-dr-level", Colors.Typography)
+}
+
+const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    initCssVars()
+
+    const handleResize = () => setWindowWidth(window.innerWidth)
+
+    window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.addEventListener("resize", handleResize)
+    }
+  }, [])
+
+  const onDragOver = event => event.preventDefault()
+
+  const onDrop = event => {
+    const item = JSON.parse(event.dataTransfer.getData("text"))
+    if (Array.isArray(item)) {
+      item.forEach(song => dispatch(addToPlaylist(song)))
+      return
+    }
+    dispatch(addToPlaylist(item))
   }
 
-  componentDidMount() {
-    this.setState({ windowWidth: window.innerWidth })
-    window.addEventListener("resize", () =>
-      this.setState({ windowWidth: window.innerWidth })
-    )
-    document.body.style.setProperty("--color-bg", Colors.Bg)
-    document.body.style.setProperty("--color-primary-highlight", Colors.Primary)
-    document.body.style.setProperty(
-      "--color-secondary-highlight",
-      Colors.Secondary
-    )
-    document.body.style.setProperty("--color-typography", Colors.Typography)
-    document.body.style.setProperty(
-      "--color-typography-primary",
-      Colors.Typography
-    )
-    document.body.style.setProperty(
-      "--color-typography-secondary",
-      Colors.Typography
-    )
-    document.body.style.setProperty("--color-slider", Colors.Primary)
-    document.body.style.setProperty("--color-dr-level", Colors.Typography)
-  }
+  const renderCenterAndRight = isLarge => {
+    const appClasses = `${
+      !isSettingsVisible ? "app-wrapper show-flex" : "app-wrapper hide"
+    }`
 
-  render() {
+    const libraryClasses = `${isLibraryVisible ? "show" : "hide"}`
+
     return (
-      <div className="app">
-        <ProgressBar />
-        <Toolbar />
-        <div className={`${this.props.isSettingsVisible ? "show" : "hide"}`}>
-          <Settings />
+      <div className={appClasses}>
+        <div className={libraryClasses}>
+          <Library />
         </div>
-        <div>
-          {this.state.windowWidth > 1279 ? (
-            <div
-              className={`${
-                !this.props.isSettingsVisible
-                  ? "app-wrapper show-flex"
-                  : "app-wrapper hide"
-              }`}
-            >
-              <div
-                className={`${this.props.isLibraryVisible ? "show" : "hide"}`}
-              >
-                <Library />
-              </div>
-              <div
-                className="app-center"
-                onDragOver={this.onDragOver}
-                onDrop={this.onDrop}
-                onClick={() => this.props.dispatch(hideLibrary())}
-              >
-                <Cover />
-              </div>
-              <div
-                className="app-right"
-                onDragOver={this.onDragOver}
-                onDrop={this.onDrop}
-                onClick={() => this.props.dispatch(hideLibrary())}
-              >
-                <Playlist />
-              </div>
-            </div>
-          ) : (
-            <div
-              className={`${
-                !this.props.isSettingsVisible
-                  ? "app-wrapper show-flex"
-                  : "app-wrapper hide"
-              }`}
-            >
-              <div
-                className={`${this.props.isLibraryVisible ? "show" : "hide"}`}
-              >
-                <Library />
-              </div>
-              <div
-                className="app-center"
-                onDragOver={this.onDragOver}
-                onDrop={this.onDrop}
-                onClick={() => this.props.dispatch(hideLibrary())}
-              >
-                <Cover />
-                <Playlist />
-              </div>
-            </div>
-          )}
+        <div
+          className="app-center"
+          onDragOver={onDragOver}
+          onDrop={onDrop}
+          onClick={() => dispatch(hideLibrary())}
+        >
+          <Cover />
+          {!isLarge && <Playlist />}
         </div>
+        {isLarge && (
+          <div
+            className="app-right"
+            onDragOver={onDragOver}
+            onDrop={onDrop}
+            onClick={() => dispatch(hideLibrary())}
+          >
+            <Playlist />
+          </div>
+        )}
       </div>
     )
   }
 
-  onDragOver = event => {
-    event.preventDefault()
-  }
+  const settingsClasses = `${isSettingsVisible ? "show" : "hide"}`
 
-  onDrop = event => {
-    const item = JSON.parse(event.dataTransfer.getData("text"))
-    if (Array.isArray(item)) {
-      item.forEach(song => this.props.dispatch(addToPlaylist(song)))
-      return
-    }
-    this.props.dispatch(addToPlaylist(item))
-  }
+  return (
+    <div className="app">
+      <ProgressBar />
+      <Toolbar />
+      <div className={settingsClasses}>
+        <Settings />
+      </div>
+      <div>{renderCenterAndRight(windowWidth > 1279)}</div>
+    </div>
+  )
 }
 
 export default connect(
