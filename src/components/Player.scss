@@ -13,33 +13,6 @@ audio {
     min-width: 640px;
   }
 
-  &-cover {
-    display: block;
-    height: auto;
-    width: 100%;
-    margin: auto;
-    max-height: 800px;
-    max-width: 800px;
-    margin-bottom: 25px;
-
-    &-wrapper {
-      min-height: 600px;
-      min-width: 600px;
-      padding-bottom: 54%;
-      overflow: hidden;
-
-      @media screen and (max-width: $musa-breakpoint-lg) {
-        padding-bottom: 0;
-      }
-    }
-
-    @media screen and (max-width: $musa-breakpoint-lg) {
-      position: relative;
-      max-height: 600px;
-      max-width: 600px;
-    }
-  }
-
   &-volume {
     margin-right: 16px;
   }
