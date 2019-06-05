@@ -1,72 +1,33 @@
-import React, { Component } from "react"
+import React from "react"
 import { connect } from "react-redux"
 import { get, isNaN, isEqual } from "lodash-es"
 import { playIndex, replay } from "../reducers/player.reducer"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import "./PlaylistItem.scss"
 
-class PlaylistItem extends Component {
-  render() {
-    const classes = this.getClassNames(
-      this.props.index,
-      this.props.activeIndex,
-      this.props.startIndex,
-      this.props.endIndex,
-      this.props.isSelected
-    )
-    return (
-      <li
-        className={classes}
-        onDoubleClick={() => {
-          if (this.shouldReplaySong()) {
-            this.props.dispatch(replay(true))
-            return
-          }
-          this.props.dispatch(playIndex(this.props.index))
-          this.props.onSetActiveIndex(this.props.index)
-        }}
-        onMouseOver={() => this.props.onMouseOverItem(this.props.index)}
-        onMouseDown={event => {
-          this.props.onMouseDownItem({
-            index: this.props.index,
-            isShiftDown: event.shiftKey,
-            isCtrlDown: event.ctrlKey || event.metaKey
-          })
-          event.stopPropagation()
-        }}
-        onMouseUp={event => {
-          this.props.onMouseUpItem({
-            index: this.props.index,
-            isShiftDown: event.shiftKey,
-            isCtrlDown: event.ctrlKey || event.metaKey
-          })
-          event.stopPropagation()
-        }}
-      >
-        <div className="cell cell-xxs">{this.renderPlayOrPauseIcon()}</div>
-        <div className="cell cell-sm left">
-          {get(this.props.item, "metadata.artist", "")}
-        </div>
-        <div className="cell cell-sm left">
-          {get(this.props.item, "metadata.album", "")}
-        </div>
-        <div className="cell cell-xs right">
-          {get(this.props.item, "metadata.track", "")}
-        </div>
-        <div className="cell cell-md left">
-          {get(this.props.item, "metadata.title", this.props.item.name)}
-        </div>
-        <div className="cell cell-xs left">
-          {get(this.props.item, "metadata.duration", "")}
-        </div>
-        <div className="cell cell-xs right">
-          {get(this.props.item, "metadata.date", "")}
-        </div>
-      </li>
-    )
-  }
-
-  getClassNames(index, activeIndex, startIndex, endIndex, isSelected) {
+const PlaylistItem = ({
+  item,
+  currentItem,
+  currentIndex,
+  isPlaying,
+  index,
+  activeIndex,
+  startIndex,
+  endIndex,
+  isSelected,
+  dispatch,
+  onSetActiveIndex,
+  onMouseOverItem,
+  onMouseDownItem,
+  onMouseUpItem
+}) => {
+  const getClassNames = ({
+    index,
+    activeIndex,
+    startIndex,
+    endIndex,
+    isSelected
+  }) => {
     let className = "playlist-item"
     const start = Math.min(startIndex, endIndex)
     const end = Math.max(startIndex, endIndex)
@@ -82,27 +43,87 @@ class PlaylistItem extends Component {
     return className
   }
 
-  shouldReplaySong() {
-    return this.isIndexCurrentIndex() && this.hasEqualItemAndCurrentItem()
+  const classes = getClassNames({
+    index,
+    activeIndex,
+    startIndex,
+    endIndex,
+    isSelected
+  })
+
+  const isIndexCurrentIndex = () => {
+    return index === currentIndex
   }
 
-  isIndexCurrentIndex() {
-    return this.props.index === this.props.currentIndex
+  const hasEqualItemAndCurrentItem = () => {
+    return isEqual(item, currentItem)
   }
 
-  hasEqualItemAndCurrentItem() {
-    return isEqual(this.props.item, this.props.currentItem)
+  const shouldReplaySong = () => {
+    return isIndexCurrentIndex() && hasEqualItemAndCurrentItem()
   }
 
-  renderPlayOrPauseIcon() {
-    if (!this.isIndexCurrentIndex() || !this.hasEqualItemAndCurrentItem())
+  const handleDoubleClick = () => {
+    if (shouldReplaySong()) {
+      dispatch(replay(true))
       return
-    return this.props.isPlaying ? (
+    }
+    dispatch(playIndex(index))
+    onSetActiveIndex(index)
+  }
+
+  const handleMouseDown = event => {
+    onMouseDownItem({
+      index,
+      isShiftDown: event.shiftKey,
+      isCtrlDown: event.ctrlKey || event.metaKey
+    })
+    event.stopPropagation()
+  }
+
+  const handleMouseUp = event => {
+    onMouseUpItem({
+      index,
+      isShiftDown: event.shiftKey,
+      isCtrlDown: event.ctrlKey || event.metaKey
+    })
+    event.stopPropagation()
+  }
+
+  const renderPlayOrPauseIcon = () => {
+    if (!isIndexCurrentIndex() || !hasEqualItemAndCurrentItem()) return
+    return isPlaying ? (
       <FontAwesomeIcon icon="play" />
     ) : (
       <FontAwesomeIcon icon="pause" />
     )
   }
+
+  return (
+    <li
+      className={classes}
+      onDoubleClick={handleDoubleClick}
+      onMouseOver={() => onMouseOverItem(index)}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+    >
+      <div className="cell cell-xxs">{renderPlayOrPauseIcon()}</div>
+      <div className="cell cell-sm left">
+        {get(item, "metadata.artist", "")}
+      </div>
+      <div className="cell cell-sm left">{get(item, "metadata.album", "")}</div>
+      <div className="cell cell-xs right">
+        {get(item, "metadata.track", "")}
+      </div>
+      <div className="cell cell-md left">
+        {get(item, "metadata.title", item.name)}
+      </div>
+      <div className="cell cell-xs left">
+        {get(item, "metadata.duration", "")}
+      </div>
+      <div className="cell cell-xs right">{get(item, "metadata.date", "")}</div>
+    </li>
+  )
 }
 
 export default connect(
