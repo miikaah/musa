@@ -70,7 +70,9 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
 
   useEffect(() => {
     initCssVars()
+  }, [])
 
+  useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth)
 
     window.addEventListener("resize", handleResize)
