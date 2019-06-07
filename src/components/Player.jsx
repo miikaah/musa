@@ -112,22 +112,6 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
     localStorage.setItem("volume", volume)
   }
 
-  const getDuration = () => {
-    const duration = get(player, "current.duration", 0)
-    return Math.floor(isNaN(duration) ? 0 : duration)
-  }
-
-  const setDrLevelColor = () => {
-    const dr = get(currentItem, "metadata.dynamicRange")
-    if (!dr) return
-
-    let color
-    if (dr > 11) color = Colors.DrGood
-    if (dr > 8 && dr < 12) color = Colors.DrMediocre
-    if (dr < 9) color = Colors.DrBad
-    document.body.style.setProperty("--color-dr-level", color)
-  }
-
   useEffect(() => {
     const handleKeyDown = event => {
       switch (event.keyCode) {
@@ -159,17 +143,37 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
   ])
 
   useEffect(() => {
+    const getDuration = () => {
+      const duration = get(player, "current.duration", 0)
+      return Math.floor(isNaN(duration) ? 0 : duration)
+    }
+
     const handleLoadedData = event => {
-      setVolumeForStateAndPlayer()
       setDuration(getDuration())
-      setSeekUpdater(getSeekUpdater())
-      setDrLevelColor()
       player.current.play()
     }
     const dispatchPlayNext = () => dispatch(playNext())
 
     player.current.addEventListener("loadeddata", handleLoadedData)
     player.current.addEventListener("ended", dispatchPlayNext)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [player])
+
+  useEffect(() => {
+    const setDrLevelColor = () => {
+      const dr = get(currentItem, "metadata.dynamicRange")
+      if (!dr) return
+
+      let color
+      if (dr > 11) color = Colors.DrGood
+      if (dr > 8 && dr < 12) color = Colors.DrMediocre
+      if (dr < 9) color = Colors.DrBad
+      document.body.style.setProperty("--color-dr-level", color)
+    }
+
+    setDrLevelColor()
+    setVolumeForStateAndPlayer()
+    setSeekUpdater(getSeekUpdater())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, volume, currentItem])
 

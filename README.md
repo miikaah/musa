@@ -55,6 +55,10 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 7.6.2019
+
+- fix: Some Player bugs
+
 ##### 5.6.2019
 
 - feat: Pause music if playlist is empty
