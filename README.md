@@ -24,7 +24,7 @@ UI for Musa-Electron.
 
 #### Playlist 2.0
 
--feat: Create a smaller playlist with album covers
+- feat: Create a smaller playlist with album covers
 
 #### Library
 
