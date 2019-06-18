@@ -1,0 +1,10 @@
+$true-white: #fff;
+
+.theme {
+  &-library {
+    display: flex;
+    justify-content: space-between;
+    background-color: $true-white;
+    padding: 10px;
+  }
+}

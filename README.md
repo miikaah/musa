@@ -11,18 +11,12 @@ UI for Musa-Electron.
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
 - feat: Scale cover images that are too high
-- feat: Persist playlist
-- feat: Multiple playlists
 
 #### Backend
-
-#### Playlist
 
 #### Playlist 2.0
 
 - feat: Create a smaller playlist with album covers
-
-#### Library
 
 #### Library 2.0
 

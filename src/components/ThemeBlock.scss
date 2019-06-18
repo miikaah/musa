@@ -1,0 +1,15 @@
+.theme {
+  &-block {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    width: 80px;
+    height: 80px;
+
+    span {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+    }
+  }
+}
