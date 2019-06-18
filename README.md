@@ -6,19 +6,17 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- feat: Search
+- feat: Recommend random music from library and show them nicely
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
+- feat: Scale cover images that are too high
 - feat: Persist playlist
 - feat: Multiple playlists
-- feat: Search
-- feat: Scale cover images that are too high
 
 #### Backend
 
 #### Playlist
-
-- feat: Rearrange playlist items with drag & drop
-- feat: Highlight with border the index when rearranging / adding items
 
 #### Playlist 2.0
 
@@ -26,12 +24,9 @@ UI for Musa-Electron.
 
 #### Library
 
-- feat: Drag to specific index in playlist
-
 #### Library 2.0
 
 - feat: Create a different kind of library view that shows album covers
-- feat: Recommend random music from library and show them nicely
 
 #### Player
 
@@ -39,8 +34,10 @@ UI for Musa-Electron.
 
 #### Settings
 
+- feat: Choose default theme from theme library
 - feat: Customise music library folder path
 - feat: Set Replaygain (track / album / off)
+- feat: Set playlist autoscroll on / off per view (medium / large)
 
 #### Themes
 
