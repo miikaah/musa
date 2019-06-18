@@ -41,8 +41,6 @@ UI for Musa-Electron.
 
 #### Themes
 
-- feat: Create a theme library
-
 #### General
 
 - feat: Create an icon
@@ -52,6 +50,7 @@ UI for Musa-Electron.
 
 ##### 18.6.2019
 
+- feat: Create a theme library
 - feat: Scroll to active index if it goes out of viewport
 - fix: Initial scan only showing the currently updated artist
 

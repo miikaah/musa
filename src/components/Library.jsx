@@ -3,15 +3,13 @@ import LibraryList from "./LibraryList"
 import { isEqual, isEmpty, get, flatten } from "lodash-es"
 import { connect } from "react-redux"
 import { setScanProps } from "../reducers/library.reducer"
+import { DB_NAME, DB_VERSION } from "../config"
 import "./Library.scss"
 
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer
 
-const dbName = "musa_db"
-const dbVersion = 3
-
-const idbRequest = indexedDB.open(dbName, dbVersion)
+const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
 
 // Only refactor to use Hooks after figuring out
 // how to work around multiple sequential state updates
@@ -24,6 +22,7 @@ class Library extends Component {
   componentDidMount() {
     ipcRenderer.on("log", (event, log) => console.log("(main)", log))
     ipcRenderer.on("error", (event, error) => console.error(error))
+
     idbRequest.onerror = event => console.error(event)
     idbRequest.onupgradeneeded = event => {
       try {
@@ -36,7 +35,13 @@ class Library extends Component {
       } catch (e) {
         console.log(e)
       }
+      try {
+        event.target.result.createObjectStore("theme", { keyPath: "key" })
+      } catch (e) {
+        console.log(e)
+      }
     }
+
     idbRequest.onsuccess = event => {
       const db = event.target.result
       const songListStore = db
