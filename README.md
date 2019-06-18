@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- fix: Initial scan only showing the currently updated artist
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
 - feat: Persist playlist
@@ -54,6 +53,10 @@ UI for Musa-Electron.
 - feat: Create a packaging script
 
 ## Done
+
+##### 18.6.2019
+
+- fix: Initial scan only showing the currently updated artist
 
 ##### 7.6.2019
 
