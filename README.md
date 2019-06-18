@@ -19,7 +19,6 @@ UI for Musa-Electron.
 
 - feat: Rearrange playlist items with drag & drop
 - feat: Highlight with border the index when rearranging / adding items
-- feat: Scroll to active index if it goes out of viewport
 
 #### Playlist 2.0
 
@@ -56,6 +55,7 @@ UI for Musa-Electron.
 
 ##### 18.6.2019
 
+- feat: Scroll to active index if it goes out of viewport
 - fix: Initial scan only showing the currently updated artist
 
 ##### 7.6.2019

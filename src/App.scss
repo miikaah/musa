@@ -28,6 +28,7 @@
 
   &-right {
     flex: 60%;
+    @include listOverflow;
   }
 
   @media screen and (max-width: $musa-breakpoint-lg) {

@@ -10,7 +10,7 @@
   border-right-width: 3px;
   background-color: var(--color-bg);
   box-shadow: -22px 10px 31px -16px rgba(10, 10, 10, .75);
-  height: 100vh;
+  min-height: 94vh;
 
   &-header {
     display: flex;
@@ -18,11 +18,9 @@
     font-weight: bold;
   }
 
-  @include listOverflow;
   @include tableCell;
 
   @media screen and (max-width: $musa-breakpoint-lg) {
-    overflow-y: scroll;
     border-left-width: 3px;
     max-height: none;
     height: auto;

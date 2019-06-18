@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import { get, isNaN, isEqual } from "lodash-es"
 import { playIndex, replay } from "../reducers/player.reducer"
@@ -19,8 +19,11 @@ const PlaylistItem = ({
   onSetActiveIndex,
   onMouseOverItem,
   onMouseDownItem,
-  onMouseUpItem
+  onMouseUpItem,
+  onScrollPlaylist
 }) => {
+  const elRef = useRef(null)
+
   const getClassNames = ({
     index,
     activeIndex,
@@ -99,8 +102,19 @@ const PlaylistItem = ({
     )
   }
 
+  useEffect(() => {
+    if (!isIndexCurrentIndex()) return
+    const elRect = elRef.current.getBoundingClientRect()
+    if (elRect.bottom > window.innerHeight - 1) {
+      elRef.current.scrollIntoView(false)
+      onScrollPlaylist()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex])
+
   return (
     <li
+      ref={elRef}
       className={classes}
       onDoubleClick={handleDoubleClick}
       onMouseOver={() => onMouseOverItem(index)}

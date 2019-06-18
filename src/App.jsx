@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import Library from "./components/Library"
 import Settings from "./components/Settings"
 import Playlist from "./components/Playlist"
@@ -68,6 +68,9 @@ const initCssVars = () => {
 const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
+  const appCenterRef = useRef(null)
+  const appRightRef = useRef(null)
+
   useEffect(() => {
     initCssVars()
   }, [])
@@ -100,6 +103,20 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
 
     const libraryClasses = `${isLibraryVisible ? "show" : "hide"}`
 
+    const scroll = ref => {
+      ref.current &&
+        ref.current.scrollTo({
+          top: ref.current.scrollTop + 200,
+          behavior: "smooth"
+        })
+    }
+
+    const scrollPlaylist = () => {
+      isLarge ? scroll(appRightRef) : scroll(appCenterRef)
+    }
+
+    const renderPlaylist = () => <Playlist onScrollPlaylist={scrollPlaylist} />
+
     return (
       <div className={appClasses}>
         <div className={libraryClasses}>
@@ -107,21 +124,23 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
         </div>
         <div
           className="app-center"
+          ref={appCenterRef}
           onDragOver={onDragOver}
           onDrop={onDrop}
           onClick={() => dispatch(hideLibrary())}
         >
           <Cover />
-          {!isLarge && <Playlist />}
+          {!isLarge && renderPlaylist()}
         </div>
         {isLarge && (
           <div
             className="app-right"
+            ref={appRightRef}
             onDragOver={onDragOver}
             onDrop={onDrop}
             onClick={() => dispatch(hideLibrary())}
           >
-            <Playlist />
+            {renderPlaylist()}
           </div>
         )}
       </div>

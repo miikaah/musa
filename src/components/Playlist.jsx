@@ -14,7 +14,13 @@ import "./Playlist.scss"
 
 const PLAYLIST_CLASSNAME = "playlist"
 
-const Playlist = ({ playlist, currentItem, currentIndex, dispatch }) => {
+const Playlist = ({
+  onScrollPlaylist,
+  playlist,
+  currentItem,
+  currentIndex,
+  dispatch
+}) => {
   const [isMouseDown, setIsMouseDown] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
   const [startIndex, setStartIndex] = useState(NaN)
@@ -354,6 +360,7 @@ const Playlist = ({ playlist, currentItem, currentIndex, dispatch }) => {
           onMouseOverItem={updateEndIndex}
           onMouseDownItem={onMouseDown}
           onMouseUpItem={onMouseUp}
+          onScrollPlaylist={onScrollPlaylist}
         />
       ))}
     </ul>
