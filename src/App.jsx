@@ -18,6 +18,8 @@ import {
 import { connect } from "react-redux"
 import { addToPlaylist } from "./reducers/player.reducer"
 import { hideLibrary } from "./reducers/library.reducer"
+import { FALLBACK_THEME } from "./config"
+import { updateCurrentTheme } from "./util"
 import "./App.scss"
 
 library.add(
@@ -45,26 +47,6 @@ export const Colors = {
   WhiteRgb: [255, 255, 255]
 }
 
-const initCssVars = () => {
-  document.body.style.setProperty("--color-bg", Colors.Bg)
-  document.body.style.setProperty("--color-primary-highlight", Colors.Primary)
-  document.body.style.setProperty(
-    "--color-secondary-highlight",
-    Colors.Secondary
-  )
-  document.body.style.setProperty("--color-typography", Colors.Typography)
-  document.body.style.setProperty(
-    "--color-typography-primary",
-    Colors.Typography
-  )
-  document.body.style.setProperty(
-    "--color-typography-secondary",
-    Colors.Typography
-  )
-  document.body.style.setProperty("--color-slider", Colors.Primary)
-  document.body.style.setProperty("--color-dr-level", Colors.Typography)
-}
-
 const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
@@ -72,7 +54,10 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
   const appRightRef = useRef(null)
 
   useEffect(() => {
-    initCssVars()
+    const theme =
+      JSON.parse(localStorage.getItem("musaDefaultTheme")) || FALLBACK_THEME
+    updateCurrentTheme(theme)
+    document.body.style.setProperty("--color-dr-level", Colors.Typography)
   }, [])
 
   useEffect(() => {

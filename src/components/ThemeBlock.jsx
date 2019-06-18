@@ -1,13 +1,16 @@
 import React from "react"
-import { updateThemeCssVars } from "../util"
+import { updateCurrentTheme } from "../util"
 import "./ThemeBlock.scss"
 
-const ThemeBlock = ({ colors }) => {
+const ThemeBlock = ({ colors, setCurrentTheme }) => {
   return (
     <div
       className="theme-block"
       style={{ backgroundColor: `rgb(${colors.bg})` }}
-      onClick={() => updateThemeCssVars(colors)}
+      onClick={() => {
+        updateCurrentTheme(colors)
+        setCurrentTheme(colors)
+      }}
     >
       <span style={{ backgroundColor: `rgb(${colors.primary})` }} />
       <span style={{ backgroundColor: `rgb(${colors.secondary})` }} />

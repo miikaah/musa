@@ -4,7 +4,7 @@ import { defaultTo, sortBy, some, isEqual } from "lodash-es"
 import Palette from "img-palette"
 import { Colors } from "../App.jsx"
 import { DB_NAME, DB_VERSION } from "../config"
-import { updateThemeCssVars } from "../util"
+import { updateCurrentTheme } from "../util"
 import "./Cover.scss"
 import "./Library.scss"
 
@@ -31,7 +31,7 @@ const onThemeStoreReqSuccess = (themeStore, themeStoreReq, coverTarget) => {
   return () => {
     const theme = themeStoreReq.result
     if (theme) {
-      updateThemeCssVars(theme.colors)
+      updateCurrentTheme(theme.colors)
       return
     }
 
@@ -133,7 +133,7 @@ const onThemeStoreReqSuccess = (themeStore, themeStoreReq, coverTarget) => {
       slider: slider.rgb
     }
 
-    updateThemeCssVars(colors)
+    updateCurrentTheme(colors)
 
     themeStore.put({ key: coverTarget.src, colors })
   }

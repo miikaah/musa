@@ -20,7 +20,7 @@ export function encodeFileUri(path) {
   return path.replace("#", "%23")
 }
 
-export function updateThemeCssVars(colors) {
+export function updateCurrentTheme(colors) {
   document.body.style.setProperty("--color-bg", `rgb(${colors.bg})`)
   document.body.style.setProperty(
     "--color-primary-highlight",
@@ -40,4 +40,6 @@ export function updateThemeCssVars(colors) {
     "--color-typography-secondary",
     colors.typographySecondary
   )
+
+  localStorage.setItem("musaCurrentTheme", JSON.stringify(colors))
 }

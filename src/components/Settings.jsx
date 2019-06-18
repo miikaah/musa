@@ -6,12 +6,12 @@ import "./Settings.scss"
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer
 
-const Settings = () => (
-  <div className="settings-wrapper">
+const Settings = ({ isSettingsVisible }) => (
+  <div className="settings">
     <h1>Settings</h1>
     <div className="settings-block">
       <h3>Theme</h3>
-      <ThemeLibrary />
+      <ThemeLibrary update={isSettingsVisible} />
     </div>
     <div className="settings-block">
       <h3>Advanced</h3>
@@ -26,6 +26,8 @@ const Settings = () => (
 )
 
 export default connect(
-  state => ({}),
+  state => ({
+    isSettingsVisible: state.settings.isVisible
+  }),
   dispatch => ({ dispatch })
 )(Settings)

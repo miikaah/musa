@@ -28,7 +28,8 @@ UI for Musa-Electron.
 
 #### Settings
 
-- feat: Choose default theme from theme library
+- feat: Use default theme if no cover
+- feat: Always use default theme
 - feat: Customise music library folder path
 - feat: Set Replaygain (track / album / off)
 - feat: Set playlist autoscroll on / off per view (medium / large)
@@ -44,6 +45,7 @@ UI for Musa-Electron.
 
 ##### 18.6.2019
 
+- feat: Choose default theme from theme library
 - feat: Create a theme library
 - feat: Scroll to active index if it goes out of viewport
 - fix: Initial scan only showing the currently updated artist

@@ -2,9 +2,36 @@ $true-white: #fff;
 
 .theme {
   &-library {
-    display: flex;
-    justify-content: space-between;
-    background-color: $true-white;
-    padding: 10px;
+    &-container {
+      display: flex;
+      margin-bottom: 40px;
+    }
+
+    &-default {
+      flex: 50%;
+      margin-right: 40px;
+
+      &-controls {
+        display: flex;
+        flex-direction: row;
+      }
+    }
+
+    &-current {
+      flex: 50%;
+    }
+
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      background-color: $true-white;
+      padding: 10px 0 0 10px;
+      max-height: 300px;
+      overflow-y: scroll;
+    }
+
+    &-controls {
+      margin-left: 20px;
+    }
   }
 }
