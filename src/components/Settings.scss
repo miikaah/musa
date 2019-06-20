@@ -1,17 +1,6 @@
 @import '../scss/variables';
 
 .settings {
-  h1 { margin-bottom: 40px; }
-
-  padding: 40px;
-  max-width: 730px;
-  min-width: 344px;
-  margin: auto;
-
-  @media screen and (max-width: $musa-breakpoint-xs) {
-    padding: 0 8px;
-  }
-
   &-block {
     margin-bottom: 60px;
   }

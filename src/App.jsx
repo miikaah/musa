@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from "react"
-import Library from "./components/Library"
-import Settings from "./components/Settings"
 import Playlist from "./components/Playlist"
 import Toolbar from "./components/Toolbar"
 import Cover from "./components/Cover"
@@ -13,11 +11,11 @@ import {
   faVolumeMute,
   faCaretRight,
   faBars,
-  faCog
+  faCog,
+  faSearch
 } from "@fortawesome/free-solid-svg-icons"
 import { connect } from "react-redux"
 import { addToPlaylist } from "./reducers/player.reducer"
-import { hideLibrary } from "./reducers/library.reducer"
 import { FALLBACK_THEME } from "./config"
 import { updateCurrentTheme, doIdbRequest, updateStateInIdb } from "./util"
 import { get } from "lodash-es"
@@ -30,7 +28,8 @@ library.add(
   faVolumeMute,
   faCaretRight,
   faBars,
-  faCog
+  faCog,
+  faSearch
 )
 
 export const Colors = {
@@ -48,7 +47,7 @@ export const Colors = {
   WhiteRgb: [255, 255, 255]
 }
 
-const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
+const App = ({ dispatch }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
   const appCenterRef = useRef(null)
@@ -91,12 +90,6 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
   }
 
   const renderCenterAndRight = isLarge => {
-    const appClasses = `${
-      !isSettingsVisible ? "app-wrapper show-flex" : "app-wrapper hide"
-    }`
-
-    const libraryClasses = `${isLibraryVisible ? "show" : "hide"}`
-
     const scroll = ref => {
       ref.current &&
         ref.current.scrollTo({
@@ -112,16 +105,12 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
     const renderPlaylist = () => <Playlist onScrollPlaylist={scrollPlaylist} />
 
     return (
-      <div className={appClasses}>
-        <div className={libraryClasses}>
-          <Library />
-        </div>
+      <>
         <div
           className="app-center"
           ref={appCenterRef}
           onDragOver={onDragOver}
           onDrop={onDrop}
-          onClick={() => dispatch(hideLibrary())}
         >
           <Cover />
           {!isLarge && renderPlaylist()}
@@ -132,33 +121,24 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
             ref={appRightRef}
             onDragOver={onDragOver}
             onDrop={onDrop}
-            onClick={() => dispatch(hideLibrary())}
           >
             {renderPlaylist()}
           </div>
         )}
-      </div>
+      </>
     )
   }
-
-  const settingsClasses = `${isSettingsVisible ? "show" : "hide"}`
 
   return (
     <div className="app">
       <ProgressBar />
       <Toolbar />
-      <div className={settingsClasses}>
-        <Settings />
-      </div>
       <div>{renderCenterAndRight(windowWidth > 1279)}</div>
     </div>
   )
 }
 
 export default connect(
-  state => ({
-    isLibraryVisible: state.library.isVisible,
-    isSettingsVisible: state.settings.isVisible
-  }),
+  state => ({}),
   dispatch => ({ dispatch })
 )(App)

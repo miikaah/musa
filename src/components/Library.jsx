@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import LibraryList from "./LibraryList"
 import { isEqual, isEmpty, get, flatten } from "lodash-es"
 import { connect } from "react-redux"
-import { setScanProps } from "../reducers/library.reducer"
+import { setListing, setScanProps } from "../reducers/library.reducer"
 import { DB_NAME, DB_VERSION } from "../config"
 import "./Library.scss"
 
@@ -15,10 +15,6 @@ const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
 // how to work around multiple sequential state updates
 // that this component needs.
 class Library extends Component {
-  state = {
-    listing: []
-  }
-
   componentDidMount() {
     ipcRenderer.on("log", (event, log) => console.log("(main)", log))
     ipcRenderer.on("error", (event, error) => console.error(error))
@@ -74,13 +70,13 @@ class Library extends Component {
 
       objectStoreRequest.onsuccess = event => {
         const dbListing = objectStoreRequest.result
-        this.setState({ listing: dbListing })
+        this.props.dispatch(setListing(dbListing))
 
         ipcRenderer.on("libraryListing", (event, listing) => {
           const libraryOS = db
             .transaction("library", "readwrite")
             .objectStore("library")
-          this.setState({ listing: this.getNewListing(listing) })
+          this.props.dispatch(setListing(this.getNewListing(listing)))
           libraryOS.put(listing)
         })
 
@@ -88,11 +84,15 @@ class Library extends Component {
           const libraryOS = db
             .transaction("library", "readwrite")
             .objectStore("library")
-          this.setState({
-            listing: this.state.listing.filter(
-              artist => !keyPaths.includes(artist.path)
+          this.props.dispatch(
+            setListing(
+              this.getNewListing(
+                this.props.listing.filter(
+                  artist => !keyPaths.includes(artist.path)
+                )
+              )
             )
-          })
+          )
           keyPaths.forEach(key => libraryOS.delete(key))
         })
 
@@ -108,7 +108,7 @@ class Library extends Component {
             ).find(s => s.path === song.path)
             oldSong.metadata = song.metadata
             artistOS.put(artist)
-            this.setState({ listing: this.getNewListing(artist) })
+            this.props.dispatch(setListing(this.getNewListing(artist)))
           }
         })
       }
@@ -138,9 +138,10 @@ class Library extends Component {
   }
 
   render() {
+    if (!this.props.isVisible) return null
     return (
-      <div className={`library ${this.props.isVisible ? "show" : "hide"}`}>
-        {this.state.listing.map((item, index) => (
+      <div ref={this.props.forwardRef} className="library">
+        {this.props.listing.map((item, index) => (
           <LibraryList
             key={item.name + "-" + index}
             item={item}
@@ -152,9 +153,13 @@ class Library extends Component {
   }
 }
 
-export default connect(
+const ConnectedLibrary = connect(
   state => ({
-    isVisible: state.library.isVisible
+    listing: state.library.listing
   }),
   dispatch => ({ dispatch })
 )(Library)
+
+export default React.forwardRef((props, ref) => (
+  <ConnectedLibrary {...props} forwardRef={ref} />
+))

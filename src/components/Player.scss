@@ -22,6 +22,10 @@ audio {
     margin-right: 16px;
   }
 
+  input {
+    padding: 0;
+  }
+
   input[type='range'] {
     overflow: hidden;
     appearance: none;
