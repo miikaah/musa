@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { defaultTo, sortBy, some, isEqual } from "lodash-es"
 import Palette from "img-palette"
 import { Colors } from "../App.jsx"
-import { updateCurrentTheme, doIdbRequest, updateDb } from "../util"
+import { updateCurrentTheme, doIdbRequest, updateIdb } from "../util"
 import "./Cover.scss"
 import "./Library.scss"
 
@@ -134,7 +134,7 @@ const onThemeStoreReqSuccess = (req, db, coverTarget) => {
 
     updateCurrentTheme(colors)
 
-    updateDb({
+    updateIdb({
       req,
       db,
       osName: "theme",

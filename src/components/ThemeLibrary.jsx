@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react"
 import ThemeBlock from "./ThemeBlock"
 import { FALLBACK_THEME } from "../config"
-import { updateCurrentTheme, doIdbRequest, updateStateInDb } from "../util"
+import {
+  updateCurrentTheme,
+  getStateFromIdb,
+  doIdbRequest,
+  updateStateInIdb
+} from "../util"
 import { get } from "lodash-es"
 import "./ThemeLibrary.scss"
 
@@ -11,13 +16,9 @@ const ThemeLibrary = ({ update }) => {
   const [currentTheme, setCurrentTheme] = useState({})
 
   useEffect(() => {
-    doIdbRequest({
-      method: "get",
-      storeName: "state",
-      key: "state",
-      onReqSuccess: req => () =>
-        setDefaultTheme(get(req, "result.defaultTheme", FALLBACK_THEME))
-    })
+    getStateFromIdb(req => () =>
+      setDefaultTheme(get(req, "result.defaultTheme", FALLBACK_THEME))
+    )
   }, [])
 
   useEffect(() => {
@@ -27,26 +28,18 @@ const ThemeLibrary = ({ update }) => {
       onReqSuccess: req => () => setThemes(req.result)
     })
 
-    doIdbRequest({
-      method: "get",
-      storeName: "state",
-      key: "state",
-      onReqSuccess: req => () =>
-        setCurrentTheme(get(req, "result.currentTheme", FALLBACK_THEME))
-    })
+    getStateFromIdb(req => () =>
+      setCurrentTheme(get(req, "result.currentTheme", FALLBACK_THEME))
+    )
   }, [update])
 
   const handleDefaultThemeChange = theme => {
     setDefaultTheme(theme)
     setCurrentTheme(theme)
     updateCurrentTheme(theme)
-    doIdbRequest({
-      method: "get",
-      storeName: "state",
-      key: "state",
-      onReqSuccess: (req, db) => () =>
-        updateStateInDb(req, db, { defaultTheme: theme })
-    })
+    getStateFromIdb((req, db) => () =>
+      updateStateInIdb(req, db, { defaultTheme: theme })
+    )
   }
 
   const handleCurrentThemeChange = theme => {

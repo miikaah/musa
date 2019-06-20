@@ -22,6 +22,15 @@ export function encodeFileUri(path) {
   return path.replace("#", "%23")
 }
 
+export function getStateFromIdb(onReqSuccess) {
+  doIdbRequest({
+    method: "get",
+    storeName: "state",
+    key: "state",
+    onReqSuccess
+  })
+}
+
 export function doIdbRequest({ method, storeName, key, onReqSuccess }) {
   const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
 
@@ -38,7 +47,7 @@ export function doIdbRequest({ method, storeName, key, onReqSuccess }) {
   }
 }
 
-export function updateDb({ req, db, osName, key, props }) {
+export function updateIdb({ req, db, osName, key, props }) {
   db.transaction(osName, "readwrite")
     .objectStore(osName)
     .put({
@@ -48,7 +57,7 @@ export function updateDb({ req, db, osName, key, props }) {
     })
 }
 
-export function updateStateInDb(req, db, props) {
+export function updateStateInIdb(req, db, props) {
   db.transaction("state", "readwrite")
     .objectStore("state")
     .put({
@@ -79,11 +88,7 @@ export function updateCurrentTheme(colors) {
     colors.typographySecondary
   )
 
-  doIdbRequest({
-    method: "get",
-    storeName: "state",
-    key: "state",
-    onReqSuccess: (req, db) => () =>
-      updateStateInDb(req, db, { currentTheme: colors })
-  })
+  getStateFromIdb((req, db) => () =>
+    updateStateInIdb(req, db, { currentTheme: colors })
+  )
 }

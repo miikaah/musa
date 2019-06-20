@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { KEYS, prefixNumber } from "../util"
 import { store } from ".."
 import { Colors } from "../App.jsx"
-import { DB_NAME, DB_VERSION } from "../config"
-import { doIdbRequest, updateStateInDb } from "../util"
+import { getStateFromIdb, updateStateInIdb } from "../util"
 import "./Player.scss"
 
 const VOLUME_DEFAULT = 50
@@ -109,12 +108,7 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
     const vol = parseInt(event.target.value, 10)
     const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol
     setVolumeForStateAndPlayer(volume)
-    doIdbRequest({
-      method: "get",
-      storeName: "state",
-      key: "state",
-      onReqSuccess: (req, db) => () => updateStateInDb(req, db, { volume })
-    })
+    getStateFromIdb((req, db) => () => updateStateInIdb(req, db, { volume }))
   }
 
   useEffect(() => {
@@ -183,15 +177,11 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
   }, [player, volume, currentItem])
 
   useEffect(() => {
-    doIdbRequest({
-      method: "get",
-      storeName: "state",
-      key: "state",
-      onReqSuccess: (req, db) => () =>
-        setVolume(
-          defaultTo(parseInt(get(req, "result.volume"), 10), VOLUME_DEFAULT)
-        )
-    })
+    getStateFromIdb((req, db) => () =>
+      setVolume(
+        defaultTo(parseInt(get(req, "result.volume"), 10), VOLUME_DEFAULT)
+      )
+    )
   }, [])
 
   const seek = event => {
