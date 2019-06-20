@@ -6,8 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Theme improvements
-- fix: Slow add to playlist
 - feat: Search
 - feat: Recommend random music from library and show them nicely
 - feat: Generate playlist (genre, random)
@@ -28,8 +26,6 @@ UI for Musa-Electron.
 
 #### Settings
 
-- feat: Use default theme if no cover
-- feat: Always use default theme
 - feat: Customise music library folder path
 - feat: Set Replaygain (track / album / off)
 - feat: Set playlist autoscroll on / off per view (medium / large)
@@ -45,6 +41,7 @@ UI for Musa-Electron.
 
 ##### 20.6.2019
 
+- feat: Use default theme if no cover for album or song
 - fix: Move stuff from localStorage to indexedDB as localStorage is destroyed on quit on mac
 
 ##### 18.6.2019

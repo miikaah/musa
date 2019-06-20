@@ -1,9 +1,15 @@
 import React, { useRef, useEffect } from "react"
 import { connect } from "react-redux"
-import { defaultTo, sortBy, some, isEqual } from "lodash-es"
+import { defaultTo, sortBy, some, isEqual, get, isEmpty } from "lodash-es"
 import Palette from "img-palette"
 import { Colors } from "../App.jsx"
-import { updateCurrentTheme, doIdbRequest, updateIdb } from "../util"
+import {
+  updateCurrentTheme,
+  doIdbRequest,
+  updateIdb,
+  getStateFromIdb
+} from "../util"
+import { FALLBACK_THEME } from "../config"
 import "./Cover.scss"
 import "./Library.scss"
 
@@ -162,6 +168,13 @@ const Cover = ({ coverSrc }) => {
   useEffect(() => {
     cover.current.addEventListener("load", onLoadCover)
   }, [])
+
+  useEffect(() => {
+    if (isEmpty(coverSrc))
+      getStateFromIdb(req => () =>
+        updateCurrentTheme(get(req, "result.defaultTheme", FALLBACK_THEME))
+      )
+  }, [coverSrc])
 
   return (
     <div className="cover-wrapper">
