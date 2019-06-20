@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { KEYS, prefixNumber } from "../util"
 import { store } from ".."
 import { Colors } from "../App.jsx"
+import { DB_NAME, DB_VERSION } from "../config"
 import "./Player.scss"
 
 const VOLUME_DEFAULT = 50
@@ -15,9 +16,7 @@ const SEEK_REFRESH_RATE = 500
 
 const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
   const [duration, setDuration] = useState(0)
-  const [volume, setVolume] = useState(
-    defaultTo(parseInt(localStorage.getItem("volume"), 10), VOLUME_DEFAULT)
-  )
+  const [volume, setVolume] = useState(VOLUME_DEFAULT)
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT)
   const [seekUpdater, setSeekUpdater] = useState(null)
   const [currentTime, setCurrentTime] = useState(0)
@@ -109,7 +108,30 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
     const vol = parseInt(event.target.value, 10)
     const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol
     setVolumeForStateAndPlayer(volume)
-    localStorage.setItem("volume", volume)
+
+    // Update volume to state in IndexedDB
+    const onReqSuccess = (req, db) => {
+      return () => {
+        const store = db.transaction("state", "readwrite").objectStore("state")
+
+        store.put({
+          key: "state",
+          ...req.result,
+          volume
+        })
+      }
+    }
+
+    const onIdbSuccess = idbEvent => {
+      const db = idbEvent.target.result
+      const store = db.transaction("state", "readwrite").objectStore("state")
+
+      const req = store.get("state")
+      req.onsuccess = onReqSuccess(req, db)
+    }
+
+    const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
+    idbRequest.onsuccess = onIdbSuccess
   }
 
   useEffect(() => {
@@ -176,6 +198,26 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
     setSeekUpdater(getSeekUpdater())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, volume, currentItem])
+
+  useEffect(() => {
+    const onReqSuccess = req => {
+      return () =>
+        setVolume(
+          defaultTo(parseInt(get(req, "result.volume"), 10), VOLUME_DEFAULT)
+        )
+    }
+
+    const onIdbSuccess = idbEvent => {
+      const db = idbEvent.target.result
+      const store = db.transaction("state", "readwrite").objectStore("state")
+
+      const req = store.get("state")
+      req.onsuccess = onReqSuccess(req)
+    }
+
+    const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
+    idbRequest.onsuccess = onIdbSuccess
+  }, [])
 
   const seek = event => {
     if (prevCurrentTime === event.target.value) return

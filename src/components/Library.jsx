@@ -40,6 +40,11 @@ class Library extends Component {
       } catch (e) {
         console.log(e)
       }
+      try {
+        event.target.result.createObjectStore("state", { keyPath: "key" })
+      } catch (e) {
+        console.log(e)
+      }
     }
 
     idbRequest.onsuccess = event => {

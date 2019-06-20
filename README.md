@@ -6,6 +6,7 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- fix: Slow add to playlist
 - feat: Search
 - feat: Recommend random music from library and show them nicely
 - feat: Generate playlist (genre, random)
@@ -42,6 +43,10 @@ UI for Musa-Electron.
 - feat: Create a packaging script
 
 ## Done
+
+##### 20.6.2019
+
+- fix: Move stuff from localStorage to indexedDB as localStorage is destroyed on quit on mac
 
 ##### 18.6.2019
 
