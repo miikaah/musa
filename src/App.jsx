@@ -19,7 +19,7 @@ import { connect } from "react-redux"
 import { addToPlaylist } from "./reducers/player.reducer"
 import { hideLibrary } from "./reducers/library.reducer"
 import { FALLBACK_THEME } from "./config"
-import { updateCurrentTheme, doIdbRequest, changeThemeInDb } from "./util"
+import { updateCurrentTheme, doIdbRequest, updateStateInDb } from "./util"
 import { get } from "lodash-es"
 import "./App.scss"
 
@@ -62,7 +62,7 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
       onReqSuccess: (req, db) => () => {
         const defaultTheme = get(req, "result.defaultTheme", FALLBACK_THEME)
         updateCurrentTheme(defaultTheme)
-        changeThemeInDb(req, db, "currentTheme", defaultTheme)
+        updateStateInDb(req, db, { currentTheme: defaultTheme })
       }
     })
 

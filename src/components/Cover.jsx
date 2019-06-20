@@ -3,8 +3,7 @@ import { connect } from "react-redux"
 import { defaultTo, sortBy, some, isEqual } from "lodash-es"
 import Palette from "img-palette"
 import { Colors } from "../App.jsx"
-import { DB_NAME, DB_VERSION } from "../config"
-import { updateCurrentTheme } from "../util"
+import { updateCurrentTheme, doIdbRequest, updateDb } from "../util"
 import "./Cover.scss"
 import "./Library.scss"
 
@@ -27,9 +26,9 @@ const contrast = (rgb1, rgb2) => {
   )
 }
 
-const onThemeStoreReqSuccess = (themeStore, themeStoreReq, coverTarget) => {
+const onThemeStoreReqSuccess = (req, db, coverTarget) => {
   return () => {
-    const theme = themeStoreReq.result
+    const theme = req.result
     if (theme) {
       updateCurrentTheme(theme.colors)
       return
@@ -135,27 +134,26 @@ const onThemeStoreReqSuccess = (themeStore, themeStoreReq, coverTarget) => {
 
     updateCurrentTheme(colors)
 
-    themeStore.put({ key: coverTarget.src, colors })
-  }
-}
-
-const onIdbSuccess = coverTarget => {
-  return idbEvent => {
-    const db = idbEvent.target.result
-    const themeStore = db.transaction("theme", "readwrite").objectStore("theme")
-
-    const themeStoreReq = themeStore.get(coverTarget.src)
-    themeStoreReq.onsuccess = onThemeStoreReqSuccess(
-      themeStore,
-      themeStoreReq,
-      coverTarget
-    )
+    updateDb({
+      req,
+      db,
+      osName: "theme",
+      key: coverTarget.src,
+      props: { colors }
+    })
   }
 }
 
 const onLoadCover = coverEvent => {
-  const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
-  idbRequest.onsuccess = onIdbSuccess(coverEvent.target)
+  // Save to variable here, because the target is set to null in the event
+  // variable when it goes out of scope
+  const coverTarget = coverEvent.target
+  doIdbRequest({
+    method: "get",
+    storeName: "theme",
+    key: coverEvent.target.src,
+    onReqSuccess: (req, db) => onThemeStoreReqSuccess(req, db, coverTarget)
+  })
 }
 
 const Cover = ({ coverSrc }) => {

@@ -38,13 +38,23 @@ export function doIdbRequest({ method, storeName, key, onReqSuccess }) {
   }
 }
 
-export function changeThemeInDb(req, db, propName, theme) {
+export function updateDb({ req, db, osName, key, props }) {
+  db.transaction(osName, "readwrite")
+    .objectStore(osName)
+    .put({
+      key,
+      ...req.result,
+      ...props
+    })
+}
+
+export function updateStateInDb(req, db, props) {
   db.transaction("state", "readwrite")
     .objectStore("state")
     .put({
       key: "state",
       ...req.result,
-      [propName]: theme
+      ...props
     })
 }
 
@@ -68,4 +78,12 @@ export function updateCurrentTheme(colors) {
     "--color-typography-secondary",
     colors.typographySecondary
   )
+
+  doIdbRequest({
+    method: "get",
+    storeName: "state",
+    key: "state",
+    onReqSuccess: (req, db) => () =>
+      updateStateInDb(req, db, { currentTheme: colors })
+  })
 }

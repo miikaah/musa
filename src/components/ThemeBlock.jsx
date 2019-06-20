@@ -2,6 +2,7 @@ import React from "react"
 import "./ThemeBlock.scss"
 
 const ThemeBlock = ({ colors, setCurrentTheme }) => {
+  if (!colors) return null
   return (
     <div
       className="theme-block"

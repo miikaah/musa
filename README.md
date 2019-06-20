@@ -26,8 +26,6 @@ UI for Musa-Electron.
 
 #### Player
 
-- fix: Bug where playback doesn't continue to items added later than the playback of the last element started
-
 #### Settings
 
 - feat: Use default theme if no cover

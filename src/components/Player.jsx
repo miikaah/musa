@@ -7,6 +7,7 @@ import { KEYS, prefixNumber } from "../util"
 import { store } from ".."
 import { Colors } from "../App.jsx"
 import { DB_NAME, DB_VERSION } from "../config"
+import { doIdbRequest, updateStateInDb } from "../util"
 import "./Player.scss"
 
 const VOLUME_DEFAULT = 50
@@ -108,30 +109,12 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
     const vol = parseInt(event.target.value, 10)
     const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol
     setVolumeForStateAndPlayer(volume)
-
-    // Update volume to state in IndexedDB
-    const onReqSuccess = (req, db) => {
-      return () => {
-        const store = db.transaction("state", "readwrite").objectStore("state")
-
-        store.put({
-          key: "state",
-          ...req.result,
-          volume
-        })
-      }
-    }
-
-    const onIdbSuccess = idbEvent => {
-      const db = idbEvent.target.result
-      const store = db.transaction("state", "readwrite").objectStore("state")
-
-      const req = store.get("state")
-      req.onsuccess = onReqSuccess(req, db)
-    }
-
-    const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
-    idbRequest.onsuccess = onIdbSuccess
+    doIdbRequest({
+      method: "get",
+      storeName: "state",
+      key: "state",
+      onReqSuccess: (req, db) => () => updateStateInDb(req, db, { volume })
+    })
   }
 
   useEffect(() => {
@@ -200,23 +183,15 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
   }, [player, volume, currentItem])
 
   useEffect(() => {
-    const onReqSuccess = req => {
-      return () =>
+    doIdbRequest({
+      method: "get",
+      storeName: "state",
+      key: "state",
+      onReqSuccess: (req, db) => () =>
         setVolume(
           defaultTo(parseInt(get(req, "result.volume"), 10), VOLUME_DEFAULT)
         )
-    }
-
-    const onIdbSuccess = idbEvent => {
-      const db = idbEvent.target.result
-      const store = db.transaction("state", "readwrite").objectStore("state")
-
-      const req = store.get("state")
-      req.onsuccess = onReqSuccess(req)
-    }
-
-    const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
-    idbRequest.onsuccess = onIdbSuccess
+    })
   }, [])
 
   const seek = event => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import ThemeBlock from "./ThemeBlock"
 import { FALLBACK_THEME } from "../config"
-import { updateCurrentTheme, doIdbRequest, changeThemeInDb } from "../util"
+import { updateCurrentTheme, doIdbRequest, updateStateInDb } from "../util"
 import { get } from "lodash-es"
 import "./ThemeLibrary.scss"
 
@@ -45,20 +45,13 @@ const ThemeLibrary = ({ update }) => {
       storeName: "state",
       key: "state",
       onReqSuccess: (req, db) => () =>
-        changeThemeInDb(req, db, "defaultTheme", theme)
+        updateStateInDb(req, db, { defaultTheme: theme })
     })
   }
 
   const handleCurrentThemeChange = theme => {
     setCurrentTheme(theme)
     updateCurrentTheme(theme)
-    doIdbRequest({
-      method: "get",
-      storeName: "state",
-      key: "state",
-      onReqSuccess: (req, db) => () =>
-        changeThemeInDb(req, db, "currentTheme", theme)
-    })
   }
 
   return (
