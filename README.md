@@ -35,12 +35,12 @@ UI for Musa-Electron.
 #### General
 
 - feat: Create an icon
-- feat: Create a packaging script
 
 ## Done
 
 ##### 20.6.2019
 
+- feat: Create a packaging script
 - feat: Use default theme if no cover for album or song
 - fix: Move stuff from localStorage to indexedDB as localStorage is destroyed on quit on mac
 
