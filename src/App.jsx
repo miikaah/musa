@@ -19,7 +19,8 @@ import { connect } from "react-redux"
 import { addToPlaylist } from "./reducers/player.reducer"
 import { hideLibrary } from "./reducers/library.reducer"
 import { FALLBACK_THEME } from "./config"
-import { updateCurrentTheme } from "./util"
+import { updateCurrentTheme, doIdbRequest, changeThemeInDb } from "./util"
+import { get } from "lodash-es"
 import "./App.scss"
 
 library.add(
@@ -54,9 +55,17 @@ const App = ({ isSettingsVisible, isLibraryVisible, dispatch }) => {
   const appRightRef = useRef(null)
 
   useEffect(() => {
-    const theme =
-      JSON.parse(localStorage.getItem("musaDefaultTheme")) || FALLBACK_THEME
-    updateCurrentTheme(theme)
+    doIdbRequest({
+      method: "get",
+      storeName: "state",
+      key: "state",
+      onReqSuccess: (req, db) => () => {
+        const defaultTheme = get(req, "result.defaultTheme", FALLBACK_THEME)
+        updateCurrentTheme(defaultTheme)
+        changeThemeInDb(req, db, "currentTheme", defaultTheme)
+      }
+    })
+
     document.body.style.setProperty("--color-dr-level", Colors.Typography)
   }, [])
 

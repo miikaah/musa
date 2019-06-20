@@ -1,3 +1,5 @@
+import { DB_NAME, DB_VERSION } from "./config"
+
 export const KEYS = {
   Backspace: 8,
   Enter: 13,
@@ -20,6 +22,32 @@ export function encodeFileUri(path) {
   return path.replace("#", "%23")
 }
 
+export function doIdbRequest({ method, storeName, key, onReqSuccess }) {
+  const idbRequest = indexedDB.open(DB_NAME, DB_VERSION)
+
+  idbRequest.onsuccess = idbEvent => {
+    const db = idbEvent.target.result
+    const store = db.transaction(storeName, "readwrite").objectStore(storeName)
+
+    let req
+
+    if (key) req = store[method](key)
+    else req = store[method]()
+
+    req.onsuccess = onReqSuccess(req, db)
+  }
+}
+
+export function changeThemeInDb(req, db, propName, theme) {
+  db.transaction("state", "readwrite")
+    .objectStore("state")
+    .put({
+      key: "state",
+      ...req.result,
+      [propName]: theme
+    })
+}
+
 export function updateCurrentTheme(colors) {
   document.body.style.setProperty("--color-bg", `rgb(${colors.bg})`)
   document.body.style.setProperty(
@@ -40,6 +68,4 @@ export function updateCurrentTheme(colors) {
     "--color-typography-secondary",
     colors.typographySecondary
   )
-
-  localStorage.setItem("musaCurrentTheme", JSON.stringify(colors))
 }

@@ -6,6 +6,7 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- feat: Theme improvements
 - fix: Slow add to playlist
 - feat: Search
 - feat: Recommend random music from library and show them nicely
