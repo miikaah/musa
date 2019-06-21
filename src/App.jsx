@@ -15,7 +15,7 @@ import {
   faSearch
 } from "@fortawesome/free-solid-svg-icons"
 import { connect } from "react-redux"
-import { addToPlaylist } from "./reducers/player.reducer"
+import { addToPlaylist, pasteToPlaylist } from "./reducers/player.reducer"
 import { FALLBACK_THEME } from "./config"
 import { updateCurrentTheme, doIdbRequest, updateStateInIdb } from "./util"
 import { get } from "lodash-es"
@@ -83,7 +83,7 @@ const App = ({ dispatch }) => {
   const onDrop = event => {
     const item = JSON.parse(event.dataTransfer.getData("text"))
     if (Array.isArray(item)) {
-      item.forEach(song => dispatch(addToPlaylist(song)))
+      dispatch(pasteToPlaylist(item))
       return
     }
     dispatch(addToPlaylist(item))
