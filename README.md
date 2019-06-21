@@ -40,6 +40,7 @@ UI for Musa-Electron.
 
 ##### 21.6.2019
 
+feat: add more features to search
 fix: Initial scan in frontend
 
 ##### 20.6.2019
