@@ -105,7 +105,7 @@ const App = ({ dispatch }) => {
     const renderPlaylist = () => <Playlist onScrollPlaylist={scrollPlaylist} />
 
     return (
-      <>
+      <div className="app-wrapper">
         <div
           className="app-center"
           ref={appCenterRef}
@@ -125,7 +125,7 @@ const App = ({ dispatch }) => {
             {renderPlaylist()}
           </div>
         )}
-      </>
+      </div>
     )
   }
 
