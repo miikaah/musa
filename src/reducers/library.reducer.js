@@ -1,4 +1,4 @@
-export const SET_LISTING = "MUSA/LIBRARY/SET_SCAN_PROPS"
+export const SET_LISTING = "MUSA/LIBRARY/SET_LISTING"
 export const setListing = listing => ({
   type: SET_LISTING,
   listing

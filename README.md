@@ -38,8 +38,13 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 21.6.2019
+
+fix: Initial scan in frontend
+
 ##### 20.6.2019
 
+- refactor: Toolbar buttons to use Refs
 - feat: Create a packaging script
 - feat: Use default theme if no cover for album or song
 - fix: Move stuff from localStorage to indexedDB as localStorage is destroyed on quit on mac

@@ -47,7 +47,7 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
 
   const getSeekUpdater = () =>
     setInterval(() => {
-      setCurrentTime(player.current.currentTime)
+      setCurrentTime(get(player, "current.currentTime", 0))
     }, SEEK_REFRESH_RATE)
 
   const playOrPause = () => {
@@ -55,7 +55,7 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
       player.current.pause()
       dispatch(pause())
       clearInterval(seekUpdater)
-      setCurrentTime(player.current.currentTime)
+      setCurrentTime(get(player, "current.currentTime", 0))
       return
     }
     if (!isEmpty(src)) {

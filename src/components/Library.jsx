@@ -76,7 +76,7 @@ class Library extends Component {
           const libraryOS = db
             .transaction("library", "readwrite")
             .objectStore("library")
-          this.props.dispatch(setListing(this.getNewListing(listing)))
+          // this.props.dispatch(setListing(this.getNewListing(listing)))
           libraryOS.put(listing)
         })
 
@@ -126,28 +126,28 @@ class Library extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return !isEqual(this.state, nextState) || !isEqual(this.props, nextProps)
+    return !isEqual(this.props, nextProps)
   }
 
   getNewListing(listing) {
-    if (isEmpty(listing)) return [...this.state.listing]
+    if (isEmpty(listing)) return [...this.props.listing]
     return [
-      ...this.state.listing.filter(artist => artist.path !== listing.path),
+      ...this.props.listing.filter(artist => artist.path !== listing.path),
       listing
     ].sort((a, b) => a.path.localeCompare(b.path))
   }
 
   render() {
-    if (!this.props.isVisible) return null
     return (
       <div ref={this.props.forwardRef} className="library">
-        {this.props.listing.map((item, index) => (
-          <LibraryList
-            key={item.name + "-" + index}
-            item={item}
-            isRoot={true}
-          />
-        ))}
+        {this.props.listing &&
+          this.props.listing.map((item, index) => (
+            <LibraryList
+              key={item.name + "-" + index}
+              item={item}
+              isRoot={true}
+            />
+          ))}
       </div>
     )
   }
