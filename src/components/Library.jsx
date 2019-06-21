@@ -138,6 +138,7 @@ class Library extends Component {
   }
 
   render() {
+    if (!this.props.isVisible) return null
     return (
       <div ref={this.props.forwardRef} className="library">
         {this.props.listing &&
