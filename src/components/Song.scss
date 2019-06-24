@@ -1,0 +1,34 @@
+@import '../scss/colors';
+@import '../scss/variables';
+
+.song {
+  display: flex;
+  flex: 48%;
+  margin: 0 10px 40px 0;
+
+  > img {
+    flex: 50%;
+    min-width: 160px;
+    max-width: 160px;
+    min-height: 160px;
+    max-height: 160px;
+    background-color: $musa-black;
+  }
+
+  > div {
+    flex: 50%;
+    padding: 4px 20px;
+
+    > p {
+      margin: 0 0 10px;
+    }
+
+    > p:not(:nth-child(3)) {
+      font-size: $musa-font-size-xs;
+    }
+
+    > p:nth-child(3) {
+      font-weight: bold;
+    }
+  }
+}

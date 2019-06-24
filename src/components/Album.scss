@@ -1,0 +1,63 @@
+@import '../scss/colors';
+@import '../scss/variables';
+
+.album {
+  display: flex;
+  flex: 100%;
+  margin: 0 10px 60px 0;
+
+  > img {
+    flex: 20%;
+    min-width: 200px;
+    max-width: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    background-color: $musa-black;
+  }
+
+  &-info {
+    flex: 30%;
+    padding: 4px 20px;
+
+    > p {
+      margin: 0 0 10px;
+    }
+
+    > p:not(:nth-child(2)) {
+      font-size: $musa-font-size-xs;
+    }
+
+    > p:nth-child(2) {
+      font-weight: bold;
+    }
+  }
+
+  &-songs {
+    flex: 50%;
+    font-size: $musa-font-size-sm;
+  }
+
+  &-song-list {
+    display: flex;
+    flex-direction: row;
+
+    > span {
+      margin-bottom: 4px;
+    }
+
+    > span:nth-child(1) {
+      flex: 12%;
+      font-size: $musa-font-size-xs;
+    }
+
+    > span:nth-child(2) {
+      flex: 78%;
+      padding-right: 4px;
+    }
+
+    > span:nth-child(3) {
+      flex: 10%;
+      font-size: $musa-font-size-xs;
+    }
+  }
+}

@@ -9,14 +9,14 @@
   height: 100%;
   width: 100%;
   margin: $musa-height-toolbar 0 0 -12px;
+  overflow-y: scroll;
 
   &-wrapper {
     padding: 40px;
     max-width: 730px;
     min-width: 344px;
-    margin: auto;
+    margin: 0 auto 50px;
     max-height: 95vh;
-    overflow-y: scroll;
   }
 
   @media screen and (max-width: $musa-breakpoint-xs) {

@@ -1,5 +1,23 @@
 .search {
+  input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  > div {
+    margin-bottom: 100px;
+  }
+
   &-block {
-    margin-top: 30px;
+    margin-top: 40px;
+
+    > h2 {
+      margin-bottom: 40px;
+    }
+
+    &-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+    }
   }
 }

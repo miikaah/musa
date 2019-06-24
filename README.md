@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Search
 - feat: Recommend random music from library and show them nicely
 - feat: Generate playlist (genre, random)
 - feat: Support replaygain album gain
@@ -37,6 +36,10 @@ UI for Musa-Electron.
 - feat: Create an icon
 
 ## Done
+
+##### 24.6.2019
+
+- feat: Add styles to Search
 
 ##### 21.6.2019
 
