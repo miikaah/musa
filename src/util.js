@@ -1,4 +1,5 @@
 import { DB_NAME, DB_VERSION } from "./config"
+import { addToast, animateToast, removeToast } from "./reducers/toaster.reducer"
 
 export const KEYS = {
   Backspace: 8,
@@ -91,4 +92,10 @@ export function updateCurrentTheme(colors) {
   getStateFromIdb((req, db) => () =>
     updateStateInIdb(req, db, { currentTheme: colors })
   )
+}
+
+export function dispatchToast(msg, key, dispatch) {
+  dispatch(addToast(msg, key))
+  setTimeout(() => dispatch(animateToast(key)), 1000)
+  setTimeout(() => dispatch(removeToast(key)), 3000)
 }

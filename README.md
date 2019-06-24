@@ -36,7 +36,8 @@ UI for Musa-Electron.
 
 ##### 24.6.2019
 
-- feat: Persist search query and artifacts to redux state
+- feat: Add toast for successfully adding to playlist in search
+- feat: Persist search query and artefacts to redux state
 - feat: Add functionality to Search
 - feat: Add styles to Search
 

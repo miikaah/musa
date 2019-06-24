@@ -1,0 +1,32 @@
+.toaster {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 3;
+  margin-top: 0;
+  pointer-events: none;
+  width: 100vw;
+  height: 200px;
+
+  .toast-container {
+    background-color: var(--color-primary-highlight);
+    min-width: 30%;
+    max-width: 40%;
+    margin: 4px auto;
+    border-radius: 20px;
+    opacity: 1;
+  }
+
+  .toast {
+    color: var(--color-typography-primary);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .animate {
+    opacity: 0;
+    transition: opacity 3s ease-out;
+  }
+}

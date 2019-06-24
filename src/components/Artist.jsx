@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import { isEmpty } from "lodash-es"
-import { encodeFileUri } from "../util"
+import { encodeFileUri, dispatchToast } from "../util"
 import { pasteToPlaylist } from "../reducers/player.reducer"
 import "./Artist.scss"
 
@@ -17,6 +17,9 @@ const Artist = ({ item, dispatch }) => {
         }))
       )
     )
+    const msg = `Added ${album.name} to playlist`
+    const key = `${album.name}-${Date.now()}`
+    dispatchToast(msg, key, dispatch)
   }
   return (
     <div className="artist">
@@ -46,6 +49,8 @@ const Artist = ({ item, dispatch }) => {
 }
 
 export default connect(
-  state => ({}),
+  state => ({
+    messages: state.toaster.messages
+  }),
   dispatch => ({ dispatch })
 )(Artist)

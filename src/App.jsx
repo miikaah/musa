@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import Playlist from "./components/Playlist"
 import Toolbar from "./components/Toolbar"
+import Toaster from "./components/Toaster"
 import Cover from "./components/Cover"
 import ProgressBar from "./components/ProgressBar"
 import { library } from "@fortawesome/fontawesome-svg-core"
@@ -131,6 +132,7 @@ const App = ({ dispatch }) => {
 
   return (
     <div className="app">
+      <Toaster />
       <ProgressBar />
       <Toolbar />
       <div>{renderCenterAndRight(windowWidth > 1279)}</div>

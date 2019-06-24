@@ -1,7 +1,7 @@
 import React from "react"
 import { connect } from "react-redux"
 import { get, isEmpty } from "lodash-es"
-import { encodeFileUri } from "../util"
+import { encodeFileUri, dispatchToast } from "../util"
 import { addToPlaylist, pasteToPlaylist } from "../reducers/player.reducer"
 import "./Album.scss"
 
@@ -17,6 +17,19 @@ const Album = ({ item, dispatch }) => {
         }))
       )
     )
+
+    const msg = `Added ${item.name} to playlist`
+    const key = `${item.name}-${Date.now()}`
+    dispatchToast(msg, key, dispatch)
+  }
+
+  const addSongToPlaylist = song => {
+    dispatch(addToPlaylist({ ...song, cover: item.cover }))
+
+    const title = get(song, "metadata.title", "")
+    const msg = `Added ${title} to playlist`
+    const key = `${title}-${Date.now()}`
+    dispatchToast(msg, key, dispatch)
   }
 
   return (
@@ -38,7 +51,7 @@ const Album = ({ item, dispatch }) => {
           <div
             className="album-song"
             key={i}
-            onClick={() => dispatch(addToPlaylist({ ...s, cover: item.cover }))}
+            onClick={() => addSongToPlaylist(s)}
           >
             <span>{get(s, "metadata.track", "")}</span>
             <span>{get(s, "metadata.title", "")}</span>
