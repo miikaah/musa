@@ -6,10 +6,8 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Recommend random music from library and show them nicely
-- feat: Generate playlist (genre, random)
+- feat: Disable key listeners when writing to input
 - feat: Support replaygain album gain
-- feat: Scale cover images that are too high
 
 #### Backend
 
@@ -27,7 +25,6 @@ UI for Musa-Electron.
 
 - feat: Customise music library folder path
 - feat: Set Replaygain (track / album / off)
-- feat: Set playlist autoscroll on / off per view (medium / large)
 
 #### Themes
 
@@ -43,8 +40,8 @@ UI for Musa-Electron.
 
 ##### 21.6.2019
 
-feat: add more features to search
-fix: Initial scan in frontend
+- feat: add more features to search
+- fix: Initial scan in frontend
 
 ##### 20.6.2019
 

@@ -26,6 +26,12 @@
       flex: 30%;
       margin: 0 24px 30px 0;
       max-width: 30%;
+      position: relative;
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-top-width: 0;
+      border-right-width: 0;
+      border-left-width: 0;
 
       > img {
         flex: 20%;
@@ -44,6 +50,10 @@
           margin: 0 0 8px;
         }
       }
+    }
+
+    &-item:hover {
+      border-color: var(--color-primary-highlight);
     }
   }
 }

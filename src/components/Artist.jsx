@@ -1,9 +1,11 @@
 import React from "react"
+import { connect } from "react-redux"
 import { isEmpty } from "lodash-es"
 import { encodeFileUri } from "../util"
+import { pasteToPlaylist } from "../reducers/player.reducer"
 import "./Artist.scss"
 
-const Artist = ({ item }) => {
+const Artist = ({ item, dispatch }) => {
   if (isEmpty(item)) return null
   return (
     <div className="artist">
@@ -12,7 +14,20 @@ const Artist = ({ item }) => {
         {item.albums
           .filter(a => a.name !== "undefined")
           .map((a, i) => (
-            <div className="artist-album-list-item" key={i}>
+            <div
+              className="artist-album-list-item"
+              key={i}
+              onClick={() =>
+                dispatch(
+                  pasteToPlaylist(
+                    a.songs.map(s => ({
+                      ...s,
+                      cover: a.cover
+                    }))
+                  )
+                )
+              }
+            >
               <img
                 alt=""
                 src={isEmpty(a.cover) ? "" : encodeFileUri(`file://${a.cover}`)}
@@ -27,5 +42,7 @@ const Artist = ({ item }) => {
     </div>
   )
 }
-
-export default Artist
+export default connect(
+  state => ({}),
+  dispatch => ({ dispatch })
+)(Artist)
