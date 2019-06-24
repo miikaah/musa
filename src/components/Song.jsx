@@ -1,13 +1,18 @@
 import React from "react"
+import { connect } from "react-redux"
 import { get, isEmpty } from "lodash-es"
 import { encodeFileUri } from "../util"
+import { addToPlaylist } from "../reducers/player.reducer"
 import "./Song.scss"
 
-const Song = ({ item }) => {
+const Song = ({ item, dispatch }) => {
   if (isEmpty(item)) return null
   return (
-    <div className="song">
-      <img alt="" src={encodeFileUri(item.cover)} />
+    <div className="song" onClick={() => dispatch(addToPlaylist(item))}>
+      <img
+        alt=""
+        src={isEmpty(item.cover) ? "" : encodeFileUri(`file://${item.cover}`)}
+      />
       <div>
         <p>{get(item, "metadata.artist", "")}</p>
         <p>{get(item, "metadata.album", "")}</p>
@@ -18,4 +23,7 @@ const Song = ({ item }) => {
   )
 }
 
-export default Song
+export default connect(
+  state => ({}),
+  dispatch => ({ dispatch })
+)(Song)

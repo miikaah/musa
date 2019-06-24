@@ -50,10 +50,10 @@
           margin: 0 0 8px;
         }
       }
-    }
 
-    &-item:hover {
-      border-color: var(--color-primary-highlight);
+      &:hover {
+        border-color: var(--color-primary-highlight);
+      }
     }
   }
 }

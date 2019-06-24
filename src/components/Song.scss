@@ -5,6 +5,11 @@
   display: flex;
   flex: 48%;
   margin: 0 10px 40px 0;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-left-width: 0;
 
   > img {
     flex: 50%;
@@ -30,5 +35,9 @@
     > p:nth-child(3) {
       font-weight: bold;
     }
+  }
+
+  &:hover {
+    border-color: var(--color-primary-highlight);
   }
 }

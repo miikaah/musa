@@ -44,7 +44,7 @@ const Search = ({ listing }) => {
           a.songs.map(s => ({
             name: get(s, "metadata.title", ""),
             path: s.path,
-            cover: isUndefined(a.cover) ? "" : `file://${a.cover}`,
+            cover: isUndefined(a.cover) ? "" : a.cover,
             metadata: s.metadata
           }))
         )

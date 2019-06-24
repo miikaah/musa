@@ -36,6 +36,7 @@ UI for Musa-Electron.
 
 ##### 24.6.2019
 
+- feat: Add functionality to Search
 - feat: Add styles to Search
 
 ##### 21.6.2019

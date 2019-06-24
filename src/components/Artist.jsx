@@ -42,6 +42,7 @@ const Artist = ({ item, dispatch }) => {
     </div>
   )
 }
+
 export default connect(
   state => ({}),
   dispatch => ({ dispatch })
