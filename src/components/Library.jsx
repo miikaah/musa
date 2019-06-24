@@ -2,7 +2,11 @@ import React, { Component } from "react"
 import LibraryList from "./LibraryList"
 import { isEqual, isEmpty, get, flatten } from "lodash-es"
 import { connect } from "react-redux"
-import { setListing, setScanProps } from "../reducers/library.reducer"
+import {
+  initListing,
+  setListing,
+  setScanProps
+} from "../reducers/library.reducer"
 import { DB_NAME, DB_VERSION } from "../config"
 import "./Library.scss"
 
@@ -70,13 +74,13 @@ class Library extends Component {
 
       objectStoreRequest.onsuccess = event => {
         const dbListing = objectStoreRequest.result
-        this.props.dispatch(setListing(dbListing))
+        this.props.dispatch(initListing(dbListing))
 
         ipcRenderer.on("libraryListing", (event, listing) => {
           const libraryOS = db
             .transaction("library", "readwrite")
             .objectStore("library")
-          // this.props.dispatch(setListing(this.getNewListing(listing)))
+          this.props.dispatch(setListing(this.getNewListing(listing)))
           libraryOS.put(listing)
         })
 

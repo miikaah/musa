@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { connect } from "react-redux"
-import { flatten, get, isUndefined } from "lodash-es"
+import { setQuery } from "../reducers/library.reducer"
 import fuzzysort from "fuzzysort"
 import Song from "./Song"
 import Album from "./Album"
@@ -19,38 +19,11 @@ const useDebounce = (value, delay) => {
   return debouncedValue
 }
 
-const Search = ({ listing }) => {
-  const [query, setQuery] = useState("")
+const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   const [searchArtists, setSearchArtists] = useState([])
   const [searchAlbums, setSearchAlbums] = useState([])
   const [searchSongs, setSearchSongs] = useState([])
-  const [artistAlbums, setArtistAlbums] = useState([])
-  const [artistSongs, setArtistSongs] = useState([])
   const options = { limit: 10, key: "name", threshold: -50 }
-
-  useEffect(() => {
-    const albums = flatten(
-      listing.map(l =>
-        l.albums.map(a => ({
-          ...a,
-          artist: l.name
-        }))
-      )
-    )
-    setArtistAlbums(albums)
-    setArtistSongs(
-      flatten(
-        albums.map(a =>
-          a.songs.map(s => ({
-            name: get(s, "metadata.title", ""),
-            path: s.path,
-            cover: isUndefined(a.cover) ? "" : a.cover,
-            metadata: s.metadata
-          }))
-        )
-      )
-    )
-  }, [listing])
 
   const debouncedQuery = useDebounce(query, 16)
 
@@ -84,7 +57,10 @@ const Search = ({ listing }) => {
     <div className="search">
       <h1>Search</h1>
       <div>
-        <input value={query} onChange={e => setQuery(e.target.value)} />
+        <input
+          value={query}
+          onChange={e => dispatch(setQuery(e.target.value))}
+        />
         <div className="search-block">
           <h2>Artists</h2>
           <div className="search-block-wrapper">
@@ -110,7 +86,10 @@ const Search = ({ listing }) => {
 
 export default connect(
   state => ({
-    listing: state.library.listing
+    listing: state.library.listing,
+    query: state.library.query,
+    artistAlbums: state.library.albums,
+    artistSongs: state.library.songs
   }),
   dispatch => ({ dispatch })
 )(Search)
