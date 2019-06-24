@@ -1,45 +1,62 @@
 @import '../scss/colors';
 @import '../scss/variables';
 
+@mixin bottomBorder {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-top-width: 0;
+  border-right-width: 0;
+  border-left-width: 0;
+}
+
 .album {
   display: flex;
   flex: 100%;
   margin: 0 10px 60px 0;
 
-  > img {
-    flex: 20%;
-    min-width: 200px;
-    max-width: 200px;
-    min-height: 200px;
-    max-height: 200px;
-    background-color: $musa-black;
-  }
+  .album-full-add {
+    display: flex;
+    flex: 60%;
+    @include bottomBorder;
 
-  &-info {
-    flex: 30%;
-    padding: 4px 20px;
-
-    > p {
-      margin: 0 0 10px;
+    > img {
+      min-width: 200px;
+      max-width: 200px;
+      min-height: 200px;
+      max-height: 200px;
+      background-color: $musa-black;
     }
 
-    > p:not(:nth-child(2)) {
-      font-size: $musa-font-size-xs;
+    .album-info {
+      padding: 4px 20px;
+
+      > p {
+        margin: 0 0 10px;
+      }
+
+      > p:not(:nth-child(2)) {
+        font-size: $musa-font-size-xs;
+      }
+
+      > p:nth-child(2) {
+        font-weight: bold;
+      }
     }
 
-    > p:nth-child(2) {
-      font-weight: bold;
+    &:hover {
+      border-color: var(--color-primary-highlight);
     }
   }
 
   &-songs {
-    flex: 50%;
+    flex: 40%;
     font-size: $musa-font-size-sm;
   }
 
-  &-song-list {
+  &-song {
     display: flex;
     flex-direction: row;
+    @include bottomBorder;
 
     > span {
       margin-bottom: 4px;
@@ -58,6 +75,11 @@
     > span:nth-child(3) {
       flex: 10%;
       font-size: $musa-font-size-xs;
+      text-align: right;
+    }
+
+    &:hover {
+      border-color: var(--color-primary-highlight);
     }
   }
 }

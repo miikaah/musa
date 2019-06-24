@@ -6,6 +6,7 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- feat: Persist search query and artifacts to redux state
 - feat: Disable key listeners when writing to input
 - feat: Support replaygain album gain
 

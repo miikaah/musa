@@ -7,6 +7,17 @@ import "./Artist.scss"
 
 const Artist = ({ item, dispatch }) => {
   if (isEmpty(item)) return null
+
+  const addAlbumSongsToPlaylist = album => {
+    dispatch(
+      pasteToPlaylist(
+        album.songs.map(s => ({
+          ...s,
+          cover: album.cover
+        }))
+      )
+    )
+  }
   return (
     <div className="artist">
       <div>{item.name}</div>
@@ -17,16 +28,7 @@ const Artist = ({ item, dispatch }) => {
             <div
               className="artist-album-list-item"
               key={i}
-              onClick={() =>
-                dispatch(
-                  pasteToPlaylist(
-                    a.songs.map(s => ({
-                      ...s,
-                      cover: a.cover
-                    }))
-                  )
-                )
-              }
+              onClick={() => addAlbumSongsToPlaylist(a)}
             >
               <img
                 alt=""
