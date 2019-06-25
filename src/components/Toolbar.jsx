@@ -8,9 +8,9 @@ import Player from "./Player"
 import "./Toolbar.scss"
 
 const Toolbar = () => {
-  const [isLibraryVisible, setIsLibraryVisible] = useState(false)
+  const [isLibraryVisible, setIsLibraryVisible] = useState(true)
   const [isSettingsVisible, setIsSettingsVisible] = useState(false)
-  const [isSearchVisible, setIsSearchVisible] = useState(true)
+  const [isSearchVisible, setIsSearchVisible] = useState(false)
 
   const libraryRef = useRef()
   const libraryButtonRef = useRef()

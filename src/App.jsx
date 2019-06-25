@@ -10,7 +10,6 @@ import {
   faPause,
   faVolumeUp,
   faVolumeMute,
-  faCaretRight,
   faBars,
   faCog,
   faSearch
@@ -22,16 +21,7 @@ import { updateCurrentTheme, doIdbRequest, updateStateInIdb } from "./util"
 import { get } from "lodash-es"
 import "./App.scss"
 
-library.add(
-  faPlay,
-  faPause,
-  faVolumeUp,
-  faVolumeMute,
-  faCaretRight,
-  faBars,
-  faCog,
-  faSearch
-)
+library.add(faPlay, faPause, faVolumeUp, faVolumeMute, faBars, faCog, faSearch)
 
 export const Colors = {
   Bg: "#21252b",

@@ -4,15 +4,17 @@ import { get } from "lodash-es"
 import { addToPlaylist } from "../reducers/player.reducer"
 import "./LibraryItem.scss"
 
-const LibraryItem = ({ item, cover, dispatch }) => {
+const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
   const onDragStart = event => {
-    event.dataTransfer.setData("text/plain", JSON.stringify(item))
+    event.dataTransfer.setData("text/plain", JSON.stringify({ ...item, cover }))
     event.stopPropagation()
   }
 
+  const classes = hasAlbum ? "library-item" : "library-item-no-album"
+
   return (
     <li
-      className="library-item"
+      className={classes}
       draggable
       onDragStart={onDragStart}
       onDoubleClick={() => dispatch(addToPlaylist(item))}

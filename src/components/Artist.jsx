@@ -1,8 +1,9 @@
 import React from "react"
 import { connect } from "react-redux"
 import { isEmpty } from "lodash-es"
-import { encodeFileUri, dispatchToast } from "../util"
+import { dispatchToast } from "../util"
 import { pasteToPlaylist } from "../reducers/player.reducer"
+import AlbumCover from "./AlbumCover"
 import "./Artist.scss"
 
 const Artist = ({ item, dispatch }) => {
@@ -28,20 +29,11 @@ const Artist = ({ item, dispatch }) => {
         {item.albums
           .filter(a => a.name !== "undefined")
           .map((a, i) => (
-            <div
-              className="artist-album-list-item"
+            <AlbumCover
               key={i}
+              item={a}
               onClick={() => addAlbumSongsToPlaylist(a)}
-            >
-              <img
-                alt=""
-                src={isEmpty(a.cover) ? "" : encodeFileUri(`file://${a.cover}`)}
-              />
-              <div>
-                <p>{a.name}</p>
-                <p>{a.date}</p>
-              </div>
-            </div>
+            />
           ))}
       </div>
     </div>

@@ -8,13 +8,27 @@
 
   &-folder {
     cursor: pointer;
+
+    > div {
+      max-width: 100%;
+      border: 0;
+      margin: 5px 0;
+    }
   }
 
-  li {
+  > li {
     padding: 2px 12px;
   }
 
-  li:hover {
+  > li:nth-child(2) {
+    padding-top: 4px;
+  }
+
+  > li:last-child:not(:first-child) {
+    margin-bottom: 20px;
+  }
+
+  > li:hover {
     background-color: var(--color-secondary-highlight);
     color: var(--color-typography-secondary);
   }

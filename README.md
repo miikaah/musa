@@ -14,18 +14,10 @@ UI for Musa-Electron.
 
 - feat: Create a smaller playlist with album covers
 
-#### Library 2.0
-
-- feat: Create a different kind of library view that shows album covers
-
-#### Player
-
 #### Settings
 
 - feat: Customise music library folder path
 - feat: Set Replaygain (track / album / off)
-
-#### Themes
 
 #### General
 
@@ -35,6 +27,7 @@ UI for Musa-Electron.
 
 ##### 25.6.2019
 
+- feat: Create a different kind of library view that shows album covers
 - feat: Add app menu, which enables clipboard
 - feat: Disable global key listeners when target is not BODY
 

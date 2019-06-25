@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { connect } from "react-redux"
+import { flatten, defaultTo } from "lodash-es"
 import LibraryItem from "./LibraryItem"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { flatten, defaultTo, isNaN } from "lodash-es"
+import AlbumCover from "./AlbumCover"
 import "./LibraryList.scss"
 
 const LibraryList = ({ item, cover, isRoot, dispatch }) => {
@@ -39,16 +39,8 @@ const LibraryList = ({ item, cover, isRoot, dispatch }) => {
       return <LibraryItem key={`${song.name}-${i}`} item={song} />
     })
 
-  const renderCaret = () =>
-    isAlbum &&
-    isNaN(parseInt(item.date, 10)) && (
-      <FontAwesomeIcon className="caret-right" icon="caret-right" />
-    )
-
   const renderFolderName = () =>
-    isAlbum && parseInt(item.date, 10) > 0
-      ? `${item.date} - ${item.name}`
-      : item.name
+    isAlbum ? <AlbumCover item={item} /> : item.name
 
   const renderArtistsAndAlbums = () => (
     <ul
@@ -61,7 +53,6 @@ const LibraryList = ({ item, cover, isRoot, dispatch }) => {
         key={item.name}
         onClick={toggleFolder}
       >
-        {renderCaret()}
         {renderFolderName()}
       </li>
       {showFolderItems &&
@@ -81,7 +72,7 @@ const LibraryList = ({ item, cover, isRoot, dispatch }) => {
       ? renderItemsWithoutAlbum()
       : renderArtistsAndAlbums()
   }
-  return <LibraryItem item={item} cover={cover} />
+  return <LibraryItem item={item} cover={cover} hasAlbum={true} />
 }
 
 export default connect(
