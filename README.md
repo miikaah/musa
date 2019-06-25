@@ -35,6 +35,7 @@ UI for Musa-Electron.
 
 ##### 25.6.2019
 
+- feat: Add app menu, which enables clipboard
 - feat: Disable global key listeners when target is not BODY
 
 ##### 24.6.2019
