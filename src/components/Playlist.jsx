@@ -8,7 +8,7 @@ import {
   replay
 } from "../reducers/player.reducer"
 import PlaylistItem from "./PlaylistItem"
-import { isNaN, isEqual } from "lodash-es"
+import { isNaN, isEqual, get } from "lodash-es"
 import { KEYS } from "../util"
 import "./Playlist.scss"
 
@@ -124,6 +124,8 @@ const Playlist = ({
     }
 
     const handleKeyDown = event => {
+      if (get(event, "target.tagName") !== "BODY") return
+
       const setNewIndexes = newActiveIndex => {
         if (event.shiftKey) {
           setStartIndex(!isNaN(startIndex) ? startIndex : activeIndex)

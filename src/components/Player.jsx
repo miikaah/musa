@@ -113,6 +113,8 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
 
   useEffect(() => {
     const handleKeyDown = event => {
+      if (get(event, "target.tagName") !== "BODY") return
+
       switch (event.keyCode) {
         case KEYS.Space:
           playOrPause()

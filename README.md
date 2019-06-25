@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Disable key listeners when writing to input
 - feat: Support replaygain album gain
 
 #### Backend
@@ -33,6 +32,10 @@ UI for Musa-Electron.
 - feat: Create an icon
 
 ## Done
+
+##### 25.6.2019
+
+- feat: Disable global key listeners when target is not BODY
 
 ##### 24.6.2019
 
