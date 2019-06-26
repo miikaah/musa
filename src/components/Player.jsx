@@ -97,14 +97,11 @@ const Player = ({
 
   const getReplaygainDb = () => {
     switch (replaygainType) {
-      case REPLAYGAIN_TYPE.Track: {
-        return getReplaygainTrackGainDb()
-      }
       case REPLAYGAIN_TYPE.Album: {
         return getReplaygainAlbumGainDb()
       }
       default:
-        return 0
+        return getReplaygainTrackGainDb()
     }
   }
 
