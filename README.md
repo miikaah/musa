@@ -6,8 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Support replaygain album gain
-
 #### Backend
 
 #### Playlist 2.0
@@ -17,13 +15,17 @@ UI for Musa-Electron.
 #### Settings
 
 - feat: Customise music library folder path
-- feat: Set Replaygain (track / album / off)
 
 #### General
 
 - feat: Create an icon
 
 ## Done
+
+##### 26.6.2019
+
+- feat: Support replaygain album gain
+- feat: Set Replaygain (track / album / off)
 
 ##### 25.6.2019
 

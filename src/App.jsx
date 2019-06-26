@@ -16,9 +16,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import { connect } from "react-redux"
 import { addToPlaylist, pasteToPlaylist } from "./reducers/player.reducer"
-import { FALLBACK_THEME } from "./config"
-import { updateCurrentTheme, doIdbRequest, updateStateInIdb } from "./util"
-import { get } from "lodash-es"
+import { updateSettings } from "./reducers/settings.reducer"
+import { getStateFromIdb } from "./util"
 import "./App.scss"
 
 library.add(faPlay, faPause, faVolumeUp, faVolumeMute, faBars, faCog, faSearch)
@@ -45,18 +44,10 @@ const App = ({ dispatch }) => {
   const appRightRef = useRef(null)
 
   useEffect(() => {
-    doIdbRequest({
-      method: "get",
-      storeName: "state",
-      key: "state",
-      onReqSuccess: (req, db) => () => {
-        const defaultTheme = get(req, "result.defaultTheme", FALLBACK_THEME)
-        updateCurrentTheme(defaultTheme)
-        updateStateInIdb(req, db, { currentTheme: defaultTheme })
-      }
-    })
+    getStateFromIdb((req, db) => () => dispatch(updateSettings(req.result)))
 
     document.body.style.setProperty("--color-dr-level", Colors.Typography)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

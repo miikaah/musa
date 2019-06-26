@@ -1,22 +1,29 @@
 import React, { useState, useEffect, useRef } from "react"
 import { connect } from "react-redux"
 import { play, replay, pause, playNext } from "../reducers/player.reducer"
-import { get, isNaN, isEmpty, isNumber, defaultTo } from "lodash-es"
+import { VOLUME_DEFAULT, updateSettings } from "../reducers/settings.reducer"
+import { get, isNaN, isEmpty, isNumber } from "lodash-es"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { KEYS, prefixNumber } from "../util"
 import { store } from ".."
 import { Colors } from "../App.jsx"
-import { getStateFromIdb, updateStateInIdb } from "../util"
+import { getStateFromIdb, updateStateInIdb, REPLAYGAIN_TYPE } from "../util"
 import "./Player.scss"
 
-const VOLUME_DEFAULT = 50
 const VOLUME_MUTED = 0
 const VOLUME_STEP = 5
 const SEEK_REFRESH_RATE = 500
 
-const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
+const Player = ({
+  playlist,
+  isPlaying,
+  volume,
+  replaygainType,
+  dispatch,
+  src,
+  currentItem
+}) => {
   const [duration, setDuration] = useState(0)
-  const [volume, setVolume] = useState(VOLUME_DEFAULT)
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT)
   const [seekUpdater, setSeekUpdater] = useState(null)
   const [currentTime, setCurrentTime] = useState(0)
@@ -79,20 +86,45 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
     return parseFloat(!isEmpty(dbString) ? dbString : 0)
   }
 
+  const getReplaygainAlbumGainDb = () => {
+    const dbString = get(
+      currentItem,
+      "metadata.replaygainAlbumGain",
+      ""
+    ).replace(/ dB+/, "")
+    return parseFloat(!isEmpty(dbString) ? dbString : 0)
+  }
+
+  const getReplaygainDb = () => {
+    switch (replaygainType) {
+      case REPLAYGAIN_TYPE.Track: {
+        return getReplaygainTrackGainDb()
+      }
+      case REPLAYGAIN_TYPE.Album: {
+        return getReplaygainAlbumGainDb()
+      }
+      default:
+        return 0
+    }
+  }
+
   const getVolumeForAudioEl = volume => {
     const vol = volume / 100
     return vol < 0.02 ? VOLUME_MUTED : vol
   }
 
-  const setVolumeForStateAndPlayer = v => {
+  const setVolumeForPlayer = v => {
     const vol = isNumber(v) ? v : volume
-    const trackGainPercentage = Math.pow(10, getReplaygainTrackGainDb() / 20)
-    const realVolume = Math.min(
-      100,
-      Math.max(1, vol * parseFloat(trackGainPercentage))
-    )
+    const trackGainPercentage = Math.pow(10, getReplaygainDb() / 20)
+    const realVolume =
+      Math.min(100, Math.max(1, vol * parseFloat(trackGainPercentage))) ||
+      VOLUME_DEFAULT
     player.current.volume = getVolumeForAudioEl(realVolume)
-    setVolume(vol)
+  }
+
+  const setVolumeForStateAndPlayer = v => {
+    setVolumeForPlayer(v)
+    dispatch(updateSettings({ volume: v }))
   }
 
   const muteOrUnmute = () => {
@@ -173,18 +205,14 @@ const Player = ({ playlist, isPlaying, dispatch, src, currentItem }) => {
     }
 
     setDrLevelColor()
-    setVolumeForStateAndPlayer()
     setSeekUpdater(getSeekUpdater())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, volume, currentItem])
+  }, [player, currentItem])
 
   useEffect(() => {
-    getStateFromIdb((req, db) => () =>
-      setVolume(
-        defaultTo(parseInt(get(req, "result.volume"), 10), VOLUME_DEFAULT)
-      )
-    )
-  }, [])
+    setVolumeForPlayer()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [player, volume, replaygainType, currentItem])
 
   const seek = event => {
     if (prevCurrentTime === event.target.value) return
@@ -271,7 +299,9 @@ export default connect(
     src: state.player.src,
     isPlaying: state.player.isPlaying,
     playlist: state.player.items,
-    currentItem: state.player.currentItem
+    currentItem: state.player.currentItem,
+    volume: state.settings.volume,
+    replaygainType: state.settings.replaygainType
   }),
   dispatch => ({ dispatch })
 )(Player)

@@ -15,6 +15,12 @@ export const KEYS = {
   X: 88
 }
 
+export const REPLAYGAIN_TYPE = {
+  Track: "track",
+  Album: "album",
+  Off: "off"
+}
+
 export function prefixNumber(value) {
   return value < 10 ? `0${value}` : `${value}`
 }

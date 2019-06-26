@@ -72,7 +72,7 @@ const LibraryList = ({ item, cover, isRoot, dispatch }) => {
       ? renderItemsWithoutAlbum()
       : renderArtistsAndAlbums()
   }
-  return <LibraryItem item={item} cover={cover} hasAlbum={true} />
+  return <LibraryItem item={item} cover={cover} hasAlbum />
 }
 
 export default connect(
