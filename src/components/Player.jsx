@@ -100,6 +100,9 @@ const Player = ({
       case REPLAYGAIN_TYPE.Album: {
         return getReplaygainAlbumGainDb()
       }
+      case REPLAYGAIN_TYPE.Off: {
+        return 0
+      }
       default:
         return getReplaygainTrackGainDb()
     }
