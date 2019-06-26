@@ -18,6 +18,8 @@ import { connect } from "react-redux"
 import { addToPlaylist, pasteToPlaylist } from "./reducers/player.reducer"
 import { updateSettings } from "./reducers/settings.reducer"
 import { getStateFromIdb } from "./util"
+import { get } from "lodash-es"
+import { FALLBACK_THEME } from "./config"
 import "./App.scss"
 
 library.add(faPlay, faPause, faVolumeUp, faVolumeMute, faBars, faCog, faSearch)
@@ -44,7 +46,14 @@ const App = ({ dispatch }) => {
   const appRightRef = useRef(null)
 
   useEffect(() => {
-    getStateFromIdb((req, db) => () => dispatch(updateSettings(req.result)))
+    getStateFromIdb((req, db) => () =>
+      dispatch(
+        updateSettings({
+          ...req.result,
+          currentTheme: get(req, "result.defaultTheme", FALLBACK_THEME)
+        })
+      )
+    )
 
     document.body.style.setProperty("--color-dr-level", Colors.Typography)
     // eslint-disable-next-line react-hooks/exhaustive-deps
