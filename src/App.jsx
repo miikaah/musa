@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
+import { connect } from "react-redux"
 import Playlist from "./components/Playlist"
 import Toolbar from "./components/Toolbar"
 import Toaster from "./components/Toaster"
@@ -14,7 +15,6 @@ import {
   faCog,
   faSearch
 } from "@fortawesome/free-solid-svg-icons"
-import { connect } from "react-redux"
 import { addToPlaylist, pasteToPlaylist } from "./reducers/player.reducer"
 import { updateSettings } from "./reducers/settings.reducer"
 import { getStateFromIdb } from "./util"

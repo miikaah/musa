@@ -1,25 +1,13 @@
 import React, { useState, useEffect } from "react"
+import { connect } from "react-redux"
 import ThemeBlock from "./ThemeBlock"
 import { FALLBACK_THEME } from "../config"
-import {
-  updateCurrentTheme,
-  getStateFromIdb,
-  doIdbRequest,
-  updateStateInIdb
-} from "../util"
-import { get } from "lodash-es"
+import { doIdbRequest, updateCurrentTheme } from "../util"
+import { updateSettings } from "../reducers/settings.reducer"
 import "./ThemeLibrary.scss"
 
-const ThemeLibrary = ({ update }) => {
+const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
   const [themes, setThemes] = useState([])
-  const [defaultTheme, setDefaultTheme] = useState({})
-  const [currentTheme, setCurrentTheme] = useState({})
-
-  useEffect(() => {
-    getStateFromIdb(req => () =>
-      setDefaultTheme(get(req, "result.defaultTheme", FALLBACK_THEME))
-    )
-  }, [])
 
   useEffect(() => {
     doIdbRequest({
@@ -27,24 +15,16 @@ const ThemeLibrary = ({ update }) => {
       storeName: "theme",
       onReqSuccess: req => () => setThemes(req.result)
     })
-
-    getStateFromIdb(req => () =>
-      setCurrentTheme(get(req, "result.currentTheme", FALLBACK_THEME))
-    )
   }, [update])
 
   const handleDefaultThemeChange = theme => {
-    setDefaultTheme(theme)
-    setCurrentTheme(theme)
     updateCurrentTheme(theme)
-    getStateFromIdb((req, db) => () =>
-      updateStateInIdb(req, db, { defaultTheme: theme })
-    )
+    dispatch(updateSettings({ defaultTheme: theme, currentTheme: theme }))
   }
 
   const handleCurrentThemeChange = theme => {
-    setCurrentTheme(theme)
     updateCurrentTheme(theme)
+    dispatch(updateSettings({ currentTheme: theme }))
   }
 
   return (
@@ -102,4 +82,10 @@ const ThemeLibrary = ({ update }) => {
   )
 }
 
-export default ThemeLibrary
+export default connect(
+  state => ({
+    defaultTheme: state.settings.defaultTheme,
+    currentTheme: state.settings.currentTheme
+  }),
+  dispatch => ({ dispatch })
+)(ThemeLibrary)

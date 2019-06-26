@@ -94,10 +94,6 @@ export function updateCurrentTheme(colors) {
     "--color-typography-secondary",
     colors.typographySecondary
   )
-
-  getStateFromIdb((req, db) => () =>
-    updateStateInIdb(req, db, { currentTheme: colors })
-  )
 }
 
 export function dispatchToast(msg, key, dispatch) {

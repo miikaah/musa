@@ -6,6 +6,9 @@ UI for Musa-Electron.
 
 #### Frontend
 
+- feat: instantly unfocus control buttons
+- feat: Styles for select in Replaygain settings
+
 #### Backend
 
 #### Playlist 2.0
