@@ -96,7 +96,9 @@ const Player = ({
       "metadata.replaygainAlbumGain",
       ""
     ).replace(/ dB+/, "")
-    return parseFloat(!isEmpty(dbString) ? dbString : 0)
+    return parseFloat(
+      !isEmpty(dbString) ? dbString : getReplaygainTrackGainDb()
+    )
   }
 
   const getReplaygainDb = () => {

@@ -26,6 +26,7 @@ UI for Musa-Electron.
 
 ##### 29.6.2019
 
+- feat: Use Track Replaygain as fallback
 - feat: Add Labels for Library
 - feat: Styles for select in Replaygain settings
 - feat: Instantly unfocus control buttons
