@@ -1,4 +1,4 @@
-import { flatten, get, isUndefined } from "lodash-es"
+import { flatten, get, isUndefined, defaultTo } from "lodash-es"
 
 export const INIT_LISTING = "MUSA/LIBRARY/INIT_LISTING"
 export const initListing = listing => ({
@@ -28,6 +28,7 @@ export const setQuery = query => ({
 
 const initialState = {
   listing: [],
+  listingWithLabels: [],
   scanLength: -1,
   scannedLength: 0,
   query: "",
@@ -43,6 +44,7 @@ const library = (state = initialState, action) => {
       return {
         ...state,
         listing: action.listing,
+        listingWithLabels: getListingWithLabels(action.listing),
         albums,
         songs
       }
@@ -50,7 +52,8 @@ const library = (state = initialState, action) => {
     case SET_LISTING: {
       return {
         ...state,
-        listing: action.listing
+        listing: action.listing,
+        listingWithLabels: getListingWithLabels(action.listing)
       }
     }
     case SET_SCAN_PROPS: {
@@ -80,6 +83,16 @@ const library = (state = initialState, action) => {
     default:
       return state
   }
+}
+
+function getListingWithLabels(listing = []) {
+  return listing.reduce((acc, folder) => {
+    const label = get(folder, "name", "").charAt(0)
+    return {
+      ...acc,
+      [label]: [...defaultTo(acc[label], []), folder]
+    }
+  }, {})
 }
 
 function getAlbums(listing) {

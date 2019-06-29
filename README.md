@@ -10,8 +10,6 @@ UI for Musa-Electron.
 
 #### Library
 
-- feat: Add Labels when new first letter starts
-
 #### Playlist 2.0
 
 - feat: Create a smaller playlist with album covers
@@ -28,6 +26,7 @@ UI for Musa-Electron.
 
 ##### 29.6.2019
 
+- feat: Add Labels for Library
 - feat: Styles for select in Replaygain settings
 - feat: Instantly unfocus control buttons
 

@@ -145,14 +145,24 @@ class Library extends Component {
     if (!this.props.isVisible) return null
     return (
       <div ref={this.props.forwardRef} className="library">
-        {this.props.listing &&
-          this.props.listing.map((item, index) => (
-            <LibraryList
-              key={item.name + "-" + index}
-              item={item}
-              isRoot={true}
-            />
-          ))}
+        {this.props.listingWithLabels &&
+          Object.keys(this.props.listingWithLabels).map(key => {
+            if (isEmpty(this.props.listingWithLabels[key])) return null
+            return (
+              <div key={key}>
+                <div className="library-label">
+                  <span>{key}</span>
+                </div>
+                {this.props.listingWithLabels[key].map((item, index) => (
+                  <LibraryList
+                    key={item.name + "-" + index}
+                    item={item}
+                    isRoot={true}
+                  />
+                ))}
+              </div>
+            )
+          })}
       </div>
     )
   }
@@ -160,7 +170,8 @@ class Library extends Component {
 
 const ConnectedLibrary = connect(
   state => ({
-    listing: state.library.listing
+    listing: state.library.listing,
+    listingWithLabels: state.library.listingWithLabels
   }),
   dispatch => ({ dispatch })
 )(Library)

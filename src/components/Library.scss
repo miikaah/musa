@@ -1,6 +1,8 @@
 @import '../scss/mixins';
 @import '../scss/variables';
 
+$label-font-size: 40px;
+
 .library {
   text-align: left;
   border: 0 solid var(--color-secondary-highlight);
@@ -13,6 +15,19 @@
   z-index: 1;
   height: 100vh;
   margin: $musa-height-toolbar 0 0 -12px;
+
+  &-label {
+    text-align: right;
+    padding: 20px;
+
+    span {
+      color: var(--color-typography-primary);
+      background-color: var(--color-primary-highlight);
+      padding: 5px 10px;
+      font-size: $label-font-size;
+      border-radius: 3px;
+    }
+  }
 
   &-root {
     padding-left: 0;
