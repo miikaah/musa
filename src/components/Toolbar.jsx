@@ -68,21 +68,33 @@ const Toolbar = () => {
 
   return (
     <div className="toolbar">
-      <button type="button" ref={libraryButtonRef}>
+      <button
+        type="button"
+        ref={libraryButtonRef}
+        onFocus={() => libraryButtonRef.current.blur()}
+      >
         <FontAwesomeIcon icon="bars" />
       </button>
       <Library ref={libraryRef} isVisible={isLibraryVisible} />
 
       <Player />
 
-      <button type="button" ref={settingsButtonRef}>
+      <button
+        type="button"
+        ref={settingsButtonRef}
+        onFocus={() => settingsButtonRef.current.blur()}
+      >
         <FontAwesomeIcon icon="cog" />
       </button>
       <BasePage ref={settingsRef} isVisible={isSettingsVisible}>
         <Settings isVisible={isSettingsVisible} />
       </BasePage>
 
-      <button type="button" ref={searchButtonRef}>
+      <button
+        type="button"
+        ref={searchButtonRef}
+        onFocus={() => searchButtonRef.current.blur()}
+      >
         <FontAwesomeIcon icon="search" />
       </button>
       <BasePage ref={searchRef} isVisible={isSearchVisible}>

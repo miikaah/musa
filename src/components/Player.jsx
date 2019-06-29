@@ -30,6 +30,10 @@ const Player = ({
   const [prevCurrentTime, setPrevCurrentTime] = useState(0)
 
   const player = useRef(null)
+  const playerVolume = useRef(null)
+  const playerSeek = useRef(null)
+  const playerPlayPause = useRef(null)
+  const playerMute = useRef(null)
 
   const isMuted = () => volume === VOLUME_MUTED
 
@@ -255,10 +259,20 @@ const Player = ({
     <div className="player-container">
       <audio controls src={src} ref={player} />
       <div className="player">
-        <button className="player-play-pause" onClick={playOrPause}>
+        <button
+          className="player-play-pause"
+          ref={playerPlayPause}
+          onClick={playOrPause}
+          onFocus={() => playerPlayPause.current.blur()}
+        >
           <FontAwesomeIcon icon={isPlaying ? "pause" : "play"} />
         </button>
-        <button className="player-volume-btn" onClick={muteOrUnmute}>
+        <button
+          className="player-volume-btn"
+          ref={playerMute}
+          onClick={muteOrUnmute}
+          onFocus={() => playerMute.current.blur()}
+        >
           <FontAwesomeIcon
             icon={volume > VOLUME_STEP - 1 ? "volume-up" : "volume-mute"}
           />
@@ -268,9 +282,11 @@ const Player = ({
           type="range"
           min="0"
           max="100"
+          ref={playerVolume}
           step={VOLUME_STEP}
           value={volume}
           onChange={setVolumeByEvent}
+          onFocus={() => playerVolume.current.blur()}
         />
         <input
           className="player-seek"
@@ -278,8 +294,10 @@ const Player = ({
           min="0"
           max={duration}
           step="1"
+          ref={playerSeek}
           value={currentTime}
           onChange={seek}
+          onFocus={() => playerSeek.current.blur()}
         />
         <span className="player-time-display">
           <span className="player-played">

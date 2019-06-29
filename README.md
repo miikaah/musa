@@ -6,10 +6,13 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: instantly unfocus control buttons
 - feat: Styles for select in Replaygain settings
 
 #### Backend
+
+#### Library
+
+- feat: Add Labels when new first letter starts
 
 #### Playlist 2.0
 
@@ -24,6 +27,10 @@ UI for Musa-Electron.
 - feat: Create an icon
 
 ## Done
+
+##### 29.6.2019
+
+- feat: Instantly unfocus control buttons
 
 ##### 26.6.2019
 
