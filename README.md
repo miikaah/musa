@@ -6,8 +6,6 @@ UI for Musa-Electron.
 
 #### Frontend
 
-- feat: Styles for select in Replaygain settings
-
 #### Backend
 
 #### Library
@@ -30,6 +28,7 @@ UI for Musa-Electron.
 
 ##### 29.6.2019
 
+- feat: Styles for select in Replaygain settings
 - feat: Instantly unfocus control buttons
 
 ##### 26.6.2019

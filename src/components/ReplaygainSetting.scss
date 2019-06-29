@@ -1,0 +1,28 @@
+@import '../scss/variables';
+
+.replaygain-setting {
+  position: relative;
+
+  select {
+    appearance: none;
+    width: 200px;
+    padding: 10px;
+    font-size: $musa-font-size-sm;
+    border-radius: 0;
+    background-color: var(--color-primary-highlight);
+    color: var(--color-typography-primary);
+    cursor: pointer;
+  }
+
+  .arrow-down {
+    position: absolute;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+    left: 170px;
+    top: 15px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--color-typography-primary);
+  }
+}

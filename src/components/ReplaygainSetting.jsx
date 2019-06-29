@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { REPLAYGAIN_TYPE, getStateFromIdb, updateStateInIdb } from "../util"
 import { updateSettings } from "../reducers/settings.reducer"
 import { get } from "lodash-es"
+import "./ReplaygainSetting.scss"
 
 const ReplaygainSetting = ({ replaygainType, dispatch }) => {
   const [type, setType] = useState()
@@ -30,6 +31,7 @@ const ReplaygainSetting = ({ replaygainType, dispatch }) => {
         <option value={REPLAYGAIN_TYPE.Album}>Album</option>
         <option value={REPLAYGAIN_TYPE.Off}>Off</option>
       </select>
+      <span className="arrow-down" />
     </div>
   )
 }
