@@ -34,7 +34,6 @@ const Cover = ({ coverSrc, defaultTheme, dispatch }) => {
       return () => {
         const theme = req.result
         if (theme) {
-          console.log(theme)
           updateCurrentTheme(theme.colors)
           dispatch(updateSettings({ currentTheme: theme.colors }))
           return
@@ -169,7 +168,7 @@ const Cover = ({ coverSrc, defaultTheme, dispatch }) => {
   }, [dispatch])
 
   useEffect(() => {
-    updateCurrentTheme(defaultTheme)
+    if (!coverSrc) updateCurrentTheme(defaultTheme)
   }, [coverSrc, defaultTheme])
 
   return (

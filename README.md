@@ -24,6 +24,10 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 1.7.2019
+
+- fix: Default theme change when no album cover
+
 ##### 29.6.2019
 
 - feat: Use Track Replaygain as fallback
