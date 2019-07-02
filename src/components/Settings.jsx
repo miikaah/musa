@@ -2,15 +2,24 @@ import React from "react"
 import { connect } from "react-redux"
 import ThemeLibrary from "./ThemeLibrary"
 import ReplaygainSetting from "./ReplaygainSetting"
+import MusicLibrarySetting from "./MusicLibrarySetting"
 import "./Settings.scss"
 
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer
 
-const Settings = ({ isVisible }) => {
+const Settings = ({ isVisible, musicLibraryPaths }) => {
+  const runInitialScan = () => {
+    ipcRenderer.send("runInitialScan", musicLibraryPaths)
+  }
+
   return (
     <>
       <h1>Settings</h1>
+      <div className="settings-block">
+        <h3>Library</h3>
+        <MusicLibrarySetting />
+      </div>
       <div className="settings-block">
         <h3>Theme</h3>
         <ThemeLibrary update={isVisible} />
@@ -21,10 +30,7 @@ const Settings = ({ isVisible }) => {
       </div>
       <div className="settings-block">
         <h3>Advanced</h3>
-        <button
-          className="btn btn-primary"
-          onClick={() => ipcRenderer.send("runInitialScan")}
-        >
+        <button className="btn btn-primary" onClick={runInitialScan}>
           Re-run initial scan
         </button>
       </div>
@@ -33,6 +39,8 @@ const Settings = ({ isVisible }) => {
 }
 
 export default connect(
-  state => ({}),
+  state => ({
+    musicLibraryPaths: state.settings.musicLibraryPaths
+  }),
   dispatch => ({ dispatch })
 )(Settings)

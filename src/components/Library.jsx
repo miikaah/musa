@@ -49,39 +49,47 @@ class Library extends Component {
 
     idbRequest.onsuccess = event => {
       const db = event.target.result
-      const songListStore = db
-        .transaction("songList", "readwrite")
-        .objectStore("songList")
+      const stateReq = db
+        .transaction("state", "readwrite")
+        .objectStore("state")
+        .get("state")
 
-      const songListStoreRequest = songListStore.get("list")
+      stateReq.onsuccess = () => {
+        const songListReq = db
+          .transaction("songList", "readwrite")
+          .objectStore("songList")
+          .get("list")
 
-      songListStoreRequest.onsuccess = event => {
-        ipcRenderer.on("updateSongList", (event, songList) => {
-          const songListOS = db
-            .transaction("songList", "readwrite")
-            .objectStore("songList")
-          songListOS.put({ key: "list", list: songList })
-        })
-        const dbSongList = songListStoreRequest.result
-        ipcRenderer.send("initLibrary", get(dbSongList, "list", []))
+        songListReq.onsuccess = () => {
+          ipcRenderer.on("updateSongList", (_, songList) => {
+            db.transaction("songList", "readwrite")
+              .objectStore("songList")
+              .put({ key: "list", list: songList })
+          })
+          const dbSongList = songListReq.result
+          const dbState = stateReq.result
+          ipcRenderer.send(
+            "initLibrary",
+            get(dbSongList, "list", []),
+            get(dbState, "musicLibraryPaths", [])
+          )
+        }
       }
 
-      const objectStore = db
+      const libraryReq = db
         .transaction("library", "readwrite")
         .objectStore("library")
+        .getAll()
 
-      const objectStoreRequest = objectStore.getAll()
-
-      objectStoreRequest.onsuccess = event => {
-        const dbListing = objectStoreRequest.result
+      libraryReq.onsuccess = event => {
+        const dbListing = libraryReq.result
         this.props.dispatch(initListing(dbListing))
 
         ipcRenderer.on("libraryListing", (event, listing) => {
-          const libraryOS = db
-            .transaction("library", "readwrite")
+          db.transaction("library", "readwrite")
             .objectStore("library")
+            .put(listing)
           this.props.dispatch(setListing(this.getNewListing(listing)))
-          libraryOS.put(listing)
         })
 
         ipcRenderer.on("deleteLibraryListings", (event, keyPaths) => {
@@ -105,6 +113,7 @@ class Library extends Component {
             .transaction("library", "readwrite")
             .objectStore("library")
           const artistReq = artistOS.get(song.artistPath)
+
           artistReq.onsuccess = event => {
             const artist = artistReq.result
             const oldSong = flatten(

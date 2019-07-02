@@ -10,9 +10,7 @@ UI for Musa-Electron.
 
 #### Library
 
-#### Playlist 2.0
-
-- feat: Create a smaller playlist with album covers
+#### Playlist
 
 #### Settings
 
@@ -23,6 +21,10 @@ UI for Musa-Electron.
 - feat: Create an icon
 
 ## Done
+
+##### 2.7.2019
+
+- feat: Enable webSecurity in prod
 
 ##### 1.7.2019
 

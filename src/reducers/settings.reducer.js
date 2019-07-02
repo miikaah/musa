@@ -14,7 +14,8 @@ const initialState = {
   defaultTheme: FALLBACK_THEME,
   key: "state",
   replaygainType: REPLAYGAIN_TYPE.Track,
-  volume: VOLUME_DEFAULT
+  volume: VOLUME_DEFAULT,
+  musicLibraryPaths: []
 }
 
 const settings = (state = initialState, action) => {
