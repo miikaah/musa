@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import { updateSettings } from "../reducers/settings.reducer"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import "./MusicLibrarySetting.scss"
 
 const electron = window.require("electron")
@@ -35,7 +36,7 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
             className="btn btn-secondary"
             onClick={() => removeLibraryPath(path)}
           >
-            Del
+            <FontAwesomeIcon icon="trash" />
           </button>
         </div>
       ))}

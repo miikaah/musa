@@ -62,6 +62,7 @@ class Library extends Component {
 
         songListReq.onsuccess = () => {
           ipcRenderer.on("updateSongList", (_, songList) => {
+            console.log(songList)
             db.transaction("songList", "readwrite")
               .objectStore("songList")
               .put({ key: "list", list: songList })
@@ -96,33 +97,24 @@ class Library extends Component {
           const libraryOS = db
             .transaction("library", "readwrite")
             .objectStore("library")
-          this.props.dispatch(
-            setListing(
-              this.getNewListing(
+
+          if (Array.isArray(keyPaths)) {
+            this.props.dispatch(
+              setListing(
                 this.props.listing.filter(
                   artist => !keyPaths.includes(artist.path)
                 )
               )
             )
-          )
-          keyPaths.forEach(key => libraryOS.delete(key))
-        })
-
-        ipcRenderer.on("updateSongMetadata", (event, song) => {
-          const artistOS = db
-            .transaction("library", "readwrite")
-            .objectStore("library")
-          const artistReq = artistOS.get(song.artistPath)
-
-          artistReq.onsuccess = event => {
-            const artist = artistReq.result
-            const oldSong = flatten(
-              get(artist, "albums", []).map(a => a.songs)
-            ).find(s => s.path === song.path)
-            oldSong.metadata = song.metadata
-            artistOS.put(artist)
-            this.props.dispatch(setListing(this.getNewListing(artist)))
+            keyPaths.forEach(key => libraryOS.delete(key))
+            return
           }
+          this.props.dispatch(
+            setListing(
+              this.props.listing.filter(artist => artist.path !== keyPaths)
+            )
+          )
+          libraryOS.delete(keyPaths)
         })
       }
 

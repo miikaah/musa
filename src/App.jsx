@@ -13,7 +13,8 @@ import {
   faVolumeMute,
   faBars,
   faCog,
-  faSearch
+  faSearch,
+  faTrash
 } from "@fortawesome/free-solid-svg-icons"
 import { addToPlaylist, pasteToPlaylist } from "./reducers/player.reducer"
 import { updateSettings } from "./reducers/settings.reducer"
@@ -22,7 +23,16 @@ import { get } from "lodash-es"
 import { FALLBACK_THEME } from "./config"
 import "./App.scss"
 
-library.add(faPlay, faPause, faVolumeUp, faVolumeMute, faBars, faCog, faSearch)
+library.add(
+  faPlay,
+  faPause,
+  faVolumeUp,
+  faVolumeMute,
+  faBars,
+  faCog,
+  faSearch,
+  faTrash
+)
 
 export const Colors = {
   Bg: "#21252b",
