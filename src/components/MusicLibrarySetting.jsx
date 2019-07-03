@@ -2,10 +2,18 @@ import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import { updateSettings } from "../reducers/settings.reducer"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { doIdbRequest } from "../util"
+import { get } from "lodash-es"
 import "./MusicLibrarySetting.scss"
 
 const electron = window.require("electron")
 const ipcRenderer = electron.ipcRenderer
+
+const songListProps = {
+  method: "get",
+  storeName: "songList",
+  key: "list"
+}
 
 const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
   useEffect(() => {
@@ -22,7 +30,32 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
   const removeLibraryPath = path => {
     const paths = new Set(musicLibraryPaths)
     paths.delete(path)
-    dispatch(updateSettings({ musicLibraryPaths: Array.from(paths) }))
+    const libPaths = Array.from(paths)
+    dispatch(updateSettings({ musicLibraryPaths: libPaths }))
+    doIdbRequest({
+      ...songListProps,
+      onReqSuccess: req => () => {
+        ipcRenderer.send(
+          "removeMusicLibraryPath",
+          get(req, "result.list"),
+          libPaths,
+          path
+        )
+      }
+    })
+  }
+
+  const addLibraryPath = () => {
+    doIdbRequest({
+      ...songListProps,
+      onReqSuccess: req => () => {
+        ipcRenderer.send(
+          "addMusicLibraryPath",
+          get(req, "result.list"),
+          musicLibraryPaths
+        )
+      }
+    })
   }
 
   return (
@@ -43,7 +76,7 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
       <button
         type="button"
         className="btn btn-primary"
-        onClick={() => ipcRenderer.send("addMusicLibraryPath")}
+        onClick={addLibraryPath}
       >
         Add new
       </button>

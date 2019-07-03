@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import LibraryList from "./LibraryList"
-import { isEqual, isEmpty, get, flatten } from "lodash-es"
+import { isEqual, isEmpty, get } from "lodash-es"
 import { connect } from "react-redux"
 import {
   initListing,
@@ -62,7 +62,6 @@ class Library extends Component {
 
         songListReq.onsuccess = () => {
           ipcRenderer.on("updateSongList", (_, songList) => {
-            console.log(songList)
             db.transaction("songList", "readwrite")
               .objectStore("songList")
               .put({ key: "list", list: songList })

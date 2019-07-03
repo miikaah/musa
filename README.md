@@ -14,13 +14,16 @@ UI for Musa-Electron.
 
 #### Settings
 
-- feat: Customise music library folder path
-
 #### General
 
 - feat: Create an icon
 
 ## Done
+
+##### 3.7.2019
+
+- feat: Support multiple music library folders
+- feat: Customise music library folder path
 
 ##### 2.7.2019
 
