@@ -16,9 +16,11 @@ UI for Musa-Electron.
 
 #### General
 
-- feat: Create an icon
-
 ## Done
+
+##### 11.7.2019
+
+- feat: Create an icon
 
 ##### 3.7.2019
 
