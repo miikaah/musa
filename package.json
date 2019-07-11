@@ -43,7 +43,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "fuzzysort": "^1.1.4",
     "img-palette": "^0.3.2",
-    "lodash-es": "^4.17.11",
+    "lodash-es": "^4.17.14",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",

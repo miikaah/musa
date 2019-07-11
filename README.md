@@ -4,17 +4,25 @@ UI for Musa-Electron.
 
 ## Todo
 
-#### Frontend
+#### Cross platform
 
-#### Backend
+- feat: Make sure everything works on Windows
+- feat: Make sure everything works on Linux
 
-#### Library
+#### Reduce build size
 
-#### Playlist
+- feat: Replace ffprobe-static with a smaller solution
+- feat: Use MacGap on Mac (obviously)
 
-#### Settings
+#### V2
+
+- feat: Write tags to music files
+- feat: Add ReplayGain scanning
+- feat: Add Dynamic Range scanning
 
 #### General
+
+- feat: Add license
 
 ## Done
 
