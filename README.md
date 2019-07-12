@@ -6,8 +6,9 @@ UI for Musa-Electron.
 
 #### Cross platform
 
-- feat: Make sure everything works on Windows
 - feat: Make sure everything works on Linux
+- feat: Open mp3, flac and ogg files from filesystem
+- feat: Drag & drop mp3, flac and ogg files from filesystem
 
 #### Reduce build size
 
@@ -16,6 +17,11 @@ UI for Musa-Electron.
 
 #### V2
 
+- fix: Play/pause icon disappearing after Cut + Copy etc because currentIndex changes
+- fix: Selections + duplication
+- feat: Delete items in playlist with Del-key
+- feat: Remember library state (which folders are open)
+- feat: Go to Search when pressing Ctrl + F
 - feat: Write tags to music files
 - feat: Add ReplayGain scanning
 - feat: Add Dynamic Range scanning
@@ -28,6 +34,12 @@ UI for Musa-Electron.
 
 ##### 12.7.2019
 
+- feat: Make sure everything works on Windows
+- feat: Add packaging for Windows
+- fix: Deleting last library folder in UI
+- fix: initial scan on fresh DB after adding library path
+- feat: Use dotenv-cli for environment variables for packaging
+- feat: Enable OverlayScrollbar (Mac like scrollbar for Windows)
 - feat: Improve styles for Windows
 - feat: Get dev environment working in Windows
 
