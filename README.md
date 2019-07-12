@@ -38,6 +38,7 @@ UI for Musa-Electron.
 - feat: Add packaging for Windows
 - fix: Deleting last library folder in UI
 - fix: initial scan on fresh DB after adding library path
+- fix: Music library add crashing in Windows
 - feat: Use dotenv-cli for environment variables for packaging
 - feat: Enable OverlayScrollbar (Mac like scrollbar for Windows)
 - feat: Improve styles for Windows
