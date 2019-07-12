@@ -27,7 +27,7 @@ $true-white: #fff;
       background-color: $true-white;
       padding: 10px 0 0 10px;
       max-height: 300px;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
 
     &-controls {

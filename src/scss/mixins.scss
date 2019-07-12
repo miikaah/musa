@@ -30,7 +30,7 @@
 
 @mixin listOverflow {
   max-height: 95vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @media (max-height: 800px) {
     max-height: 94vh;
