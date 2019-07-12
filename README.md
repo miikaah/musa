@@ -17,6 +17,8 @@ UI for Musa-Electron.
 
 #### V2
 
+- fix: Some album covers not showing due to casing etc issues
+- fix: Sorting of songs when there are multiple dics
 - fix: Sorting of folders in library when there is more than one library folder
 - fix: Play/pause icon disappearing after Cut + Copy etc because currentIndex changes
 - fix: Selections + duplication
