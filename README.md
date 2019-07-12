@@ -26,6 +26,11 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 12.7.2019
+
+- feat: Improve styles for Windows
+- feat: Get dev environment working in Windows
+
 ##### 11.7.2019
 
 - feat: Create an icon
