@@ -17,6 +17,7 @@ UI for Musa-Electron.
 
 #### V2
 
+- fix: Sorting of folders in library when there is more than one library folder
 - fix: Play/pause icon disappearing after Cut + Copy etc because currentIndex changes
 - fix: Selections + duplication
 - feat: Delete items in playlist with Del-key
