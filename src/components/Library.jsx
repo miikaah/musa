@@ -82,10 +82,13 @@ class Library extends Component {
         .getAll()
 
       libraryReq.onsuccess = event => {
-        const dbListing = libraryReq.result
+        const dbListing = libraryReq.result.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        )
         this.props.dispatch(initListing(dbListing))
 
         ipcRenderer.on("libraryListing", (event, listing) => {
+          if (isEmpty(listing)) return
           db.transaction("library", "readwrite")
             .objectStore("library")
             .put(listing)
@@ -138,7 +141,7 @@ class Library extends Component {
     return [
       ...this.props.listing.filter(artist => artist.path !== listing.path),
       listing
-    ].sort((a, b) => a.path.localeCompare(b.path))
+    ].sort((a, b) => a.name.localeCompare(b.name))
   }
 
   render() {

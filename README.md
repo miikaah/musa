@@ -4,36 +4,46 @@ UI for Musa-Electron.
 
 ## Todo
 
+### V1
+
+- fix: Play/pause icon disappearing after Cut + Copy etc. because currentIndex changes
+- fix: Selections + duplication
+- feat: Delete items in playlist with Del-key
+- feat: Remember library state (which folders are open)
+- feat: Go to Search when pressing Ctrl + F
+- feat: Focus to search input when navigating to Search page
+
 #### Cross platform
 
 - feat: Make sure everything works on Linux
-- feat: Open mp3, flac and ogg files from filesystem
-- feat: Drag & drop mp3, flac and ogg files from filesystem
+
+#### General
+
+- feat: Add license
+
+### V2
+
+- feat: Write tags to music files
+- feat: Add ReplayGain scanning
+- feat: Add Dynamic Range scanning
 
 #### Reduce build size
 
 - feat: Replace ffprobe-static with a smaller solution
 - feat: Use MacGap on Mac (obviously)
 
-#### V2
+#### Cross platform
 
-- fix: Some album covers not showing due to casing etc issues
-- fix: Sorting of songs when there are multiple dics
-- fix: Sorting of folders in library when there is more than one library folder
-- fix: Play/pause icon disappearing after Cut + Copy etc because currentIndex changes
-- fix: Selections + duplication
-- feat: Delete items in playlist with Del-key
-- feat: Remember library state (which folders are open)
-- feat: Go to Search when pressing Ctrl + F
-- feat: Write tags to music files
-- feat: Add ReplayGain scanning
-- feat: Add Dynamic Range scanning
-
-#### General
-
-- feat: Add license
+- feat: Open mp3, flac and ogg files from filesystem
+- feat: Drag & drop mp3, flac and ogg files from filesystem
 
 ## Done
+
+##### 16.7.2019
+
+- fix: Sorting of songs when there are multiple discs
+- fix: Sorting of folders in library when there is more than one library folder
+- fix: Some album covers not showing due to casing etc. issues
 
 ##### 12.7.2019
 
