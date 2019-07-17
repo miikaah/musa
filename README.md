@@ -6,6 +6,7 @@ UI for Musa-Electron.
 
 ### V1
 
+- feat: Delete DB when starting new Initial scan
 - fix: Play/pause icon disappearing after Cut + Copy etc. because currentIndex changes
 - fix: Selections + duplication
 - feat: Delete items in playlist with Del-key
@@ -38,6 +39,10 @@ UI for Musa-Electron.
 - feat: Drag & drop mp3, flac and ogg files from filesystem
 
 ## Done
+
+##### 17.7.2019
+
+- feat: Simplify update & deletion logic due to Windows
 
 ##### 16.7.2019
 
