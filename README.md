@@ -6,6 +6,23 @@ UI for Musa-Electron.
 
 ### V1
 
+- fix: Memory leak bug. `scheduler.production.min.js`
+
+```
+function E(a) {
+  C = A(function (b) {
+    z(D);
+    a(b);
+  });
+  D = y(function () {
+    B(C);
+    a(exports.unstable_now());
+  }, 100);
+}
+```
+
+Error msg: `Paused before potential out-of-memory crash.`
+
 - feat: Delete DB when starting new Initial scan
 - fix: Play/pause icon disappearing after Cut + Copy etc. because currentIndex changes
 - fix: Selections + duplication
