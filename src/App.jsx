@@ -21,6 +21,7 @@ import { updateSettings } from "./reducers/settings.reducer"
 import { getStateFromIdb } from "./util"
 import { get } from "lodash-es"
 import { FALLBACK_THEME } from "./config"
+import { webFrame } from "electron"
 import "./App.scss"
 
 library.add(
@@ -48,6 +49,14 @@ export const Colors = {
   SliderTrackRgb: [66, 74, 86],
   WhiteRgb: [255, 255, 255]
 }
+
+function clearWebFrameCache() {
+  webFrame.clearCache()
+}
+
+const ONE_MINUTE_MS = 60000
+
+setInterval(clearWebFrameCache, ONE_MINUTE_MS * 10)
 
 const App = ({ dispatch }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
