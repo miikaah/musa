@@ -6,7 +6,6 @@ UI for Musa-Electron.
 
 ### V1
 
-- fix: Memory leak bug.
 - fix: Seek updater timer might stay on after playback in some cases (investigate).
 - feat: Delete DB when starting new Initial scan
 - fix: Play/pause icon disappearing after Cut + Copy etc. because currentIndex changes
@@ -41,6 +40,10 @@ UI for Musa-Electron.
 - feat: Drag & drop mp3, flac and ogg files from filesystem
 
 ## Done
+
+##### 20.8.2019
+
+- fix: Clear WebFrame cache every 10 minutes to reduce used memory.
 
 ##### 17.7.2019
 
