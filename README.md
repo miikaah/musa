@@ -2,6 +2,12 @@
 
 UI for Musa-Electron.
 
+## Development
+
+1. Copy `.env.example` to `.env`
+2. `npm install`
+3. `npm run start`
+
 ## Todo
 
 ### V1
@@ -11,6 +17,7 @@ UI for Musa-Electron.
 - fix: Play/pause icon disappearing after Cut + Copy etc. because currentIndex changes
 - fix: Selections + duplication
 - feat: Remember library state (which folders are open)
+- refactor: Use react router for changing page to settings and search
 - feat: Go to Search when pressing Ctrl + F
 - feat: Focus to search input when navigating to Search page
 - refactor: use styled-components

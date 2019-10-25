@@ -15,6 +15,7 @@ export const KEYS = {
   A: 65,
   C: 67,
   D: 68,
+  F: 70,
   M: 77,
   V: 86,
   X: 88

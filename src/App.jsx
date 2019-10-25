@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react"
-import { connect } from "react-redux"
-import Playlist from "./components/Playlist"
-import Toolbar from "./components/Toolbar"
-import Toaster from "./components/Toaster"
-import Cover from "./components/Cover"
-import ProgressBar from "./components/ProgressBar"
-import { library } from "@fortawesome/fontawesome-svg-core"
+import React, { useState, useEffect, useRef } from "react";
+import { connect } from "react-redux";
+import Playlist from "./components/Playlist";
+import Toolbar from "./components/Toolbar";
+import Toaster from "./components/Toaster";
+import Cover from "./components/Cover";
+import ProgressBar from "./components/ProgressBar";
+import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
   faPause,
@@ -15,14 +15,14 @@ import {
   faCog,
   faSearch,
   faTrash
-} from "@fortawesome/free-solid-svg-icons"
-import { addToPlaylist, pasteToPlaylist } from "./reducers/player.reducer"
-import { updateSettings } from "./reducers/settings.reducer"
-import { getStateFromIdb } from "./util"
-import { get } from "lodash-es"
-import { FALLBACK_THEME } from "./config"
-import { webFrame } from "electron"
-import "./App.scss"
+} from "@fortawesome/free-solid-svg-icons";
+import { addToPlaylist, pasteToPlaylist } from "./reducers/player.reducer";
+import { updateSettings } from "./reducers/settings.reducer";
+import { getStateFromIdb } from "./util";
+import { get } from "lodash-es";
+import { FALLBACK_THEME } from "./config";
+import { webFrame } from "electron";
+import "./App.scss";
 
 library.add(
   faPlay,
@@ -33,7 +33,7 @@ library.add(
   faCog,
   faSearch,
   faTrash
-)
+);
 
 export const Colors = {
   Bg: "#21252b",
@@ -48,21 +48,21 @@ export const Colors = {
   SliderTrack: "#424a56",
   SliderTrackRgb: [66, 74, 86],
   WhiteRgb: [255, 255, 255]
-}
+};
 
 function clearWebFrameCache() {
-  webFrame.clearCache()
+  webFrame.clearCache();
 }
 
-const ONE_MINUTE_MS = 60000
+const ONE_MINUTE_MS = 60000;
 
-setInterval(clearWebFrameCache, ONE_MINUTE_MS * 10)
+setInterval(clearWebFrameCache, ONE_MINUTE_MS * 10);
 
 const App = ({ dispatch }) => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const appCenterRef = useRef(null)
-  const appRightRef = useRef(null)
+  const appCenterRef = useRef(null);
+  const appRightRef = useRef(null);
 
   useEffect(() => {
     getStateFromIdb((req, db) => () =>
@@ -72,32 +72,32 @@ const App = ({ dispatch }) => {
           currentTheme: get(req, "result.defaultTheme", FALLBACK_THEME)
         })
       )
-    )
+    );
 
-    document.body.style.setProperty("--color-dr-level", Colors.Typography)
+    document.body.style.setProperty("--color-dr-level", Colors.Typography);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth)
+    const handleResize = () => setWindowWidth(window.innerWidth);
 
-    window.addEventListener("resize", handleResize)
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.addEventListener("resize", handleResize)
-    }
-  }, [])
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-  const onDragOver = event => event.preventDefault()
+  const onDragOver = event => event.preventDefault();
 
   const onDrop = event => {
-    const item = JSON.parse(event.dataTransfer.getData("text"))
+    const item = JSON.parse(event.dataTransfer.getData("text"));
     if (Array.isArray(item)) {
-      dispatch(pasteToPlaylist(item))
-      return
+      dispatch(pasteToPlaylist(item));
+      return;
     }
-    dispatch(addToPlaylist(item))
-  }
+    dispatch(addToPlaylist(item));
+  };
 
   const renderCenterAndRight = isLarge => {
     const scroll = ref => {
@@ -105,14 +105,14 @@ const App = ({ dispatch }) => {
         ref.current.scrollTo({
           top: ref.current.scrollTop + 200,
           behavior: "smooth"
-        })
-    }
+        });
+    };
 
     const scrollPlaylist = () => {
-      isLarge ? scroll(appRightRef) : scroll(appCenterRef)
-    }
+      isLarge ? scroll(appRightRef) : scroll(appCenterRef);
+    };
 
-    const renderPlaylist = () => <Playlist onScrollPlaylist={scrollPlaylist} />
+    const renderPlaylist = () => <Playlist onScrollPlaylist={scrollPlaylist} />;
 
     return (
       <div className="app-wrapper">
@@ -136,8 +136,8 @@ const App = ({ dispatch }) => {
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="app">
@@ -146,10 +146,10 @@ const App = ({ dispatch }) => {
       <Toolbar />
       <div>{renderCenterAndRight(windowWidth > 1279)}</div>
     </div>
-  )
-}
+  );
+};
 
 export default connect(
   state => ({}),
   dispatch => ({ dispatch })
-)(App)
+)(App);
