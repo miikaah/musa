@@ -43,6 +43,7 @@ UI for Musa-Electron.
 
 ##### 25.10.2019
 
+- chore: Update frontend packages
 - chore: Update backend packages
 
 ##### 20.8.2019
