@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "start": "dotenv craco start",
+    "start": "PORT=3666 BROWSER=none dotenv craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
