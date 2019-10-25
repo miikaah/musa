@@ -13,6 +13,7 @@ UI for Musa-Electron.
 - feat: Remember library state (which folders are open)
 - feat: Go to Search when pressing Ctrl + F
 - feat: Focus to search input when navigating to Search page
+- refactor: use styled-components
 
 #### Cross platform
 
