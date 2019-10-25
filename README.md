@@ -10,7 +10,6 @@ UI for Musa-Electron.
 - feat: Delete DB when starting new Initial scan
 - fix: Play/pause icon disappearing after Cut + Copy etc. because currentIndex changes
 - fix: Selections + duplication
-- feat: Delete items in playlist with Del-key
 - feat: Remember library state (which folders are open)
 - feat: Go to Search when pressing Ctrl + F
 - feat: Focus to search input when navigating to Search page
@@ -43,6 +42,7 @@ UI for Musa-Electron.
 
 ##### 25.10.2019
 
+- feat: Delete items in playlist with Del-key
 - chore: Update localhost port
 - chore: Update frontend packages
 - chore: Update backend packages
