@@ -41,6 +41,10 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 25.10.2019
+
+- chore: Update backend packages
+
 ##### 20.8.2019
 
 - fix: Clear WebFrame cache every 10 minutes to reduce used memory.
