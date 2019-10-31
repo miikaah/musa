@@ -49,6 +49,7 @@ UI for Musa-Electron.
 
 ##### 31.10.2019
 
+- fix: Space and M key listeners
 - refactor: Split Player to smaller components
 - refactor: replace seek setInterval in Player with requestAnimationFrame hook
 

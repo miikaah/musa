@@ -123,7 +123,7 @@ const Player = ({
       window.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [volume, volumeBeforeMuting, playlist, isPlaying]);
 
   useEffect(() => {
     const getDuration = () => {
