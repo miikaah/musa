@@ -41,7 +41,9 @@ const getReplaygainAlbumGainDb = currentItem => {
     / dB+/,
     ""
   );
-  return parseFloat(!isEmpty(dbString) ? dbString : getReplaygainTrackGainDb());
+  return parseFloat(
+    !isEmpty(dbString) ? dbString : getReplaygainTrackGainDb(currentItem)
+  );
 };
 
 export const getReplaygainDb = (replaygainType, currentItem) => {
