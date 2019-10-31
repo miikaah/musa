@@ -1,11 +1,11 @@
 @import '../scss/colors';
-@import '../scss/variables';
 
 .player-seek {
   margin-right: 16px;
 
   input {
     padding: 0;
+    min-width: 240px;
   }
 
   input[type='range'] {

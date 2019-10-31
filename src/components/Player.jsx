@@ -148,27 +148,22 @@ const Player = ({
   }, [player, volume, replaygainType, currentItem]);
 
   return (
-    <div className="player-container">
+    <div className="player">
       <audio controls src={src} ref={player} />
-      <div className="player">
-        <PlayerPlayPauseButton playOrPause={playOrPause} />
-        <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
-        <PlayerVolume
-          volume={volume}
-          setVolumeForStateAndPlayer={setVolumeForStateAndPlayer}
-        />
-        <PlayerSeek
-          player={player}
-          duration={duration}
-          currentTime={currentTime}
-          setCurrentTime={setCurrentTime}
-        />
-        <PlayerTimeDisplay
-          currentTime={currentTime}
-          currentItem={currentItem}
-        />
-        <PlayerDrGauge currentItem={currentItem} />
-      </div>
+      <PlayerPlayPauseButton playOrPause={playOrPause} />
+      <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
+      <PlayerVolume
+        volume={volume}
+        setVolumeForStateAndPlayer={setVolumeForStateAndPlayer}
+      />
+      <PlayerSeek
+        player={player}
+        duration={duration}
+        currentTime={currentTime}
+        setCurrentTime={setCurrentTime}
+      />
+      <PlayerTimeDisplay currentTime={currentTime} currentItem={currentItem} />
+      <PlayerDrGauge currentItem={currentItem} />
     </div>
   );
 };
