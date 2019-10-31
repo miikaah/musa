@@ -1,3 +1,4 @@
+import { get, isEmpty } from "lodash-es";
 import { DB_NAME, DB_VERSION } from "./config";
 import {
   addToast,
@@ -25,6 +26,35 @@ export const REPLAYGAIN_TYPE = {
   Track: "track",
   Album: "album",
   Off: "off"
+};
+
+const getReplaygainTrackGainDb = currentItem => {
+  const dbString = get(currentItem, "metadata.replaygainTrackGain", "").replace(
+    / dB+/,
+    ""
+  );
+  return parseFloat(!isEmpty(dbString) ? dbString : 0);
+};
+
+const getReplaygainAlbumGainDb = currentItem => {
+  const dbString = get(currentItem, "metadata.replaygainAlbumGain", "").replace(
+    / dB+/,
+    ""
+  );
+  return parseFloat(!isEmpty(dbString) ? dbString : getReplaygainTrackGainDb());
+};
+
+export const getReplaygainDb = (replaygainType, currentItem) => {
+  switch (replaygainType) {
+    case REPLAYGAIN_TYPE.Album: {
+      return getReplaygainAlbumGainDb(currentItem);
+    }
+    case REPLAYGAIN_TYPE.Off: {
+      return 0;
+    }
+    default:
+      return getReplaygainTrackGainDb(currentItem);
+  }
 };
 
 export function prefixNumber(value) {

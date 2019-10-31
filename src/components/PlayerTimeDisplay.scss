@@ -1,0 +1,11 @@
+.player {
+  &-time-display {
+    padding-left: 12px;
+  }
+
+  &-played {
+    min-width: 36px;
+    display: inline-block;
+    text-align: left;
+  }
+}

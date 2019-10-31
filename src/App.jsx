@@ -51,6 +51,7 @@ export const Colors = {
 };
 
 function clearWebFrameCache() {
+  console.log("CLEAR WEBFRAME CACHE ", new Date().toISOString());
   webFrame.clearCache();
 }
 

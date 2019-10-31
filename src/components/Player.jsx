@@ -3,29 +3,18 @@ import { connect } from "react-redux";
 import { play, replay, pause, playNext } from "../reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "../reducers/settings.reducer";
 import { get, isNaN, isEmpty, isNumber } from "lodash-es";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { KEYS, prefixNumber } from "../util";
+import { KEYS } from "../util";
 import { store } from "..";
-import { Colors } from "../App.jsx";
-import { getStateFromIdb, updateStateInIdb, REPLAYGAIN_TYPE } from "../util";
+import { getReplaygainDb } from "../util";
+import PlayerSeek from "./PlayerSeek";
+import PlayerVolume from "./PlayerVolume";
+import PlayerPlayPauseButton from "./PlayerPlayPauseButton";
+import PlayerVolumeButton from "./PlayerVolumeButton";
+import PlayerTimeDisplay from "./PlayerTimeDisplay";
+import PlayerDrGauge from "./PlayerDrGauge";
 import "./Player.scss";
 
 const VOLUME_MUTED = 0;
-const VOLUME_STEP = 5;
-
-const useAnimationFrame = callback => {
-  const requestRef = useRef();
-
-  useEffect(() => {
-    const animate = () => {
-      requestRef.current = requestAnimationFrame(animate);
-      callback();
-    };
-
-    requestRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(requestRef.current);
-  }, [callback]);
-};
 
 const Player = ({
   playlist,
@@ -39,38 +28,10 @@ const Player = ({
   const [duration, setDuration] = useState(0);
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT);
   const [currentTime, setCurrentTime] = useState(0);
-  const [prevCurrentTime, setPrevCurrentTime] = useState(0);
 
   const player = useRef(null);
-  const playerVolume = useRef(null);
-  const playerSeek = useRef(null);
-  const playerPlayPause = useRef(null);
-  const playerMute = useRef(null);
 
   const isMuted = () => volume === VOLUME_MUTED;
-
-  const handleStoreChange = () => {
-    const state = store.getState().player;
-    const shouldReplay = state.replay;
-
-    if (shouldReplay) {
-      player.current.currentTime = 0;
-      setCurrentTime(0);
-
-      if (!state.isPlaying) {
-        // Double click has a delay in it so run this the next time
-        // microtask queue gets emptied
-        setTimeout(() => playOrPause());
-      }
-      dispatch(replay(false));
-    }
-  };
-
-  store.subscribe(handleStoreChange);
-
-  useAnimationFrame(() => {
-    setCurrentTime(get(player, "current.currentTime", 0));
-  });
 
   const playOrPause = () => {
     if (isPlaying || isEmpty(playlist)) {
@@ -90,38 +51,23 @@ const Player = ({
     dispatch(play());
   };
 
-  const getReplaygainTrackGainDb = () => {
-    const dbString = get(
-      currentItem,
-      "metadata.replaygainTrackGain",
-      ""
-    ).replace(/ dB+/, "");
-    return parseFloat(!isEmpty(dbString) ? dbString : 0);
-  };
+  const handleStoreChange = () => {
+    const state = store.getState().player;
+    const shouldReplay = state.replay;
 
-  const getReplaygainAlbumGainDb = () => {
-    const dbString = get(
-      currentItem,
-      "metadata.replaygainAlbumGain",
-      ""
-    ).replace(/ dB+/, "");
-    return parseFloat(
-      !isEmpty(dbString) ? dbString : getReplaygainTrackGainDb()
-    );
-  };
+    if (shouldReplay) {
+      player.current.currentTime = 0;
+      setCurrentTime(0);
 
-  const getReplaygainDb = () => {
-    switch (replaygainType) {
-      case REPLAYGAIN_TYPE.Album: {
-        return getReplaygainAlbumGainDb();
+      if (!state.isPlaying) {
+        // Double click has a delay in it so run this the next time
+        // microtask queue gets emptied
+        setTimeout(() => playOrPause());
       }
-      case REPLAYGAIN_TYPE.Off: {
-        return 0;
-      }
-      default:
-        return getReplaygainTrackGainDb();
+      dispatch(replay(false));
     }
   };
+  store.subscribe(handleStoreChange);
 
   const getVolumeForAudioEl = volume => {
     const vol = volume / 100;
@@ -130,7 +76,10 @@ const Player = ({
 
   const setVolumeForPlayer = v => {
     const vol = isNumber(v) ? v : volume;
-    const trackGainPercentage = Math.pow(10, getReplaygainDb() / 20);
+    const trackGainPercentage = Math.pow(
+      10,
+      getReplaygainDb(replaygainType, currentItem) / 20
+    );
     const realVolume =
       Math.min(100, Math.max(1, vol * parseFloat(trackGainPercentage))) ||
       VOLUME_DEFAULT;
@@ -149,13 +98,6 @@ const Player = ({
     }
     setVolumeBeforeMuting(volume);
     setVolumeForStateAndPlayer(VOLUME_MUTED);
-  };
-
-  const setVolumeByEvent = event => {
-    const vol = parseInt(event.target.value, 10);
-    const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol;
-    setVolumeForStateAndPlayer(volume);
-    getStateFromIdb((req, db) => () => updateStateInIdb(req, db, { volume }));
   };
 
   useEffect(() => {
@@ -181,7 +123,7 @@ const Player = ({
       window.removeEventListener("keydown", handleKeyDown);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [volume, volumeBeforeMuting, playlist, isPlaying, currentTime]);
+  }, []);
 
   useEffect(() => {
     const getDuration = () => {
@@ -201,113 +143,31 @@ const Player = ({
   }, [player]);
 
   useEffect(() => {
-    const setDrLevelColor = () => {
-      const dr = get(currentItem, "metadata.dynamicRange");
-      if (!dr) return;
-
-      let color;
-      if (dr > 11) color = Colors.DrGood;
-      if (dr > 8 && dr < 12) color = Colors.DrMediocre;
-      if (dr < 9) color = Colors.DrBad;
-      document.body.style.setProperty("--color-dr-level", color);
-    };
-
-    setDrLevelColor();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, currentItem]);
-
-  useEffect(() => {
     setVolumeForPlayer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, volume, replaygainType, currentItem]);
-
-  const seek = event => {
-    if (prevCurrentTime === event.target.value) return;
-    player.current.currentTime = event.target.value;
-    setCurrentTime(event.target.value);
-    setPrevCurrentTime(event.target.value);
-    // Makes it possible to seek back to same spot after timeout
-    // to prevent multiple seeks
-    setTimeout(() => setPrevCurrentTime(-1), 500);
-  };
-
-  const formatCurrentTime = duration => {
-    if (duration < 1) return "0:00";
-    let output = "";
-    if (duration >= 3600) {
-      output += prefixNumber(Math.floor(duration / 3600)) + ":";
-      output +=
-        prefixNumber(Math.floor((Math.floor(duration) % 3600) / 60)) + ":";
-    } else output += Math.floor((Math.floor(duration) % 3600) / 60) + ":";
-    output += prefixNumber(Math.floor(duration % 60));
-    return output;
-  };
-
-  const renderDrGauge = () => {
-    const dr = get(currentItem, "metadata.dynamicRange", "");
-    let className = "player-dynamic-range-wrapper";
-    if (isEmpty(dr)) className += " hidden";
-    return (
-      <span className={className}>
-        <span className="player-dynamic-range">
-          {isEmpty(dr) ? "DR00" : `DR${prefixNumber(dr)}`}
-        </span>
-      </span>
-    );
-  };
 
   return (
     <div className="player-container">
       <audio controls src={src} ref={player} />
       <div className="player">
-        <button
-          className="player-play-pause"
-          ref={playerPlayPause}
-          onClick={playOrPause}
-          onFocus={() => playerPlayPause.current.blur()}
-        >
-          <FontAwesomeIcon icon={isPlaying ? "pause" : "play"} />
-        </button>
-        <button
-          className="player-volume-btn"
-          ref={playerMute}
-          onClick={muteOrUnmute}
-          onFocus={() => playerMute.current.blur()}
-        >
-          <FontAwesomeIcon
-            icon={volume > VOLUME_STEP - 1 ? "volume-up" : "volume-mute"}
-          />
-        </button>
-        <input
-          className="player-volume"
-          type="range"
-          min="0"
-          max="100"
-          ref={playerVolume}
-          step={VOLUME_STEP}
-          value={volume}
-          onChange={setVolumeByEvent}
-          onFocus={() => playerVolume.current.blur()}
+        <PlayerPlayPauseButton playOrPause={playOrPause} />
+        <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
+        <PlayerVolume
+          volume={volume}
+          setVolumeForStateAndPlayer={setVolumeForStateAndPlayer}
         />
-        <input
-          className="player-seek"
-          type="range"
-          min="0"
-          max={duration}
-          step="1"
-          ref={playerSeek}
-          value={currentTime}
-          onChange={seek}
-          onFocus={() => playerSeek.current.blur()}
+        <PlayerSeek
+          player={player}
+          duration={duration}
+          currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
         />
-        <span className="player-time-display">
-          <span className="player-played">
-            {formatCurrentTime(currentTime)}
-          </span>
-          <span> / </span>
-          <span>{get(currentItem, "metadata.duration", "0:00")}</span>
-        </span>
-        {renderDrGauge()}
+        <PlayerTimeDisplay
+          currentTime={currentTime}
+          currentItem={currentItem}
+        />
+        <PlayerDrGauge currentItem={currentItem} />
       </div>
     </div>
   );
