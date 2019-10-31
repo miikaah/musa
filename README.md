@@ -12,7 +12,6 @@ UI for Musa-Electron.
 
 ### V1
 
-- fix: Seek updater timer might stay on after playback in some cases (investigate).
 - feat: Delete DB when starting new Initial scan
 - fix: Play/pause icon disappearing after Cut + Copy etc. because currentIndex changes
 - fix: Selections + duplication
@@ -47,6 +46,10 @@ UI for Musa-Electron.
 - feat: Drag & drop mp3, flac and ogg files from filesystem
 
 ## Done
+
+##### 31.10.2019
+
+- refactor: replace seek setInterval in Player with requestAnimationFrame hook
 
 ##### 25.10.2019
 
