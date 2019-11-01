@@ -51,24 +51,6 @@ const Player = ({
     dispatch(play());
   };
 
-  const handleStoreChange = () => {
-    const state = store.getState().player;
-    const shouldReplay = state.replay;
-
-    if (shouldReplay) {
-      player.current.currentTime = 0;
-      setCurrentTime(0);
-
-      if (!state.isPlaying) {
-        // Double click has a delay in it so run this the next time
-        // microtask queue gets emptied
-        setTimeout(() => playOrPause());
-      }
-      dispatch(replay(false));
-    }
-  };
-  store.subscribe(handleStoreChange);
-
   const getVolumeForAudioEl = volume => {
     const vol = volume / 100;
     return vol < 0.02 ? VOLUME_MUTED : vol;
@@ -99,6 +81,27 @@ const Player = ({
     setVolumeBeforeMuting(volume);
     setVolumeForStateAndPlayer(VOLUME_MUTED);
   };
+
+  useEffect(() => {
+    const handleStoreChange = () => {
+      const state = store.getState().player;
+      const shouldReplay = state.replay;
+
+      if (shouldReplay) {
+        player.current.currentTime = 0;
+        setCurrentTime(0);
+
+        if (!state.isPlaying) {
+          // Double click has a delay in it so run this the next time
+          // microtask queue gets emptied
+          setTimeout(() => playOrPause());
+        }
+        dispatch(replay(false));
+      }
+    };
+    store.subscribe(handleStoreChange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = event => {

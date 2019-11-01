@@ -47,6 +47,10 @@ UI for Musa-Electron.
 
 ## Done
 
+##### 1.11.2019
+
+- refactor: Wrap redux store subscription with useEffect
+
 ##### 31.10.2019
 
 - fix: ReplayGain album gain -> track gain fallback
