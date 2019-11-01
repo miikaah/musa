@@ -1,21 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
 import { get } from "lodash-es";
+import { useAnimationFrame } from "../hooks";
 import "./PlayerSeek.scss";
-
-const useAnimationFrame = callback => {
-  const requestRef = useRef();
-
-  useEffect(() => {
-    const animate = () => {
-      requestRef.current = requestAnimationFrame(animate);
-      callback();
-    };
-
-    requestRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(requestRef.current);
-  }, [callback]);
-};
 
 const PlayerSeek = ({
   player,

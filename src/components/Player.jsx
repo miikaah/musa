@@ -6,6 +6,7 @@ import { get, isNaN, isEmpty, isNumber } from "lodash-es";
 import { KEYS } from "../util";
 import { store } from "..";
 import { getReplaygainDb } from "../util";
+import { useKeyPress } from "../hooks";
 import PlayerSeek from "./PlayerSeek";
 import PlayerVolume from "./PlayerVolume";
 import PlayerPlayPauseButton from "./PlayerPlayPauseButton";
@@ -33,13 +34,18 @@ const Player = ({
 
   const isMuted = () => volume === VOLUME_MUTED;
 
-  const playOrPause = () => {
+  const playOrPause = event => {
+    if (event) {
+      event.preventDefault();
+    }
+    // PAUSE
     if (isPlaying || isEmpty(playlist)) {
       player.current.pause();
       dispatch(pause());
       setCurrentTime(get(player, "current.currentTime", 0));
       return;
     }
+    // PLAY
     if (!isEmpty(src)) {
       // BUGFIX: pause->play starting from beginning
       player.current.currentTime = currentTime;
@@ -50,6 +56,7 @@ const Player = ({
     // Dispatch first play action
     dispatch(play());
   };
+  useKeyPress(KEYS.Space, playOrPause);
 
   const getVolumeForAudioEl = volume => {
     const vol = volume / 100;
@@ -73,14 +80,20 @@ const Player = ({
     dispatch(updateSettings({ volume: v }));
   };
 
-  const muteOrUnmute = () => {
+  const muteOrUnmute = event => {
+    if (event) {
+      event.preventDefault();
+    }
+    // UNMUTE
     if (isMuted()) {
       setVolumeForStateAndPlayer(volumeBeforeMuting);
       return;
     }
+    // MUTE
     setVolumeBeforeMuting(volume);
     setVolumeForStateAndPlayer(VOLUME_MUTED);
   };
+  useKeyPress(KEYS.M, muteOrUnmute);
 
   useEffect(() => {
     const handleStoreChange = () => {
@@ -102,31 +115,6 @@ const Player = ({
     store.subscribe(handleStoreChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    const handleKeyDown = event => {
-      if (get(event, "target.tagName") !== "BODY") return;
-
-      switch (event.keyCode) {
-        case KEYS.Space:
-          playOrPause();
-          event.preventDefault();
-          return;
-        case KEYS.M:
-          muteOrUnmute();
-          return;
-        default:
-          break;
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [volume, volumeBeforeMuting, playlist, isPlaying]);
 
   useEffect(() => {
     const getDuration = () => {

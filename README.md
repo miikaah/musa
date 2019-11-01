@@ -49,6 +49,7 @@ UI for Musa-Electron.
 
 ##### 1.11.2019
 
+- refactor: Create useKeyPress hook + put custom hooks in their own file
 - refactor: Wrap redux store subscription with useEffect
 
 ##### 31.10.2019
