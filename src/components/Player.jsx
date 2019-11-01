@@ -80,10 +80,7 @@ const Player = ({
     dispatch(updateSettings({ volume: v }));
   };
 
-  const muteOrUnmute = event => {
-    if (event) {
-      event.preventDefault();
-    }
+  const muteOrUnmute = () => {
     // UNMUTE
     if (isMuted()) {
       setVolumeForStateAndPlayer(volumeBeforeMuting);
