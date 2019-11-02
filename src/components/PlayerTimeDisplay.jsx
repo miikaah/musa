@@ -1,8 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 import { get } from "lodash-es";
+import styled from "styled-components/macro";
 import { prefixNumber } from "../util";
-import "./PlayerTimeDisplay.scss";
+
+const TimeDisplay = styled.span`
+  padding-left: 12px;
+`;
+
+const TimePlayed = styled.span`
+  min-width: 36px;
+  display: inline-block;
+  text-align: left;
+`;
 
 const PlayerTimeDisplay = ({ currentTime, currentItem }) => {
   const formatCurrentTime = duration => {
@@ -18,11 +28,11 @@ const PlayerTimeDisplay = ({ currentTime, currentItem }) => {
   };
 
   return (
-    <span className="player-time-display">
-      <span className="player-played">{formatCurrentTime(currentTime)}</span>
+    <TimeDisplay>
+      <TimePlayed>{formatCurrentTime(currentTime)}</TimePlayed>
       <span> / </span>
       <span>{get(currentItem, "metadata.duration", "0:00")}</span>
-    </span>
+    </TimeDisplay>
   );
 };
 
