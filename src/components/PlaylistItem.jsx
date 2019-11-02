@@ -3,7 +3,26 @@ import { connect } from "react-redux";
 import { get, isNaN, isEqual } from "lodash-es";
 import { playIndex, replay } from "reducers/player.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./PlaylistItem.scss";
+import styled from "styled-components/macro";
+import { Cell } from "../common.styles";
+
+const PlaylistItemContainer = styled.li`
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+
+  &:hover {
+    background-color: var(--color-primary-highlight);
+    color: var(--color-typography-primary);
+  }
+
+  ${({ isActiveOrSelected }) =>
+    isActiveOrSelected &&
+    `
+    background-color: var(--color-primary-highlight);
+    color: var(--color-typography-primary);
+  `}
+`;
 
 const PlaylistItem = ({
   item,
@@ -24,17 +43,16 @@ const PlaylistItem = ({
 }) => {
   const elRef = useRef(null);
 
-  const getClassNames = ({
+  const getIsActiveOrSelected = ({
     index,
     activeIndex,
     startIndex,
     endIndex,
     isSelected
   }) => {
-    let className = "playlist-item";
     const start = Math.min(startIndex, endIndex);
     const end = Math.max(startIndex, endIndex);
-    if (index === activeIndex) className += " active";
+    if (index === activeIndex) return true;
     if (
       (!isNaN(startIndex) &&
         !isNaN(endIndex) &&
@@ -42,17 +60,18 @@ const PlaylistItem = ({
         index <= end) ||
       isSelected
     )
-      className += " selected";
-    return className;
+      return true;
+    return false;
   };
 
-  const classes = getClassNames({
-    index,
-    activeIndex,
-    startIndex,
-    endIndex,
-    isSelected
-  });
+  const isActiveOrSelected = () =>
+    getIsActiveOrSelected({
+      index,
+      activeIndex,
+      startIndex,
+      endIndex,
+      isSelected
+    });
 
   const isIndexCurrentIndex = () => {
     return index === currentIndex;
@@ -113,30 +132,26 @@ const PlaylistItem = ({
   }, [currentIndex]);
 
   return (
-    <li
+    <PlaylistItemContainer
       ref={elRef}
-      className={classes}
+      isActiveOrSelected={isActiveOrSelected()}
       onDoubleClick={handleDoubleClick}
       onMouseOver={() => onMouseOverItem(index)}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      <div className="cell cell-xxs">{renderPlayOrPauseIcon()}</div>
-      <div className="cell cell-sm left">
-        {get(item, "metadata.artist", "")}
-      </div>
-      <div className="cell cell-sm left">{get(item, "metadata.album", "")}</div>
-      <div className="cell cell-xs right">
+      <Cell size="xxs">{renderPlayOrPauseIcon()}</Cell>
+      <Cell size="sm">{get(item, "metadata.artist", "")}</Cell>
+      <Cell size="sm">{get(item, "metadata.album", "")}</Cell>
+      <Cell size="xs" alignRight>
         {get(item, "metadata.track", "")}
-      </div>
-      <div className="cell cell-md left">
-        {get(item, "metadata.title", item.name)}
-      </div>
-      <div className="cell cell-xs left">
-        {get(item, "metadata.duration", "")}
-      </div>
-      <div className="cell cell-xs right">{get(item, "metadata.date", "")}</div>
-    </li>
+      </Cell>
+      <Cell size="md">{get(item, "metadata.title", item.name)}</Cell>
+      <Cell size="xs">{get(item, "metadata.duration", "")}</Cell>
+      <Cell size="xs" alignRight>
+        {get(item, "metadata.date", "")}
+      </Cell>
+    </PlaylistItemContainer>
   );
 };
 

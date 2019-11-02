@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { isNaN, isEqual, get } from "lodash-es";
+import styled from "styled-components/macro";
 import {
   pasteToPlaylist,
   removeRangeFromPlaylist,
@@ -7,10 +9,34 @@ import {
   playIndex,
   replay
 } from "reducers/player.reducer";
-import PlaylistItem from "./PlaylistItem";
-import { isNaN, isEqual, get } from "lodash-es";
 import { KEYS } from "../util";
-import "./Playlist.scss";
+import { breakpoint } from "../breakpoints";
+import { Cell } from "../common.styles";
+import PlaylistItem from "./PlaylistItem";
+
+const PlaylistContainer = styled.ul`
+  padding: 0 8px 0 0;
+  margin: 0;
+  font-size: 0.85rem;
+  border: 0 solid var(--color-primary-highlight);
+  border-left-width: 1px;
+  border-right-width: 3px;
+  background-color: var(--color-bg);
+  box-shadow: -22px 10px 31px -16px rgba(10, 10, 10, 0.75);
+  min-height: 94vh;
+
+  @media (max-width: ${breakpoint.lg}) {
+    border-left-width: 3px;
+    max-height: none;
+    height: auto;
+  }
+`;
+
+const PlaylistHeader = styled.li`
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+`;
 
 const PLAYLIST_CLASSNAME = "playlist";
 
@@ -328,7 +354,7 @@ const Playlist = ({
   };
 
   return (
-    <ul
+    <PlaylistContainer
       className={PLAYLIST_CLASSNAME}
       onMouseDown={event => {
         onMouseDown({
@@ -341,15 +367,19 @@ const Playlist = ({
       }}
       onMouseUp={clearSelection}
     >
-      <li className="playlist-header">
-        <div className="cell cell-xxs" />
-        <div className="cell cell-sm left">Artist</div>
-        <div className="cell cell-sm left">Album</div>
-        <div className="cell cell-xs right">Tr</div>
-        <div className="cell cell-md left">Title</div>
-        <div className="cell cell-xs left">Length</div>
-        <div className="cell cell-xs right">Date</div>
-      </li>
+      <PlaylistHeader>
+        <Cell size="xxs" />
+        <Cell size="sm">Artist</Cell>
+        <Cell size="sm">Album</Cell>
+        <Cell size="xs" alignRight>
+          Tr
+        </Cell>
+        <Cell size="md">Title</Cell>
+        <Cell size="xs">Length</Cell>
+        <Cell size="xs" alignRight>
+          Date
+        </Cell>
+      </PlaylistHeader>
       {playlist.map((item, index) => (
         <PlaylistItem
           key={`${item.name}-${index}`}
@@ -366,7 +396,7 @@ const Playlist = ({
           onScrollPlaylist={onScrollPlaylist}
         />
       ))}
-    </ul>
+    </PlaylistContainer>
   );
 };
 

@@ -1,4 +1,4 @@
-import { css } from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 
 export const listOverflow = css`
   max-height: 95vh;
@@ -40,4 +40,23 @@ export const rangeInput = css`
     appearance: none;
     box-shadow: -10000px 0 0 10000px var(--color-slider);
   }
+`;
+
+export const Cell = styled.div`
+  padding: 2px 4px;
+  flex: ${({ size }) => {
+    switch (size) {
+      case "xxs":
+        return "0 0 2.5%";
+      case "xs":
+        return "0 0 5%";
+      case "sm":
+        return "0 1 25%";
+      case "md":
+        return "0 0 35%";
+      default:
+        return "0 0 35%";
+    }
+  }};
+  text-align: ${({ alignRight }) => (alignRight ? "right" : "left")};
 `;
