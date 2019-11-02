@@ -2,9 +2,26 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { updateSettings } from "reducers/settings.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { doIdbRequest } from "../util";
 import { get } from "lodash-es";
-import "./MusicLibrarySetting.scss";
+import styled from "styled-components/macro";
+import { doIdbRequest } from "../util";
+
+const MusicLibrarySettingContainer = styled.div``;
+
+const MusicLibrarySettingPath = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+
+  input {
+    flex: 90%;
+  }
+
+  button {
+    flex: 10%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+`;
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -59,10 +76,10 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
   };
 
   return (
-    <div className="music-library-setting">
+    <MusicLibrarySettingContainer>
       <h5>Paths</h5>
       {musicLibraryPaths.map((path, i) => (
-        <div className="music-library-setting-path" key={i}>
+        <MusicLibrarySettingPath key={i}>
           <input disabled readOnly value={path} />
           <button
             type="button"
@@ -71,7 +88,7 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
           >
             <FontAwesomeIcon icon="trash" />
           </button>
-        </div>
+        </MusicLibrarySettingPath>
       ))}
       <button
         type="button"
@@ -80,7 +97,7 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
       >
         Add new
       </button>
-    </div>
+    </MusicLibrarySettingContainer>
   );
 };
 
