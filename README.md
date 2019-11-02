@@ -23,6 +23,8 @@ UI for Musa-Electron.
 - refactor: Replace FontAwesome with something else
 - refactor: List keys to something other than just index
 - refactor: Toaster as the animate action is no longer needed
+- refactor: Move initial file system scan off of main thread as it lags during startup on Windows
+- feat: Add Splash screen
 
 #### Cross platform
 
