@@ -1,7 +1,5 @@
-@import './scss/colors';
-@import './scss/variables';
-
 :root {
+  --font-size-md: 16px;
   --font-size-sm: 14px;
   --font-size-xs: 12px;
 }
@@ -14,7 +12,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: Helvetica, Tahoma, sans-serif;
-  font-size: $musa-font-size-md;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -41,7 +38,7 @@ h1, h2, h3, h4, h5, h6 {
 
 input {
   padding: 10px 30px;
-  font-size: $musa-font-size-md;
+  font-size: var(--font-size-md);
   box-sizing: border-box;
 }
 
