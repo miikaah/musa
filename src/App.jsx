@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import Playlist from "components/Playlist";
-import Toolbar from "components/Toolbar";
-import Toaster from "components/Toaster";
-import Cover from "components/Cover";
-import ProgressBar from "components/ProgressBar";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
@@ -17,14 +12,19 @@ import {
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components/macro";
+import { get } from "lodash-es";
+import { FALLBACK_THEME } from "./config";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import { updateSettings } from "reducers/settings.reducer";
 import { getStateFromIdb } from "./util";
 import { breakpoint } from "./breakpoints";
 import { listOverflow } from "./common.styles";
-import { get } from "lodash-es";
-import { FALLBACK_THEME } from "./config";
 import { webFrame } from "electron";
+import Playlist from "components/Playlist";
+import Toolbar from "components/Toolbar";
+import Toaster from "components/Toaster";
+import Cover from "components/Cover";
+import ProgressBar from "components/ProgressBar";
 
 const AppContainer = styled.div`
   text-align: left;
