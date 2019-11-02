@@ -1,20 +1,20 @@
-import React from "react"
-import { connect } from "react-redux"
-import { get, isEmpty } from "lodash-es"
-import { encodeFileUri, dispatchToast } from "../util"
-import { addToPlaylist } from "../reducers/player.reducer"
-import "./Song.scss"
+import React from "react";
+import { connect } from "react-redux";
+import { get, isEmpty } from "lodash-es";
+import { encodeFileUri, dispatchToast } from "../util";
+import { addToPlaylist } from "reducers/player.reducer";
+import "./Song.scss";
 
 const Song = ({ item, dispatch }) => {
-  if (isEmpty(item)) return null
+  if (isEmpty(item)) return null;
 
   const addSongToPlaylist = () => {
-    dispatch(addToPlaylist(item))
+    dispatch(addToPlaylist(item));
 
-    const msg = `Added ${item.name} to playlist`
-    const key = `${item.name}-${Date.now()}`
-    dispatchToast(msg, key, dispatch)
-  }
+    const msg = `Added ${item.name} to playlist`;
+    const key = `${item.name}-${Date.now()}`;
+    dispatchToast(msg, key, dispatch);
+  };
 
   return (
     <div className="song" onClick={addSongToPlaylist}>
@@ -29,10 +29,10 @@ const Song = ({ item, dispatch }) => {
         <p>{get(item, "metadata.date", "")}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default connect(
   state => ({}),
   dispatch => ({ dispatch })
-)(Song)
+)(Song);

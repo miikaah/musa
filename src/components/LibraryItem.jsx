@@ -1,16 +1,19 @@
-import React from "react"
-import { connect } from "react-redux"
-import { get } from "lodash-es"
-import { addToPlaylist } from "../reducers/player.reducer"
-import "./LibraryItem.scss"
+import React from "react";
+import { connect } from "react-redux";
+import { get } from "lodash-es";
+import { addToPlaylist } from "reducers/player.reducer";
+import "./LibraryItem.scss";
 
 const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
   const onDragStart = event => {
-    event.dataTransfer.setData("text/plain", JSON.stringify({ ...item, cover }))
-    event.stopPropagation()
-  }
+    event.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify({ ...item, cover })
+    );
+    event.stopPropagation();
+  };
 
-  const classes = hasAlbum ? "library-item" : "library-item-no-album"
+  const classes = hasAlbum ? "library-item" : "library-item-no-album";
 
   return (
     <li
@@ -21,10 +24,10 @@ const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
     >
       {get(item, "metadata.title", item.name)}
     </li>
-  )
-}
+  );
+};
 
 export default connect(
   () => ({}),
   dispatch => ({ dispatch })
-)(LibraryItem)
+)(LibraryItem);

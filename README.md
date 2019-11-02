@@ -52,6 +52,8 @@ UI for Musa-Electron.
 It seems the last days' changes finally fixed the memory leak(s)!
 Note to self: code functional React components properly.
 
+- refactor: Use absolute paths
+
 ##### 1.11.2019
 
 - refactor: Create useKeyPress hook + put custom hooks in their own file

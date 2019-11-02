@@ -1,19 +1,19 @@
-import React, { useEffect } from "react"
-import { connect } from "react-redux"
-import { updateSettings } from "../reducers/settings.reducer"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { doIdbRequest } from "../util"
-import { get } from "lodash-es"
-import "./MusicLibrarySetting.scss"
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { updateSettings } from "reducers/settings.reducer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { doIdbRequest } from "../util";
+import { get } from "lodash-es";
+import "./MusicLibrarySetting.scss";
 
-const electron = window.require("electron")
-const ipcRenderer = electron.ipcRenderer
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 const songListProps = {
   method: "get",
   storeName: "songList",
   key: "list"
-}
+};
 
 const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
   useEffect(() => {
@@ -22,16 +22,16 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
         updateSettings({
           musicLibraryPaths: Array.from(new Set([...musicLibraryPaths, path]))
         })
-      )
-    })
+      );
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [musicLibraryPaths])
+  }, [musicLibraryPaths]);
 
   const removeLibraryPath = path => {
-    const paths = new Set(musicLibraryPaths)
-    paths.delete(path)
-    const libPaths = Array.from(paths)
-    dispatch(updateSettings({ musicLibraryPaths: libPaths }))
+    const paths = new Set(musicLibraryPaths);
+    paths.delete(path);
+    const libPaths = Array.from(paths);
+    dispatch(updateSettings({ musicLibraryPaths: libPaths }));
     doIdbRequest({
       ...songListProps,
       onReqSuccess: req => () => {
@@ -40,10 +40,10 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
           get(req, "result.list"),
           libPaths,
           path
-        )
+        );
       }
-    })
-  }
+    });
+  };
 
   const addLibraryPath = () => {
     doIdbRequest({
@@ -53,10 +53,10 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
           "addMusicLibraryPath",
           get(req, "result.list"),
           musicLibraryPaths
-        )
+        );
       }
-    })
-  }
+    });
+  };
 
   return (
     <div className="music-library-setting">
@@ -81,12 +81,12 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
         Add new
       </button>
     </div>
-  )
-}
+  );
+};
 
 export default connect(
   state => ({
     musicLibraryPaths: state.settings.musicLibraryPaths
   }),
   dispatch => ({ dispatch })
-)(MusicLibrarySetting)
+)(MusicLibrarySetting);

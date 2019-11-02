@@ -6,7 +6,7 @@ import {
   removeIndexesFromPlaylist,
   playIndex,
   replay
-} from "../reducers/player.reducer";
+} from "reducers/player.reducer";
 import PlaylistItem from "./PlaylistItem";
 import { isNaN, isEqual, get } from "lodash-es";
 import { KEYS } from "../util";

@@ -1,12 +1,12 @@
-import React from "react"
-import { connect } from "react-redux"
-import { get, isEmpty } from "lodash-es"
-import { encodeFileUri, dispatchToast } from "../util"
-import { addToPlaylist, pasteToPlaylist } from "../reducers/player.reducer"
-import "./Album.scss"
+import React from "react";
+import { connect } from "react-redux";
+import { get, isEmpty } from "lodash-es";
+import { encodeFileUri, dispatchToast } from "util";
+import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
+import "./Album.scss";
 
 const Album = ({ item, dispatch }) => {
-  if (isEmpty(item)) return null
+  if (isEmpty(item)) return null;
 
   const addAlbumSongsToPlaylist = () => {
     dispatch(
@@ -16,21 +16,21 @@ const Album = ({ item, dispatch }) => {
           cover: item.cover
         }))
       )
-    )
+    );
 
-    const msg = `Added ${item.name} to playlist`
-    const key = `${item.name}-${Date.now()}`
-    dispatchToast(msg, key, dispatch)
-  }
+    const msg = `Added ${item.name} to playlist`;
+    const key = `${item.name}-${Date.now()}`;
+    dispatchToast(msg, key, dispatch);
+  };
 
   const addSongToPlaylist = song => {
-    dispatch(addToPlaylist({ ...song, cover: item.cover }))
+    dispatch(addToPlaylist({ ...song, cover: item.cover }));
 
-    const title = get(song, "metadata.title", "")
-    const msg = `Added ${title} to playlist`
-    const key = `${title}-${Date.now()}`
-    dispatchToast(msg, key, dispatch)
-  }
+    const title = get(song, "metadata.title", "");
+    const msg = `Added ${title} to playlist`;
+    const key = `${title}-${Date.now()}`;
+    dispatchToast(msg, key, dispatch);
+  };
 
   return (
     <div className="album">
@@ -60,10 +60,10 @@ const Album = ({ item, dispatch }) => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default connect(
   state => ({}),
   dispatch => ({ dispatch })
-)(Album)
+)(Album);

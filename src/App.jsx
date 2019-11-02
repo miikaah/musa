@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import Playlist from "./components/Playlist";
-import Toolbar from "./components/Toolbar";
-import Toaster from "./components/Toaster";
-import Cover from "./components/Cover";
-import ProgressBar from "./components/ProgressBar";
+import Playlist from "components/Playlist";
+import Toolbar from "components/Toolbar";
+import Toaster from "components/Toaster";
+import Cover from "components/Cover";
+import ProgressBar from "components/ProgressBar";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
@@ -16,8 +16,8 @@ import {
   faSearch,
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
-import { addToPlaylist, pasteToPlaylist } from "./reducers/player.reducer";
-import { updateSettings } from "./reducers/settings.reducer";
+import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
+import { updateSettings } from "reducers/settings.reducer";
 import { getStateFromIdb } from "./util";
 import { get } from "lodash-es";
 import { FALLBACK_THEME } from "./config";

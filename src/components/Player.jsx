@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { play, replay, pause, playNext } from "../reducers/player.reducer";
-import { VOLUME_DEFAULT, updateSettings } from "../reducers/settings.reducer";
+import { play, replay, pause, playNext } from "reducers/player.reducer";
+import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
 import { get, isNaN, isEmpty, isNumber } from "lodash-es";
 import { KEYS } from "../util";
 import { store } from "..";

@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react"
-import { connect } from "react-redux"
-import ThemeBlock from "./ThemeBlock"
-import { FALLBACK_THEME } from "../config"
-import { doIdbRequest, updateCurrentTheme } from "../util"
-import { updateSettings } from "../reducers/settings.reducer"
-import "./ThemeLibrary.scss"
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import ThemeBlock from "./ThemeBlock";
+import { FALLBACK_THEME } from "../config";
+import { doIdbRequest, updateCurrentTheme } from "../util";
+import { updateSettings } from "reducers/settings.reducer";
+import "./ThemeLibrary.scss";
 
 const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
-  const [themes, setThemes] = useState([])
+  const [themes, setThemes] = useState([]);
 
   useEffect(() => {
     doIdbRequest({
       method: "getAll",
       storeName: "theme",
       onReqSuccess: req => () => setThemes(req.result)
-    })
-  }, [update])
+    });
+  }, [update]);
 
   const handleDefaultThemeChange = theme => {
-    updateCurrentTheme(theme)
-    dispatch(updateSettings({ defaultTheme: theme, currentTheme: theme }))
-  }
+    updateCurrentTheme(theme);
+    dispatch(updateSettings({ defaultTheme: theme, currentTheme: theme }));
+  };
 
   const handleCurrentThemeChange = theme => {
-    updateCurrentTheme(theme)
-    dispatch(updateSettings({ currentTheme: theme }))
-  }
+    updateCurrentTheme(theme);
+    dispatch(updateSettings({ currentTheme: theme }));
+  };
 
   return (
     <div className="theme-library">
@@ -79,8 +79,8 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
           ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default connect(
   state => ({
@@ -88,4 +88,4 @@ export default connect(
     currentTheme: state.settings.currentTheme
   }),
   dispatch => ({ dispatch })
-)(ThemeLibrary)
+)(ThemeLibrary);

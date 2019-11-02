@@ -1,13 +1,13 @@
-import React from "react"
-import { connect } from "react-redux"
-import { isEmpty } from "lodash-es"
-import { dispatchToast } from "../util"
-import { pasteToPlaylist } from "../reducers/player.reducer"
-import AlbumCover from "./AlbumCover"
-import "./Artist.scss"
+import React from "react";
+import { connect } from "react-redux";
+import { isEmpty } from "lodash-es";
+import { dispatchToast } from "../util";
+import { pasteToPlaylist } from "reducers/player.reducer";
+import AlbumCover from "./AlbumCover";
+import "./Artist.scss";
 
 const Artist = ({ item, dispatch }) => {
-  if (isEmpty(item)) return null
+  if (isEmpty(item)) return null;
 
   const addAlbumSongsToPlaylist = album => {
     dispatch(
@@ -17,11 +17,11 @@ const Artist = ({ item, dispatch }) => {
           cover: album.cover
         }))
       )
-    )
-    const msg = `Added ${album.name} to playlist`
-    const key = `${album.name}-${Date.now()}`
-    dispatchToast(msg, key, dispatch)
-  }
+    );
+    const msg = `Added ${album.name} to playlist`;
+    const key = `${album.name}-${Date.now()}`;
+    dispatchToast(msg, key, dispatch);
+  };
   return (
     <div className="artist">
       <div>{item.name}</div>
@@ -37,12 +37,12 @@ const Artist = ({ item, dispatch }) => {
           ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default connect(
   state => ({
     messages: state.toaster.messages
   }),
   dispatch => ({ dispatch })
-)(Artist)
+)(Artist);
