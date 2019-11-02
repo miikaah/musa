@@ -1,8 +1,15 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
 import { get } from "lodash-es";
+import styled from "styled-components/macro";
 import { useAnimationFrame } from "../hooks";
-import "./PlayerSeek.scss";
+import { rangeInput } from "../common.styles";
+
+const SeekContainer = styled.span`
+  margin-right: 16px;
+
+  ${rangeInput}
+`;
 
 const PlayerSeek = ({
   player,
@@ -32,7 +39,7 @@ const PlayerSeek = ({
   };
 
   return (
-    <span className="player-seek">
+    <SeekContainer>
       <input
         type="range"
         min="0"
@@ -43,7 +50,7 @@ const PlayerSeek = ({
         onChange={seek}
         onFocus={() => playerSeek.current.blur()}
       />
-    </span>
+    </SeekContainer>
   );
 };
 
