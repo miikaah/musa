@@ -2,10 +2,33 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { setQuery } from "reducers/library.reducer";
 import fuzzysort from "fuzzysort";
+import styled from "styled-components/macro";
 import Song from "./Song";
 import Album from "./Album";
 import Artist from "./Artist";
-import "./Search.scss";
+
+const SearchContainer = styled.div`
+  input {
+    width: 100%;
+  }
+
+  > div {
+    margin-bottom: 100px;
+  }
+`;
+
+const SearchBlock = styled.div`
+  margin-top: 40px;
+
+  > h2 {
+    margin-bottom: 40px;
+  }
+`;
+
+const SearchBlockWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
 
 const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -54,33 +77,33 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   };
 
   return (
-    <div className="search">
+    <SearchContainer>
       <h1>Search</h1>
       <div>
         <input
           value={query}
           onChange={e => dispatch(setQuery(e.target.value))}
         />
-        <div className="search-block">
+        <SearchBlock>
           <h2>Artists</h2>
-          <div className="search-block-wrapper">
+          <SearchBlockWrapper>
             {renderSearchResults(searchArtists, "artists")}
-          </div>
-        </div>
-        <div className="search-block">
+          </SearchBlockWrapper>
+        </SearchBlock>
+        <SearchBlock>
           <h2>Albums</h2>
-          <div className="search-block-wrapper">
+          <SearchBlockWrapper>
             {renderSearchResults(searchAlbums, "albums")}
-          </div>
-        </div>
-        <div className="search-block">
+          </SearchBlockWrapper>
+        </SearchBlock>
+        <SearchBlock>
           <h2>Songs</h2>
-          <div className="search-block-wrapper">
+          <SearchBlockWrapper>
             {renderSearchResults(searchSongs, "songs")}
-          </div>
-        </div>
+          </SearchBlockWrapper>
+        </SearchBlock>
       </div>
-    </div>
+    </SearchContainer>
   );
 };
 
