@@ -2,6 +2,7 @@
   --font-size-md: 16px;
   --font-size-sm: 14px;
   --font-size-xs: 12px;
+  --toolbar-height: 30px;
 }
 
 html {
