@@ -1,11 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import ThemeBlock from "./ThemeBlock";
+import styled from "styled-components/macro";
 import { FALLBACK_THEME } from "../config";
 import { doIdbRequest, updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
+import ThemeBlock from "./ThemeBlock";
 import Button from "./Button";
-import "./ThemeLibrary.scss";
+
+const ThemeLibraryContainer = styled.div``;
+
+const DefaultAndCurrentThemes = styled.div`
+  display: flex;
+  margin-bottom: 40px;
+`;
+
+const DefaultTheme = styled.div`
+  flex: 50%;
+  margin-right: 40px;
+`;
+
+const CurrentTheme = styled.div`
+  flex: 50%;
+`;
+
+const ThemeWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const ThemeList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+  padding: 10px 0 0 10px;
+  max-height: 300px;
+  overflow-y: auto;
+`;
+
+const ThemeControls = styled.div`
+  margin-left: 20px;
+`;
 
 const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
   const [themes, setThemes] = useState([]);
@@ -29,15 +63,15 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
   };
 
   return (
-    <div className="theme-library">
-      <div className="theme-library-container">
-        <div className="theme-library-default">
+    <ThemeLibraryContainer>
+      <DefaultAndCurrentThemes>
+        <DefaultTheme>
           <h5>Default theme</h5>
-          <div className="theme-library-default-controls">
-            <div className="theme-library-list">
+          <ThemeWrapper>
+            <ThemeList>
               <ThemeBlock colors={defaultTheme} />
-            </div>
-            <div className="theme-library-controls">
+            </ThemeList>
+            <ThemeControls>
               <Button
                 onClick={() => handleDefaultThemeChange(FALLBACK_THEME)}
                 isSmall
@@ -45,17 +79,17 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
               >
                 Set to factory default
               </Button>
-            </div>
-          </div>
-        </div>
+            </ThemeControls>
+          </ThemeWrapper>
+        </DefaultTheme>
 
-        <div className="theme-library-current">
+        <CurrentTheme>
           <h5>Current theme</h5>
-          <div className="theme-library-default-controls">
-            <div className="theme-library-list">
+          <ThemeWrapper>
+            <ThemeList>
               <ThemeBlock colors={currentTheme} />
-            </div>
-            <div className="theme-library-controls">
+            </ThemeList>
+            <ThemeControls>
               <Button
                 onClick={() => handleDefaultThemeChange(currentTheme)}
                 isSmall
@@ -63,13 +97,13 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
               >
                 Set as default theme
               </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+            </ThemeControls>
+          </ThemeWrapper>
+        </CurrentTheme>
+      </DefaultAndCurrentThemes>
 
       <h5>Library</h5>
-      <div className="theme-library-list">
+      <ThemeList>
         {themes &&
           themes.map((theme, i) => (
             <ThemeBlock
@@ -78,8 +112,8 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
               setCurrentTheme={theme => handleCurrentThemeChange(theme)}
             />
           ))}
-      </div>
-    </div>
+      </ThemeList>
+    </ThemeLibraryContainer>
   );
 };
 
