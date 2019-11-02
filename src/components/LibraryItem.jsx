@@ -1,8 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import { get } from "lodash-es";
+import styled from "styled-components/macro";
 import { addToPlaylist } from "reducers/player.reducer";
-import "./LibraryItem.scss";
+
+const LibraryItemContainer = styled.li`
+  padding-left: 90px !important;
+  cursor: pointer;
+  padding-left: ${({ hasAlbum }) => !hasAlbum && "24px !important"};
+`;
 
 const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
   const onDragStart = event => {
@@ -13,17 +19,15 @@ const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
     event.stopPropagation();
   };
 
-  const classes = hasAlbum ? "library-item" : "library-item-no-album";
-
   return (
-    <li
-      className={classes}
+    <LibraryItemContainer
+      hasAlbum={hasAlbum}
       draggable
       onDragStart={onDragStart}
       onDoubleClick={() => dispatch(addToPlaylist(item))}
     >
       {get(item, "metadata.title", item.name)}
-    </li>
+    </LibraryItemContainer>
   );
 };
 
