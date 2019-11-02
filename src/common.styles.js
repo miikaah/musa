@@ -16,7 +16,6 @@ export const listOverflow = css`
 export const rangeInput = css`
   input {
     padding: 0;
-    min-width: 240px;
   }
 
   input[type="range"] {

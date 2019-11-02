@@ -9,6 +9,10 @@ const SeekContainer = styled.span`
   margin-right: 16px;
 
   ${rangeInput}
+
+  input {
+    min-width: 240px;
+  }
 `;
 
 const PlayerSeek = ({

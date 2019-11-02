@@ -1,6 +1,13 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
-import "./PlayerVolume.scss";
+import styled from "styled-components/macro";
+import { rangeInput } from "../common.styles";
+
+const VolumeContainer = styled.span`
+  margin-right: 16px;
+
+  ${rangeInput}
+`;
 
 const VOLUME_MUTED = 0;
 const VOLUME_STEP = 5;
@@ -15,7 +22,7 @@ const PlayerVolume = ({ volume, setVolumeForStateAndPlayer, dispatch }) => {
   };
 
   return (
-    <span className="player-volume">
+    <VolumeContainer>
       <input
         type="range"
         min="0"
@@ -26,7 +33,7 @@ const PlayerVolume = ({ volume, setVolumeForStateAndPlayer, dispatch }) => {
         onChange={setVolumeByEvent}
         onFocus={() => playerVolume.current.blur()}
       />
-    </span>
+    </VolumeContainer>
   );
 };
 
