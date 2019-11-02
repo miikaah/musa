@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import { get, isNaN, isEmpty, isNumber } from "lodash-es";
+import styled from "styled-components/macro";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
-import { get, isNaN, isEmpty, isNumber } from "lodash-es";
-import { KEYS } from "../util";
 import { store } from "..";
-import { getReplaygainDb } from "../util";
+import { KEYS, getReplaygainDb } from "../util";
 import { useKeyPress } from "../hooks";
 import PlayerSeek from "./PlayerSeek";
 import PlayerVolume from "./PlayerVolume";
@@ -13,7 +13,15 @@ import PlayerPlayPauseButton from "./PlayerPlayPauseButton";
 import PlayerVolumeButton from "./PlayerVolumeButton";
 import PlayerTimeDisplay from "./PlayerTimeDisplay";
 import PlayerDrGauge from "./PlayerDrGauge";
-import "./Player.scss";
+
+const PlayerContainer = styled.div`
+  font-size: 0.8rem;
+  padding: 6px;
+
+  audio {
+    display: none;
+  }
+`;
 
 const VOLUME_MUTED = 0;
 
@@ -136,7 +144,7 @@ const Player = ({
   }, [player, volume, replaygainType, currentItem]);
 
   return (
-    <div className="player">
+    <PlayerContainer>
       <audio controls src={src} ref={player} />
       <PlayerPlayPauseButton playOrPause={playOrPause} />
       <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
@@ -152,7 +160,7 @@ const Player = ({
       />
       <PlayerTimeDisplay currentTime={currentTime} currentItem={currentItem} />
       <PlayerDrGauge currentItem={currentItem} />
-    </div>
+    </PlayerContainer>
   );
 };
 
