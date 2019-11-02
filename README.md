@@ -55,6 +55,7 @@ Note to self: code functional React components properly.
 - refactor: Use absolute paths
 - refactor: component styles to styled components
 - chore: add babel-plugin-macros and use styled-components/macro
+- chore: remove node-sass and stylelint
 
 ##### 1.11.2019
 

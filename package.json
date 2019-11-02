@@ -14,10 +14,6 @@
       "*.{js,jsx,json,md}": [
         "prettier --write",
         "git add"
-      ],
-      "*.scss": [
-        "stylelint --quiet --fix",
-        "git add"
       ]
     }
   },
@@ -56,10 +52,6 @@
     "eslint-plugin-prettier": "^3.1.0",
     "husky": "^2.3.0",
     "lint-staged": "^8.1.7",
-    "node-sass": "^4.12.0",
-    "prettier": "^1.17.1",
-    "stylelint": "^10.0.1",
-    "stylelint-config-standard": "^18.3.0",
-    "stylelint-no-unsupported-browser-features": "^3.0.2"
+    "prettier": "^1.17.1"
   }
 }
