@@ -59,6 +59,7 @@ Note to self: code functional React components properly.
 - chore: add babel-plugin-macros and use styled-components/macro
 - chore: remove stylelint
 - chore: update all packages
+- chore: remove dotenv-cli
 
 ##### 1.11.2019
 

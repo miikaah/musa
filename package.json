@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "start": "dotenv craco start",
+    "start": "PORT=3666 BROWSER=none craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
@@ -46,7 +46,6 @@
   "devDependencies": {
     "@craco/craco": "^5.6.1",
     "babel-plugin-macros": "^2.6.1",
-    "dotenv-cli": "^3.0.0",
     "eslint-plugin-prettier": "^3.1.1",
     "husky": "^3.0.9",
     "lint-staged": "^9.4.2",
