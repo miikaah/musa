@@ -22,6 +22,8 @@ UI for Musa-Electron.
 - refactor: use styled-components
 - refactor: Replace redux with React Context API
 - refactor: Replace FontAwesome with something else
+- refactor: List keys to something other than just index
+- refactor: Toaster as the animate action is no longer needed
 
 #### Cross platform
 
