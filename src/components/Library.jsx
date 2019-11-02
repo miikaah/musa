@@ -2,13 +2,54 @@ import React, { Component } from "react";
 import LibraryList from "./LibraryList";
 import { isEqual, isEmpty, get } from "lodash-es";
 import { connect } from "react-redux";
+import styled from "styled-components/macro";
 import {
   initListing,
   setListing,
   setScanProps
 } from "reducers/library.reducer";
 import { DB_NAME, DB_VERSION } from "../config";
-import "./Library.scss";
+import { listOverflow } from "../common.styles";
+
+const LibraryContainer = styled.div`
+  text-align: left;
+  border: 0 solid var(--color-secondary-highlight);
+  border-left-width: 4px;
+  border-right-width: 1px;
+  background-color: var(--color-bg);
+  box-shadow: 25px 10px 31px -17px rgba(10, 10, 10, 0.75);
+  position: absolute;
+  min-width: 400px;
+  z-index: 1;
+  height: 100vh;
+  margin: var(--toolbar-height) 0 0 -12px;
+
+  &-root {
+    padding-left: 0;
+  }
+
+  &-scan-progress {
+    position: fixed;
+    top: 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  ${listOverflow}
+`;
+
+const LibraryLabel = styled.div`
+  text-align: right;
+  padding: 20px;
+
+  span {
+    color: var(--color-typography-primary);
+    background-color: var(--color-primary-highlight);
+    padding: 5px 10px;
+    font-size: 40px;
+    border-radius: 3px;
+  }
+`;
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -147,15 +188,15 @@ class Library extends Component {
   render() {
     if (!this.props.isVisible) return null;
     return (
-      <div ref={this.props.forwardRef} className="library">
+      <LibraryContainer ref={this.props.forwardRef}>
         {this.props.listingWithLabels &&
           Object.keys(this.props.listingWithLabels).map(key => {
             if (isEmpty(this.props.listingWithLabels[key])) return null;
             return (
               <div key={key}>
-                <div className="library-label">
+                <LibraryLabel>
                   <span>{key}</span>
-                </div>
+                </LibraryLabel>
                 {this.props.listingWithLabels[key].map((item, index) => (
                   <LibraryList
                     key={item.name + "-" + index}
@@ -166,7 +207,7 @@ class Library extends Component {
               </div>
             );
           })}
-      </div>
+      </LibraryContainer>
     );
   }
 }

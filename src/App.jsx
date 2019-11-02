@@ -16,27 +16,15 @@ import {
   faSearch,
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
-import styled, { css } from "styled-components/macro";
+import styled from "styled-components/macro";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import { updateSettings } from "reducers/settings.reducer";
 import { getStateFromIdb } from "./util";
 import { breakpoint } from "./breakpoints";
+import { listOverflow } from "./common.styles";
 import { get } from "lodash-es";
 import { FALLBACK_THEME } from "./config";
 import { webFrame } from "electron";
-
-const listOverflow = css`
-  max-height: 95vh;
-  overflow-y: auto;
-
-  @media (max-height: 800px) {
-    max-height: 94vh;
-  }
-
-  @media (max-height: 600px) {
-    max-height: 92vh;
-  }
-`;
 
 const AppContainer = styled.div`
   text-align: left;
