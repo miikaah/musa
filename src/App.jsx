@@ -79,21 +79,6 @@ library.add(
   faTrash
 );
 
-export const Colors = {
-  Bg: "#21252b",
-  Primary: "#753597",
-  Secondary: "#21737e",
-  Typography: "#fbfbfb",
-  TypographyLight: "#000",
-  DrGood: "#90ff00",
-  DrMediocre: "#ffe02f",
-  DrBad: "#f00",
-  PrimaryRgb: [117, 53, 151],
-  SliderTrack: "#424a56",
-  SliderTrackRgb: [66, 74, 86],
-  WhiteRgb: [255, 255, 255]
-};
-
 function clearWebFrameCache() {
   console.log("CLEAR WEBFRAME CACHE ", new Date().toISOString());
   webFrame.clearCache();
@@ -118,8 +103,6 @@ const App = ({ dispatch }) => {
         })
       )
     );
-
-    document.body.style.setProperty("--color-dr-level", Colors.Typography);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

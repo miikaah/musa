@@ -4,9 +4,20 @@ import { defaultTo, sortBy, some, isEqual } from "lodash-es";
 import Palette from "img-palette";
 import styled from "styled-components/macro";
 import { breakpoint } from "../breakpoints";
-import { Colors } from "../App.jsx";
 import { updateCurrentTheme, doIdbRequest, updateIdb } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
+
+const Colors = {
+  Bg: "#21252b",
+  Primary: "#753597",
+  Secondary: "#21737e",
+  Typography: "#fbfbfb",
+  TypographyLight: "#000",
+  PrimaryRgb: [117, 53, 151],
+  SliderTrack: "#424a56",
+  SliderTrackRgb: [66, 74, 86],
+  WhiteRgb: [255, 255, 255]
+};
 
 const marginTop = 12;
 const marginBottom = 20;

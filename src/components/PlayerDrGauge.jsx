@@ -1,38 +1,43 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { get, isEmpty } from "lodash-es";
+import styled from "styled-components/macro";
 import { prefixNumber } from "../util";
-import { Colors } from "../App.jsx";
-import "./PlayerDrGauge.scss";
+
+const Colors = {
+  DrGood: "#90ff00",
+  DrMediocre: "#ffe02f",
+  DrBad: "#f00"
+};
+
+const DynamicRangeContainer = styled.span`
+  color: var(--color-white);
+  background-color: var(--color-black);
+  margin-left: 12px;
+  padding: 0 2px 7px;
+  visibility: ${({ isHidden }) => isHidden && "hidden"};
+`;
+
+const DynamicRange = styled.span`
+  font-weight: bold;
+  border-style: solid;
+  border-color: ${({ dr }) => {
+    if (dr > 11) return Colors.DrGood;
+    else if (dr > 8 && dr < 12) return Colors.DrMediocre;
+    else if (dr < 9) return Colors.DrBad;
+  }};
+  border-width: 0;
+  border-bottom-width: 2px;
+`;
 
 const PlayerDrGauge = ({ currentItem }) => {
   const dr = get(currentItem, "metadata.dynamicRange", "");
-  let className = "player-dynamic-range-wrapper";
-
-  if (isEmpty(dr)) className += " hidden";
-
-  useEffect(() => {
-    const setDrLevelColor = () => {
-      const dr = get(currentItem, "metadata.dynamicRange");
-      if (!dr) return;
-
-      let color;
-      if (dr > 11) color = Colors.DrGood;
-      if (dr > 8 && dr < 12) color = Colors.DrMediocre;
-      if (dr < 9) color = Colors.DrBad;
-      document.body.style.setProperty("--color-dr-level", color);
-    };
-
-    setDrLevelColor();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentItem]);
-
   return (
-    <span className={className}>
-      <span className="player-dynamic-range">
+    <DynamicRangeContainer isHidden={isEmpty(dr)}>
+      <DynamicRange dr={dr}>
         {isEmpty(dr) ? "DR00" : `DR${prefixNumber(dr)}`}
-      </span>
-    </span>
+      </DynamicRange>
+    </DynamicRangeContainer>
   );
 };
 

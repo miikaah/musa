@@ -3,6 +3,8 @@
   --font-size-sm: 14px;
   --font-size-xs: 12px;
   --toolbar-height: 30px;
+  --color-white: #fbfbfb;
+  --color-black: #000;
 }
 
 html {
