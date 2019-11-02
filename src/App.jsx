@@ -16,13 +16,69 @@ import {
   faSearch,
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
+import styled, { css } from "styled-components";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import { updateSettings } from "reducers/settings.reducer";
 import { getStateFromIdb } from "./util";
+import { breakpoint } from "./breakpoints";
 import { get } from "lodash-es";
 import { FALLBACK_THEME } from "./config";
 import { webFrame } from "electron";
-import "./App.scss";
+
+const listOverflow = css`
+  max-height: 95vh;
+  overflow-y: auto;
+
+  @media (max-height: 800px) {
+    max-height: 94vh;
+  }
+
+  @media (max-height: 600px) {
+    max-height: 92vh;
+  }
+`;
+
+const AppContainer = styled.div`
+  text-align: left;
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  max-height: 100vh;
+  min-width: 360px;
+  overflow: hidden;
+  color: var(--color-typography);
+  user-select: none;
+`;
+
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  @media (max-width: ${breakpoint.lg}) {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+const AppCenter = styled.div`
+  flex: 40%;
+  padding: 0;
+  height: 100vh;
+
+  @media (max-width: ${breakpoint.lg}) {
+    flex: 100%;
+    padding: 0;
+    ${listOverflow}
+  }
+`;
+
+const AppRight = styled.div`
+  flex: 60%;
+  ${listOverflow}
+
+  @media (max-width: ${breakpoint.lg}) {
+    flex: 100%;
+  }
+`;
 
 library.add(
   faPlay,
@@ -116,37 +172,27 @@ const App = ({ dispatch }) => {
     const renderPlaylist = () => <Playlist onScrollPlaylist={scrollPlaylist} />;
 
     return (
-      <div className="app-wrapper">
-        <div
-          className="app-center"
-          ref={appCenterRef}
-          onDragOver={onDragOver}
-          onDrop={onDrop}
-        >
+      <AppWrapper>
+        <AppCenter ref={appCenterRef} onDragOver={onDragOver} onDrop={onDrop}>
           <Cover />
           {!isLarge && renderPlaylist()}
-        </div>
+        </AppCenter>
         {isLarge && (
-          <div
-            className="app-right"
-            ref={appRightRef}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-          >
+          <AppRight ref={appRightRef} onDragOver={onDragOver} onDrop={onDrop}>
             {renderPlaylist()}
-          </div>
+          </AppRight>
         )}
-      </div>
+      </AppWrapper>
     );
   };
 
   return (
-    <div className="app">
+    <AppContainer>
       <Toaster />
       <ProgressBar />
       <Toolbar />
       <div>{renderCenterAndRight(windowWidth > 1279)}</div>
-    </div>
+    </AppContainer>
   );
 };
 

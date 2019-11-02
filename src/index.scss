@@ -1,6 +1,11 @@
 @import './scss/colors';
 @import './scss/variables';
 
+:root {
+  --font-size-sm: 14px;
+  --font-size-xs: 12px;
+}
+
 html {
   overflow: hidden;
 }
