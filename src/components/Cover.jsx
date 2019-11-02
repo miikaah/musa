@@ -2,10 +2,40 @@ import React, { useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import { defaultTo, sortBy, some, isEqual } from "lodash-es";
 import Palette from "img-palette";
+import styled from "styled-components/macro";
+import { breakpoint } from "../breakpoints";
 import { Colors } from "../App.jsx";
 import { updateCurrentTheme, doIdbRequest, updateIdb } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
-import "./Cover.scss";
+
+const marginTop = 12;
+const marginBottom = 20;
+
+const CoverContainer = styled.div`
+  min-height: ${600 + marginTop + marginBottom}px;
+  min-width: 600px;
+  padding-bottom: 54%;
+  overflow: hidden;
+  background-color: var(--color-bg);
+
+  @media (max-width: ${breakpoint.lg}) {
+    padding-bottom: 0;
+  }
+`;
+
+const CoverImage = styled.img`
+  display: block;
+  height: auto;
+  width: 100%;
+  margin: 12px auto 20px;
+  max-height: ${800 + marginTop + marginBottom}px;
+  max-width: 800px;
+
+  @media (max-width: ${breakpoint.lg}) {
+    max-height: ${600 + marginTop + marginBottom}px;
+    max-width: 600px;
+  }
+`;
 
 const isVibrantCover = mostPopularSwatch => {
   return some(mostPopularSwatch.rgb, value => value > 125);
@@ -172,9 +202,9 @@ const Cover = ({ coverSrc, defaultTheme, dispatch }) => {
   }, [coverSrc, defaultTheme]);
 
   return (
-    <div className="cover-wrapper">
-      <img alt="" className="cover" src={coverSrc} ref={cover} />
-    </div>
+    <CoverContainer>
+      <CoverImage src={coverSrc} ref={cover} />
+    </CoverContainer>
   );
 };
 
