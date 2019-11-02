@@ -58,5 +58,5 @@ export const Cell = styled.div`
         return "0 0 35%";
     }
   }};
-  text-align: ${({ alignRight }) => (alignRight ? "right" : "left")};
+  text-align: ${({ textAlign }) => textAlign};
 `;

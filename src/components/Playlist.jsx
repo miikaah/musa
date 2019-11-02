@@ -333,12 +333,12 @@ const Playlist = ({
         <Cell size="xxs" />
         <Cell size="sm">Artist</Cell>
         <Cell size="sm">Album</Cell>
-        <Cell size="xs" alignRight>
+        <Cell size="xs" textAlign="right">
           Tr
         </Cell>
         <Cell size="md">Title</Cell>
         <Cell size="xs">Length</Cell>
-        <Cell size="xs" alignRight>
+        <Cell size="xs" textAlign="right">
           Date
         </Cell>
       </PlaylistHeader>

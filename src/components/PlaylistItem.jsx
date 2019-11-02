@@ -140,15 +140,17 @@ const PlaylistItem = ({
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      <Cell size="xxs">{renderPlayOrPauseIcon()}</Cell>
+      <Cell size="xxs" textAlign="center">
+        {renderPlayOrPauseIcon()}
+      </Cell>
       <Cell size="sm">{get(item, "metadata.artist", "")}</Cell>
       <Cell size="sm">{get(item, "metadata.album", "")}</Cell>
-      <Cell size="xs" alignRight>
+      <Cell size="xs" textAlign="right">
         {get(item, "metadata.track", "")}
       </Cell>
       <Cell size="md">{get(item, "metadata.title", item.name)}</Cell>
       <Cell size="xs">{get(item, "metadata.duration", "")}</Cell>
-      <Cell size="xs" alignRight>
+      <Cell size="xs" textAlign="right">
         {get(item, "metadata.date", "")}
       </Cell>
     </PlaylistItemContainer>

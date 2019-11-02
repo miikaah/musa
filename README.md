@@ -62,6 +62,8 @@ Note to self: code functional React components properly.
 - chore: add babel-plugin-macros and use styled-components/macro
 - chore: update all packages
 - chore: remove stylelint, dotenv-cli and node-sass
+- chore: Remove service worker
+- feat: Allow Cell text to be aligned center
 
 ##### 1.11.2019
 
