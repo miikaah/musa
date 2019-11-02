@@ -1,23 +1,38 @@
-import React, { useState, useRef, useEffect } from "react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import BasePage from "./BasePage"
-import Library from "./Library"
-import Settings from "./Settings"
-import Search from "./Search"
-import Player from "./Player"
-import "./Toolbar.scss"
+import React, { useState, useRef, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styled from "styled-components/macro";
+import BasePage from "./BasePage";
+import Library from "./Library";
+import Settings from "./Settings";
+import Search from "./Search";
+import Player from "./Player";
+
+const ToolbarContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  width: 100%;
+  height: 30px;
+  z-index: 10;
+
+  > button {
+    font-size: 1.4rem;
+    margin-right: 12px;
+    outline: none;
+  }
+`;
 
 const Toolbar = () => {
-  const [isLibraryVisible, setIsLibraryVisible] = useState(true)
-  const [isSettingsVisible, setIsSettingsVisible] = useState(false)
-  const [isSearchVisible, setIsSearchVisible] = useState(false)
+  const [isLibraryVisible, setIsLibraryVisible] = useState(true);
+  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-  const libraryRef = useRef()
-  const libraryButtonRef = useRef()
-  const settingsRef = useRef()
-  const settingsButtonRef = useRef()
-  const searchRef = useRef()
-  const searchButtonRef = useRef()
+  const libraryRef = useRef();
+  const libraryButtonRef = useRef();
+  const settingsRef = useRef();
+  const settingsButtonRef = useRef();
+  const searchRef = useRef();
+  const searchButtonRef = useRef();
 
   useEffect(() => {
     const handleClick = e => {
@@ -25,26 +40,26 @@ const Toolbar = () => {
         libraryButtonRef.current &&
         libraryButtonRef.current.contains(e.target)
       ) {
-        setIsLibraryVisible(!isLibraryVisible)
-        setIsSettingsVisible(false)
-        setIsSearchVisible(false)
-        return
+        setIsLibraryVisible(!isLibraryVisible);
+        setIsSettingsVisible(false);
+        setIsSearchVisible(false);
+        return;
       }
       if (
         settingsButtonRef.current &&
         settingsButtonRef.current.contains(e.target)
       ) {
-        setIsSettingsVisible(!isSettingsVisible)
-        setIsSearchVisible(false)
-        return
+        setIsSettingsVisible(!isSettingsVisible);
+        setIsSearchVisible(false);
+        return;
       }
       if (
         searchButtonRef.current &&
         searchButtonRef.current.contains(e.target)
       ) {
-        setIsSearchVisible(!isSearchVisible)
-        setIsSettingsVisible(false)
-        return
+        setIsSearchVisible(!isSearchVisible);
+        setIsSettingsVisible(false);
+        return;
       }
 
       if (
@@ -52,22 +67,22 @@ const Toolbar = () => {
         (settingsRef.current && settingsRef.current.contains(e.target)) ||
         (searchRef.current && searchRef.current.contains(e.target))
       )
-        return
+        return;
 
-      setIsLibraryVisible(false)
-      setIsSettingsVisible(false)
-      setIsSearchVisible(false)
-    }
+      setIsLibraryVisible(false);
+      setIsSettingsVisible(false);
+      setIsSearchVisible(false);
+    };
 
-    document.addEventListener("mousedown", handleClick)
+    document.addEventListener("mousedown", handleClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleClick)
-    }
-  }, [isLibraryVisible, isSettingsVisible, isSearchVisible])
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, [isLibraryVisible, isSettingsVisible, isSearchVisible]);
 
   return (
-    <div className="toolbar">
+    <ToolbarContainer>
       <button
         type="button"
         ref={libraryButtonRef}
@@ -100,8 +115,8 @@ const Toolbar = () => {
       <BasePage ref={searchRef} isVisible={isSearchVisible}>
         <Search />
       </BasePage>
-    </div>
-  )
-}
+    </ToolbarContainer>
+  );
+};
 
-export default Toolbar
+export default Toolbar;
