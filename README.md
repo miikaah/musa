@@ -56,6 +56,7 @@ Note to self: code functional React components properly.
 - refactor: component styles to styled components
 - chore: add babel-plugin-macros and use styled-components/macro
 - chore: remove stylelint
+- chore: update all packages
 
 ##### 1.11.2019
 
