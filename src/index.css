@@ -49,16 +49,16 @@ input {
   padding: 12px;
   border-radius: 3px;
   font-weight: bold;
+}
 
-  &-primary {
-    background-color: var(--color-primary-highlight);
-    color: var(--color-typography-primary);
-  }
+.btn-primary {
+  background-color: var(--color-primary-highlight);
+  color: var(--color-typography-primary);
+}
 
-  &-secondary {
-    background-color: var(--color-secondary-highlight);
-    color: var(--color-typography-secondary);
-  }
+.btn-secondary {
+  background-color: var(--color-secondary-highlight);
+  color: var(--color-typography-secondary);
 }
 
 .btn-small {
