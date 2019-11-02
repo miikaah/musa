@@ -1,8 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { get, isEmpty } from "lodash-es";
-import { encodeFileUri, dispatchToast } from "../util";
+import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
+import AlbumImage from "./AlbumImage";
 import "./Song.scss";
 
 const Song = ({ item, dispatch }) => {
@@ -18,10 +19,7 @@ const Song = ({ item, dispatch }) => {
 
   return (
     <div className="song" onClick={addSongToPlaylist}>
-      <img
-        alt=""
-        src={isEmpty(item.cover) ? "" : encodeFileUri(`file://${item.cover}`)}
-      />
+      <AlbumImage item={item} />
       <div>
         <p>{get(item, "metadata.artist", "")}</p>
         <p>{get(item, "metadata.album", "")}</p>

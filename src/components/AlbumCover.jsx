@@ -1,7 +1,6 @@
 import React from "react";
-import { isEmpty } from "lodash-es";
 import styled from "styled-components/macro";
-import { encodeFileUri } from "../util";
+import AlbumImage from "./AlbumImage";
 
 const AlbumCoverContainer = styled.div`
   display: flex;
@@ -40,10 +39,7 @@ const AlbumCoverContainer = styled.div`
 
 const AlbumCover = ({ item, onClick }) => (
   <AlbumCoverContainer onClick={onClick}>
-    <img
-      alt=""
-      src={isEmpty(item.cover) ? "" : encodeFileUri(`file://${item.cover}`)}
-    />
+    <AlbumImage item={item} />
     <div>
       <p>{item.name}</p>
       <p>{item.date}</p>

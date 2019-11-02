@@ -2,8 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { get, isEmpty } from "lodash-es";
 import styled, { css } from "styled-components/macro";
-import { encodeFileUri, dispatchToast } from "../util";
+import { dispatchToast } from "../util";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
+import AlbumImage from "./AlbumImage";
 
 const AlbumContainer = styled.div`
   display: flex;
@@ -118,10 +119,7 @@ const Album = ({ item, dispatch }) => {
   return (
     <AlbumContainer>
       <AlbumFullAdd onClick={addAlbumSongsToPlaylist}>
-        <img
-          alt=""
-          src={isEmpty(item.cover) ? "" : encodeFileUri(`file://${item.cover}`)}
-        />
+        <AlbumImage item={item} />
         <AlbumInfo>
           <p>{item.artist}</p>
           <p>{item.name}</p>
