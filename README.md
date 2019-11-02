@@ -53,6 +53,7 @@ It seems the last days' changes finally fixed the memory leak(s)!
 Note to self: code functional React components properly.
 
 - refactor: Use absolute paths
+- refactor: component styles to styled components
 
 ##### 1.11.2019
 

@@ -1,6 +1,11 @@
 @import './scss/variables';
 @import './scss/mixins';
 
+:root {
+  --font-size-sm: 14px;
+  --font-size-xs: 12px;
+}
+
 .app {
   text-align: left;
   background-color: var(--color-bg);
