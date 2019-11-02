@@ -7,8 +7,7 @@
     "start": "dotenv craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject",
-    "precommit": "lint-staged"
+    "eject": "react-scripts eject"
   },
   "lint-staged": {
     "linters": {
@@ -24,7 +23,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run precommit"
+      "pre-commit": "lint-staged"
     }
   },
   "eslintConfig": {
@@ -48,7 +47,8 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
     "react-scripts": "3.0.1",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "styled-components": "^4.4.1"
   },
   "devDependencies": {
     "dotenv-cli": "^2.0.0",
