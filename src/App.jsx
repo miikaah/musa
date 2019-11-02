@@ -16,7 +16,7 @@ import {
   faSearch,
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
-import styled, { css } from "styled-components";
+import styled, { css } from "styled-components/macro";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import { updateSettings } from "reducers/settings.reducer";
 import { getStateFromIdb } from "./util";
