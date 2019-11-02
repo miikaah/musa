@@ -20,6 +20,8 @@ UI for Musa-Electron.
 - feat: Go to Search when pressing Ctrl + F
 - feat: Focus to search input when navigating to Search page
 - refactor: use styled-components
+- refactor: Replace redux with React Context API
+- refactor: Replace FontAwesome with something else
 
 #### Cross platform
 
@@ -53,7 +55,7 @@ It seems the last days' changes finally fixed the memory leak(s)!
 Note to self: code functional React components properly.
 
 - refactor: Use absolute paths
-- refactor: component styles to styled components
+- refactor: start refactoring components to styled components
 - chore: add babel-plugin-macros and use styled-components/macro
 - chore: remove stylelint
 - chore: update all packages
