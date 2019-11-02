@@ -1,18 +1,34 @@
-import React from "react"
-import "./ThemeBlock.scss"
+import React from "react";
+import styled from "styled-components/macro";
+
+const ThemeBlockContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  width: 80px;
+  height: 80px;
+  margin: 0 10px 10px 0;
+  background-color: ${({ rgb }) => rgb && `rgb(${rgb})`};
+`;
+
+const PrimaryOrSecondaryColor = styled.span`
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: ${({ rgb }) => rgb && `rgb(${rgb})`};
+`;
 
 const ThemeBlock = ({ colors, setCurrentTheme }) => {
-  if (!colors) return null
+  if (!colors) return null;
   return (
-    <div
-      className="theme-block"
-      style={{ backgroundColor: `rgb(${colors.bg})` }}
+    <ThemeBlockContainer
+      rgb={colors.bg}
       onClick={() => setCurrentTheme(colors)}
     >
-      <span style={{ backgroundColor: `rgb(${colors.primary})` }} />
-      <span style={{ backgroundColor: `rgb(${colors.secondary})` }} />
-    </div>
-  )
-}
+      <PrimaryOrSecondaryColor rgb={colors.primary} />
+      <PrimaryOrSecondaryColor rgb={colors.secondary} />
+    </ThemeBlockContainer>
+  );
+};
 
-export default ThemeBlock
+export default ThemeBlock;
