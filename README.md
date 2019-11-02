@@ -19,7 +19,6 @@ UI for Musa-Electron.
 - refactor: Use react router for changing page to settings and search
 - feat: Go to Search when pressing Ctrl + F
 - feat: Focus to search input when navigating to Search page
-- refactor: use styled-components
 - refactor: Replace redux with React Context API
 - refactor: Replace FontAwesome with something else
 - refactor: List keys to something other than just index
@@ -53,15 +52,14 @@ UI for Musa-Electron.
 
 ##### 2.11.2019
 
-It seems the last days' changes finally fixed the memory leak(s)!
+It seems the last days changes finally fixed the memory leak(s)!
 Note to self: code functional React components properly.
 
 - refactor: Use absolute paths
-- refactor: start refactoring components to styled components
+- refactor: refactor components to styled components
 - chore: add babel-plugin-macros and use styled-components/macro
-- chore: remove stylelint
 - chore: update all packages
-- chore: remove dotenv-cli
+- chore: remove stylelint, dotenv-cli and node-sass
 
 ##### 1.11.2019
 
