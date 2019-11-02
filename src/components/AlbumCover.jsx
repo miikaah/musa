@@ -23,27 +23,27 @@ const AlbumCoverContainer = styled.div`
     background-color: #000;
   }
 
-  > div {
-    font-size: var(--font-size-sm);
-    padding: 0 25px 0 20px;
-
-    > p {
-      margin: 0 0 8px;
-    }
-  }
-
   &:hover {
     border-color: var(--color-primary-highlight);
+  }
+`;
+
+const AlbumInfo = styled.div`
+  font-size: var(--font-size-sm);
+  padding: 0 25px 0 20px;
+
+  > p {
+    margin: 0 0 8px;
   }
 `;
 
 const AlbumCover = ({ item, onClick }) => (
   <AlbumCoverContainer onClick={onClick}>
     <AlbumImage item={item} />
-    <div>
+    <AlbumInfo>
       <p>{item.name}</p>
       <p>{item.date}</p>
-    </div>
+    </AlbumInfo>
   </AlbumCoverContainer>
 );
 
