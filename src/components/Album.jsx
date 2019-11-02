@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { get, isEmpty } from "lodash-es";
-import { encodeFileUri, dispatchToast } from "util";
+import { encodeFileUri, dispatchToast } from "../util";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import "./Album.scss";
 
