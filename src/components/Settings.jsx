@@ -1,17 +1,18 @@
-import React from "react"
-import { connect } from "react-redux"
-import ThemeLibrary from "./ThemeLibrary"
-import ReplaygainSetting from "./ReplaygainSetting"
-import MusicLibrarySetting from "./MusicLibrarySetting"
-import "./Settings.scss"
+import React from "react";
+import { connect } from "react-redux";
+import ThemeLibrary from "./ThemeLibrary";
+import ReplaygainSetting from "./ReplaygainSetting";
+import MusicLibrarySetting from "./MusicLibrarySetting";
+import Button from "./Button";
+import "./Settings.scss";
 
-const electron = window.require("electron")
-const ipcRenderer = electron.ipcRenderer
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 const Settings = ({ isVisible, musicLibraryPaths }) => {
   const runInitialScan = () => {
-    ipcRenderer.send("runInitialScan", musicLibraryPaths)
-  }
+    ipcRenderer.send("runInitialScan", musicLibraryPaths);
+  };
 
   return (
     <>
@@ -30,17 +31,17 @@ const Settings = ({ isVisible, musicLibraryPaths }) => {
       </div>
       <div className="settings-block">
         <h3>Advanced</h3>
-        <button className="btn btn-primary" onClick={runInitialScan}>
+        <Button onClick={runInitialScan} isPrimary>
           Re-run initial scan
-        </button>
+        </Button>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default connect(
   state => ({
     musicLibraryPaths: state.settings.musicLibraryPaths
   }),
   dispatch => ({ dispatch })
-)(Settings)
+)(Settings);

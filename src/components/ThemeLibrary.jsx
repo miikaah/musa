@@ -4,6 +4,7 @@ import ThemeBlock from "./ThemeBlock";
 import { FALLBACK_THEME } from "../config";
 import { doIdbRequest, updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
+import Button from "./Button";
 import "./ThemeLibrary.scss";
 
 const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
@@ -37,13 +38,13 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
               <ThemeBlock colors={defaultTheme} />
             </div>
             <div className="theme-library-controls">
-              <button
-                type="button"
-                className="btn-small btn-secondary"
+              <Button
                 onClick={() => handleDefaultThemeChange(FALLBACK_THEME)}
+                isSmall
+                isSecondary
               >
                 Set to factory default
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -55,13 +56,13 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
               <ThemeBlock colors={currentTheme} />
             </div>
             <div className="theme-library-controls">
-              <button
-                type="button"
-                className="btn-small btn-primary"
+              <Button
                 onClick={() => handleDefaultThemeChange(currentTheme)}
+                isSmall
+                isPrimary
               >
                 Set as default theme
-              </button>
+              </Button>
             </div>
           </div>
         </div>

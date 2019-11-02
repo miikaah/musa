@@ -42,28 +42,3 @@ input {
   font-size: var(--font-size-md);
   box-sizing: border-box;
 }
-
-.btn {
-  width: 100%;
-  font-size: 1rem;
-  padding: 12px;
-  border-radius: 3px;
-  font-weight: bold;
-}
-
-.btn-primary {
-  background-color: var(--color-primary-highlight);
-  color: var(--color-typography-primary);
-}
-
-.btn-secondary {
-  background-color: var(--color-secondary-highlight);
-  color: var(--color-typography-secondary);
-}
-
-.btn-small {
-  width: 100%;
-  font-size: .9rem;
-  padding: 10px;
-  border-radius: 3px;
-}

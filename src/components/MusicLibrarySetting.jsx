@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { get } from "lodash-es";
 import styled from "styled-components/macro";
 import { doIdbRequest } from "../util";
+import Button from "./Button";
 
 const MusicLibrarySettingContainer = styled.div``;
 
@@ -81,22 +82,14 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
       {musicLibraryPaths.map((path, i) => (
         <MusicLibrarySettingPath key={i}>
           <input disabled readOnly value={path} />
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={() => removeLibraryPath(path)}
-          >
+          <Button onClick={() => removeLibraryPath(path)} isSecondary>
             <FontAwesomeIcon icon="trash" />
-          </button>
+          </Button>
         </MusicLibrarySettingPath>
       ))}
-      <button
-        type="button"
-        className="btn btn-primary"
-        onClick={addLibraryPath}
-      >
+      <Button onClick={addLibraryPath} isPrimary>
         Add new
-      </button>
+      </Button>
     </MusicLibrarySettingContainer>
   );
 };
