@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { flatten, defaultTo } from "lodash-es";
 import styled from "styled-components/macro";
+import { updateSettings } from "reducers/settings.reducer";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./AlbumCover";
 
@@ -38,15 +39,18 @@ const LibraryListFolder = styled.li`
   }
 `;
 
-const LibraryList = ({ item, cover, isRoot, dispatch }) => {
-  const [showFolderItems, setShowFolderItems] = useState(false);
+const LibraryList = ({ item, cover, isRoot, openLibraryPaths, dispatch }) => {
+  const { path } = item;
   const isArtist = Array.isArray(item.albums);
   const isAlbum = Array.isArray(item.songs);
   const isUndefinedItemName = item.name === "undefined";
+  const showFolderItems = openLibraryPaths.includes(path);
 
-  const toggleFolder = event => {
-    event.preventDefault();
-    setShowFolderItems(!showFolderItems);
+  const toggleFolder = () => {
+    const newPaths = !showFolderItems
+      ? [...openLibraryPaths, path]
+      : openLibraryPaths.filter(p => p !== path);
+    dispatch(updateSettings({ openLibraryPaths: newPaths }));
   };
 
   const getArtistOrAlbumSongs = () => {
@@ -83,7 +87,7 @@ const LibraryList = ({ item, cover, isRoot, dispatch }) => {
       </LibraryListFolder>
       {showFolderItems &&
         (item.albums || item.songs).map((child, i) => (
-          <LibraryList
+          <ConnectedLibraryList
             key={`${child.name}-${i}`}
             item={child}
             cover={item.cover}
@@ -101,7 +105,11 @@ const LibraryList = ({ item, cover, isRoot, dispatch }) => {
   return <LibraryItem item={item} cover={cover} hasAlbum />;
 };
 
-export default connect(
-  () => ({}),
+const ConnectedLibraryList = connect(
+  state => ({
+    openLibraryPaths: state.settings.openLibraryPaths
+  }),
   dispatch => ({ dispatch })
 )(LibraryList);
+
+export default ConnectedLibraryList;

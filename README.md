@@ -14,9 +14,9 @@ utilising Electron and React.
 
 ### V1
 
+- feat: add button to collapse all folders in library
 - feat: Delete DB when starting new Initial scan
-- feat: Remember library state (which folders are open)
-- refactor: Use react router for changing page to settings and search
+- feat: Use react router for changing page to settings and search
 - feat: Go to Search when pressing Ctrl + F
 - feat: Focus to search input when navigating to Search page
 - refactor: Replace redux with React Context API
