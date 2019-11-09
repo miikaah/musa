@@ -99,7 +99,8 @@ const App = ({ dispatch }) => {
       dispatch(
         updateSettings({
           ...req.result,
-          currentTheme: get(req, "result.defaultTheme", FALLBACK_THEME)
+          currentTheme: get(req, "result.defaultTheme", FALLBACK_THEME),
+          openLibraryPaths: []
         })
       )
     );
