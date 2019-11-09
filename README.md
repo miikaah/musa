@@ -13,8 +13,6 @@ UI for Musa-Electron.
 ### V1
 
 - feat: Delete DB when starting new Initial scan
-- fix: Play/pause icon disappearing after Cut + Copy etc. because currentIndex changes
-- fix: Selections + duplication
 - feat: Remember library state (which folders are open)
 - refactor: Use react router for changing page to settings and search
 - feat: Go to Search when pressing Ctrl + F
@@ -51,6 +49,10 @@ UI for Musa-Electron.
 - feat: Drag & drop mp3, flac and ogg files from filesystem
 
 ## Done
+
+##### 9.11.2019
+
+- fix: currentIndex calculation in player.reducer
 
 ##### 2.11.2019
 
