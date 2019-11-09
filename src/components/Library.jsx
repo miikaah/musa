@@ -23,6 +23,7 @@ const LibraryContainer = styled.div`
   z-index: 1;
   height: 100vh;
   margin: var(--toolbar-height) 0 0 -12px;
+  visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
 
   ${listOverflow}
 `;
@@ -175,18 +176,18 @@ class Library extends Component {
   }
 
   render() {
-    if (!this.props.isVisible) return null;
+    const { forwardRef, isVisible, listingWithLabels } = this.props;
     return (
-      <LibraryContainer ref={this.props.forwardRef}>
-        {this.props.listingWithLabels &&
-          Object.keys(this.props.listingWithLabels).map(key => {
-            if (isEmpty(this.props.listingWithLabels[key])) return null;
+      <LibraryContainer ref={forwardRef} isVisible={isVisible}>
+        {listingWithLabels &&
+          Object.keys(listingWithLabels).map(key => {
+            if (isEmpty(listingWithLabels[key])) return null;
             return (
               <div key={key}>
                 <LibraryLabel>
                   <span>{key}</span>
                 </LibraryLabel>
-                {this.props.listingWithLabels[key].map((item, index) => (
+                {listingWithLabels[key].map((item, index) => (
                   <LibraryList
                     key={item.name + "-" + index}
                     item={item}
