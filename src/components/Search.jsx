@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { setQuery } from "reducers/library.reducer";
 import fuzzysort from "fuzzysort";
 import styled from "styled-components/macro";
+import { useThrottle } from "../hooks";
 import Song from "./Song";
 import Album from "./Album";
 import Artist from "./Artist";
@@ -30,25 +31,13 @@ const SearchBlockWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const useDebounce = (value, delay) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedValue(value), delay);
-
-    return () => clearTimeout(handler);
-  }, [value, delay]);
-
-  return debouncedValue;
-};
-
 const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   const [searchArtists, setSearchArtists] = useState([]);
   const [searchAlbums, setSearchAlbums] = useState([]);
   const [searchSongs, setSearchSongs] = useState([]);
   const options = { limit: 10, key: "name", threshold: -50 };
 
-  const debouncedQuery = useDebounce(query, 16);
+  const throttledQuery = useThrottle(query, 16);
 
   useEffect(() => {
     const artists = fuzzysort.go(query, listing, options);
@@ -58,7 +47,7 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
     setSearchAlbums(albums);
     setSearchSongs(songs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedQuery]);
+  }, [throttledQuery]);
 
   const renderSearchResults = (results, type) => {
     switch (type) {

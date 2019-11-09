@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { get } from "lodash-es";
 
 export const useKeyPress = (key, callback) => {
@@ -30,4 +30,23 @@ export const useAnimationFrame = callback => {
     requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current);
   }, [callback]);
+};
+
+export const useThrottle = (value, wait) => {
+  const [throttledValue, setThrottledValue] = useState(value);
+  const lastRan = useRef(Date.now());
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (Date.now() - lastRan.current < wait) return;
+      setThrottledValue(value);
+      lastRan.current = Date.now();
+    }, wait - (Date.now() - lastRan.current));
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, wait]);
+
+  return throttledValue;
 };
