@@ -24,17 +24,6 @@ const LibraryContainer = styled.div`
   height: 100vh;
   margin: var(--toolbar-height) 0 0 -12px;
 
-  &-root {
-    padding-left: 0;
-  }
-
-  &-scan-progress {
-    position: fixed;
-    top: 0;
-    text-align: center;
-    width: 100%;
-  }
-
   ${listOverflow}
 `;
 
