@@ -30,10 +30,6 @@ utilising Electron and React.
 
 - feat: Make sure everything works on Linux
 
-#### General
-
-- feat: Add license
-
 ### V2
 
 - feat: Write tags to music files
