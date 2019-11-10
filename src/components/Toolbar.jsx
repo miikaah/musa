@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { withRouter } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
+import { useKeyPress } from "../hooks";
+import { KEYS, isCtrlDown } from "../util";
 import Library from "./Library";
 import Player from "./Player";
 
@@ -28,6 +30,8 @@ const Toolbar = ({ location, history }) => {
 
   const libraryRef = useRef();
   const libraryButtonRef = useRef();
+  const settingsButtonRef = useRef();
+  const searchButtonRef = useRef();
 
   useEffect(() => {
     const handleClick = e => {
@@ -52,6 +56,13 @@ const Toolbar = ({ location, history }) => {
     };
   }, []);
 
+  const goToSearchByKeyEvent = event => {
+    if (!isCtrlDown(event)) return;
+    history.push("/search");
+    setIsLibraryVisible(false);
+  };
+  useKeyPress(KEYS.F, goToSearchByKeyEvent);
+
   const handleToolbarClick = event => {
     if (event.target.id === "Toolbar") {
       history.push("/");
@@ -59,6 +70,7 @@ const Toolbar = ({ location, history }) => {
   };
 
   const toggleLibrary = event => {
+    libraryButtonRef.current.blur();
     if (location.pathname !== "/") {
       history.push("/");
       setIsLibraryVisible(true);
@@ -68,12 +80,16 @@ const Toolbar = ({ location, history }) => {
     event.stopPropagation();
   };
 
-  const goTo = (path, event) => {
-    history.push(path);
+  const goToSettings = event => {
+    settingsButtonRef.current.blur();
+    history.push("/settings");
     event.stopPropagation();
   };
-  const goToSettings = event => goTo("/settings", event);
-  const goToSearch = event => goTo("/search", event);
+  const goToSearch = event => {
+    searchButtonRef.current.blur();
+    history.push("/search");
+    event.stopPropagation();
+  };
 
   return (
     <ToolbarContainer id="Toolbar" onClick={handleToolbarClick}>
@@ -84,11 +100,11 @@ const Toolbar = ({ location, history }) => {
 
       <Player />
 
-      <Button onClick={goToSettings}>
+      <Button onClick={goToSettings} ref={settingsButtonRef}>
         <FontAwesomeIcon icon="cog" />
       </Button>
 
-      <Button onClick={goToSearch}>
+      <Button onClick={goToSearch} ref={searchButtonRef}>
         <FontAwesomeIcon icon="search" />
       </Button>
     </ToolbarContainer>

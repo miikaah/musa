@@ -14,17 +14,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components/macro";
 import { get } from "lodash-es";
+import { webFrame } from "electron";
 import { FALLBACK_THEME } from "./config";
 import { updateSettings } from "reducers/settings.reducer";
 import { updateCurrentTheme, getStateFromIdb } from "./util";
 import { breakpointLg } from "./breakpoints";
-import { webFrame } from "electron";
-import Toolbar from "components/Toolbar";
-import Toaster from "components/Toaster";
-import ProgressBar from "components/ProgressBar";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
 import Search from "views/Search";
+import Toolbar from "components/Toolbar";
+import Toaster from "components/Toaster";
+import ProgressBar from "components/ProgressBar";
 
 const AppContainer = styled.div`
   text-align: left;
@@ -57,7 +57,7 @@ const ONE_MINUTE_MS = 60000;
 
 setInterval(clearWebFrameCache, ONE_MINUTE_MS * 10);
 
-const App = ({ history, dispatch }) => {
+const App = ({ dispatch }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {

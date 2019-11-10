@@ -9,7 +9,7 @@ import {
   playIndex,
   replay
 } from "reducers/player.reducer";
-import { KEYS } from "../util";
+import { KEYS, isCtrlDown } from "../util";
 import { breakpoint } from "../breakpoints";
 import { Cell } from "../common.styles";
 import { useKeyPress } from "../hooks";
@@ -54,8 +54,6 @@ const Playlist = ({
   const [endIndex, setEndIndex] = useState(NaN);
   const [selectedIndexes, setSelectedIndexes] = useState(new Set());
   const [clipboard, setClipboard] = useState([]);
-
-  const isCtrlDown = event => event.ctrlKey || event.metaKey;
 
   const isContinuousSelection = () => {
     return (

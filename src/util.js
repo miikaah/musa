@@ -139,3 +139,5 @@ export function dispatchToast(msg, key, dispatch) {
   setTimeout(() => dispatch(animateToast(key)), 1000);
   setTimeout(() => dispatch(removeToast(key)), 3000);
 }
+
+export const isCtrlDown = event => event.ctrlKey || event.metaKey;
