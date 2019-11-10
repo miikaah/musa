@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
+import PlayIcon from "components/PlayIcon";
+import PauseIcon from "components/PauseIcon";
 
 const ButtonContainer = styled.span`
   margin-right: 16px;
@@ -9,6 +10,7 @@ const ButtonContainer = styled.span`
 
   > button {
     font-size: 1rem;
+    min-width: 16px;
   }
 `;
 
@@ -22,7 +24,7 @@ const PlayerPlayPauseButton = ({ playOrPause, isPlaying }) => {
         onClick={playOrPause}
         onFocus={() => playerPlayPause.current.blur()}
       >
-        <FontAwesomeIcon icon={isPlaying ? "pause" : "play"} />
+        {isPlaying ? <PauseIcon /> : <PlayIcon />}
       </button>
     </ButtonContainer>
   );
