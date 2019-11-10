@@ -19,12 +19,12 @@ import { updateSettings } from "reducers/settings.reducer";
 import { updateCurrentTheme, getStateFromIdb } from "./util";
 import { breakpointLg } from "./breakpoints";
 import { webFrame } from "electron";
-import AppMain from "components/AppMain";
 import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
 import ProgressBar from "components/ProgressBar";
-import Settings from "components/Settings";
-import Search from "components/Search";
+import AppMain from "views/AppMain";
+import Settings from "views/Settings";
+import Search from "views/Search";
 
 const AppContainer = styled.div`
   text-align: left;

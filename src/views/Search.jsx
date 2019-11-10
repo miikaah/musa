@@ -5,10 +5,10 @@ import { setQuery } from "reducers/library.reducer";
 import fuzzysort from "fuzzysort";
 import styled from "styled-components/macro";
 import { useThrottle } from "../hooks";
-import Song from "./Song";
-import Album from "./Album";
-import Artist from "./Artist";
-import BasePage from "./BasePage";
+import Song from "components/Song";
+import Album from "components/Album";
+import Artist from "components/Artist";
+import BasePage from "components/BasePage";
 
 const SearchContainer = styled.div`
   input {
