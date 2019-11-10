@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
-import Library from "./Library";
-import Player from "./Player";
+import Library from "components/Library";
+import LibraryIcon from "components/LibraryIcon";
+import Player from "components/Player";
 
 const ToolbarContainer = styled.div`
   display: flex;
@@ -94,7 +95,7 @@ const Toolbar = ({ location, history }) => {
   return (
     <ToolbarContainer id="Toolbar" onClick={handleToolbarClick}>
       <Button onClick={toggleLibrary} ref={libraryButtonRef}>
-        <FontAwesomeIcon icon="bars" />
+        <LibraryIcon />
       </Button>
       <Library ref={libraryRef} isVisible={isLibraryVisible} />
 

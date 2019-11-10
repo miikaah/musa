@@ -7,7 +7,6 @@ import {
   faPause,
   faVolumeUp,
   faVolumeMute,
-  faBars,
   faCog,
   faSearch,
   faTrash
@@ -42,7 +41,6 @@ library.add(
   faPause,
   faVolumeUp,
   faVolumeMute,
-  faBars,
   faCog,
   faSearch,
   faTrash
