@@ -14,7 +14,6 @@ utilising Electron and React.
 
 ### V1
 
-- feat: add button to collapse all folders in library
 - feat: Delete DB when starting new Initial scan
 - feat: Use react router for changing page to settings and search
 - feat: Go to Search when pressing Ctrl + F
@@ -25,6 +24,7 @@ utilising Electron and React.
 - refactor: Toaster as the animate action is no longer needed
 - refactor: Move initial file system scan off of main thread as it lags during startup on Windows
 - feat: Add Splash screen
+- feat: add button to collapse all folders in library
 
 #### Cross platform
 
