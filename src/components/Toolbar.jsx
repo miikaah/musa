@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
+import { withRouter } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
-import BasePage from "./BasePage";
 import Library from "./Library";
-import Settings from "./Settings";
-import Search from "./Search";
 import Player from "./Player";
 
 const ToolbarContainer = styled.div`
@@ -14,25 +12,22 @@ const ToolbarContainer = styled.div`
   width: 100%;
   height: 30px;
   z-index: 10;
-
-  > button {
-    font-size: 1.4rem;
-    margin-right: 12px;
-    outline: none;
-  }
+  position: absolute;
 `;
 
-const Toolbar = () => {
-  const [isLibraryVisible, setIsLibraryVisible] = useState(true);
-  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
+const Button = styled.button`
+  font-size: 1.4rem;
+  margin-right: 12px;
+  outline: none;
+`;
+
+const Toolbar = ({ location, history }) => {
+  const [isLibraryVisible, setIsLibraryVisible] = useState(
+    location.pathname === "/"
+  );
 
   const libraryRef = useRef();
   const libraryButtonRef = useRef();
-  const settingsRef = useRef();
-  const settingsButtonRef = useRef();
-  const searchRef = useRef();
-  const searchButtonRef = useRef();
 
   useEffect(() => {
     const handleClick = e => {
@@ -40,38 +35,14 @@ const Toolbar = () => {
         libraryButtonRef.current &&
         libraryButtonRef.current.contains(e.target)
       ) {
-        setIsLibraryVisible(!isLibraryVisible);
-        setIsSettingsVisible(false);
-        setIsSearchVisible(false);
-        return;
-      }
-      if (
-        settingsButtonRef.current &&
-        settingsButtonRef.current.contains(e.target)
-      ) {
-        setIsSettingsVisible(!isSettingsVisible);
-        setIsSearchVisible(false);
-        return;
-      }
-      if (
-        searchButtonRef.current &&
-        searchButtonRef.current.contains(e.target)
-      ) {
-        setIsSearchVisible(!isSearchVisible);
-        setIsSettingsVisible(false);
         return;
       }
 
-      if (
-        (libraryRef.current && libraryRef.current.contains(e.target)) ||
-        (settingsRef.current && settingsRef.current.contains(e.target)) ||
-        (searchRef.current && searchRef.current.contains(e.target))
-      )
+      if (libraryRef.current && libraryRef.current.contains(e.target)) {
         return;
+      }
 
       setIsLibraryVisible(false);
-      setIsSettingsVisible(false);
-      setIsSearchVisible(false);
     };
 
     document.addEventListener("mousedown", handleClick);
@@ -79,44 +50,49 @@ const Toolbar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClick);
     };
-  }, [isLibraryVisible, isSettingsVisible, isSearchVisible]);
+  }, []);
+
+  const handleToolbarClick = event => {
+    if (event.target.id === "Toolbar") {
+      history.push("/");
+    }
+  };
+
+  const toggleLibrary = event => {
+    if (location.pathname !== "/") {
+      history.push("/");
+      setIsLibraryVisible(true);
+      return;
+    }
+    setIsLibraryVisible(!isLibraryVisible);
+    event.stopPropagation();
+  };
+
+  const goTo = (path, event) => {
+    history.push(path);
+    event.stopPropagation();
+  };
+  const goToSettings = event => goTo("/settings", event);
+  const goToSearch = event => goTo("/search", event);
 
   return (
-    <ToolbarContainer>
-      <button
-        type="button"
-        ref={libraryButtonRef}
-        onFocus={() => libraryButtonRef.current.blur()}
-      >
+    <ToolbarContainer id="Toolbar" onClick={handleToolbarClick}>
+      <Button onClick={toggleLibrary} ref={libraryButtonRef}>
         <FontAwesomeIcon icon="bars" />
-      </button>
+      </Button>
       <Library ref={libraryRef} isVisible={isLibraryVisible} />
 
       <Player />
 
-      <button
-        type="button"
-        ref={settingsButtonRef}
-        onFocus={() => settingsButtonRef.current.blur()}
-      >
+      <Button onClick={goToSettings}>
         <FontAwesomeIcon icon="cog" />
-      </button>
-      <BasePage ref={settingsRef} isVisible={isSettingsVisible}>
-        <Settings isVisible={isSettingsVisible} />
-      </BasePage>
+      </Button>
 
-      <button
-        type="button"
-        ref={searchButtonRef}
-        onFocus={() => searchButtonRef.current.blur()}
-      >
+      <Button onClick={goToSearch}>
         <FontAwesomeIcon icon="search" />
-      </button>
-      <BasePage ref={searchRef} isVisible={isSearchVisible}>
-        <Search />
-      </BasePage>
+      </Button>
     </ToolbarContainer>
   );
 };
 
-export default Toolbar;
+export default withRouter(Toolbar);

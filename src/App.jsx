@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -14,17 +15,16 @@ import {
 import styled from "styled-components/macro";
 import { get } from "lodash-es";
 import { FALLBACK_THEME } from "./config";
-import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import { updateSettings } from "reducers/settings.reducer";
-import { getStateFromIdb } from "./util";
-import { breakpoint } from "./breakpoints";
-import { listOverflow } from "./common.styles";
+import { updateCurrentTheme, getStateFromIdb } from "./util";
+import { breakpointLg } from "./breakpoints";
 import { webFrame } from "electron";
-import Playlist from "components/Playlist";
+import AppMain from "components/AppMain";
 import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
-import Cover from "components/Cover";
 import ProgressBar from "components/ProgressBar";
+import Settings from "components/Settings";
+import Search from "components/Search";
 
 const AppContainer = styled.div`
   text-align: left;
@@ -32,40 +32,9 @@ const AppContainer = styled.div`
   min-height: 100vh;
   max-height: 100vh;
   min-width: 360px;
-  overflow: hidden;
+  overflow: auto;
   color: var(--color-typography);
   user-select: none;
-`;
-
-const AppWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  @media (max-width: ${breakpoint.lg}) {
-    display: flex;
-    flex-direction: column;
-  }
-`;
-
-const AppCenter = styled.div`
-  flex: 40%;
-  padding: 0;
-  height: 100vh;
-
-  @media (max-width: ${breakpoint.lg}) {
-    flex: 100%;
-    padding: 0;
-    ${listOverflow}
-  }
-`;
-
-const AppRight = styled.div`
-  flex: 60%;
-  ${listOverflow}
-
-  @media (max-width: ${breakpoint.lg}) {
-    flex: 100%;
-  }
 `;
 
 library.add(
@@ -88,21 +57,20 @@ const ONE_MINUTE_MS = 60000;
 
 setInterval(clearWebFrameCache, ONE_MINUTE_MS * 10);
 
-const App = ({ dispatch }) => {
+const App = ({ history, dispatch }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const appCenterRef = useRef(null);
-  const appRightRef = useRef(null);
-
   useEffect(() => {
-    getStateFromIdb((req, db) => () =>
+    getStateFromIdb((req, db) => () => {
+      const currentTheme = get(req, "result.defaultTheme", FALLBACK_THEME);
+      updateCurrentTheme(currentTheme);
       dispatch(
         updateSettings({
           ...req.result,
-          currentTheme: get(req, "result.defaultTheme", FALLBACK_THEME)
+          currentTheme
         })
-      )
-    );
+      );
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -116,54 +84,23 @@ const App = ({ dispatch }) => {
     };
   }, []);
 
-  const onDragOver = event => event.preventDefault();
-
-  const onDrop = event => {
-    const item = JSON.parse(event.dataTransfer.getData("text"));
-    if (Array.isArray(item)) {
-      dispatch(pasteToPlaylist(item));
-      return;
-    }
-    dispatch(addToPlaylist(item));
-  };
-
-  const renderCenterAndRight = isLarge => {
-    const scroll = ref => {
-      ref.current &&
-        ref.current.scrollTo({
-          top: ref.current.scrollTop + 200,
-          behavior: "smooth"
-        });
-    };
-
-    const scrollPlaylist = () => {
-      isLarge ? scroll(appRightRef) : scroll(appCenterRef);
-    };
-
-    const renderPlaylist = () => <Playlist onScrollPlaylist={scrollPlaylist} />;
-
-    return (
-      <AppWrapper>
-        <AppCenter ref={appCenterRef} onDragOver={onDragOver} onDrop={onDrop}>
-          <Cover />
-          {!isLarge && renderPlaylist()}
-        </AppCenter>
-        {isLarge && (
-          <AppRight ref={appRightRef} onDragOver={onDragOver} onDrop={onDrop}>
-            {renderPlaylist()}
-          </AppRight>
-        )}
-      </AppWrapper>
-    );
-  };
-
   return (
-    <AppContainer>
-      <Toaster />
-      <ProgressBar />
-      <Toolbar />
-      <div>{renderCenterAndRight(windowWidth > 1279)}</div>
-    </AppContainer>
+    <Router>
+      <AppContainer>
+        <Toaster />
+        <ProgressBar />
+        <Toolbar />
+        <Switch>
+          <Route
+            exact
+            path="/"
+            component={() => <AppMain isLarge={windowWidth > breakpointLg} />}
+          />
+          <Route exact path="/settings" component={Settings} />
+          <Route exact path="/search" component={Search} />
+        </Switch>
+      </AppContainer>
+    </Router>
   );
 };
 

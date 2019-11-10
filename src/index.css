@@ -2,7 +2,7 @@
   --font-size-md: 16px;
   --font-size-sm: 14px;
   --font-size-xs: 12px;
-  --toolbar-height: 30px;
+  --toolbar-height: 46px;
   --color-white: #fbfbfb;
   --color-black: #000;
   --color-slider-track: #424a56;
@@ -10,6 +10,10 @@
 
 html {
   overflow: hidden;
+}
+
+a {
+  color: var(--color-typography);
 }
 
 body {

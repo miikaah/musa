@@ -1,4 +1,7 @@
+export const breakpointLg = 1279;
+export const breakpointXs = 577;
+
 export const breakpoint = {
-  lg: "1279px",
-  xs: "577px"
+  lg: `${breakpointLg}px`,
+  xs: `${breakpointXs}px`
 };

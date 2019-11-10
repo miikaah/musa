@@ -12,7 +12,7 @@ const BasePageContainer = styled.div`
   background-color: var(--color-bg);
   height: 100%;
   width: 100%;
-  margin: var(--toolbar-height) 0 0 -12px;
+  margin-top: var(--toolbar-height);
   overflow-y: auto;
 
   @media (max-width: ${breakpoint.xs}) {
@@ -25,16 +25,14 @@ const BasePageWrapper = styled.div`
   max-width: 730px;
   min-width: 344px;
   margin: 0 auto 50px;
-  max-height: 95vh;
 `;
 
-const BasePage = React.forwardRef(({ children, isVisible }, ref) => {
-  if (!isVisible) return null;
+const BasePage = ({ children }) => {
   return (
-    <BasePageContainer ref={ref}>
+    <BasePageContainer>
       <BasePageWrapper>{children}</BasePageWrapper>
     </BasePageContainer>
   );
-});
+};
 
 export default BasePage;

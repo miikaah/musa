@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { setQuery } from "reducers/library.reducer";
 import fuzzysort from "fuzzysort";
 import styled from "styled-components/macro";
@@ -7,6 +8,7 @@ import { useThrottle } from "../hooks";
 import Song from "./Song";
 import Album from "./Album";
 import Artist from "./Artist";
+import BasePage from "./BasePage";
 
 const SearchContainer = styled.div`
   input {
@@ -66,42 +68,47 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   };
 
   return (
-    <SearchContainer>
-      <h1>Search</h1>
-      <div>
-        <input
-          value={query}
-          onChange={e => dispatch(setQuery(e.target.value))}
-        />
-        <SearchBlock>
-          <h2>Artists</h2>
-          <SearchBlockWrapper>
-            {renderSearchResults(searchArtists, "artists")}
-          </SearchBlockWrapper>
-        </SearchBlock>
-        <SearchBlock>
-          <h2>Albums</h2>
-          <SearchBlockWrapper>
-            {renderSearchResults(searchAlbums, "albums")}
-          </SearchBlockWrapper>
-        </SearchBlock>
-        <SearchBlock>
-          <h2>Songs</h2>
-          <SearchBlockWrapper>
-            {renderSearchResults(searchSongs, "songs")}
-          </SearchBlockWrapper>
-        </SearchBlock>
-      </div>
-    </SearchContainer>
+    <BasePage>
+      <SearchContainer>
+        <h1>Search</h1>
+        <div>
+          <input
+            autoFocus
+            value={query}
+            onChange={e => dispatch(setQuery(e.target.value))}
+          />
+          <SearchBlock>
+            <h2>Artists</h2>
+            <SearchBlockWrapper>
+              {renderSearchResults(searchArtists, "artists")}
+            </SearchBlockWrapper>
+          </SearchBlock>
+          <SearchBlock>
+            <h2>Albums</h2>
+            <SearchBlockWrapper>
+              {renderSearchResults(searchAlbums, "albums")}
+            </SearchBlockWrapper>
+          </SearchBlock>
+          <SearchBlock>
+            <h2>Songs</h2>
+            <SearchBlockWrapper>
+              {renderSearchResults(searchSongs, "songs")}
+            </SearchBlockWrapper>
+          </SearchBlock>
+        </div>
+      </SearchContainer>
+    </BasePage>
   );
 };
 
-export default connect(
-  state => ({
-    listing: state.library.listing,
-    query: state.library.query,
-    artistAlbums: state.library.albums,
-    artistSongs: state.library.songs
-  }),
-  dispatch => ({ dispatch })
-)(Search);
+export default withRouter(
+  connect(
+    state => ({
+      listing: state.library.listing,
+      query: state.library.query,
+      artistAlbums: state.library.albums,
+      artistSongs: state.library.songs
+    }),
+    dispatch => ({ dispatch })
+  )(Search)
+);

@@ -1,10 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import styled from "styled-components/macro";
 import ThemeLibrary from "./ThemeLibrary";
 import ReplaygainSetting from "./ReplaygainSetting";
 import MusicLibrarySetting from "./MusicLibrarySetting";
 import Button from "./Button";
+import BasePage from "./BasePage";
 
 const SettingsBlock = styled.div`
   margin-bottom: 60px;
@@ -13,13 +15,13 @@ const SettingsBlock = styled.div`
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
-const Settings = ({ isVisible, musicLibraryPaths }) => {
+const Settings = ({ musicLibraryPaths }) => {
   const runInitialScan = () => {
     ipcRenderer.send("runInitialScan", musicLibraryPaths);
   };
 
   return (
-    <>
+    <BasePage>
       <h1>Settings</h1>
       <SettingsBlock>
         <h3>Library</h3>
@@ -27,7 +29,7 @@ const Settings = ({ isVisible, musicLibraryPaths }) => {
       </SettingsBlock>
       <SettingsBlock>
         <h3>Theme</h3>
-        <ThemeLibrary update={isVisible} />
+        <ThemeLibrary />
       </SettingsBlock>
       <SettingsBlock>
         <h3>Replaygain</h3>
@@ -39,13 +41,15 @@ const Settings = ({ isVisible, musicLibraryPaths }) => {
           Re-run initial scan
         </Button>
       </SettingsBlock>
-    </>
+    </BasePage>
   );
 };
 
-export default connect(
-  state => ({
-    musicLibraryPaths: state.settings.musicLibraryPaths
-  }),
-  dispatch => ({ dispatch })
-)(Settings);
+export default withRouter(
+  connect(
+    state => ({
+      musicLibraryPaths: state.settings.musicLibraryPaths
+    }),
+    dispatch => ({ dispatch })
+  )(Settings)
+);

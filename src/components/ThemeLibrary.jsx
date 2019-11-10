@@ -41,7 +41,7 @@ const ThemeControls = styled.div`
   margin-left: 20px;
 `;
 
-const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
+const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
   const [themes, setThemes] = useState([]);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, update, dispatch }) => {
       storeName: "theme",
       onReqSuccess: req => () => setThemes(req.result)
     });
-  }, [update]);
+  }, []);
 
   const handleDefaultThemeChange = theme => {
     updateCurrentTheme(theme);

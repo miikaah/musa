@@ -15,9 +15,8 @@ utilising Electron and React.
 ### V1
 
 - feat: Delete DB when starting new Initial scan
-- feat: Use react router for changing page to settings and search
 - feat: Go to Search when pressing Ctrl + F
-- feat: Focus to search input when navigating to Search page
+- feat: Playlist header to sticky positioning
 - refactor: Replace redux with React Context API
 - refactor: Replace FontAwesome with something else
 - refactor: List keys to something other than just index

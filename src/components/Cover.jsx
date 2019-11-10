@@ -25,20 +25,16 @@ const marginBottom = 20;
 const CoverContainer = styled.div`
   min-height: ${600 + marginTop + marginBottom}px;
   min-width: 600px;
-  padding-bottom: 54%;
   overflow: hidden;
   background-color: var(--color-bg);
-
-  @media (max-width: ${breakpoint.lg}) {
-    padding-bottom: 0;
-  }
+  padding-bottom: 0;
 `;
 
 const CoverImage = styled.img`
   display: block;
   height: auto;
   width: 100%;
-  margin: 12px auto 20px;
+  margin: 0 auto 20px;
   max-height: ${800 + marginTop + marginBottom}px;
   max-width: 800px;
 
