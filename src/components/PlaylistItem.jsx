@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { get, isNaN, isEqual } from "lodash-es";
 import { playIndex, replay } from "reducers/player.reducer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
 import { Cell } from "../common.styles";
 import PlayIcon from "components/PlayIcon";

@@ -7,9 +7,13 @@
     "start": "PORT=3666 BROWSER=none craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --ext .jsx,.js src"
   },
   "lint-staged": {
+    "*.{js,jsx}": [
+      "npm run lint"
+    ],
     "*.{js,jsx,json,md}": [
       "prettier --write",
       "git add"
@@ -19,9 +23,6 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": [
     ">0.2%",
