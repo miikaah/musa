@@ -126,11 +126,7 @@ const player = (state = initialState, action) => {
     case PASTE_TO_PLAYLIST: {
       if (isUndefined(action.index)) {
         const newItems = [...state.items, ...action.items];
-        return {
-          ...state,
-          items: newItems,
-          currentIndex: newItems.indexOf(state.currentItem)
-        };
+        return getStateByPlaylistChange(state, newItems);
       }
       const playlistStart = state.items.slice(0, action.index + 1);
       const playlistEnd = state.items.slice(
@@ -138,31 +134,19 @@ const player = (state = initialState, action) => {
         state.items.length
       );
       const newItems = [...playlistStart, ...action.items, ...playlistEnd];
-      return {
-        ...state,
-        items: newItems,
-        currentIndex: newItems.indexOf(state.currentItem)
-      };
+      return getStateByPlaylistChange(state, newItems);
     }
     case REMOVE_RANGE_FROM_PLAYLIST: {
       const newItems = state.items.filter(
         (_, index) => index < action.startIndex || index > action.endIndex
       );
-      return {
-        ...state,
-        items: newItems,
-        currentIndex: newItems.indexOf(state.currentItem)
-      };
+      return getStateByPlaylistChange(state, newItems);
     }
     case REMOVE_INDEXES_FROM_PLAYLIST: {
       const newItems = state.items.filter(
         (_, index) => !action.indexes.includes(index)
       );
-      return {
-        ...state,
-        items: newItems,
-        currentIndex: newItems.indexOf(state.currentItem)
-      };
+      return getStateByPlaylistChange(state, newItems);
     }
     default:
       return state;
@@ -178,6 +162,14 @@ function getPlayBase(newItem, newIndex) {
     cover: isEmpty(newItem.cover)
       ? ""
       : `file://${encodeFileUri(newItem.cover)}`
+  };
+}
+
+function getStateByPlaylistChange(state, newItems) {
+  return {
+    ...state,
+    items: newItems,
+    currentIndex: newItems.indexOf(state.currentItem)
   };
 }
 
