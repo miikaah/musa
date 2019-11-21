@@ -51,6 +51,7 @@ const idbRequest = indexedDB.open(DB_NAME, DB_VERSION);
 // that this component needs.
 class Library extends Component {
   componentDidMount() {
+    /* eslint-disable no-console */
     ipcRenderer.on("log", (event, log) => console.log("(main)", log));
     ipcRenderer.on("error", (event, error) => console.error(error));
 
@@ -77,6 +78,7 @@ class Library extends Component {
         console.log(e);
       }
     };
+    /* eslint-enable no-console */
 
     idbRequest.onsuccess = event => {
       const db = event.target.result;

@@ -37,7 +37,6 @@ const AppContainer = styled.div`
 library.add(faVolumeUp, faVolumeMute, faCog, faSearch, faTrash);
 
 function clearWebFrameCache() {
-  console.log("CLEAR WEBFRAME CACHE ", new Date().toISOString());
   webFrame.clearCache();
 }
 
