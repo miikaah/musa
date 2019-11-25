@@ -6,6 +6,7 @@ import {
   pasteToPlaylist,
   removeRangeFromPlaylist,
   removeIndexesFromPlaylist,
+  emptyPlaylist,
   playIndex,
   replay
 } from "reducers/player.reducer";
@@ -194,7 +195,7 @@ const Playlist = ({
         selItems = selectedItems;
       }
 
-      dispatch(removeRangeFromPlaylist(0, playlist.length - 1));
+      dispatch(emptyPlaylist());
       dispatch(pasteToPlaylist(selItems, 0));
       setStartIndex(NaN);
       setEndIndex(NaN);

@@ -55,6 +55,11 @@ export const removeIndexesFromPlaylist = indexes => ({
   indexes
 });
 
+export const EMPTY_PLAYLIST = "MUSA/PLAYER/EMPTY_PLAYLIST";
+export const emptyPlaylist = () => ({
+  type: EMPTY_PLAYLIST
+});
+
 const initialState = {
   items: [],
   currentItem: {},
@@ -147,6 +152,13 @@ const player = (state = initialState, action) => {
         (_, index) => !action.indexes.includes(index)
       );
       return getStateByPlaylistChange(state, newItems);
+    }
+    case EMPTY_PLAYLIST: {
+      return {
+        ...state,
+        items: [],
+        currentIndex: -1
+      };
     }
     default:
       return state;
