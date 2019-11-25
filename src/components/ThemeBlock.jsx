@@ -11,7 +11,7 @@ const ThemeBlockContainer = styled.div`
   background-color: ${({ rgb }) => rgb && `rgb(${rgb})`};
 `;
 
-const PrimaryOrSecondaryColor = styled.span`
+const Color = styled.span`
   display: inline-block;
   width: 30px;
   height: 30px;
@@ -25,8 +25,8 @@ const ThemeBlock = ({ colors, setCurrentTheme }) => {
       rgb={colors.bg}
       onClick={() => setCurrentTheme(colors)}
     >
-      <PrimaryOrSecondaryColor rgb={colors.primary} />
-      <PrimaryOrSecondaryColor rgb={colors.secondary} />
+      <Color rgb={colors.primary} />
+      <Color rgb={colors.secondary} />
     </ThemeBlockContainer>
   );
 };
