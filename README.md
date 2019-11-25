@@ -6,9 +6,9 @@ utilising Electron and React.
 
 ## Development
 
-1. Copy `.env.example` to `.env`
-2. `npm install`
-3. `npm run start`
+1. `npm install`
+2. `npm start`
+3. Start musa-electron
 
 ## Todo
 
