@@ -1,3 +1,7 @@
+##### 30.11.2019
+
+- feat: Delete DB when starting new Initial scan
+
 ##### 9.11.2019
 
 Stop logging done tickets in README. This changelog will function

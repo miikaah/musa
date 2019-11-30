@@ -7,6 +7,7 @@ import ReplaygainSetting from "components/ReplaygainSetting";
 import MusicLibrarySetting from "components/MusicLibrarySetting";
 import Button from "components/Button";
 import BasePage from "components/BasePage";
+import { doIdbRequest } from "../util";
 
 const SettingsBlock = styled.div`
   margin-bottom: 60px;
@@ -17,7 +18,13 @@ const ipcRenderer = electron.ipcRenderer;
 
 const Settings = ({ musicLibraryPaths }) => {
   const runInitialScan = () => {
-    ipcRenderer.send("runInitialScan", musicLibraryPaths);
+    doIdbRequest({
+      method: "clear",
+      storeName: "library",
+      onReqSuccess: req => () => {
+        ipcRenderer.send("runInitialScan", musicLibraryPaths);
+      }
+    });
   };
 
   return (

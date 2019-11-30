@@ -14,7 +14,6 @@ utilising Electron and React.
 
 ### V1
 
-- feat: Delete DB when starting new Initial scan
 - feat: Playlist header to sticky positioning
 - refactor: Replace redux with React Context API
 - refactor: Replace FontAwesome with something else
