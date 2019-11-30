@@ -44,8 +44,48 @@ const ONE_MINUTE_MS = 60000;
 
 setInterval(clearWebFrameCache, ONE_MINUTE_MS * 10);
 
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
+
+const getSpotifyCodeFromQuery = () => {
+  return window.location.search.split("?code=").pop();
+};
+
 const App = ({ dispatch }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    ipcRenderer.on(
+      "gotSpotifyTokens",
+      (event, spotify, spotifyRefreshToken) => {
+        getStateFromIdb((req, db) => () => {
+          const payload = { ...req.result, spotify };
+          if (spotifyRefreshToken) {
+            payload.spotifyRefreshToken = spotifyRefreshToken;
+          }
+          dispatch(updateSettings(payload));
+        });
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    getStateFromIdb((req, db) => () => {
+      const code = getSpotifyCodeFromQuery();
+      const refreshToken = get(req, "result.spotifyRefreshToken");
+      const spotify = get(req, "result.spotify", {});
+      const expiresAt = spotify.expiresAt;
+
+      if (!code) return;
+      if (!expiresAt || !refreshToken) {
+        ipcRenderer.send("fetchSpotifyTokens", code, "authorization_code");
+      } else if (expiresAt < new Date().getTime()) {
+        ipcRenderer.send("fetchSpotifyTokens", refreshToken, "refresh_token");
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getStateFromIdb((req, db) => () => {

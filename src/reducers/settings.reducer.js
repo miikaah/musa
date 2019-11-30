@@ -15,7 +15,9 @@ const initialState = {
   key: "state",
   replaygainType: REPLAYGAIN_TYPE.Album,
   volume: VOLUME_DEFAULT,
-  musicLibraryPaths: []
+  musicLibraryPaths: [],
+  spotify: {},
+  spotifyRefreshToken: undefined
 };
 
 const settings = (state = initialState, action) => {

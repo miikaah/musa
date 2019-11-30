@@ -1,10 +1,16 @@
 import { isNumber, isEmpty, isUndefined } from "lodash-es";
 import { getFileUri } from "../util";
 
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
+
 export const PLAY = "MUSA/PLAYER/PLAY";
-export const play = () => ({
-  type: PLAY
-});
+export const play = token => {
+  ipcRenderer.send("spotifyPlay", token);
+  return {
+    type: PLAY
+  };
+};
 
 export const PLAY_INDEX = "MUSA/PLAYER/PLAY_INDEX";
 export const playIndex = index => ({
@@ -24,9 +30,12 @@ export const replay = replay => ({
 });
 
 export const PAUSE = "MUSA/PLAYER/PAUSE";
-export const pause = () => ({
-  type: PAUSE
-});
+export const pause = token => {
+  ipcRenderer.send("spotifyPause", token);
+  return {
+    type: PAUSE
+  };
+};
 
 export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD";
 export const addToPlaylist = item => ({

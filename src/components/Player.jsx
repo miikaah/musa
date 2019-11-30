@@ -32,7 +32,8 @@ const Player = ({
   replaygainType,
   dispatch,
   src,
-  currentItem
+  currentItem,
+  spotifyToken
 }) => {
   const [duration, setDuration] = useState(0);
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT);
@@ -49,7 +50,7 @@ const Player = ({
     // PAUSE
     if (isPlaying || isEmpty(playlist)) {
       player.current.pause();
-      dispatch(pause());
+      dispatch(pause(spotifyToken));
       setCurrentTime(get(player, "current.currentTime", 0));
       return;
     }
@@ -58,11 +59,11 @@ const Player = ({
       // BUGFIX: pause->play starting from beginning
       player.current.currentTime = currentTime;
       player.current.play();
-      dispatch(play());
+      dispatch(play(spotifyToken));
       return;
     }
     // Dispatch first play action
-    dispatch(play());
+    dispatch(play(spotifyToken));
   };
   useKeyPress(KEYS.Space, playOrPause);
 
@@ -171,7 +172,8 @@ export default connect(
     playlist: state.player.items,
     currentItem: state.player.currentItem,
     volume: state.settings.volume,
-    replaygainType: state.settings.replaygainType
+    replaygainType: state.settings.replaygainType,
+    spotifyToken: state.settings.spotify.accessToken
   }),
   dispatch => ({ dispatch })
 )(Player);

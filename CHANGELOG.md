@@ -1,5 +1,6 @@
 ##### 30.11.2019
 
+- feat: Add rudimentary Spotify integration
 - feat: Delete DB when starting new Initial scan
 
 ##### 9.11.2019
