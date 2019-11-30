@@ -63,8 +63,8 @@ export function prefixNumber(value) {
   return value < 10 ? `0${value}` : `${value}`;
 }
 
-export function encodeFileUri(path) {
-  return path.replace("#", "%23");
+export function getFileUri(path) {
+  return `file://${path}`.replace("#", "%23");
 }
 
 export function getStateFromIdb(onReqSuccess) {

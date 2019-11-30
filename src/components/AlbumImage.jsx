@@ -1,12 +1,9 @@
 import React from "react";
 import { isEmpty } from "lodash-es";
-import { encodeFileUri } from "../util";
+import { getFileUri } from "../util";
 
 const AlbumImage = ({ item }) => (
-  <img
-    alt=""
-    src={isEmpty(item.cover) ? "" : encodeFileUri(`file://${item.cover}`)}
-  />
+  <img alt="" src={isEmpty(item.cover) ? "" : getFileUri(item.cover)} />
 );
 
 export default AlbumImage;

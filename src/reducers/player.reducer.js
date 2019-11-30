@@ -1,5 +1,5 @@
 import { isNumber, isEmpty, isUndefined } from "lodash-es";
-import { encodeFileUri } from "../util";
+import { getFileUri } from "../util";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
 export const play = () => ({
@@ -170,10 +170,8 @@ function getPlayBase(newItem, newIndex) {
     currentItem: newItem,
     currentIndex: newIndex,
     isPlaying: true,
-    src: `file://${encodeFileUri(newItem.path)}`,
-    cover: isEmpty(newItem.cover)
-      ? ""
-      : `file://${encodeFileUri(newItem.cover)}`
+    src: getFileUri(newItem.path),
+    cover: isEmpty(newItem.cover) ? "" : getFileUri(newItem.cover)
   };
 }
 
