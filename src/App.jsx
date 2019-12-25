@@ -81,13 +81,18 @@ const App = ({ dispatch }) => {
       if (!code) return;
       if (!expiresAt || !refreshToken) {
         ipcRenderer.send("fetchSpotifyTokens", code, "authorization_code");
-      } else if (expiresAt < new Date().getTime()) {
+      } else if (expiresAt < Date.now()) {
         ipcRenderer.send("fetchSpotifyTokens", refreshToken, "refresh_token");
       }
     });
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchSpotifyTokens, []);
+
+  const spotifyFailedDoRefresh = () => {
+    ipcRenderer.on("spotifyNotWorking", window.location.reload);
+  };
+  useEffect(spotifyFailedDoRefresh, []);
 
   const updateAppSettings = () => {
     getStateFromIdb((req, db) => () => {
