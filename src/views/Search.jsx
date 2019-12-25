@@ -33,7 +33,7 @@ const SearchBlockWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
+const Search = ({ listing, query, albums, songs, dispatch }) => {
   const [searchArtists, setSearchArtists] = useState([]);
   const [searchAlbums, setSearchAlbums] = useState([]);
   const [searchSongs, setSearchSongs] = useState([]);
@@ -42,12 +42,12 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   const throttledQuery = useThrottle(query, 16);
 
   useEffect(() => {
-    const artists = fuzzysort.go(throttledQuery, listing, options);
-    const albums = fuzzysort.go(throttledQuery, artistAlbums, options);
-    const songs = fuzzysort.go(throttledQuery, artistSongs, options);
-    setSearchArtists(artists);
-    setSearchAlbums(albums);
-    setSearchSongs(songs);
+    const localArtists = fuzzysort.go(throttledQuery, listing, options);
+    const localAlbums = fuzzysort.go(throttledQuery, albums, options);
+    const localSongs = fuzzysort.go(throttledQuery, songs, options);
+    setSearchArtists(localArtists);
+    setSearchAlbums(localAlbums);
+    setSearchSongs(localSongs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [throttledQuery]);
 
@@ -106,8 +106,8 @@ export default withRouter(
     state => ({
       listing: state.library.listing,
       query: state.library.query,
-      artistAlbums: state.library.albums,
-      artistSongs: state.library.songs
+      albums: state.library.albums,
+      songs: state.library.songs
     }),
     dispatch => ({ dispatch })
   )(Search)
