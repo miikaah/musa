@@ -54,7 +54,7 @@ const getSpotifyCodeFromQuery = () => {
 const App = ({ dispatch }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  useEffect(() => {
+  const updateStateWithSpotifyTokens = () => {
     ipcRenderer.on(
       "gotSpotifyTokens",
       (event, spotify, spotifyRefreshToken) => {
@@ -67,10 +67,11 @@ const App = ({ dispatch }) => {
         });
       }
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(updateStateWithSpotifyTokens, []);
 
-  useEffect(() => {
+  const fetchSpotifyTokens = () => {
     getStateFromIdb((req, db) => () => {
       const code = getSpotifyCodeFromQuery();
       const refreshToken = get(req, "result.spotifyRefreshToken");
@@ -84,10 +85,11 @@ const App = ({ dispatch }) => {
         ipcRenderer.send("fetchSpotifyTokens", refreshToken, "refresh_token");
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(fetchSpotifyTokens, []);
 
-  useEffect(() => {
+  const updateAppSettings = () => {
     getStateFromIdb((req, db) => () => {
       const currentTheme = get(req, "result.defaultTheme", FALLBACK_THEME);
       updateCurrentTheme(currentTheme);
@@ -98,10 +100,11 @@ const App = ({ dispatch }) => {
         })
       );
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(updateAppSettings, []);
 
-  useEffect(() => {
+  const handleResize = () => {
     const handleResize = () => setWindowWidth(window.innerWidth);
 
     window.addEventListener("resize", handleResize);
@@ -109,7 +112,8 @@ const App = ({ dispatch }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  };
+  useEffect(handleResize, []);
 
   return (
     <Router>
