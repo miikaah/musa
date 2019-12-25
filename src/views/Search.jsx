@@ -46,7 +46,7 @@ const Search = ({ query, artists, albums, songs, spotifyToken, dispatch }) => {
   const options = { limit: 10, key: "name", threshold: -50 };
 
   const throttledQuery = useThrottle(query, 16);
-  const throttledSpotifyQuery = useThrottle(query, 1000);
+  const throttledSpotifyQuery = useThrottle(query, 543);
 
   const handleSpotifySearchResults = () => {
     ipcRenderer.on("gotSpotifySearchResults", (event, spotifyResults) => {
