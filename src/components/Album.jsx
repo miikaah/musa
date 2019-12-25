@@ -5,6 +5,7 @@ import styled, { css } from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import AlbumImage from "./AlbumImage";
+import AlbumInfo from "./AlbumInfo";
 
 const AlbumContainer = styled.div`
   display: flex;
@@ -35,22 +36,6 @@ const AlbumFullAdd = styled.div`
 
   &:hover {
     border-color: var(--color-primary-highlight);
-  }
-`;
-
-const AlbumInfo = styled.div`
-  padding: 4px 20px;
-
-  > p {
-    margin: 0 0 10px;
-  }
-
-  > p:not(:nth-child(2)) {
-    font-size: var(--font-size-xs);
-  }
-
-  > p:nth-child(2) {
-    font-weight: bold;
   }
 `;
 
@@ -120,15 +105,10 @@ const Album = ({ item, dispatch }) => {
     <AlbumContainer>
       <AlbumFullAdd onClick={addAlbumSongsToPlaylist}>
         <AlbumImage item={item} />
-        <AlbumInfo>
-          <p>{item.artist}</p>
-          <p>{item.name}</p>
-          <p>{item.date}</p>
-          <p>{item.genre}</p>
-        </AlbumInfo>
+        <AlbumInfo item={item} />
       </AlbumFullAdd>
       <AlbumSongs>
-        {item.songs.map((s, i) => (
+        {(item.songs || []).map((s, i) => (
           <AlbumSong key={i} onClick={() => addSongToPlaylist(s)}>
             <span>{get(s, "metadata.track", "")}</span>
             <span>{get(s, "metadata.title", "")}</span>

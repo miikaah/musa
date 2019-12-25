@@ -6,7 +6,7 @@ const ipcRenderer = electron.ipcRenderer;
 
 export const PLAY = "MUSA/PLAYER/PLAY";
 export const play = token => {
-  ipcRenderer.send("spotifyPlay", token);
+  if (token) ipcRenderer.send("spotifyPlay", token);
   return {
     type: PLAY
   };
@@ -31,7 +31,7 @@ export const replay = replay => ({
 
 export const PAUSE = "MUSA/PLAYER/PAUSE";
 export const pause = token => {
-  ipcRenderer.send("spotifyPause", token);
+  if (token) ipcRenderer.send("spotifyPause", token);
   return {
     type: PAUSE
   };

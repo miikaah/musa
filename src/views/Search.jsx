@@ -33,34 +33,55 @@ const SearchBlockWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const Search = ({ listing, query, albums, songs, dispatch }) => {
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
+
+const Search = ({ query, artists, albums, songs, spotifyToken, dispatch }) => {
   const [searchArtists, setSearchArtists] = useState([]);
   const [searchAlbums, setSearchAlbums] = useState([]);
   const [searchSongs, setSearchSongs] = useState([]);
+  const [spotifyArtists, setSpotifyArtists] = useState([]);
+  const [spotifyAlbums, setSpotifyAlbums] = useState([]);
+  const [spotifySongs, setSpotifySongs] = useState([]);
   const options = { limit: 10, key: "name", threshold: -50 };
 
   const throttledQuery = useThrottle(query, 16);
+  const throttledSpotifyQuery = useThrottle(query, 1000);
+
+  const handleSpotifySearchResults = () => {
+    ipcRenderer.on("gotSpotifySearchResults", (event, spotifyResults) => {
+      setSpotifyArtists(spotifyResults.artists.items);
+      setSpotifyAlbums(spotifyResults.albums.items);
+      setSpotifySongs(spotifyResults.tracks.items);
+    });
+  };
+  useEffect(handleSpotifySearchResults, []);
 
   useEffect(() => {
-    const localArtists = fuzzysort.go(throttledQuery, listing, options);
+    const localArtists = fuzzysort.go(throttledQuery, artists, options);
     const localAlbums = fuzzysort.go(throttledQuery, albums, options);
     const localSongs = fuzzysort.go(throttledQuery, songs, options);
-    setSearchArtists(localArtists);
-    setSearchAlbums(localAlbums);
-    setSearchSongs(localSongs);
+    setSearchArtists(localArtists.map(a => a.obj));
+    setSearchAlbums(localAlbums.map(a => a.obj));
+    setSearchSongs(localSongs.map(a => a.obj));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [throttledQuery]);
+
+  useEffect(() => {
+    ipcRenderer.send("spotifySearch", spotifyToken, throttledSpotifyQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [throttledSpotifyQuery]);
 
   const renderSearchResults = (results, type) => {
     switch (type) {
       case "artists": {
-        return results.map((r, i) => <Artist key={i} item={r.obj} />);
+        return results.map((item, i) => <Artist key={i} item={item} />);
       }
       case "albums": {
-        return results.map((r, i) => <Album key={i} item={r.obj} />);
+        return results.map((item, i) => <Album key={i} item={item} />);
       }
       case "songs": {
-        return results.map((r, i) => <Song key={i} item={r.obj} />);
+        return results.map((item, i) => <Song key={i} item={item} />);
       }
       default:
         return null;
@@ -80,19 +101,25 @@ const Search = ({ listing, query, albums, songs, dispatch }) => {
           <SearchBlock>
             <h2>Artists</h2>
             <SearchBlockWrapper>
-              {renderSearchResults(searchArtists, "artists")}
+              {renderSearchResults(
+                [...searchArtists, ...spotifyArtists],
+                "artists"
+              )}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
             <h2>Albums</h2>
             <SearchBlockWrapper>
-              {renderSearchResults(searchAlbums, "albums")}
+              {renderSearchResults(
+                [...searchAlbums, ...spotifyAlbums],
+                "albums"
+              )}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
             <h2>Songs</h2>
             <SearchBlockWrapper>
-              {renderSearchResults(searchSongs, "songs")}
+              {renderSearchResults([...searchSongs, ...spotifySongs], "songs")}
             </SearchBlockWrapper>
           </SearchBlock>
         </div>
@@ -104,10 +131,11 @@ const Search = ({ listing, query, albums, songs, dispatch }) => {
 export default withRouter(
   connect(
     state => ({
-      listing: state.library.listing,
       query: state.library.query,
+      artists: state.library.listing,
       albums: state.library.albums,
-      songs: state.library.songs
+      songs: state.library.songs,
+      spotifyToken: state.settings.spotify.accessToken
     }),
     dispatch => ({ dispatch })
   )(Search)

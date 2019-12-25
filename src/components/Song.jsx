@@ -47,6 +47,22 @@ const SongInfo = styled.div`
   }
 `;
 
+const getArtists = item => {
+  if (get(item, "metadata.artist")) return item.metadata.artist;
+  return (item.artists || []).map(a => a.name).join(", ");
+};
+
+const getAlbum = item => {
+  if (get(item, "metadata.album")) return item.metadata.album;
+  if (get(item, "album.name")) return item.album.name;
+};
+
+const getDate = item => {
+  if (get(item, "metadata.date")) return item.metadata.date;
+  if (get(item, "album.release_date"))
+    return item.album.release_date.split("-")[0];
+};
+
 const Song = ({ item, dispatch }) => {
   if (isEmpty(item)) return null;
 
@@ -62,10 +78,10 @@ const Song = ({ item, dispatch }) => {
     <SongContainer onClick={addSongToPlaylist}>
       <AlbumImage item={item} />
       <SongInfo>
-        <p>{get(item, "metadata.artist", "")}</p>
-        <p>{get(item, "metadata.album", "")}</p>
+        <p>{getArtists(item)}</p>
+        <p>{getAlbum(item)}</p>
         <p>{item.name}</p>
-        <p>{get(item, "metadata.date", "")}</p>
+        <p>{getDate(item)}</p>
       </SongInfo>
     </SongContainer>
   );

@@ -47,19 +47,28 @@ const Player = ({
     if (event) {
       event.preventDefault();
     }
-    // PAUSE
+    // SPOTIFY
+    if (spotifyToken) {
+      if (isPlaying) {
+        dispatch(pause(spotifyToken));
+      } else {
+        dispatch(play(spotifyToken));
+      }
+      return;
+    }
+    // PAUSE LOCAL
     if (isPlaying || isEmpty(playlist)) {
       player.current.pause();
-      dispatch(pause(spotifyToken));
+      dispatch(pause());
       setCurrentTime(get(player, "current.currentTime", 0));
       return;
     }
-    // PLAY
+    // PLAY LOCAL
     if (!isEmpty(src)) {
       // BUGFIX: pause->play starting from beginning
       player.current.currentTime = currentTime;
       player.current.play();
-      dispatch(play(spotifyToken));
+      dispatch(play());
       return;
     }
     // Dispatch first play action
