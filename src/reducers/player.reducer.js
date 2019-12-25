@@ -1,12 +1,10 @@
 import { isNumber, isEmpty, isUndefined } from "lodash-es";
+import Spotify from "services/spotify";
 import { getFileUri } from "../util";
-
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
 
 export const PLAY = "MUSA/PLAYER/PLAY";
 export const play = token => {
-  if (token) ipcRenderer.send("SpotifyPlay", token);
+  if (token) Spotify.play(token);
   return {
     type: PLAY
   };
@@ -31,7 +29,7 @@ export const replay = replay => ({
 
 export const PAUSE = "MUSA/PLAYER/PAUSE";
 export const pause = token => {
-  if (token) ipcRenderer.send("SpotifyPause", token);
+  if (token) Spotify.pause(token);
   return {
     type: PAUSE
   };

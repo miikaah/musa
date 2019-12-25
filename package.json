@@ -34,6 +34,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/react-fontawesome": "^0.1.7",
+    "electron-promise-ipc": "^2.0.1",
     "fuzzysort": "^1.1.4",
     "img-palette": "^0.3.2",
     "lodash-es": "^4.17.15",

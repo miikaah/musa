@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { setQuery } from "reducers/library.reducer";
+import { isEmpty } from "lodash-es";
 import fuzzysort from "fuzzysort";
 import styled from "styled-components/macro";
 import { useThrottle } from "../hooks";
+import Spotify from "services/spotify";
 import Song from "components/Song";
 import Album from "components/Album";
 import Artist from "components/Artist";
@@ -33,10 +35,7 @@ const SearchBlockWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
-
-const Search = ({ query, artists, albums, songs, spotifyToken, dispatch }) => {
+const Search = ({ query, artists, albums, songs, token, dispatch }) => {
   const [searchArtists, setSearchArtists] = useState([]);
   const [searchAlbums, setSearchAlbums] = useState([]);
   const [searchSongs, setSearchSongs] = useState([]);
@@ -47,15 +46,6 @@ const Search = ({ query, artists, albums, songs, spotifyToken, dispatch }) => {
 
   const throttledQuery = useThrottle(query, 16);
   const throttledSpotifyQuery = useThrottle(query, 543);
-
-  const handleSpotifySearchResults = () => {
-    ipcRenderer.on("GotSpotifySearchResults", (event, spotifyResults) => {
-      setSpotifyArtists(spotifyResults.artists.items);
-      setSpotifyAlbums(spotifyResults.albums.items);
-      setSpotifySongs(spotifyResults.tracks.items);
-    });
-  };
-  useEffect(handleSpotifySearchResults, []);
 
   useEffect(() => {
     const localArtists = fuzzysort.go(throttledQuery, artists, options);
@@ -68,7 +58,14 @@ const Search = ({ query, artists, albums, songs, spotifyToken, dispatch }) => {
   }, [throttledQuery]);
 
   useEffect(() => {
-    ipcRenderer.send("SpotifySearch", spotifyToken, throttledSpotifyQuery);
+    const doSearch = async () => {
+      if (isEmpty(throttledSpotifyQuery)) return;
+      const results = await Spotify.search(token, throttledSpotifyQuery);
+      setSpotifyArtists(results.artists.items);
+      setSpotifyAlbums(results.albums.items);
+      setSpotifySongs(results.tracks.items);
+    };
+    doSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [throttledSpotifyQuery]);
 
@@ -135,7 +132,7 @@ export default withRouter(
       artists: state.library.listing,
       albums: state.library.albums,
       songs: state.library.songs,
-      spotifyToken: state.settings.spotify.accessToken
+      token: state.settings.spotify.accessToken
     }),
     dispatch => ({ dispatch })
   )(Search)

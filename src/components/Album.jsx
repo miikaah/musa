@@ -4,6 +4,7 @@ import { get, isEmpty } from "lodash-es";
 import styled, { css } from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
+import Spotify, { isSpotifyAlbum } from "services/spotify";
 import AlbumImage from "./AlbumImage";
 import AlbumInfo from "./AlbumInfo";
 
@@ -74,8 +75,12 @@ const AlbumSong = styled.div`
   }
 `;
 
-const Album = ({ item, dispatch }) => {
+const Album = ({ item, token, dispatch }) => {
   if (isEmpty(item)) return null;
+
+  const addSpotifyAlbum = async () => {
+    console.log(await Spotify.getAlbumsTracks(token, item));
+  };
 
   const addAlbumSongsToPlaylist = () => {
     dispatch(
@@ -92,6 +97,10 @@ const Album = ({ item, dispatch }) => {
     dispatchToast(msg, key, dispatch);
   };
 
+  const handleAlbumFullAdd = () => {
+    return isSpotifyAlbum(item) ? addSpotifyAlbum() : addAlbumSongsToPlaylist();
+  };
+
   const addSongToPlaylist = song => {
     dispatch(addToPlaylist({ ...song, cover: item.cover }));
 
@@ -103,7 +112,7 @@ const Album = ({ item, dispatch }) => {
 
   return (
     <AlbumContainer>
-      <AlbumFullAdd onClick={addAlbumSongsToPlaylist}>
+      <AlbumFullAdd onClick={handleAlbumFullAdd}>
         <AlbumImage item={item} />
         <AlbumInfo item={item} />
       </AlbumFullAdd>
@@ -121,6 +130,8 @@ const Album = ({ item, dispatch }) => {
 };
 
 export default connect(
-  state => ({}),
+  state => ({
+    token: state.settings.spotify.accessToken
+  }),
   dispatch => ({ dispatch })
 )(Album);
