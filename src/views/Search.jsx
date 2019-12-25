@@ -42,9 +42,9 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   const throttledQuery = useThrottle(query, 16);
 
   useEffect(() => {
-    const artists = fuzzysort.go(query, listing, options);
-    const albums = fuzzysort.go(query, artistAlbums, options);
-    const songs = fuzzysort.go(query, artistSongs, options);
+    const artists = fuzzysort.go(throttledQuery, listing, options);
+    const albums = fuzzysort.go(throttledQuery, artistAlbums, options);
+    const songs = fuzzysort.go(throttledQuery, artistSongs, options);
     setSearchArtists(artists);
     setSearchAlbums(albums);
     setSearchSongs(songs);
