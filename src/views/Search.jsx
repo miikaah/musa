@@ -49,7 +49,7 @@ const Search = ({ query, artists, albums, songs, spotifyToken, dispatch }) => {
   const throttledSpotifyQuery = useThrottle(query, 543);
 
   const handleSpotifySearchResults = () => {
-    ipcRenderer.on("gotSpotifySearchResults", (event, spotifyResults) => {
+    ipcRenderer.on("GotSpotifySearchResults", (event, spotifyResults) => {
       setSpotifyArtists(spotifyResults.artists.items);
       setSpotifyAlbums(spotifyResults.albums.items);
       setSpotifySongs(spotifyResults.tracks.items);
@@ -68,7 +68,7 @@ const Search = ({ query, artists, albums, songs, spotifyToken, dispatch }) => {
   }, [throttledQuery]);
 
   useEffect(() => {
-    ipcRenderer.send("spotifySearch", spotifyToken, throttledSpotifyQuery);
+    ipcRenderer.send("SpotifySearch", spotifyToken, throttledSpotifyQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [throttledSpotifyQuery]);
 

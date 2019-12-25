@@ -56,7 +56,7 @@ const App = ({ dispatch }) => {
 
   const updateStateWithSpotifyTokens = () => {
     ipcRenderer.on(
-      "gotSpotifyTokens",
+      "GotSpotifyTokens",
       (event, spotify, spotifyRefreshToken) => {
         getStateFromIdb((req, db) => () => {
           const payload = { ...req.result, spotify };
@@ -80,9 +80,9 @@ const App = ({ dispatch }) => {
 
       if (!code) return;
       if (!expiresAt || !refreshToken) {
-        ipcRenderer.send("fetchSpotifyTokens", code, "authorization_code");
+        ipcRenderer.send("SpotifyFetchTokens", code, "authorization_code");
       } else if (expiresAt < Date.now()) {
-        ipcRenderer.send("fetchSpotifyTokens", refreshToken, "refresh_token");
+        ipcRenderer.send("SpotifyFetchTokens", refreshToken, "refresh_token");
       }
     });
   };
@@ -90,7 +90,7 @@ const App = ({ dispatch }) => {
   useEffect(fetchSpotifyTokens, []);
 
   const spotifyFailedDoRefresh = () => {
-    ipcRenderer.on("spotifyNotWorking", window.location.reload);
+    ipcRenderer.on("SpotifyNotWorking", window.location.reload);
   };
   useEffect(spotifyFailedDoRefresh, []);
 
