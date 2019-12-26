@@ -75,11 +75,11 @@ const AlbumSong = styled.div`
   }
 `;
 
-const Album = ({ item, token, dispatch }) => {
+const Album = ({ item, spotifyTokens, dispatch }) => {
   if (isEmpty(item)) return null;
 
   const addSpotifyAlbum = async () => {
-    console.log(await Spotify.getAlbumsTracks(token, item));
+    console.log(await Spotify.getAlbumsTracks(spotifyTokens, item));
   };
 
   const addAlbumSongsToPlaylist = () => {
@@ -131,7 +131,7 @@ const Album = ({ item, token, dispatch }) => {
 
 export default connect(
   state => ({
-    token: state.settings.spotify.accessToken
+    spotifyTokens: state.settings.spotifyTokens
   }),
   dispatch => ({ dispatch })
 )(Album);

@@ -3,8 +3,8 @@ import Spotify from "services/spotify";
 import { getFileUri } from "../util";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
-export const play = token => {
-  if (token) Spotify.play(token);
+export const play = tokens => {
+  if (tokens) Spotify.play(tokens);
   return {
     type: PLAY
   };
@@ -28,8 +28,8 @@ export const replay = replay => ({
 });
 
 export const PAUSE = "MUSA/PLAYER/PAUSE";
-export const pause = token => {
-  if (token) Spotify.pause(token);
+export const pause = tokens => {
+  if (tokens) Spotify.pause(tokens);
   return {
     type: PAUSE
   };

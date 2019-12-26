@@ -59,9 +59,16 @@ const App = ({ dispatch }) => {
       "GotSpotifyTokens",
       (event, spotify, spotifyRefreshToken) => {
         getStateFromIdb((req, db) => () => {
-          const payload = { ...req.result, spotify };
+          const payload = {
+            ...req.result,
+            spotify,
+            spotifyTokens: {
+              ...req.result.spotifyTokens,
+              access: spotify.accessToken
+            }
+          };
           if (spotifyRefreshToken) {
-            payload.spotifyRefreshToken = spotifyRefreshToken;
+            payload.spotifyTokens.refresh = spotifyRefreshToken;
           }
           dispatch(updateSettings(payload));
         });
@@ -74,7 +81,7 @@ const App = ({ dispatch }) => {
   const fetchSpotifyTokens = () => {
     getStateFromIdb((req, db) => () => {
       const code = getSpotifyCodeFromQuery();
-      const refreshToken = get(req, "result.spotifyRefreshToken");
+      const refreshToken = get(req, "result.spotifyTokens.refresh");
       const spotify = get(req, "result.spotify", {});
       const expiresAt = spotify.expiresAt;
 

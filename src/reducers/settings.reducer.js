@@ -17,7 +17,11 @@ const initialState = {
   volume: VOLUME_DEFAULT,
   musicLibraryPaths: [],
   spotify: {},
-  spotifyRefreshToken: undefined
+  // Has to be separate because Spotify does not always send a new refresh token
+  spotifyTokens: {
+    access: undefined,
+    refresh: undefined
+  }
 };
 
 const settings = (state = initialState, action) => {

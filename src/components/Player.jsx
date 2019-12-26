@@ -33,7 +33,7 @@ const Player = ({
   dispatch,
   src,
   currentItem,
-  spotifyToken
+  spotifyTokens
 }) => {
   const [duration, setDuration] = useState(0);
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT);
@@ -48,11 +48,11 @@ const Player = ({
       event.preventDefault();
     }
     // SPOTIFY
-    if (spotifyToken) {
+    if (spotifyTokens.access) {
       if (isPlaying) {
-        dispatch(pause(spotifyToken));
+        dispatch(pause(spotifyTokens));
       } else {
-        dispatch(play(spotifyToken));
+        dispatch(play(spotifyTokens));
       }
       return;
     }
@@ -72,7 +72,7 @@ const Player = ({
       return;
     }
     // Dispatch first play action
-    dispatch(play(spotifyToken));
+    dispatch(play(spotifyTokens));
   };
   useKeyPress(KEYS.Space, playOrPause);
 
@@ -182,7 +182,7 @@ export default connect(
     currentItem: state.player.currentItem,
     volume: state.settings.volume,
     replaygainType: state.settings.replaygainType,
-    spotifyToken: state.settings.spotify.accessToken
+    spotifyTokens: state.settings.spotifyTokens
   }),
   dispatch => ({ dispatch })
 )(Player);

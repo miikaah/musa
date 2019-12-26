@@ -35,7 +35,7 @@ const SearchBlockWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const Search = ({ query, artists, albums, songs, token, dispatch }) => {
+const Search = ({ query, artists, albums, songs, spotifyTokens, dispatch }) => {
   const [searchArtists, setSearchArtists] = useState([]);
   const [searchAlbums, setSearchAlbums] = useState([]);
   const [searchSongs, setSearchSongs] = useState([]);
@@ -60,10 +60,13 @@ const Search = ({ query, artists, albums, songs, token, dispatch }) => {
   useEffect(() => {
     const doSearch = async () => {
       if (isEmpty(throttledSpotifyQuery)) return;
-      const results = await Spotify.search(token, throttledSpotifyQuery);
-      setSpotifyArtists(results.artists.items);
-      setSpotifyAlbums(results.albums.items);
-      setSpotifySongs(results.tracks.items);
+      const results = await Spotify.search(
+        spotifyTokens,
+        throttledSpotifyQuery
+      );
+      setSpotifyArtists(results.artists && results.artists.items);
+      setSpotifyAlbums(results.albums && results.albums.items);
+      setSpotifySongs(results.tracks && results.tracks.items);
     };
     doSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,7 +135,7 @@ export default withRouter(
       artists: state.library.listing,
       albums: state.library.albums,
       songs: state.library.songs,
-      token: state.settings.spotify.accessToken
+      spotifyTokens: state.settings.spotifyTokens
     }),
     dispatch => ({ dispatch })
   )(Search)
