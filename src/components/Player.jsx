@@ -7,6 +7,7 @@ import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
 import { store } from "..";
 import { KEYS, getReplaygainDb } from "../util";
 import { useKeyPress } from "../hooks";
+import { isSpotifyResource } from "../spotify.util";
 import PlayerSeek from "./PlayerSeek";
 import PlayerVolume from "./PlayerVolume";
 import PlayerPlayPauseButton from "./PlayerPlayPauseButton";
@@ -52,7 +53,7 @@ const Player = ({
       if (isPlaying) {
         dispatch(pause(spotifyTokens));
       } else {
-        dispatch(play(spotifyTokens));
+        dispatch(play(spotifyTokens, currentItem));
       }
       return;
     }
@@ -155,7 +156,11 @@ const Player = ({
 
   return (
     <PlayerContainer>
-      <audio controls src={src} ref={player} />
+      <audio
+        controls
+        src={isSpotifyResource(currentItem) ? "" : src}
+        ref={player}
+      />
       <PlayerPlayPauseButton playOrPause={playOrPause} />
       <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
       <PlayerVolume

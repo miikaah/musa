@@ -2,9 +2,15 @@ import React from "react";
 import { connect } from "react-redux";
 import { get, isEmpty } from "lodash-es";
 import styled, { css } from "styled-components/macro";
-import { dispatchToast } from "../util";
+import { dispatchToast, formatDuration } from "../util";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
-import Spotify, { isSpotifyAlbum } from "services/spotify";
+import Spotify from "services/spotify";
+import {
+  getSpotifyImage,
+  SpotifyImage,
+  getArtists,
+  isSpotifyResource
+} from "../spotify.util";
 import AlbumImage from "./AlbumImage";
 import AlbumInfo from "./AlbumInfo";
 
@@ -79,7 +85,25 @@ const Album = ({ item, spotifyTokens, dispatch }) => {
   if (isEmpty(item)) return null;
 
   const addSpotifyAlbum = async () => {
-    console.log(await Spotify.getAlbumsTracks(spotifyTokens, item));
+    const albumTracks = await Spotify.getAlbumsTracks(spotifyTokens, item);
+    console.log(albumTracks);
+    dispatch(
+      pasteToPlaylist(
+        albumTracks.items.map(i => ({
+          ...i,
+          metadata: {
+            artist: getArtists(i),
+            album: item.name,
+            track: i.track_number,
+            title: i.name,
+            duration: formatDuration(i.duration_ms / 1000),
+            date: item.release_date.split("-")[0]
+          },
+          cover: getSpotifyImage(item, SpotifyImage.Lg),
+          isSpotify: true
+        }))
+      )
+    );
   };
 
   const addAlbumSongsToPlaylist = () => {
@@ -98,7 +122,9 @@ const Album = ({ item, spotifyTokens, dispatch }) => {
   };
 
   const handleAlbumFullAdd = () => {
-    return isSpotifyAlbum(item) ? addSpotifyAlbum() : addAlbumSongsToPlaylist();
+    return isSpotifyResource(item)
+      ? addSpotifyAlbum()
+      : addAlbumSongsToPlaylist();
   };
 
   const addSongToPlaylist = song => {

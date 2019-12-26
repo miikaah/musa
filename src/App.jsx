@@ -19,6 +19,7 @@ import { breakpointLg } from "./breakpoints";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
 import Search from "views/Search";
+import Spotify from "views/Spotify";
 import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
 import ProgressBar from "components/ProgressBar";
@@ -141,6 +142,7 @@ const App = ({ dispatch }) => {
           />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/search" component={Search} />
+          <Route exact path="/spotify" component={Spotify} />
         </Switch>
       </AppContainer>
     </Router>

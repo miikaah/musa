@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { get, isNaN, isEqual } from "lodash-es";
-import { playIndex, replay } from "reducers/player.reducer";
+import { playIndex, spotifyPlayIndex, replay } from "reducers/player.reducer";
 import styled from "styled-components/macro";
 import { Cell } from "../common.styles";
+import { isSpotifyResource } from "../spotify.util";
 import PlayIcon from "components/PlayIcon";
 import PauseIcon from "components/PauseIcon";
 
@@ -30,6 +31,7 @@ const PlaylistItem = ({
   currentItem,
   currentIndex,
   isPlaying,
+  spotifyTokens,
   index,
   activeIndex,
   startIndex,
@@ -91,7 +93,11 @@ const PlaylistItem = ({
       dispatch(replay(true));
       return;
     }
-    dispatch(playIndex(index));
+    dispatch(
+      isSpotifyResource(item)
+        ? spotifyPlayIndex(spotifyTokens, item, index)
+        : playIndex(index)
+    );
     onSetActiveIndex(index);
   };
 
@@ -158,7 +164,8 @@ export default connect(
   state => ({
     currentItem: state.player.currentItem,
     currentIndex: state.player.currentIndex,
-    isPlaying: state.player.isPlaying
+    isPlaying: state.player.isPlaying,
+    spotifyTokens: state.settings.spotifyTokens
   }),
   dispatch => ({ dispatch })
 )(PlaylistItem);

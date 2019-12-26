@@ -3,8 +3,8 @@ import Spotify from "services/spotify";
 import { getFileUri } from "../util";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
-export const play = tokens => {
-  if (tokens) Spotify.play(tokens);
+export const play = (tokens, item) => {
+  if (tokens) Spotify.play(tokens, item);
   return {
     type: PLAY
   };
@@ -15,6 +15,15 @@ export const playIndex = index => ({
   type: PLAY_INDEX,
   index
 });
+
+export const spotifyPlayIndex = (tokens, item, index) => {
+  console.log(item);
+  Spotify.play(tokens, item);
+  return {
+    type: PLAY_INDEX,
+    index
+  };
+};
 
 export const PLAY_NEXT = "MUSA/PLAYER/PLAY_NEXT";
 export const playNext = () => ({
@@ -107,6 +116,7 @@ const player = (state = initialState, action) => {
         ? action.index
         : state.currentIndex + 1;
       const newItem = state.items[newIndex];
+      console.log(newItem);
       if (newItem) {
         return {
           ...state,
@@ -172,14 +182,19 @@ const player = (state = initialState, action) => {
   }
 };
 
-function getPlayBase(newItem, newIndex) {
+function getPlayBase(item, index) {
   return {
-    currentItem: newItem,
-    currentIndex: newIndex,
+    currentItem: item,
+    currentIndex: index,
     isPlaying: true,
-    src: getFileUri(newItem.path),
-    cover: isEmpty(newItem.cover) ? "" : getFileUri(newItem.cover)
+    src: item.isSpotify ? item.uri : getFileUri(item.path),
+    cover: getCoverSrc(item)
   };
+}
+
+function getCoverSrc(item) {
+  if (item.isSpotify) return item.cover;
+  return isEmpty(item.cover) ? "" : getFileUri(item.cover);
 }
 
 function getStateByPlaylistChange(state, newItems) {

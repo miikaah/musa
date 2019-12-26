@@ -64,6 +64,7 @@ const Search = ({ query, artists, albums, songs, spotifyTokens, dispatch }) => {
         spotifyTokens,
         throttledSpotifyQuery
       );
+      console.log(results);
       setSpotifyArtists(results.artists && results.artists.items);
       setSpotifyAlbums(results.albums && results.albums.items);
       setSpotifySongs(results.tracks && results.tracks.items);

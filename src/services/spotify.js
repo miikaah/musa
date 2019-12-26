@@ -1,12 +1,7 @@
 import promiseIpc from "electron-promise-ipc";
-import { startsWith } from "lodash-es";
 
-export const isSpotifyAlbum = item => {
-  return startsWith(item.uri, "spotify");
-};
-
-const play = async tokens => {
-  return promiseIpc.send("SpotifyPlay", tokens);
+const play = async (tokens, item) => {
+  return promiseIpc.send("SpotifyPlay", tokens, item);
 };
 
 const pause = async tokens => {

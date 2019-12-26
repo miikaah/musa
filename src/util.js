@@ -59,6 +59,18 @@ export const getReplaygainDb = (replaygainType, currentItem) => {
   }
 };
 
+export function formatDuration(duration) {
+  if (duration < 1) return "0:00";
+  let output = "";
+  if (duration >= 3600) {
+    output += prefixNumber(Math.floor(duration / 3600)) + ":";
+    output +=
+      prefixNumber(Math.floor((Math.floor(duration) % 3600) / 60)) + ":";
+  } else output += Math.floor((Math.floor(duration) % 3600) / 60) + ":";
+  output += prefixNumber(Math.floor(duration % 60));
+  return output;
+}
+
 export function prefixNumber(value) {
   return value < 10 ? `0${value}` : `${value}`;
 }

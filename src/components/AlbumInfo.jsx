@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
+import { getArtists, getDate } from "../spotify.util";
 
 const Info = styled.div`
   padding: 4px 20px;
@@ -16,16 +17,6 @@ const Info = styled.div`
     font-weight: bold;
   }
 `;
-
-const getArtists = item => {
-  if (item.artist) return item.artist;
-  return (item.artists || []).map(a => a.name).join(", ");
-};
-
-const getDate = item => {
-  if (item.date) return item.date;
-  return item.release_date && item.release_date.split("-")[0];
-};
 
 const AlbumInfo = ({ item }) => {
   return (
