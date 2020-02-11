@@ -103,7 +103,7 @@ const Player = ({
   useEffect(() => {
     const handleStoreChange = () => {
       const state = store.getState().player;
-      const shouldReplay = state.replay;
+      const { replay: shouldReplay, currentItem } = state;
 
       if (shouldReplay) {
         player.current.currentTime = 0;
@@ -116,6 +116,10 @@ const Player = ({
         }
         dispatch(replay(false));
       }
+
+      if (!currentItem || !currentItem.metadata) return;
+
+      document.title = currentItem.metadata.title;
     };
     store.subscribe(handleStoreChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
