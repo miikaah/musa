@@ -5,7 +5,6 @@ import styled from "styled-components/macro";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
 import Library from "components/Library";
-import LibraryIcon from "components/LibraryIcon";
 import Player from "components/Player";
 
 const ToolbarContainer = styled.div`
@@ -95,7 +94,7 @@ const Toolbar = ({ location, history }) => {
   return (
     <ToolbarContainer id="Toolbar" onClick={handleToolbarClick}>
       <Button onClick={toggleLibrary} ref={libraryButtonRef}>
-        <LibraryIcon />
+        <FontAwesomeIcon icon="bars" />
       </Button>
       <Library ref={libraryRef} isVisible={isLibraryVisible} />
 
