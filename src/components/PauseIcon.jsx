@@ -11,7 +11,7 @@ const Icon = styled.div`
     width: ${({ isSmall }) => (isSmall ? "3px" : "4px")};
     height: ${({ isSmall }) => (isSmall ? "10px" : "18px")};
     margin-right: ${({ isSmall }) => (isSmall ? "2px" : "4px")};
-    background-color: var(--color-typography);
+    background-color: var(--color-typography-primary);
   }
 `;
 

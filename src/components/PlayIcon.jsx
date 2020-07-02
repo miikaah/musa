@@ -15,7 +15,7 @@ const Icon = styled.div`
     border-bottom: ${({ isSmall }) => (isSmall ? "6px" : "9px")} solid
       transparent;
     border-left: ${({ isSmall }) => (isSmall ? "10px" : "14px")} solid
-      var(--color-typography);
+      var(--color-typography-primary);
     margin: auto;
   }
 `;
