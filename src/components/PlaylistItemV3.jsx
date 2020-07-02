@@ -1,10 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { get, isNaN, isEqual } from "lodash-es";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { playIndex, replay } from "reducers/player.reducer";
 import styled from "styled-components/macro";
-import PlayIcon from "components/PlayIcon";
-import PauseIcon from "components/PauseIcon";
 
 const PlaylistItemContainer = styled.li`
   cursor: pointer;
@@ -28,7 +27,7 @@ const PlaylistItemContainer = styled.li`
 const FirstRow = styled.div`
   display: flex;
   justify-content: space-between;
-  padding-right: 40px;
+  padding: 6px 40px 4px 10px;
 `;
 
 const IconTitleWrapper = styled.div`
@@ -36,13 +35,12 @@ const IconTitleWrapper = styled.div`
 `;
 
 const Icon = styled.span`
-  width: 40px;
+  width: 30px;
 `;
 
 const Title = styled.span`
   font-size: var(--font-size-sm);
   font-weight: normal;
-  padding: 6px 8px 4px 0;
 `;
 
 const Duration = styled.span`
@@ -151,7 +149,11 @@ const PlaylistItem = ({
 
   const renderPlayOrPauseIcon = () => {
     if (!isIndexCurrentIndex() || !hasEqualItemAndCurrentItem()) return;
-    return isPlaying ? <PlayIcon isSmall /> : <PauseIcon isSmall />;
+    return isPlaying ? (
+      <FontAwesomeIcon icon="play" />
+    ) : (
+      <FontAwesomeIcon icon="pause" />
+    );
   };
 
   useEffect(() => {
