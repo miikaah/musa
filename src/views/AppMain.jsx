@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
-import Playlist from "components/PlaylistV2Container";
+import Playlist from "components/PlaylistV3";
 import Cover from "components/Cover";
 import { breakpoint } from "../breakpoints";
 import { listOverflow } from "../common.styles";

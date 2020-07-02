@@ -43,7 +43,7 @@ export const rangeInput = css`
 `;
 
 export const Cell = styled.div`
-  padding: 2px 4px;
+  padding: 2px 12px;
   flex: ${({ size }) => {
     switch (size) {
       case "xxs":

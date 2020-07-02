@@ -2,6 +2,7 @@
   --font-size-md: 18px;
   --font-size-sm: 16px;
   --font-size-xs: 14px;
+  --font-size-xxs: 12px;
   --toolbar-height: 46px;
   --color-white: #fbfbfb;
   --color-black: #000;
@@ -19,7 +20,7 @@ a {
 body {
   margin: 0;
   padding: 0;
-  font-family: Helvetica, Tahoma, sans-serif;
+  font-family: Verdana, Tahoma, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
