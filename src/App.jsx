@@ -3,6 +3,8 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faPlay,
+  faPause,
   faVolumeUp,
   faVolumeMute,
   faCog,
@@ -34,7 +36,15 @@ const AppContainer = styled.div`
   user-select: none;
 `;
 
-library.add(faVolumeUp, faVolumeMute, faCog, faSearch, faTrash);
+library.add(
+  faPlay,
+  faPause,
+  faVolumeUp,
+  faVolumeMute,
+  faCog,
+  faSearch,
+  faTrash
+);
 
 function clearWebFrameCache() {
   webFrame.clearCache();

@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { get, isNaN, isEqual } from "lodash-es";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { playIndex, replay } from "reducers/player.reducer";
 import styled from "styled-components/macro";
 import { Cell } from "../common.styles";
-import PlayIcon from "components/PlayIcon";
-import PauseIcon from "components/PauseIcon";
 
 const PlaylistItemContainer = styled.li`
   cursor: pointer;
@@ -115,7 +114,11 @@ const PlaylistItem = ({
 
   const renderPlayOrPauseIcon = () => {
     if (!isIndexCurrentIndex() || !hasEqualItemAndCurrentItem()) return;
-    return isPlaying ? <PlayIcon isSmall /> : <PauseIcon isSmall />;
+    return isPlaying ? (
+      <FontAwesomeIcon icon="play" />
+    ) : (
+      <FontAwesomeIcon icon="pause" />
+    );
   };
 
   useEffect(() => {
