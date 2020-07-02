@@ -41,7 +41,7 @@ const Icon = styled.span`
 
 const Title = styled.span`
   font-size: var(--font-size-sm);
-  font-weight: bold;
+  font-weight: normal;
   padding: 6px 8px 4px 0;
 `;
 
