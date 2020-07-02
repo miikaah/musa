@@ -125,6 +125,10 @@ export function updateCurrentTheme(colors) {
   document.body.style.setProperty("--color-slider", `rgb(${colors.slider})`);
   document.body.style.setProperty("--color-typography", colors.typography);
   document.body.style.setProperty(
+    "--color-typography-ghost",
+    colors.typographyGhost
+  );
+  document.body.style.setProperty(
     "--color-typography-primary",
     colors.typographyPrimary
   );

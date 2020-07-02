@@ -2,8 +2,19 @@ import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { get, isNaN, isEqual } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styled, { css } from "styled-components/macro";
 import { playIndex, replay } from "reducers/player.reducer";
-import styled from "styled-components/macro";
+
+const colorCss = css`
+  background-color: var(--color-primary-highlight);
+  color: var(--color-typography-primary);
+
+  > div {
+    > span {
+      color: var(--color-typography-primary);
+    }
+  }
+`;
 
 const PlaylistItemContainer = styled.li`
   cursor: pointer;
@@ -12,15 +23,13 @@ const PlaylistItemContainer = styled.li`
   justify-content: center;
 
   &:hover {
-    background-color: var(--color-primary-highlight);
-    color: var(--color-typography-primary);
+    ${colorCss}
   }
 
   ${({ isActiveOrSelected }) =>
     isActiveOrSelected &&
     `
-    background-color: var(--color-primary-highlight);
-    color: var(--color-typography-primary);
+    ${colorCss}
   `}
 `;
 
@@ -53,6 +62,7 @@ const SecondRow = styled.div`
   font-size: var(--font-size-xxs);
   padding-left: 40px;
   margin-bottom: 12px;
+  color: var(--color-typography-ghost);
 `;
 
 const SecondRowItem = styled.span`

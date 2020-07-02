@@ -13,6 +13,8 @@ const Colors = {
   Secondary: "#21737e",
   Typography: "#fbfbfb",
   TypographyLight: "#000",
+  TypographyGhost: "#d2d2d2",
+  TypographyGhostLight: "#4a4a4a",
   PrimaryRgb: [117, 53, 151],
   SliderTrack: "#424a56",
   SliderTrackRgb: [66, 74, 86],
@@ -90,6 +92,7 @@ const Cover = ({ coverSrc, defaultTheme, dispatch }) => {
           primary,
           secondary,
           color = Colors.Typography,
+          ghostColor = Colors.TypographyGhost,
           primaryColor = Colors.Typography,
           secondaryColor = Colors.Typography,
           primarySwatches = [
@@ -104,8 +107,10 @@ const Cover = ({ coverSrc, defaultTheme, dispatch }) => {
 
         // Set different colors for a light cover
         if (isVibrantCover(mostPopularSwatch)) {
-          if (contrast(Colors.WhiteRgb, bg.rgb) < 3.4)
+          if (contrast(Colors.WhiteRgb, bg.rgb) < 3.4) {
             color = Colors.TypographyLight;
+            ghostColor = Colors.TypographyGhostLight;
+          }
           primarySwatches = [
             defaultTo(palette.vibrantSwatch, {}),
             defaultTo(palette.lightVibrantSwatch, {})
@@ -161,16 +166,19 @@ const Cover = ({ coverSrc, defaultTheme, dispatch }) => {
           slider = secondary;
 
         // Switch to dark text for light covers
-        if (contrast(Colors.WhiteRgb, primary.rgb) < 2.6)
+        if (contrast(Colors.WhiteRgb, primary.rgb) < 2.6) {
           primaryColor = Colors.TypographyLight;
-        if (contrast(Colors.WhiteRgb, secondary.rgb) < 2.6)
+        }
+        if (contrast(Colors.WhiteRgb, secondary.rgb) < 2.6) {
           secondaryColor = Colors.TypographyLight;
+        }
 
         const colors = {
           bg: defaultTo(bg.rgb, Colors.Bg),
           primary: defaultTo(primary.rgb, Colors.Primary),
           secondary: defaultTo(secondary.rgb, Colors.Secondary),
           typography: defaultTo(color, Colors.Typography),
+          typographyGhost: defaultTo(ghostColor, Colors.TypographyGhost),
           typographyPrimary: defaultTo(primaryColor, Colors.Typography),
           typographySecondary: defaultTo(secondaryColor, Colors.Typography),
           slider: slider.rgb
