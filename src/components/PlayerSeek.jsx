@@ -6,9 +6,8 @@ import { useAnimationFrame } from "../hooks";
 import { rangeInput } from "../common.styles";
 
 const SeekContainer = styled.span`
-  margin-right: 16px;
-
   ${rangeInput}
+  height: 20px;
 
   input {
     min-width: 240px;

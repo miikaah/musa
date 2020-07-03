@@ -29,14 +29,13 @@ const CoverContainer = styled.div`
   min-width: 600px;
   overflow: hidden;
   background-color: var(--color-bg);
-  padding-bottom: 0;
 `;
 
 const CoverImage = styled.img`
   display: block;
   height: auto;
   width: 100%;
-  margin: 0 auto 20px;
+  margin: 0 auto;
   max-height: ${800 + marginTop + marginBottom}px;
   max-width: 800px;
 

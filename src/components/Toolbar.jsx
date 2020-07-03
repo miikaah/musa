@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { withRouter } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
 import Library from "components/Library";
@@ -9,18 +9,37 @@ import Player from "components/Player";
 
 const ToolbarContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
-  padding: 8px 12px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
   width: 100%;
-  height: 30px;
+  min-height: var(--toolbar-height);
   z-index: 10;
   position: absolute;
+  background: var(--color-bg);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 16px;
 `;
 
-const Button = styled.button`
+const buttonCss = css`
   font-size: 1.4rem;
-  margin-right: 12px;
   outline: none;
+`;
+
+const LibraryButton = styled.button`
+  ${buttonCss}
+`;
+
+const RightContainer = styled.div`
+  min-width: 57px;
+`;
+
+const SearchButton = styled.button`
+  ${buttonCss}
+  margin-right: 12px;
+`;
+
+const SettingsButton = styled.button`
+  ${buttonCss}
 `;
 
 const Toolbar = ({ location, history }) => {
@@ -100,22 +119,26 @@ const Toolbar = ({ location, history }) => {
   };
 
   return (
-    <ToolbarContainer id="Toolbar" onClick={handleToolbarClick}>
-      <Button onClick={toggleLibrary} ref={libraryButtonRef}>
-        <FontAwesomeIcon icon="bars" />
-      </Button>
+    <>
       <Library ref={libraryRef} isVisible={isLibraryVisible} />
+      <ToolbarContainer id="Toolbar" onClick={handleToolbarClick}>
+        <LibraryButton onClick={toggleLibrary} ref={libraryButtonRef}>
+          <FontAwesomeIcon icon="bars" />
+        </LibraryButton>
 
-      <Player />
+        <Player />
 
-      <Button onClick={toggleSettings} ref={settingsButtonRef}>
-        <FontAwesomeIcon icon="cog" />
-      </Button>
+        <RightContainer>
+          <SearchButton onClick={toggleSearch} ref={searchButtonRef}>
+            <FontAwesomeIcon icon="search" />
+          </SearchButton>
 
-      <Button onClick={toggleSearch} ref={searchButtonRef}>
-        <FontAwesomeIcon icon="search" />
-      </Button>
-    </ToolbarContainer>
+          <SettingsButton onClick={toggleSettings} ref={settingsButtonRef}>
+            <FontAwesomeIcon icon="cog" />
+          </SettingsButton>
+        </RightContainer>
+      </ToolbarContainer>
+    </>
   );
 };
 

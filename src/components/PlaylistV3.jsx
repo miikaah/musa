@@ -16,13 +16,12 @@ import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
 
 const PlaylistContainer = styled.ul`
-  padding: 0;
+  padding: 14px 0;
   margin: 0;
   border: 0 solid var(--color-primary-highlight);
   border-left-width: 1px;
   border-right-width: 3px;
   background-color: var(--color-bg);
-  box-shadow: -22px 10px 31px -16px rgba(10, 10, 10, 0.75);
   min-height: 94vh;
 
   @media (max-width: ${breakpoint.lg}) {

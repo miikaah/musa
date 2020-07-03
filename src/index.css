@@ -3,7 +3,7 @@
   --font-size-sm: 16px;
   --font-size-xs: 14px;
   --font-size-xxs: 12px;
-  --toolbar-height: 46px;
+  --toolbar-height: 60px;
   --color-white: #fbfbfb;
   --color-black: #000;
   --color-slider-track: #424a56;
@@ -15,6 +15,10 @@ html {
 
 a {
   color: var(--color-typography);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {

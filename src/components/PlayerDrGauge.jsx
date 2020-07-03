@@ -13,7 +13,7 @@ const Colors = {
 const DynamicRangeContainer = styled.span`
   color: var(--color-white);
   background-color: var(--color-black);
-  margin-left: 12px;
+  margin: 0 12px;
   padding: 0 2px 7px;
   visibility: ${({ isHidden }) => isHidden && "hidden"};
 `;

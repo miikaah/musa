@@ -5,13 +5,14 @@ import styled from "styled-components/macro";
 import { prefixNumber } from "../util";
 
 const TimeDisplay = styled.span`
-  padding-left: 12px;
+  min-width: 100px;
+  display: inline-block;
+  text-align: right;
 `;
 
 const TimePlayed = styled.span`
   min-width: 36px;
   display: inline-block;
-  text-align: left;
 `;
 
 const PlayerTimeDisplay = ({ currentTime, currentItem }) => {

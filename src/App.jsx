@@ -32,7 +32,7 @@ const AppContainer = styled.div`
   min-height: 100vh;
   max-height: 100vh;
   min-width: 360px;
-  overflow: auto;
+  overflow: hidden;
   color: var(--color-typography);
   user-select: none;
 `;

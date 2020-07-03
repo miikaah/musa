@@ -4,10 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
 
 const VolumeButtonContainer = styled.span`
-  margin-right: 16px;
-  width: 20px;
+  min-width: 42px;
+  max-width: 42px;
+  display: inline-block;
+  margin-top: 2px;
 
   > button {
+    padding: 0 6px;
+    margin: 0 6px;
     font-size: 1rem;
   }
 `;

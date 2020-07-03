@@ -30,7 +30,7 @@ export const rangeInput = css`
   }
 
   input[type="range"]::-webkit-slider-runnable-track {
-    height: 10px;
+    height: 5px;
     appearance: none;
     margin-top: -1px;
   }

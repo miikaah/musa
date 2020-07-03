@@ -20,11 +20,11 @@ const LibraryContainer = styled.div`
   box-shadow: 25px 10px 31px -17px rgba(10, 10, 10, 0.75);
   position: absolute;
   min-width: 400px;
-  z-index: 1;
+  z-index: 11;
   height: 100vh;
-  margin: 30px 0 0 -12px;
+  margin-top: var(--toolbar-height);
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
-
+  padding-bottom: 40px;
   ${listOverflow}
 `;
 

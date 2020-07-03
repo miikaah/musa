@@ -4,7 +4,7 @@ import styled from "styled-components/macro";
 import { rangeInput } from "../common.styles";
 
 const VolumeContainer = styled.span`
-  margin-right: 16px;
+  margin-right: 12px;
 
   ${rangeInput}
 `;

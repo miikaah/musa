@@ -15,12 +15,29 @@ import PlayerTimeDisplay from "./PlayerTimeDisplay";
 import PlayerDrGauge from "./PlayerDrGauge";
 
 const PlayerContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 0.8rem;
-  padding: 6px;
+  width: 100%;
 
   audio {
     display: none;
   }
+`;
+
+const PlayerLeftContainer = styled.div`
+  display: flex;
+  height: 20px;
+`;
+
+const PlayerMiddleContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const PlayerRightContainer = styled.div`
+  margin-top: -4px;
 `;
 
 const VOLUME_MUTED = 0;
@@ -150,20 +167,29 @@ const Player = ({
   return (
     <PlayerContainer>
       <audio controls src={src} ref={player} />
-      <PlayerPlayPauseButton playOrPause={playOrPause} />
-      <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
-      <PlayerVolume
-        volume={volume}
-        setVolumeForStateAndPlayer={setVolumeForStateAndPlayer}
-      />
-      <PlayerSeek
-        player={player}
-        duration={duration}
-        currentTime={currentTime}
-        setCurrentTime={setCurrentTime}
-      />
-      <PlayerTimeDisplay currentTime={currentTime} currentItem={currentItem} />
-      <PlayerDrGauge currentItem={currentItem} />
+      <PlayerLeftContainer>
+        <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
+        <PlayerVolume
+          volume={volume}
+          setVolumeForStateAndPlayer={setVolumeForStateAndPlayer}
+        />
+      </PlayerLeftContainer>
+      <PlayerMiddleContainer>
+        <PlayerPlayPauseButton playOrPause={playOrPause} />
+        <PlayerSeek
+          player={player}
+          duration={duration}
+          currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
+        />
+        <PlayerTimeDisplay
+          currentTime={currentTime}
+          currentItem={currentItem}
+        />
+      </PlayerMiddleContainer>
+      <PlayerRightContainer>
+        <PlayerDrGauge currentItem={currentItem} />
+      </PlayerRightContainer>
     </PlayerContainer>
   );
 };
