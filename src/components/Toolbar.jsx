@@ -80,14 +80,22 @@ const Toolbar = ({ location, history }) => {
     event.stopPropagation();
   };
 
-  const goToSettings = event => {
+  const toggleSettings = event => {
     settingsButtonRef.current.blur();
-    history.push("/settings");
+    if (location.pathname === "/settings") {
+      history.push("/");
+    } else {
+      history.push("/settings");
+    }
     event.stopPropagation();
   };
-  const goToSearch = event => {
+  const toggleSearch = event => {
     searchButtonRef.current.blur();
-    history.push("/search");
+    if (location.pathname === "/search") {
+      history.push("/");
+    } else {
+      history.push("/search");
+    }
     event.stopPropagation();
   };
 
@@ -100,11 +108,11 @@ const Toolbar = ({ location, history }) => {
 
       <Player />
 
-      <Button onClick={goToSettings} ref={settingsButtonRef}>
+      <Button onClick={toggleSettings} ref={settingsButtonRef}>
         <FontAwesomeIcon icon="cog" />
       </Button>
 
-      <Button onClick={goToSearch} ref={searchButtonRef}>
+      <Button onClick={toggleSearch} ref={searchButtonRef}>
         <FontAwesomeIcon icon="search" />
       </Button>
     </ToolbarContainer>
