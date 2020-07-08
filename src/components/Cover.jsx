@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { connect } from "react-redux";
-import { defaultTo, sortBy, some, isEqual } from "lodash-es";
+import { get, defaultTo, sortBy, some, isEqual } from "lodash-es";
 import Palette from "img-palette";
 import styled from "styled-components/macro";
 import { breakpoint } from "../breakpoints";
@@ -24,11 +24,11 @@ const Colors = {
 const marginTop = 12;
 const marginBottom = 20;
 
-const CoverContainer = styled.div`
+const Container = styled.div`
   flex: 40%;
 `;
 
-const CoverImage = styled.img`
+const Image = styled.img`
   display: block;
   height: auto;
   width: 100%;
@@ -39,6 +39,28 @@ const CoverImage = styled.img`
   @media (max-width: ${breakpoint.lg}) {
     max-height: ${600 + marginTop + marginBottom}px;
     max-width: 600px;
+  }
+`;
+
+const Info = styled.div`
+  padding: 20px;
+
+  > div:nth-child(1) {
+    padding-bottom: 8px;
+  }
+
+  > div:nth-child(2) {
+    font-weight: bold;
+    padding-bottom: 8px;
+    font-size: 30px;
+  }
+
+  > div:nth-child(3) {
+    font-size: var(--font-size-xs);
+
+    > span:nth-child(2) {
+      margin: 0 4px;
+    }
   }
 `;
 
@@ -61,7 +83,7 @@ const contrast = (rgb1, rgb2) => {
   );
 };
 
-const Cover = ({ coverSrc, defaultTheme, dispatch }) => {
+const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
   const cover = useRef();
 
   useEffect(() => {
@@ -212,17 +234,32 @@ const Cover = ({ coverSrc, defaultTheme, dispatch }) => {
     if (!coverSrc) updateCurrentTheme(defaultTheme);
   }, [coverSrc, defaultTheme]);
 
+  const artist = get(currentItem, "metadata.artist", "");
+  const title = get(currentItem, "metadata.title", currentItem.name);
+  const album = get(currentItem, "metadata.album", "");
+  const date = get(currentItem, "metadata.date", "");
+
   return (
-    <CoverContainer>
-      <CoverImage src={coverSrc} ref={cover} />
-    </CoverContainer>
+    <Container>
+      <Image src={coverSrc} ref={cover} />
+      <Info>
+        <div>{title}</div>
+        <div>{album}</div>
+        <div>
+          <span>{artist}</span>
+          <span>{"\u00B7"}</span>
+          <span>{date}</span>
+        </div>
+      </Info>
+    </Container>
   );
 };
 
 export default connect(
   state => ({
     coverSrc: state.player.cover,
-    defaultTheme: state.settings.defaultTheme
+    defaultTheme: state.settings.defaultTheme,
+    currentItem: state.player.currentItem
   }),
   dispatch => ({ dispatch })
 )(Cover);
