@@ -1,54 +1,10 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
 import { get } from "lodash-es";
-import styled, { css } from "styled-components/macro";
+import ProgressInput from "./ProgressInput";
 import { useInterval } from "../hooks";
 
 const MAIN_BUTTON_DOWN = 1;
-
-const SeekContainer = styled.div`
-  display: flex;
-  align-items: center;
-  height: 20px;
-  cursor: pointer;
-
-  :hover {
-    > div {
-      > div {
-        > div {
-          background-color: red;
-        }
-      }
-    }
-  }
-`;
-
-const SeekCss = css`
-  border-radius: 2px;
-  height: 4px;
-  width: 100%;
-`;
-
-const SeekBg = styled.div`
-  ${SeekCss}
-  min-width: 240px;
-  background-color: var(--color-slider-track);
-  display: flex;
-`;
-
-const SeekFgWrapper = styled.div`
-  ${SeekCss}
-  overflow: hidden;
-`;
-
-const SeekFg = styled.div.attrs(({ progress }) => ({
-  style: {
-    transform: `translateX(-${progress}%)`
-  }
-}))`
-  ${SeekCss}
-  background-color: var(--color-slider);
-`;
 
 const PlayerSeek = ({
   player,
@@ -96,18 +52,12 @@ const PlayerSeek = ({
   };
 
   return (
-    <SeekContainer
-      onMouseDown={handleSeek}
-      onMouseMove={handleSeek}
+    <ProgressInput
+      handleMouseDown={handleSeek}
+      handleMouseMove={handleSeek}
       ref={playerSeek}
-      onFocus={() => playerSeek.current.blur()}
-    >
-      <SeekBg>
-        <SeekFgWrapper>
-          <SeekFg progress={convertCurrentTimeToPercentage()} />
-        </SeekFgWrapper>
-      </SeekBg>
-    </SeekContainer>
+      progress={convertCurrentTimeToPercentage()}
+    />
   );
 };
 
