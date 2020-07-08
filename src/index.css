@@ -53,5 +53,4 @@ h6 {
 input {
   padding: 10px 30px;
   font-size: var(--font-size-md);
-  box-sizing: border-box;
 }

@@ -26,7 +26,7 @@ const sharedCss = css`
 
 const Background = styled.div`
   ${sharedCss}
-  min-width: 240px;
+  min-width: ${({ minWidth }) => minWidth};
   background-color: var(--color-slider-track);
   display: flex;
 `;
@@ -46,7 +46,7 @@ const Foreground = styled.div.attrs(({ progress }) => ({
 `;
 
 const ProgressInput = React.forwardRef(
-  ({ progress, handleMouseDown, handleMouseMove }, ref) => {
+  ({ progress, handleMouseDown, handleMouseMove, minWidth }, ref) => {
     return (
       <Container
         ref={ref}
@@ -54,7 +54,7 @@ const ProgressInput = React.forwardRef(
         onMouseMove={handleMouseMove}
         onFocus={() => ref.current.blur()}
       >
-        <Background>
+        <Background minWidth={minWidth}>
           <ForegroundWrapper>
             <Foreground progress={progress} />
           </ForegroundWrapper>

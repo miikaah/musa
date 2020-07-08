@@ -1,13 +1,8 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
-import { rangeInput } from "../common.styles";
+import ProgressInput from "./ProgressInput";
 
-const VolumeContainer = styled.span`
-  margin-right: 12px;
-
-  ${rangeInput}
-`;
+const MAIN_BUTTON_DOWN = 1;
 
 const VOLUME_MUTED = 0;
 const VOLUME_STEP = 5;
@@ -15,25 +10,30 @@ const VOLUME_STEP = 5;
 const PlayerVolume = ({ volume, setVolumeForStateAndPlayer, dispatch }) => {
   const playerVolume = useRef(null);
 
-  const setVolumeByEvent = event => {
-    const vol = parseInt(event.target.value, 10);
-    const volume = vol === VOLUME_STEP ? VOLUME_MUTED : vol;
-    setVolumeForStateAndPlayer(volume);
+  const setVolumeByEvent = vol => {
+    setVolumeForStateAndPlayer(vol <= VOLUME_STEP ? VOLUME_MUTED : vol);
+  };
+
+  const handleVolumeChange = e => {
+    if (e.type === "mousemove" && e.buttons !== MAIN_BUTTON_DOWN) return;
+    const x = e.clientX;
+    const { left, width } = playerVolume.current.getBoundingClientRect();
+    const vol = Math.floor(((x - left) / width) * 100);
+    setVolumeByEvent(vol);
+  };
+
+  const convertVolumeToPercentage = () => {
+    return 100 - volume;
   };
 
   return (
-    <VolumeContainer>
-      <input
-        type="range"
-        min="0"
-        max="100"
-        ref={playerVolume}
-        step={VOLUME_STEP}
-        value={volume}
-        onChange={setVolumeByEvent}
-        onFocus={() => playerVolume.current.blur()}
-      />
-    </VolumeContainer>
+    <ProgressInput
+      handleMouseDown={handleVolumeChange}
+      handleMouseMove={handleVolumeChange}
+      ref={playerVolume}
+      progress={convertVolumeToPercentage()}
+      minWidth="120px"
+    />
   );
 };
 

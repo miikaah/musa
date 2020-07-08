@@ -57,6 +57,7 @@ const PlayerSeek = ({
       handleMouseMove={handleSeek}
       ref={playerSeek}
       progress={convertCurrentTimeToPercentage()}
+      minWidth="240px"
     />
   );
 };
