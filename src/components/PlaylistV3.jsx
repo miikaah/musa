@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
 import { isNaN, isEqual } from "lodash-es";
 import styled from "styled-components/macro";
@@ -11,11 +11,10 @@ import {
   replay
 } from "reducers/player.reducer";
 import { KEYS, isCtrlDown } from "../util";
-import { breakpoint } from "../breakpoints";
 import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
 
-const PlaylistContainer = styled.ul`
+const Container = styled.ul`
   padding: 14px 0;
   margin: 0;
   border: 0 solid var(--color-primary-highlight);
@@ -23,12 +22,9 @@ const PlaylistContainer = styled.ul`
   border-right-width: 3px;
   background-color: var(--color-bg);
   min-height: 94vh;
-
-  @media (max-width: ${breakpoint.lg}) {
-    border-left-width: 3px;
-    max-height: none;
-    height: auto;
-  }
+  max-height: 94vh;
+  overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
+  flex: 60%;
 `;
 
 const PLAYLIST_CLASSNAME = "playlist";
@@ -46,6 +42,9 @@ const Playlist = ({
   const [endIndex, setEndIndex] = useState(NaN);
   const [selectedIndexes, setSelectedIndexes] = useState(new Set());
   const [clipboard, setClipboard] = useState([]);
+  const [hideOverflow, setHideOverflow] = useState(false);
+
+  const ref = useRef(null);
 
   const isContinuousSelection = () => {
     return (
@@ -305,8 +304,19 @@ const Playlist = ({
     }
   };
 
+  const scroll = () => {
+    setHideOverflow(true);
+    ref.current &&
+      ref.current.scrollTo({
+        top: ref.current.scrollTop + 300,
+        behavior: "smooth"
+      });
+    setTimeout(() => setHideOverflow(false), 500);
+  };
+
   return (
-    <PlaylistContainer
+    <Container
+      ref={ref}
       className={PLAYLIST_CLASSNAME}
       onMouseDown={event => {
         onMouseDown({
@@ -318,6 +328,7 @@ const Playlist = ({
         });
       }}
       onMouseUp={clearSelection}
+      hideOverflow={hideOverflow}
     >
       {playlist.map((item, index) => (
         <PlaylistItem
@@ -332,10 +343,10 @@ const Playlist = ({
           onMouseOverItem={updateEndIndex}
           onMouseDownItem={onMouseDown}
           onMouseUpItem={onMouseUp}
-          onScrollPlaylist={onScrollPlaylist}
+          onScrollPlaylist={scroll}
         />
       ))}
-    </PlaylistContainer>
+    </Container>
   );
 };
 

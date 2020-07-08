@@ -170,8 +170,8 @@ const PlaylistItem = ({
     if (!isIndexCurrentIndex()) return;
     const elRect = elRef.current.getBoundingClientRect();
     if (elRect.bottom > window.innerHeight - 1) {
-      elRef.current.scrollIntoView(false);
-      onScrollPlaylist();
+      elRef.current.scrollIntoView(false); // Scrolls to correct song
+      onScrollPlaylist(); // Scrolls a little bit down so current song isn't at bottom of view
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);

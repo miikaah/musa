@@ -25,10 +25,7 @@ const marginTop = 12;
 const marginBottom = 20;
 
 const CoverContainer = styled.div`
-  min-height: ${600 + marginTop + marginBottom}px;
-  min-width: 600px;
-  overflow: hidden;
-  background-color: var(--color-bg);
+  flex: 40%;
 `;
 
 const CoverImage = styled.img`

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -18,7 +18,6 @@ import { webFrame } from "electron";
 import { FALLBACK_THEME } from "./config";
 import { updateSettings } from "reducers/settings.reducer";
 import { updateCurrentTheme, getStateFromIdb } from "./util";
-import { breakpointLg } from "./breakpoints";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
 import Search from "views/Search";
@@ -57,8 +56,6 @@ const ONE_MINUTE_MS = 60000;
 setInterval(clearWebFrameCache, ONE_MINUTE_MS * 10);
 
 const App = ({ dispatch }) => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
   useEffect(() => {
     getStateFromIdb((req, db) => () => {
       const currentTheme = get(req, "result.defaultTheme", FALLBACK_THEME);
@@ -73,16 +70,6 @@ const App = ({ dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   return (
     <Router>
       <AppContainer>
@@ -90,11 +77,7 @@ const App = ({ dispatch }) => {
         <ProgressBar />
         <Toolbar />
         <Switch>
-          <Route
-            exact
-            path="/"
-            component={() => <AppMain isLarge={windowWidth > breakpointLg} />}
-          />
+          <Route exact path="/" component={AppMain} />
           <Route exact path="/settings" component={Settings} />
           <Route exact path="/search" component={Search} />
         </Switch>
