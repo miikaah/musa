@@ -51,15 +51,15 @@ const LibraryList = ({ item, cover, isRoot, openLibraryPaths, dispatch }) => {
   const getArtistOrAlbumSongs = () => {
     if (isArtist)
       return flatten(
-        item.albums.map(a =>
-          defaultTo(a.songs, []).map(s => ({ ...s, cover: a.cover }))
+        item.albums.map((a) =>
+          defaultTo(a.songs, []).map((s) => ({ ...s, cover: a.cover }))
         )
       );
     if (isAlbum)
-      return item.songs.map(song => ({ ...song, cover: item.cover }));
+      return item.songs.map((song) => ({ ...song, cover: item.cover }));
   };
 
-  const onDragStart = event => {
+  const onDragStart = (event) => {
     event.dataTransfer.setData(
       "text/plain",
       JSON.stringify(getArtistOrAlbumSongs())
@@ -108,5 +108,5 @@ const LibraryList = ({ item, cover, isRoot, openLibraryPaths, dispatch }) => {
 
 export default connect(
   () => ({}),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(LibraryList);

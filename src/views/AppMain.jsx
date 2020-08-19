@@ -14,9 +14,9 @@ const Container = styled.div`
 `;
 
 const AppMain = ({ isLarge, dispatch }) => {
-  const onDragOver = event => event.preventDefault();
+  const onDragOver = (event) => event.preventDefault();
 
-  const onDrop = event => {
+  const onDrop = (event) => {
     const item = JSON.parse(event.dataTransfer.getData("text"));
     if (Array.isArray(item)) {
       dispatch(pasteToPlaylist(item));
@@ -34,6 +34,6 @@ const AppMain = ({ isLarge, dispatch }) => {
 };
 
 export default connect(
-  state => ({}),
-  dispatch => ({ dispatch })
+  (state) => ({}),
+  (dispatch) => ({ dispatch })
 )(AppMain);

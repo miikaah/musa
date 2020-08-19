@@ -46,8 +46,8 @@ const Toaster = ({ messages }) => (
 );
 
 export default connect(
-  state => ({
-    messages: state.toaster.messages
+  (state) => ({
+    messages: state.toaster.messages,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(Toaster);

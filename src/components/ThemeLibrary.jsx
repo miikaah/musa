@@ -48,16 +48,16 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
     doIdbRequest({
       method: "getAll",
       storeName: "theme",
-      onReqSuccess: req => () => setThemes(req.result)
+      onReqSuccess: (req) => () => setThemes(req.result),
     });
   }, []);
 
-  const handleDefaultThemeChange = theme => {
+  const handleDefaultThemeChange = (theme) => {
     updateCurrentTheme(theme);
     dispatch(updateSettings({ defaultTheme: theme, currentTheme: theme }));
   };
 
-  const handleCurrentThemeChange = theme => {
+  const handleCurrentThemeChange = (theme) => {
     updateCurrentTheme(theme);
     dispatch(updateSettings({ currentTheme: theme }));
   };
@@ -109,7 +109,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
             <ThemeBlock
               key={i}
               colors={theme.colors}
-              setCurrentTheme={theme => handleCurrentThemeChange(theme)}
+              setCurrentTheme={(theme) => handleCurrentThemeChange(theme)}
             />
           ))}
       </ThemeList>
@@ -118,9 +118,9 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     defaultTheme: state.settings.defaultTheme,
-    currentTheme: state.settings.currentTheme
+    currentTheme: state.settings.currentTheme,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(ThemeLibrary);

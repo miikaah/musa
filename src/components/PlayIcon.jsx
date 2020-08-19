@@ -20,7 +20,7 @@ const Icon = styled.div`
   }
 `;
 
-const PlayIcon = props => (
+const PlayIcon = (props) => (
   <Icon {...props}>
     <div />
   </Icon>

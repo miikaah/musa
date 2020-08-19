@@ -1,30 +1,30 @@
-import { flatten, get, isUndefined, defaultTo } from "lodash-es"
+import { flatten, get, isUndefined, defaultTo } from "lodash-es";
 
-export const INIT_LISTING = "MUSA/LIBRARY/INIT_LISTING"
-export const initListing = listing => ({
+export const INIT_LISTING = "MUSA/LIBRARY/INIT_LISTING";
+export const initListing = (listing) => ({
   type: INIT_LISTING,
-  listing
-})
+  listing,
+});
 
-export const SET_LISTING = "MUSA/LIBRARY/SET_LISTING"
-export const setListing = listing => ({
+export const SET_LISTING = "MUSA/LIBRARY/SET_LISTING";
+export const setListing = (listing) => ({
   type: SET_LISTING,
-  listing
-})
+  listing,
+});
 
-export const SET_SCAN_PROPS = "MUSA/LIBRARY/SET_SCAN_PROPS"
+export const SET_SCAN_PROPS = "MUSA/LIBRARY/SET_SCAN_PROPS";
 export const setScanProps = ({ scanLength, scannedLength, reset }) => ({
   type: SET_SCAN_PROPS,
   scanLength,
   scannedLength,
-  reset
-})
+  reset,
+});
 
-export const SET_QUERY = "MUSA/LIBRARY/SET_QUERY"
-export const setQuery = query => ({
+export const SET_QUERY = "MUSA/LIBRARY/SET_QUERY";
+export const setQuery = (query) => ({
   type: SET_QUERY,
-  query
-})
+  query,
+});
 
 const initialState = {
   listing: [],
@@ -33,90 +33,90 @@ const initialState = {
   scannedLength: 0,
   query: "",
   albums: [],
-  songs: []
-}
+  songs: [],
+};
 
 const library = (state = initialState, action) => {
   switch (action.type) {
     case INIT_LISTING: {
-      const albums = getAlbums(action.listing)
-      const songs = getSongs(albums)
+      const albums = getAlbums(action.listing);
+      const songs = getSongs(albums);
       return {
         ...state,
         listing: action.listing,
         listingWithLabels: getListingWithLabels(action.listing),
         albums,
-        songs
-      }
+        songs,
+      };
     }
     case SET_LISTING: {
       return {
         ...state,
         listing: action.listing,
-        listingWithLabels: getListingWithLabels(action.listing)
-      }
+        listingWithLabels: getListingWithLabels(action.listing),
+      };
     }
     case SET_SCAN_PROPS: {
       if (action.reset) {
-        const albums = getAlbums(state.listing)
-        const songs = getSongs(albums)
+        const albums = getAlbums(state.listing);
+        const songs = getSongs(albums);
         return {
           ...state,
           scanLength: initialState.scanLength,
           scannedLength: initialState.scannedLength,
           albums,
-          songs
-        }
+          songs,
+        };
       }
       return {
         ...state,
         scanLength: action.scanLength || state.scanLength,
-        scannedLength: action.scannedLength || state.scannedLength
-      }
+        scannedLength: action.scannedLength || state.scannedLength,
+      };
     }
     case SET_QUERY: {
       return {
         ...state,
-        query: action.query
-      }
+        query: action.query,
+      };
     }
     default:
-      return state
+      return state;
   }
-}
+};
 
 function getListingWithLabels(listing = []) {
   return listing.reduce((acc, folder) => {
-    const label = get(folder, "name", "").charAt(0)
+    const label = get(folder, "name", "").charAt(0);
     return {
       ...acc,
-      [label]: [...defaultTo(acc[label], []), folder]
-    }
-  }, {})
+      [label]: [...defaultTo(acc[label], []), folder],
+    };
+  }, {});
 }
 
 function getAlbums(listing) {
   return flatten(
-    listing.map(l =>
-      l.albums.map(a => ({
+    listing.map((l) =>
+      l.albums.map((a) => ({
         ...a,
-        artist: l.name
+        artist: l.name,
       }))
     )
-  )
+  );
 }
 
 function getSongs(albums) {
   return flatten(
-    albums.map(a =>
-      a.songs.map(s => ({
+    albums.map((a) =>
+      a.songs.map((s) => ({
         name: get(s, "metadata.title", ""),
         path: s.path,
         cover: isUndefined(a.cover) ? "" : a.cover,
-        metadata: s.metadata
+        metadata: s.metadata,
       }))
     )
-  )
+  );
 }
 
-export default library
+export default library;

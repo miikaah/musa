@@ -3,5 +3,5 @@ export const breakpointXs = 577;
 
 export const breakpoint = {
   lg: `${breakpointLg}px`,
-  xs: `${breakpointXs}px`
+  xs: `${breakpointXs}px`,
 };

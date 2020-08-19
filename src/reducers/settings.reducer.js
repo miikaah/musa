@@ -2,9 +2,9 @@ import { FALLBACK_THEME } from "../config";
 import { REPLAYGAIN_TYPE } from "../util";
 
 export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS";
-export const updateSettings = props => ({
+export const updateSettings = (props) => ({
   type: UPDATE_SETTINGS,
-  props
+  props,
 });
 
 export const VOLUME_DEFAULT = 50;
@@ -15,7 +15,7 @@ const initialState = {
   key: "state",
   replaygainType: REPLAYGAIN_TYPE.Album,
   volume: VOLUME_DEFAULT,
-  musicLibraryPaths: []
+  musicLibraryPaths: [],
 };
 
 const settings = (state = initialState, action) => {
@@ -23,7 +23,7 @@ const settings = (state = initialState, action) => {
     case UPDATE_SETTINGS: {
       return {
         ...state,
-        ...action.props
+        ...action.props,
       };
     }
     default:

@@ -84,7 +84,7 @@ const PlaylistItem = ({
   onMouseOverItem,
   onMouseDownItem,
   onMouseUpItem,
-  onScrollPlaylist
+  onScrollPlaylist,
 }) => {
   const elRef = useRef(null);
 
@@ -93,7 +93,7 @@ const PlaylistItem = ({
     activeIndex,
     startIndex,
     endIndex,
-    isSelected
+    isSelected,
   }) => {
     const start = Math.min(startIndex, endIndex);
     const end = Math.max(startIndex, endIndex);
@@ -115,7 +115,7 @@ const PlaylistItem = ({
       activeIndex,
       startIndex,
       endIndex,
-      isSelected
+      isSelected,
     });
 
   const isIndexCurrentIndex = () => {
@@ -139,20 +139,20 @@ const PlaylistItem = ({
     onSetActiveIndex(index);
   };
 
-  const handleMouseDown = event => {
+  const handleMouseDown = (event) => {
     onMouseDownItem({
       index,
       isShiftDown: event.shiftKey,
-      isCtrlDown: event.ctrlKey || event.metaKey
+      isCtrlDown: event.ctrlKey || event.metaKey,
     });
     event.stopPropagation();
   };
 
-  const handleMouseUp = event => {
+  const handleMouseUp = (event) => {
     onMouseUpItem({
       index,
       isShiftDown: event.shiftKey,
-      isCtrlDown: event.ctrlKey || event.metaKey
+      isCtrlDown: event.ctrlKey || event.metaKey,
     });
     event.stopPropagation();
   };
@@ -210,10 +210,10 @@ const PlaylistItem = ({
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     currentItem: state.player.currentItem,
     currentIndex: state.player.currentIndex,
-    isPlaying: state.player.isPlaying
+    isPlaying: state.player.isPlaying,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(PlaylistItem);

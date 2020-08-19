@@ -30,7 +30,7 @@ const ipcRenderer = electron.ipcRenderer;
 const songListProps = {
   method: "get",
   storeName: "songList",
-  key: "list"
+  key: "list",
 };
 
 const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
@@ -38,41 +38,41 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
     ipcRenderer.on("addMusicLibraryPath", (event, path) => {
       dispatch(
         updateSettings({
-          musicLibraryPaths: Array.from(new Set([...musicLibraryPaths, path]))
+          musicLibraryPaths: Array.from(new Set([...musicLibraryPaths, path])),
         })
       );
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [musicLibraryPaths]);
 
-  const removeLibraryPath = path => {
+  const removeLibraryPath = (path) => {
     const paths = new Set(musicLibraryPaths);
     paths.delete(path);
     const libPaths = Array.from(paths);
     dispatch(updateSettings({ musicLibraryPaths: libPaths }));
     doIdbRequest({
       ...songListProps,
-      onReqSuccess: req => () => {
+      onReqSuccess: (req) => () => {
         ipcRenderer.send(
           "removeMusicLibraryPath",
           get(req, "result.list"),
           libPaths,
           path
         );
-      }
+      },
     });
   };
 
   const addLibraryPath = () => {
     doIdbRequest({
       ...songListProps,
-      onReqSuccess: req => () => {
+      onReqSuccess: (req) => () => {
         ipcRenderer.send(
           "addMusicLibraryPath",
           get(req, "result.list"),
           musicLibraryPaths
         );
-      }
+      },
     });
   };
 
@@ -95,8 +95,8 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
 };
 
 export default connect(
-  state => ({
-    musicLibraryPaths: state.settings.musicLibraryPaths
+  (state) => ({
+    musicLibraryPaths: state.settings.musicLibraryPaths,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(MusicLibrarySetting);

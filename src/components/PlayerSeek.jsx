@@ -12,7 +12,7 @@ const PlayerSeek = ({
   currentTime,
   setCurrentTime,
   isPlaying,
-  currentItem
+  currentItem,
 }) => {
   const [prevCurrentTime, setPrevCurrentTime] = useState(0);
 
@@ -24,7 +24,7 @@ const PlayerSeek = ({
     }
   }, 200);
 
-  const seek = seekPosInSeconds => {
+  const seek = (seekPosInSeconds) => {
     if (prevCurrentTime === seekPosInSeconds) return;
     player.current.currentTime = seekPosInSeconds;
     setCurrentTime(seekPosInSeconds);
@@ -36,7 +36,7 @@ const PlayerSeek = ({
 
   const hasCurrentItem = () => !!(currentItem && currentItem.metadata);
 
-  const handleSeek = e => {
+  const handleSeek = (e) => {
     if (!hasCurrentItem()) return;
     if (e.type === "mousemove" && e.buttons !== MAIN_BUTTON_DOWN) return;
     const x = e.clientX;
@@ -63,9 +63,9 @@ const PlayerSeek = ({
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     isPlaying: state.player.isPlaying,
-    currentItem: state.player.currentItem
+    currentItem: state.player.currentItem,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(PlayerSeek);

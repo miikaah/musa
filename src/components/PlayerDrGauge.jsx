@@ -7,7 +7,7 @@ import { prefixNumber } from "../util";
 const Colors = {
   DrGood: "#90ff00",
   DrMediocre: "#ffe02f",
-  DrBad: "#f00"
+  DrBad: "#f00",
 };
 
 const DynamicRangeContainer = styled.span`
@@ -42,6 +42,6 @@ const PlayerDrGauge = ({ currentItem }) => {
 };
 
 export default connect(
-  state => ({}),
-  dispatch => ({ dispatch })
+  (state) => ({}),
+  (dispatch) => ({ dispatch })
 )(PlayerDrGauge);

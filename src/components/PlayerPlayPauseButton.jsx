@@ -30,8 +30,8 @@ const PlayerPlayPauseButton = ({ playOrPause, isPlaying }) => {
 };
 
 export default connect(
-  state => ({
-    isPlaying: state.player.isPlaying
+  (state) => ({
+    isPlaying: state.player.isPlaying,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(PlayerPlayPauseButton);

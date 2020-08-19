@@ -95,9 +95,9 @@ const Album = ({ item, dispatch }) => {
   const addAlbumSongsToPlaylist = () => {
     dispatch(
       pasteToPlaylist(
-        item.songs.map(s => ({
+        item.songs.map((s) => ({
           ...s,
-          cover: item.cover
+          cover: item.cover,
         }))
       )
     );
@@ -107,7 +107,7 @@ const Album = ({ item, dispatch }) => {
     dispatchToast(msg, key, dispatch);
   };
 
-  const addSongToPlaylist = song => {
+  const addSongToPlaylist = (song) => {
     dispatch(addToPlaylist({ ...song, cover: item.cover }));
 
     const title = get(song, "metadata.title", "");
@@ -141,6 +141,6 @@ const Album = ({ item, dispatch }) => {
 };
 
 export default connect(
-  state => ({}),
-  dispatch => ({ dispatch })
+  (state) => ({}),
+  (dispatch) => ({ dispatch })
 )(Album);

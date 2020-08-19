@@ -3,61 +3,61 @@ import { getFileUri } from "../util";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
 export const play = () => ({
-  type: PLAY
+  type: PLAY,
 });
 
 export const PLAY_INDEX = "MUSA/PLAYER/PLAY_INDEX";
-export const playIndex = index => ({
+export const playIndex = (index) => ({
   type: PLAY_INDEX,
-  index
+  index,
 });
 
 export const PLAY_NEXT = "MUSA/PLAYER/PLAY_NEXT";
 export const playNext = () => ({
-  type: PLAY_NEXT
+  type: PLAY_NEXT,
 });
 
 export const REPLAY = "MUSA/PLAYER/REPLAY";
-export const replay = replay => ({
+export const replay = (replay) => ({
   type: REPLAY,
-  replay
+  replay,
 });
 
 export const PAUSE = "MUSA/PLAYER/PAUSE";
 export const pause = () => ({
-  type: PAUSE
+  type: PAUSE,
 });
 
 export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD";
-export const addToPlaylist = item => ({
+export const addToPlaylist = (item) => ({
   type: ADD_TO_PLAYLIST,
-  item
+  item,
 });
 
 export const PASTE_TO_PLAYLIST = "MUSA/PLAYER/PASTE_TO_PLAYLIST";
 export const pasteToPlaylist = (items, index) => ({
   type: PASTE_TO_PLAYLIST,
   items,
-  index
+  index,
 });
 
 export const REMOVE_RANGE_FROM_PLAYLIST = "MUSA/PLAYER/REMOVE_RANGE";
 export const removeRangeFromPlaylist = (startIndex, endIndex) => ({
   type: REMOVE_RANGE_FROM_PLAYLIST,
   startIndex,
-  endIndex
+  endIndex,
 });
 
 export const REMOVE_INDEXES_FROM_PLAYLIST =
   "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST";
-export const removeIndexesFromPlaylist = indexes => ({
+export const removeIndexesFromPlaylist = (indexes) => ({
   type: REMOVE_INDEXES_FROM_PLAYLIST,
-  indexes
+  indexes,
 });
 
 export const EMPTY_PLAYLIST = "MUSA/PLAYER/EMPTY_PLAYLIST";
 export const emptyPlaylist = () => ({
-  type: EMPTY_PLAYLIST
+  type: EMPTY_PLAYLIST,
 });
 
 const initialState = {
@@ -67,7 +67,7 @@ const initialState = {
   src: "",
   cover: "",
   isPlaying: false,
-  replay: false
+  replay: false,
 };
 
 const player = (state = initialState, action) => {
@@ -86,12 +86,12 @@ const player = (state = initialState, action) => {
       if (!isEmpty(newItem)) {
         return {
           ...state,
-          ...getPlayBase(newItem, newIndex)
+          ...getPlayBase(newItem, newIndex),
         };
       }
       return {
         ...state,
-        isPlaying: false
+        isPlaying: false,
       };
     }
     case PLAY_INDEX:
@@ -103,30 +103,30 @@ const player = (state = initialState, action) => {
       if (newItem) {
         return {
           ...state,
-          ...getPlayBase(newItem, newIndex)
+          ...getPlayBase(newItem, newIndex),
         };
       }
       // We've reached end of playlist.
       // Start it from the beginning.
       return {
         ...initialState,
-        items: state.items
+        items: state.items,
       };
     }
     case REPLAY:
       return {
         ...state,
-        replay: action.replay
+        replay: action.replay,
       };
     case PAUSE:
       return {
         ...state,
-        isPlaying: false
+        isPlaying: false,
       };
     case ADD_TO_PLAYLIST:
       return {
         ...state,
-        items: [...state.items, action.item]
+        items: [...state.items, action.item],
       };
     case PASTE_TO_PLAYLIST: {
       if (isUndefined(action.index)) {
@@ -157,7 +157,7 @@ const player = (state = initialState, action) => {
       return {
         ...state,
         items: [],
-        currentIndex: -1
+        currentIndex: -1,
       };
     }
     default:
@@ -171,7 +171,7 @@ function getPlayBase(newItem, newIndex) {
     currentIndex: newIndex,
     isPlaying: true,
     src: getFileUri(newItem.path),
-    cover: isEmpty(newItem.cover) ? "" : getFileUri(newItem.cover)
+    cover: isEmpty(newItem.cover) ? "" : getFileUri(newItem.cover),
   };
 }
 
@@ -179,7 +179,7 @@ function getStateByPlaylistChange(state, newItems) {
   return {
     ...state,
     items: newItems,
-    currentIndex: newItems.indexOf(state.currentItem)
+    currentIndex: newItems.indexOf(state.currentItem),
   };
 }
 

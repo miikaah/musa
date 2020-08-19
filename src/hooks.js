@@ -3,7 +3,7 @@ import { get } from "lodash-es";
 
 export const useKeyPress = (key, callback) => {
   useEffect(() => {
-    const handleKeyDown = event => {
+    const handleKeyDown = (event) => {
       if (event.keyCode !== key) return;
       if (get(event, "target.tagName") !== "BODY") return;
 
@@ -18,7 +18,7 @@ export const useKeyPress = (key, callback) => {
   }, [key, callback]);
 };
 
-export const useAnimationFrame = callback => {
+export const useAnimationFrame = (callback) => {
   const requestRef = useRef();
 
   useEffect(() => {

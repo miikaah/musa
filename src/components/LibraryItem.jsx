@@ -13,7 +13,7 @@ const LibraryItemContainer = styled.li`
 `;
 
 const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
-  const onDragStart = event => {
+  const onDragStart = (event) => {
     event.dataTransfer.setData(
       "text/plain",
       JSON.stringify({ ...item, cover })
@@ -35,5 +35,5 @@ const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
 
 export default connect(
   () => ({}),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(LibraryItem);

@@ -10,7 +10,7 @@ import {
   faBars,
   faCog,
   faSearch,
-  faTrash
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components/macro";
 import { get } from "lodash-es";
@@ -63,7 +63,7 @@ const App = ({ dispatch }) => {
       dispatch(
         updateSettings({
           ...req.result,
-          currentTheme
+          currentTheme,
         })
       );
     });
@@ -87,6 +87,6 @@ const App = ({ dispatch }) => {
 };
 
 export default connect(
-  state => ({}),
-  dispatch => ({ dispatch })
+  (state) => ({}),
+  (dispatch) => ({ dispatch })
 )(App);

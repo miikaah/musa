@@ -53,7 +53,7 @@ const Toolbar = ({ location, history }) => {
   const searchButtonRef = useRef();
 
   useEffect(() => {
-    const handleClick = e => {
+    const handleClick = (e) => {
       if (
         libraryButtonRef.current &&
         libraryButtonRef.current.contains(e.target)
@@ -75,20 +75,20 @@ const Toolbar = ({ location, history }) => {
     };
   }, []);
 
-  const goToSearchByKeyEvent = event => {
+  const goToSearchByKeyEvent = (event) => {
     if (!isCtrlDown(event)) return;
     history.push("/search");
     setIsLibraryVisible(false);
   };
   useKeyPress(KEYS.F, goToSearchByKeyEvent);
 
-  const handleToolbarClick = event => {
+  const handleToolbarClick = (event) => {
     if (event.target.id === "Toolbar") {
       history.push("/");
     }
   };
 
-  const toggleLibrary = event => {
+  const toggleLibrary = (event) => {
     libraryButtonRef.current.blur();
     if (location.pathname !== "/") {
       history.push("/");
@@ -99,7 +99,7 @@ const Toolbar = ({ location, history }) => {
     event.stopPropagation();
   };
 
-  const toggleSettings = event => {
+  const toggleSettings = (event) => {
     settingsButtonRef.current.blur();
     if (location.pathname === "/settings") {
       history.push("/");
@@ -108,7 +108,7 @@ const Toolbar = ({ location, history }) => {
     }
     event.stopPropagation();
   };
-  const toggleSearch = event => {
+  const toggleSearch = (event) => {
     searchButtonRef.current.blur();
     if (location.pathname === "/search") {
       history.push("/");

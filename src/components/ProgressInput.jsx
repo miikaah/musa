@@ -38,8 +38,8 @@ const ForegroundWrapper = styled.div`
 
 const Foreground = styled.div.attrs(({ progress }) => ({
   style: {
-    transform: `translateX(-${progress}%)`
-  }
+    transform: `translateX(-${progress}%)`,
+  },
 }))`
   ${sharedCss}
   background-color: var(--color-slider);

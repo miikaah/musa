@@ -72,6 +72,6 @@ const Song = ({ item, dispatch }) => {
 };
 
 export default connect(
-  state => ({}),
-  dispatch => ({ dispatch })
+  (state) => ({}),
+  (dispatch) => ({ dispatch })
 )(Song);

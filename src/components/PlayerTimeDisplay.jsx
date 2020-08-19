@@ -16,7 +16,7 @@ const TimePlayed = styled.span`
 `;
 
 const PlayerTimeDisplay = ({ currentTime, currentItem }) => {
-  const formatCurrentTime = duration => {
+  const formatCurrentTime = (duration) => {
     if (duration < 1) return "0:00";
     let output = "";
     if (duration >= 3600) {
@@ -38,6 +38,6 @@ const PlayerTimeDisplay = ({ currentTime, currentItem }) => {
 };
 
 export default connect(
-  state => ({}),
-  dispatch => ({ dispatch })
+  (state) => ({}),
+  (dispatch) => ({ dispatch })
 )(PlayerTimeDisplay);

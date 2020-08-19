@@ -18,7 +18,7 @@ const Colors = {
   PrimaryRgb: [117, 53, 151],
   SliderTrack: "#424a56",
   SliderTrackRgb: [66, 74, 86],
-  WhiteRgb: [255, 255, 255]
+  WhiteRgb: [255, 255, 255],
 };
 
 const marginTop = 12;
@@ -64,12 +64,12 @@ const Info = styled.div`
   }
 `;
 
-const isVibrantCover = mostPopularSwatch => {
-  return some(mostPopularSwatch.rgb, value => value > 125);
+const isVibrantCover = (mostPopularSwatch) => {
+  return some(mostPopularSwatch.rgb, (value) => value > 125);
 };
 
 const luminance = (r, g, b) => {
-  const a = [r, g, b].map(v => {
+  const a = [r, g, b].map((v) => {
     v /= 255;
     return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
   });
@@ -98,11 +98,11 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
 
         const palette = new Palette(coverTarget);
         const mostPopularSwatch = palette.swatches.find(
-          s => s.population === palette.highestPopulation
+          (s) => s.population === palette.highestPopulation
         );
         const swatchesByPopulationDesc = sortBy(
           palette.swatches,
-          s => -s.population
+          (s) => -s.population
         );
 
         // Defaults are for dark covers
@@ -116,11 +116,11 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
           primarySwatches = [
             defaultTo(palette.vibrantSwatch, {}),
             defaultTo(palette.lightVibrantSwatch, {}),
-            defaultTo(palette.lightMutedSwatch, {})
+            defaultTo(palette.lightMutedSwatch, {}),
           ],
           secondarySwatches = [
             defaultTo(palette.mutedSwatch, {}),
-            defaultTo(palette.darkMutedSwatch, {})
+            defaultTo(palette.darkMutedSwatch, {}),
           ];
 
         // Set different colors for a light cover
@@ -131,25 +131,25 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
           }
           primarySwatches = [
             defaultTo(palette.vibrantSwatch, {}),
-            defaultTo(palette.lightVibrantSwatch, {})
+            defaultTo(palette.lightVibrantSwatch, {}),
           ];
           secondarySwatches = [
             defaultTo(palette.lightVibrantSwatch, {}),
-            defaultTo(palette.lightMutedSwatch, {})
+            defaultTo(palette.lightMutedSwatch, {}),
           ];
         }
 
         const primaryPop = Math.max.apply(
           Math,
-          primarySwatches.map(s => defaultTo(s.population, 0))
+          primarySwatches.map((s) => defaultTo(s.population, 0))
         );
         const secondaryPop = Math.max.apply(
           Math,
-          secondarySwatches.map(s => defaultTo(s.population, 0))
+          secondarySwatches.map((s) => defaultTo(s.population, 0))
         );
         // Make sure highlights are different than background
         primary = swatchesByPopulationDesc.find(
-          s => s.population === primaryPop
+          (s) => s.population === primaryPop
         );
         if (!primary || isEqual(primary.rgb, bg.rgb))
           for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
@@ -160,7 +160,7 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
           primary = { rgb: Colors.PrimaryRgb };
 
         secondary = swatchesByPopulationDesc.find(
-          s => s.population === secondaryPop
+          (s) => s.population === secondaryPop
         );
         if (!secondary || isEqual(secondary.rgb, bg.rgb))
           for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
@@ -199,7 +199,7 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
           typographyGhost: defaultTo(ghostColor, Colors.TypographyGhost),
           typographyPrimary: defaultTo(primaryColor, Colors.Typography),
           typographySecondary: defaultTo(secondaryColor, Colors.Typography),
-          slider: slider.rgb
+          slider: slider.rgb,
         };
 
         updateCurrentTheme(colors);
@@ -210,12 +210,12 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
           db,
           osName: "theme",
           key: coverTarget.src,
-          props: { colors }
+          props: { colors },
         });
       };
     };
 
-    const onLoadCover = coverEvent => {
+    const onLoadCover = (coverEvent) => {
       // Save to variable here, because the target is set to null in the event
       // variable when it goes out of scope
       const coverTarget = coverEvent.target;
@@ -223,7 +223,7 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
         method: "get",
         storeName: "theme",
         key: coverEvent.target.src,
-        onReqSuccess: (req, db) => onThemeStoreReqSuccess(req, db, coverTarget)
+        onReqSuccess: (req, db) => onThemeStoreReqSuccess(req, db, coverTarget),
       });
     };
 
@@ -256,10 +256,10 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     coverSrc: state.player.cover,
     defaultTheme: state.settings.defaultTheme,
-    currentItem: state.player.currentItem
+    currentItem: state.player.currentItem,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(Cover);

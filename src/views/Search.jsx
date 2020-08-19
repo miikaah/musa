@@ -75,7 +75,7 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
           <input
             autoFocus
             value={query}
-            onChange={e => dispatch(setQuery(e.target.value))}
+            onChange={(e) => dispatch(setQuery(e.target.value))}
           />
           <SearchBlock>
             <h2>Artists</h2>
@@ -103,12 +103,12 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
 
 export default withRouter(
   connect(
-    state => ({
+    (state) => ({
       listing: state.library.listing,
       query: state.library.query,
       artistAlbums: state.library.albums,
-      artistSongs: state.library.songs
+      artistSongs: state.library.songs,
     }),
-    dispatch => ({ dispatch })
+    (dispatch) => ({ dispatch })
   )(Search)
 );

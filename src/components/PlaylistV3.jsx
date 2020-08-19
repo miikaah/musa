@@ -8,7 +8,7 @@ import {
   removeIndexesFromPlaylist,
   emptyPlaylist,
   playIndex,
-  replay
+  replay,
 } from "reducers/player.reducer";
 import { KEYS, isCtrlDown } from "../util";
 import { useKeyPress } from "../hooks";
@@ -34,7 +34,7 @@ const Playlist = ({
   playlist,
   currentItem,
   currentIndex,
-  dispatch
+  dispatch,
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -55,7 +55,7 @@ const Playlist = ({
     );
   };
 
-  const getContinuousSelData = getSelected => {
+  const getContinuousSelData = (getSelected) => {
     const sIndex = Math.min(startIndex, endIndex);
     const eIndex = Math.max(startIndex, endIndex);
     const selectedItems = getSelected
@@ -95,13 +95,13 @@ const Playlist = ({
     return activeIndex > -1 || selectedIndexes.size > 0;
   };
 
-  const getIndexesSelData = getSelected => {
+  const getIndexesSelData = (getSelected) => {
     const indexes =
       selectedIndexes.size > 0
         ? Array.from(selectedIndexes.values())
         : [activeIndex];
     const selectedItems = getSelected
-      ? indexes.map(i => playlist[i])
+      ? indexes.map((i) => playlist[i])
       : clipboard;
     return { indexes, selectedItems };
   };
@@ -151,21 +151,21 @@ const Playlist = ({
     setSelectedIndexes(new Set());
   };
 
-  const selectAll = event => {
+  const selectAll = (event) => {
     if (!isCtrlDown(event)) return;
     setStartIndex(0);
     setEndIndex(playlist.length - 1);
   };
   useKeyPress(KEYS.A, selectAll);
 
-  const moveUp = event => {
+  const moveUp = (event) => {
     event.preventDefault();
     if (activeIndex - 1 > -1) return setNewIndexes(event, activeIndex - 1);
     if (playlist.length) return setActiveIndex(playlist.length - 1);
   };
   useKeyPress(KEYS.Up, moveUp);
 
-  const moveDown = event => {
+  const moveDown = (event) => {
     event.preventDefault();
     if (activeIndex + 1 < playlist.length)
       return setNewIndexes(event, activeIndex + 1);
@@ -207,7 +207,7 @@ const Playlist = ({
     if (isContinuousSelection()) {
       handleContinuousSelection({
         type: "remove",
-        getSelected: false
+        getSelected: false,
       });
       return;
     }
@@ -219,7 +219,7 @@ const Playlist = ({
   useKeyPress(KEYS.Backspace, removeItems);
   useKeyPress(KEYS.Delete, removeItems);
 
-  const cut = event => {
+  const cut = (event) => {
     if (!isCtrlDown(event)) return;
     if (isContinuousSelection()) {
       handleContinuousSelection({ type: "remove" });
@@ -232,7 +232,7 @@ const Playlist = ({
   };
   useKeyPress(KEYS.X, cut);
 
-  const copy = event => {
+  const copy = (event) => {
     if (!isCtrlDown(event)) return;
     if (isContinuousSelection()) {
       handleContinuousSelection({ type: "copy" });
@@ -245,7 +245,7 @@ const Playlist = ({
   };
   useKeyPress(KEYS.C, copy);
 
-  const duplicate = event => {
+  const duplicate = (event) => {
     if (!isCtrlDown(event) || !event.shiftKey) return;
     if (isContinuousSelection()) {
       handleContinuousSelection({ type: "duplicate" });
@@ -258,7 +258,7 @@ const Playlist = ({
   };
   useKeyPress(KEYS.D, duplicate);
 
-  const paste = event => {
+  const paste = (event) => {
     if (!isCtrlDown(event)) return;
     dispatch(
       pasteToPlaylist(clipboard, event.shiftKey ? activeIndex - 1 : activeIndex)
@@ -266,12 +266,12 @@ const Playlist = ({
   };
   useKeyPress(KEYS.V, paste);
 
-  const updateEndIndex = endIndex => {
+  const updateEndIndex = (endIndex) => {
     if (!isMouseDown) return;
     setEndIndex(endIndex);
   };
 
-  const onMouseDown = options => {
+  const onMouseDown = (options) => {
     if (options.isShiftDown || options.isCtrlDown) return;
     setIsMouseDown(true);
     setStartIndex(options.index);
@@ -280,7 +280,7 @@ const Playlist = ({
     setSelectedIndexes(new Set([options.index]));
   };
 
-  const onMouseUp = options => {
+  const onMouseUp = (options) => {
     if (options.isCtrlDown) {
       setIsMouseDown(false);
       setActiveIndex(-1);
@@ -292,7 +292,7 @@ const Playlist = ({
     setEndIndex(options.index);
   };
 
-  const clearSelection = event => {
+  const clearSelection = (event) => {
     if (startIndex === endIndex && !event.shiftKey) {
       setIsMouseDown(false);
       setActiveIndex(-1);
@@ -309,7 +309,7 @@ const Playlist = ({
     ref.current &&
       ref.current.scrollTo({
         top: ref.current.scrollTop + 300,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     setTimeout(() => setHideOverflow(false), 500);
   };
@@ -318,13 +318,13 @@ const Playlist = ({
     <Container
       ref={ref}
       className={PLAYLIST_CLASSNAME}
-      onMouseDown={event => {
+      onMouseDown={(event) => {
         onMouseDown({
           index:
             event.target.className === PLAYLIST_CLASSNAME
               ? playlist.length - 1
               : 0,
-          isShiftDown: event.shiftKey
+          isShiftDown: event.shiftKey,
         });
       }}
       onMouseUp={clearSelection}
@@ -351,10 +351,10 @@ const Playlist = ({
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     playlist: state.player.items,
     currentItem: state.player.currentItem,
-    currentIndex: state.player.currentIndex
+    currentIndex: state.player.currentIndex,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(Playlist);

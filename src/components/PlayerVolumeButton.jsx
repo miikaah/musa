@@ -37,6 +37,6 @@ const PlayerVolumeButton = ({ volume, muteOrUnmute }) => {
 };
 
 export default connect(
-  state => ({}),
-  dispatch => ({ dispatch })
+  (state) => ({}),
+  (dispatch) => ({ dispatch })
 )(PlayerVolumeButton);

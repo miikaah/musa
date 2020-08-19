@@ -45,7 +45,7 @@ const ReplaygainSetting = ({ replaygainType, dispatch }) => {
     });
   }, []);
 
-  const updateState = event => {
+  const updateState = (event) => {
     setType(event.target.value);
     dispatch(updateSettings({ replaygainType: event.target.value }));
     updateStateInIdb(reqIdb, dbIdb, { replaygainType: event.target.value });
@@ -64,8 +64,8 @@ const ReplaygainSetting = ({ replaygainType, dispatch }) => {
 };
 
 export default connect(
-  state => ({
-    replaygainType: state.settings.replaygainType
+  (state) => ({
+    replaygainType: state.settings.replaygainType,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(ReplaygainSetting);

@@ -3,7 +3,7 @@ import { DB_NAME, DB_VERSION } from "./config";
 import {
   addToast,
   animateToast,
-  removeToast
+  removeToast,
 } from "./reducers/toaster.reducer";
 
 export const KEYS = {
@@ -19,16 +19,16 @@ export const KEYS = {
   F: 70,
   M: 77,
   V: 86,
-  X: 88
+  X: 88,
 };
 
 export const REPLAYGAIN_TYPE = {
   Track: "track",
   Album: "album",
-  Off: "off"
+  Off: "off",
 };
 
-const getReplaygainTrackGainDb = currentItem => {
+const getReplaygainTrackGainDb = (currentItem) => {
   const dbString = get(currentItem, "metadata.replaygainTrackGain", "").replace(
     / dB+/,
     ""
@@ -36,7 +36,7 @@ const getReplaygainTrackGainDb = currentItem => {
   return parseFloat(!isEmpty(dbString) ? dbString : 0);
 };
 
-const getReplaygainAlbumGainDb = currentItem => {
+const getReplaygainAlbumGainDb = (currentItem) => {
   const dbString = get(currentItem, "metadata.replaygainAlbumGain", "").replace(
     / dB+/,
     ""
@@ -72,14 +72,14 @@ export function getStateFromIdb(onReqSuccess) {
     method: "get",
     storeName: "state",
     key: "state",
-    onReqSuccess
+    onReqSuccess,
   });
 }
 
 export function doIdbRequest({ method, storeName, key, onReqSuccess }) {
   const idbRequest = indexedDB.open(DB_NAME, DB_VERSION);
 
-  idbRequest.onsuccess = idbEvent => {
+  idbRequest.onsuccess = (idbEvent) => {
     const db = idbEvent.target.result;
     const store = db.transaction(storeName, "readwrite").objectStore(storeName);
 
@@ -98,7 +98,7 @@ export function updateIdb({ req, db, osName, key, props }) {
     .put({
       key,
       ...req.result,
-      ...props
+      ...props,
     });
 }
 
@@ -108,7 +108,7 @@ export function updateStateInIdb(req, db, props) {
     .put({
       key: "state",
       ...req.result,
-      ...props
+      ...props,
     });
 }
 
@@ -144,4 +144,4 @@ export function dispatchToast(msg, key, dispatch) {
   setTimeout(() => dispatch(removeToast(key)), 3000);
 }
 
-export const isCtrlDown = event => event.ctrlKey || event.metaKey;
+export const isCtrlDown = (event) => event.ctrlKey || event.metaKey;

@@ -15,7 +15,7 @@ const Icon = styled.div`
   }
 `;
 
-const PauseIcon = props => (
+const PauseIcon = (props) => (
   <Icon {...props}>
     <div />
     <div />

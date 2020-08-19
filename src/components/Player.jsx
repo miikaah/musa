@@ -49,7 +49,7 @@ const Player = ({
   replaygainType,
   dispatch,
   src,
-  currentItem
+  currentItem,
 }) => {
   const [duration, setDuration] = useState(0);
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT);
@@ -59,7 +59,7 @@ const Player = ({
 
   const isMuted = () => volume === VOLUME_MUTED;
 
-  const playOrPause = event => {
+  const playOrPause = (event) => {
     if (event) {
       event.preventDefault();
     }
@@ -83,12 +83,12 @@ const Player = ({
   };
   useKeyPress(KEYS.Space, playOrPause);
 
-  const getVolumeForAudioEl = volume => {
+  const getVolumeForAudioEl = (volume) => {
     const vol = volume / 100;
     return vol < 0.02 ? VOLUME_MUTED : vol;
   };
 
-  const setVolumeForPlayer = v => {
+  const setVolumeForPlayer = (v) => {
     const vol = isNumber(v) ? v : volume;
     const trackGainPercentage = Math.pow(
       10,
@@ -100,7 +100,7 @@ const Player = ({
     player.current.volume = getVolumeForAudioEl(realVolume);
   };
 
-  const setVolumeForStateAndPlayer = v => {
+  const setVolumeForStateAndPlayer = (v) => {
     setVolumeForPlayer(v);
     dispatch(updateSettings({ volume: v }));
   };
@@ -148,7 +148,7 @@ const Player = ({
       return Math.floor(isNaN(duration) ? 0 : duration);
     };
 
-    const handleLoadedData = event => {
+    const handleLoadedData = (event) => {
       setDuration(getDuration());
       player.current.play();
     };
@@ -195,13 +195,13 @@ const Player = ({
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     src: state.player.src,
     isPlaying: state.player.isPlaying,
     playlist: state.player.items,
     currentItem: state.player.currentItem,
     volume: state.settings.volume,
-    replaygainType: state.settings.replaygainType
+    replaygainType: state.settings.replaygainType,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(Player);

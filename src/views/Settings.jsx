@@ -21,9 +21,9 @@ const Settings = ({ musicLibraryPaths }) => {
     doIdbRequest({
       method: "clear",
       storeName: "library",
-      onReqSuccess: req => () => {
+      onReqSuccess: (req) => () => {
         ipcRenderer.send("runInitialScan", musicLibraryPaths);
-      }
+      },
     });
   };
 
@@ -54,9 +54,9 @@ const Settings = ({ musicLibraryPaths }) => {
 
 export default withRouter(
   connect(
-    state => ({
-      musicLibraryPaths: state.settings.musicLibraryPaths
+    (state) => ({
+      musicLibraryPaths: state.settings.musicLibraryPaths,
     }),
-    dispatch => ({ dispatch })
+    (dispatch) => ({ dispatch })
   )(Settings)
 );

@@ -6,7 +6,7 @@ import styled from "styled-components/macro";
 import {
   initListing,
   setListing,
-  setScanProps
+  setScanProps,
 } from "reducers/library.reducer";
 import { DB_NAME, DB_VERSION } from "../config";
 import { listOverflow } from "../common.styles";
@@ -55,8 +55,8 @@ class Library extends Component {
     ipcRenderer.on("log", (event, log) => console.log("(main)", log));
     ipcRenderer.on("error", (event, error) => console.error(error));
 
-    idbRequest.onerror = event => console.error(event);
-    idbRequest.onupgradeneeded = event => {
+    idbRequest.onerror = (event) => console.error(event);
+    idbRequest.onupgradeneeded = (event) => {
       try {
         event.target.result.createObjectStore("songList", { keyPath: "key" });
       } catch (e) {
@@ -80,7 +80,7 @@ class Library extends Component {
     };
     /* eslint-enable no-console */
 
-    idbRequest.onsuccess = event => {
+    idbRequest.onsuccess = (event) => {
       const db = event.target.result;
       const stateReq = db
         .transaction("state", "readwrite")
@@ -114,7 +114,7 @@ class Library extends Component {
         .objectStore("library")
         .getAll();
 
-      libraryReq.onsuccess = event => {
+      libraryReq.onsuccess = (event) => {
         const dbListing = libraryReq.result.sort((a, b) =>
           a.name.localeCompare(b.name)
         );
@@ -137,16 +137,16 @@ class Library extends Component {
             this.props.dispatch(
               setListing(
                 this.props.listing.filter(
-                  artist => !keyPaths.includes(artist.path)
+                  (artist) => !keyPaths.includes(artist.path)
                 )
               )
             );
-            keyPaths.forEach(key => libraryOS.delete(key));
+            keyPaths.forEach((key) => libraryOS.delete(key));
             return;
           }
           this.props.dispatch(
             setListing(
-              this.props.listing.filter(artist => artist.path !== keyPaths)
+              this.props.listing.filter((artist) => artist.path !== keyPaths)
             )
           );
           libraryOS.delete(keyPaths);
@@ -172,8 +172,8 @@ class Library extends Component {
   getNewListing(listing) {
     if (isEmpty(listing)) return [...this.props.listing];
     return [
-      ...this.props.listing.filter(artist => artist.path !== listing.path),
-      listing
+      ...this.props.listing.filter((artist) => artist.path !== listing.path),
+      listing,
     ].sort((a, b) => a.name.localeCompare(b.name));
   }
 
@@ -182,7 +182,7 @@ class Library extends Component {
     return (
       <LibraryContainer ref={forwardRef} isVisible={isVisible}>
         {listingWithLabels &&
-          Object.keys(listingWithLabels).map(key => {
+          Object.keys(listingWithLabels).map((key) => {
             if (isEmpty(listingWithLabels[key])) return null;
             return (
               <div key={key}>
@@ -205,11 +205,11 @@ class Library extends Component {
 }
 
 const ConnectedLibrary = connect(
-  state => ({
+  (state) => ({
     listing: state.library.listing,
-    listingWithLabels: state.library.listingWithLabels
+    listingWithLabels: state.library.listingWithLabels,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(Library);
 
 export default React.forwardRef((props, ref) => (

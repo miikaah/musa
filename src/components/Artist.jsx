@@ -28,12 +28,12 @@ const ArtistAlbumList = styled.div`
 const Artist = ({ item, dispatch }) => {
   if (isEmpty(item)) return null;
 
-  const addAlbumSongsToPlaylist = album => {
+  const addAlbumSongsToPlaylist = (album) => {
     dispatch(
       pasteToPlaylist(
-        album.songs.map(s => ({
+        album.songs.map((s) => ({
           ...s,
-          cover: album.cover
+          cover: album.cover,
         }))
       )
     );
@@ -46,7 +46,7 @@ const Artist = ({ item, dispatch }) => {
       <ArtistName>{item.name}</ArtistName>
       <ArtistAlbumList>
         {item.albums
-          .filter(a => a.name !== "undefined")
+          .filter((a) => a.name !== "undefined")
           .map((a, i) => (
             <AlbumCover
               key={i}
@@ -60,8 +60,8 @@ const Artist = ({ item, dispatch }) => {
 };
 
 export default connect(
-  state => ({
-    messages: state.toaster.messages
+  (state) => ({
+    messages: state.toaster.messages,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(Artist);

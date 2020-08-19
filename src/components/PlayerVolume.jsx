@@ -10,11 +10,11 @@ const VOLUME_STEP = 5;
 const PlayerVolume = ({ volume, setVolumeForStateAndPlayer, dispatch }) => {
   const playerVolume = useRef(null);
 
-  const setVolumeByEvent = vol => {
+  const setVolumeByEvent = (vol) => {
     setVolumeForStateAndPlayer(vol <= VOLUME_STEP ? VOLUME_MUTED : vol);
   };
 
-  const handleVolumeChange = e => {
+  const handleVolumeChange = (e) => {
     if (e.type === "mousemove" && e.buttons !== MAIN_BUTTON_DOWN) return;
     const x = e.clientX;
     const { left, width } = playerVolume.current.getBoundingClientRect();
@@ -38,8 +38,8 @@ const PlayerVolume = ({ volume, setVolumeForStateAndPlayer, dispatch }) => {
 };
 
 export default connect(
-  state => ({
-    volume: state.settings.volume
+  (state) => ({
+    volume: state.settings.volume,
   }),
-  dispatch => ({ dispatch })
+  (dispatch) => ({ dispatch })
 )(PlayerVolume);
