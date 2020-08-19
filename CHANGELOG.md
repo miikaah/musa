@@ -1,3 +1,9 @@
+##### 19.08.2020
+
+- chore: Update packages
+- fix: Progress bar
+- feat: Update Library List styles
+
 ##### 30.11.2019
 
 - feat: Delete DB when starting new Initial scan

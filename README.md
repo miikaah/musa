@@ -14,14 +14,9 @@ utilising Electron and React.
 
 ### V1
 
-- feat: Playlist header to sticky positioning
-- refactor: Replace redux with React Context API
-- refactor: Replace FontAwesome with something else
-- refactor: List keys to something other than just index
 - refactor: Toaster as the animate action is no longer needed
+- refactor: Update to newest Electron and find a substitute for electron-remote
 - refactor: Move initial file system scan off of main thread as it lags during startup on Windows
-- feat: Add Splash screen
-- feat: add button to collapse all folders in library
 
 #### Cross platform
 
