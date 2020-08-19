@@ -8,6 +8,7 @@ const ProgressBarContainer = styled.div`
   text-align: center;
   width: 100%;
   font-size: var(--font-size-sm);
+  z-index: 100;
 `;
 
 const ProgressBarValue = styled.div`

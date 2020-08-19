@@ -4,7 +4,7 @@ import { get, isEmpty } from "lodash-es";
 import styled from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
-import AlbumImage from "./AlbumImage";
+import AlbumImage from "./common/AlbumImage";
 
 const SongContainer = styled.div`
   display: flex;

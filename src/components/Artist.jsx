@@ -4,7 +4,7 @@ import { isEmpty } from "lodash-es";
 import styled from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
-import AlbumCover from "./AlbumCover";
+import AlbumCover from "./common/AlbumCover";
 
 const ArtistContainer = styled.div`
   flex: 100%;

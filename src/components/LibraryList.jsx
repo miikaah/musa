@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { flatten, defaultTo } from "lodash-es";
+import { flatten, defaultTo, isEmpty } from "lodash-es";
 import styled from "styled-components/macro";
 import LibraryItem from "./LibraryItem";
-import AlbumCover from "./AlbumCover";
+import AlbumCover from "./common/AlbumCover";
 
 const LibraryListContainer = styled.ul`
   margin: 0;
@@ -11,7 +11,6 @@ const LibraryListContainer = styled.ul`
   list-style-type: none;
   text-align: left;
   padding-left: ${({ isRoot }) => (isRoot ? 0 : 12)}px;
-  font-size: 0.9rem;
 
   > li:nth-child(2) {
     padding-top: 4px;
@@ -30,6 +29,7 @@ const LibraryListContainer = styled.ul`
 const LibraryListFolder = styled.li`
   cursor: pointer;
   padding: 2px 12px;
+  letter-spacing: 0.666px;
 
   > div {
     max-width: 100%;
@@ -73,17 +73,23 @@ const LibraryList = ({ item, cover, isRoot, openLibraryPaths, dispatch }) => {
     });
 
   const renderFolderName = () =>
-    isAlbum ? <AlbumCover item={item} /> : item.name;
+    isAlbum ? (
+      <AlbumCover item={item} />
+    ) : isEmpty(item.name) ? (
+      item.path
+    ) : (
+      item.name
+    );
 
   const renderArtistsAndAlbums = () => (
     <LibraryListContainer isRoot={isRoot} draggable onDragStart={onDragStart}>
-      <LibraryListFolder key={item.name} onClick={toggleFolder}>
+      <LibraryListFolder key={item.path} onClick={toggleFolder}>
         {renderFolderName()}
       </LibraryListFolder>
       {showFolderItems &&
         (item.albums || item.songs).map((child, i) => (
           <LibraryList
-            key={`${child.name}-${i}`}
+            key={`${child.path}-${i}`}
             item={child}
             cover={item.cover}
             dispatch={dispatch}

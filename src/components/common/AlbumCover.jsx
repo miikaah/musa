@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
+import { isEmpty } from "lodash-es";
 import AlbumImage from "./AlbumImage";
 
 const AlbumCoverContainer = styled.div`
@@ -33,18 +34,27 @@ const AlbumInfo = styled.div`
   padding: 0 25px 0 20px;
 
   > p {
-    margin: 0 0 8px;
+    margin: 0 0 4px;
+  }
+
+  > p:last-child {
+    font-size: var(--font-size-xs);
   }
 `;
 
-const AlbumCover = ({ item, onClick }) => (
-  <AlbumCoverContainer onClick={onClick}>
-    <AlbumImage item={item} />
-    <AlbumInfo>
-      <p>{item.name}</p>
-      <p>{item.date}</p>
-    </AlbumInfo>
-  </AlbumCoverContainer>
-);
+const AlbumCover = ({ item, onClick }) => {
+  const name = isEmpty(item.name) ? item.path : item.name;
+  const date = item.date;
+
+  return (
+    <AlbumCoverContainer onClick={onClick}>
+      <AlbumImage item={item} />
+      <AlbumInfo>
+        <p>{name}</p>
+        <p>{date}</p>
+      </AlbumInfo>
+    </AlbumCoverContainer>
+  );
+};
 
 export default AlbumCover;

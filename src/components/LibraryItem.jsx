@@ -8,6 +8,8 @@ const LibraryItemContainer = styled.li`
   padding-left: 90px !important;
   cursor: pointer;
   padding-left: ${({ hasAlbum }) => !hasAlbum && "24px !important"};
+  font-size: var(--font-size-xs);
+  letter-spacing: -0.4px;
 `;
 
 const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
