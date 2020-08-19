@@ -9,16 +9,20 @@ const ProgressBarContainer = styled.div`
   width: 100%;
   font-size: var(--font-size-sm);
   z-index: 100;
+  background-color: var(--color-slider-track);
 `;
 
 const ProgressBarValue = styled.div`
-  background-color: var(--color-primary-highlight);
+  background-color: red;
   width: ${({ width }) => width}%;
   height: 4px;
 `;
 
 const ProgressBar = ({ scanLength, scannedLength }) => {
   const width = scanLength > 0 ? (scannedLength / scanLength) * 100 : 0;
+
+  if (width < 1) return null;
+
   return (
     <ProgressBarContainer>
       <ProgressBarValue width={width} />
@@ -26,7 +30,7 @@ const ProgressBar = ({ scanLength, scannedLength }) => {
   );
 };
 
-export default connect(state => ({
+export default connect((state) => ({
   scanLength: state.library.scanLength,
-  scannedLength: state.library.scannedLength
+  scannedLength: state.library.scannedLength,
 }))(ProgressBar);
