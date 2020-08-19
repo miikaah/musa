@@ -1,8 +1,14 @@
-##### 19.08.2020
+##### August 2020
 
-- chore: Update packages
-- fix: Progress bar
-- feat: Update Library List styles
+- feat: Update LibraryList styles
+- fix: Progress bar and make it use basic colors to enhance its visibility
+- chore: Update packages (all except electron since electron-remote also needs subtituting)
+- chore: Run prettier with updated v2 instructions
+- chore: Add .nvmrc with node 12.x.x version as development with node version 14 breaks file scanning
+
+##### July 2020
+
+- Major UI facelift (Main view, Toolbar, Playlist & ProgressInput)
 
 ##### 30.11.2019
 
