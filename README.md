@@ -15,7 +15,6 @@ utilising Electron and React.
 ### V1
 
 - refactor: Toaster as the animate action is no longer needed
-- refactor: Update to newest Electron and find a substitute for electron-remote
 - refactor: Move initial file system scan off of main thread as it lags during startup on Windows
 
 #### Cross platform

@@ -2,7 +2,7 @@
 
 - feat: Update LibraryList styles
 - fix: Progress bar and make it use basic colors to enhance its visibility
-- chore: Update packages (all except electron since electron-remote also needs subtituting)
+- chore: Update all packages
 - chore: Run prettier with updated v2 instructions
 - chore: Add .nvmrc with node 12.x.x version as development with node version 14 breaks file scanning
 
