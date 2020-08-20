@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "start": "PORT=3666 BROWSER=none craco start",
+    "start": "cross-env PORT=3666 BROWSER=none craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
@@ -48,6 +48,7 @@
   "devDependencies": {
     "@craco/craco": "^5.6.4",
     "babel-plugin-macros": "^2.8.0",
+    "cross-env": "^7.0.2",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
