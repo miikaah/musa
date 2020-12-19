@@ -14,7 +14,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components/macro";
 import { get } from "lodash-es";
-import { webFrame } from "electron";
 import { FALLBACK_THEME } from "./config";
 import { updateSettings } from "reducers/settings.reducer";
 import { updateCurrentTheme, getStateFromIdb } from "./util";
@@ -46,14 +45,6 @@ library.add(
   faSearch,
   faTrash
 );
-
-function clearWebFrameCache() {
-  webFrame.clearCache();
-}
-
-const ONE_MINUTE_MS = 60000;
-
-setInterval(clearWebFrameCache, ONE_MINUTE_MS * 10);
 
 const App = ({ dispatch }) => {
   useEffect(() => {
