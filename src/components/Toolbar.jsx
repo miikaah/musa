@@ -68,15 +68,18 @@ const Toolbar = ({ location, history }) => {
       setIsLibraryVisible(false);
     };
 
-    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("click", handleClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("click", handleClick);
     };
   }, []);
 
   const goToSearchByKeyEvent = (event) => {
-    if (!isCtrlDown(event)) return;
+    if (!isCtrlDown(event)) {
+      return;
+    }
+
     history.push("/search");
     setIsLibraryVisible(false);
   };
@@ -90,31 +93,38 @@ const Toolbar = ({ location, history }) => {
 
   const toggleLibrary = (event) => {
     libraryButtonRef.current.blur();
+
     if (location.pathname !== "/") {
       history.push("/");
       setIsLibraryVisible(true);
       return;
     }
+
     setIsLibraryVisible(!isLibraryVisible);
     event.stopPropagation();
   };
 
   const toggleSettings = (event) => {
     settingsButtonRef.current.blur();
+
     if (location.pathname === "/settings") {
       history.push("/");
     } else {
       history.push("/settings");
     }
+
     event.stopPropagation();
   };
+
   const toggleSearch = (event) => {
     searchButtonRef.current.blur();
+
     if (location.pathname === "/search") {
       history.push("/");
     } else {
       history.push("/search");
     }
+
     event.stopPropagation();
   };
 
