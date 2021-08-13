@@ -80,6 +80,11 @@ const Toolbar = ({ location, history }) => {
       return;
     }
 
+    if (location.pathname === "/search") {
+      history.push("/");
+      return;
+    }
+
     history.push("/search");
     setIsLibraryVisible(false);
   };
