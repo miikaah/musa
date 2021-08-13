@@ -63,6 +63,7 @@ const SecondRow = styled.div`
   padding-left: 40px;
   margin-bottom: 12px;
   color: var(--color-typography-ghost);
+  min-height: 15px;
 `;
 
 const SecondRowItem = styled.span`
@@ -200,9 +201,9 @@ const PlaylistItem = ({
       </FirstRow>
       <SecondRow>
         <SecondRowItem>{artist}</SecondRowItem>
-        <SecondRowItem>{"\u00B7"}</SecondRowItem>
+        <SecondRowItem>{track ? "\u00B7" : ""}</SecondRowItem>
         <SecondRowItem>{track}</SecondRowItem>
-        <SecondRowItem>{"\u00B7"}</SecondRowItem>
+        <SecondRowItem>{album ? "\u00B7" : ""}</SecondRowItem>
         <SecondRowItem>{album}</SecondRowItem>
       </SecondRow>
     </PlaylistItemContainer>

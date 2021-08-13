@@ -247,7 +247,9 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
         <div>{album}</div>
         <div>
           <span>{artist}</span>
-          {currentItem && currentItem.metadata && <span>{"\u00B7"}</span>}
+          {currentItem && currentItem.metadata && (
+            <span>{date ? "\u00B7" : ""}</span>
+          )}
           <span>{date}</span>
         </div>
       </Info>
