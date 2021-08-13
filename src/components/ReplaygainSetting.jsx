@@ -5,7 +5,7 @@ import styled from "styled-components/macro";
 import { REPLAYGAIN_TYPE, getStateFromIdb, updateStateInIdb } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 
-const ReplaygainSettingContainer = styled.div`
+const ReplaygainSettingSelect = styled.div`
   position: relative;
 
   select {
@@ -17,6 +17,7 @@ const ReplaygainSettingContainer = styled.div`
     background-color: var(--color-primary-highlight);
     color: var(--color-typography-primary);
     cursor: pointer;
+    border-color: transparent;
   }
 `;
 
@@ -30,6 +31,7 @@ const ArrowDown = styled.span`
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-top: 10px solid var(--color-typography-primary);
+  pointer-events: none;
 `;
 
 const ReplaygainSetting = ({ replaygainType, dispatch }) => {
@@ -52,14 +54,14 @@ const ReplaygainSetting = ({ replaygainType, dispatch }) => {
   };
 
   return (
-    <ReplaygainSettingContainer>
+    <ReplaygainSettingSelect>
       <select value={type} onChange={updateState}>
         <option value={REPLAYGAIN_TYPE.Track}>Track</option>
         <option value={REPLAYGAIN_TYPE.Album}>Album</option>
         <option value={REPLAYGAIN_TYPE.Off}>Off</option>
       </select>
       <ArrowDown />
-    </ReplaygainSettingContainer>
+    </ReplaygainSettingSelect>
   );
 };
 
