@@ -19,8 +19,7 @@ const colorCss = css`
 const PlaylistItemContainer = styled.li`
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  max-height: 60px;
 
   &:hover {
     ${colorCss}
@@ -33,18 +32,35 @@ const PlaylistItemContainer = styled.li`
   `}
 `;
 
+const CoverWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  min-width: 50px;
+  min-height: 50px;
+`;
+
+const CoverSmall = styled.img`
+  width: 50px;
+  height: 50px;
+`;
+
+const RowContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
 const FirstRow = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 6px 40px 4px 10px;
-`;
-
-const IconTitleWrapper = styled.div`
-  display: flex;
+  padding: 6px 40px 4px 12px;
 `;
 
 const Icon = styled.span`
-  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 30px;
 `;
 
 const Title = styled.span`
@@ -60,7 +76,7 @@ const Duration = styled.span`
 const SecondRow = styled.div`
   display: flex;
   font-size: var(--font-size-xxs);
-  padding-left: 40px;
+  padding-left: 12px;
   margin-bottom: 12px;
   color: var(--color-typography-ghost);
   min-height: 15px;
@@ -182,6 +198,7 @@ const PlaylistItem = ({
   const track = get(item, "metadata.track", "");
   const title = get(item, "metadata.title", item.name);
   const duration = get(item, "metadata.duration", "");
+  const coverSrc = get(item, "cover", "");
 
   return (
     <PlaylistItemContainer
@@ -192,20 +209,23 @@ const PlaylistItem = ({
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      <FirstRow>
-        <IconTitleWrapper>
-          <Icon>{renderPlayOrPauseIcon()}</Icon>
+      <Icon>{renderPlayOrPauseIcon()}</Icon>
+      <CoverWrapper>
+        {coverSrc && <CoverSmall src={`file://${coverSrc}`} alt="" />}
+      </CoverWrapper>
+      <RowContainer>
+        <FirstRow>
           <Title>{title}</Title>
-        </IconTitleWrapper>
-        <Duration>{duration}</Duration>
-      </FirstRow>
-      <SecondRow>
-        <SecondRowItem>{artist}</SecondRowItem>
-        <SecondRowItem>{track ? "\u00B7" : ""}</SecondRowItem>
-        <SecondRowItem>{track}</SecondRowItem>
-        <SecondRowItem>{album ? "\u00B7" : ""}</SecondRowItem>
-        <SecondRowItem>{album}</SecondRowItem>
-      </SecondRow>
+          <Duration>{duration}</Duration>
+        </FirstRow>
+        <SecondRow>
+          <SecondRowItem>{artist}</SecondRowItem>
+          <SecondRowItem>{track ? "\u00B7" : ""}</SecondRowItem>
+          <SecondRowItem>{track}</SecondRowItem>
+          <SecondRowItem>{album ? "\u00B7" : ""}</SecondRowItem>
+          <SecondRowItem>{album}</SecondRowItem>
+        </SecondRow>
+      </RowContainer>
     </PlaylistItemContainer>
   );
 };
