@@ -50,12 +50,12 @@ const RowContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: 6px 16px 6px 12px;
 `;
 
 const FirstRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 40px 4px 12px;
+  display: grid;
+  grid-template-columns: 9fr 1fr;
 `;
 
 const Icon = styled.span`
@@ -68,18 +68,20 @@ const Icon = styled.span`
 const Title = styled.span`
   font-size: var(--font-size-sm);
   font-weight: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 const Duration = styled.span`
-  align-self: flex-end;
   font-size: var(--font-size-xs);
+  text-align: right;
 `;
 
 const SecondRow = styled.div`
   display: flex;
   font-size: var(--font-size-xxs);
-  padding-left: 12px;
-  margin-bottom: 12px;
+  margin: 6px 0;
   color: var(--color-typography-ghost);
   min-height: 15px;
 `;

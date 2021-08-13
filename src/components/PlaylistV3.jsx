@@ -24,6 +24,7 @@ const Container = styled.ul`
   min-height: 94vh;
   max-height: 94vh;
   overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
+  overflow-x: hidden;
   flex: 60%;
 `;
 
@@ -65,9 +66,8 @@ const Playlist = ({
   };
 
   const handleContinuousSelection = ({ type, getSelected = true }) => {
-    const { startIndex, endIndex, selectedItems } = getContinuousSelData(
-      getSelected
-    );
+    const { startIndex, endIndex, selectedItems } =
+      getContinuousSelData(getSelected);
 
     switch (type) {
       case "remove": {
