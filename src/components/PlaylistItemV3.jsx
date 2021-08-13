@@ -10,8 +10,10 @@ const colorCss = css`
   color: var(--color-typography-primary);
 
   > div {
-    > span {
-      color: var(--color-typography-primary);
+    > div {
+      > span {
+        color: var(--color-typography-primary);
+      }
     }
   }
 `;
