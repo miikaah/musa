@@ -11,6 +11,7 @@ const LibraryListContainer = styled.ul`
   list-style-type: none;
   text-align: left;
   padding-left: ${({ isRoot }) => (isRoot ? 0 : 12)}px;
+  padding-right: 12px;
 
   > li:nth-child(2) {
     padding-top: 4px;
