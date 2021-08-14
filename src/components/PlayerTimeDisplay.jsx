@@ -5,7 +5,7 @@ import styled from "styled-components/macro";
 import { prefixNumber } from "../util";
 
 const TimeDisplay = styled.span`
-  min-width: 100px;
+  min-width: 86px;
   display: inline-block;
   text-align: right;
 `;

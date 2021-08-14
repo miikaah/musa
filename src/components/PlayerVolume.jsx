@@ -32,7 +32,7 @@ const PlayerVolume = ({ volume, setVolumeForStateAndPlayer, dispatch }) => {
       handleMouseMove={handleVolumeChange}
       ref={playerVolume}
       progress={convertVolumeToPercentage()}
-      minWidth="120px"
+      width={120}
     />
   );
 };

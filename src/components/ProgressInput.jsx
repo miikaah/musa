@@ -4,6 +4,7 @@ import styled, { css } from "styled-components/macro";
 const Container = styled.div`
   display: flex;
   align-items: center;
+  min-width: ${({ width }) => `${width}px`};
   height: 20px;
   cursor: pointer;
 
@@ -28,9 +29,11 @@ const sharedCss = css`
 
 const Background = styled.div`
   ${sharedCss}
-  min-width: ${({ minWidth }) => minWidth};
+  max-width: ${({ width }) => `${width}px`};
+  min-width: ${({ width }) => `${width}px`};
   background-color: var(--color-slider-track);
   display: flex;
+  margin: 0 auto;
 `;
 
 const ForegroundWrapper = styled.div`
@@ -48,15 +51,16 @@ const Foreground = styled.div.attrs(({ progress }) => ({
 `;
 
 const ProgressInput = React.forwardRef(
-  ({ progress, handleMouseDown, handleMouseMove, minWidth }, ref) => {
+  ({ progress, handleMouseDown, handleMouseMove, width }, ref) => {
     return (
       <Container
         ref={ref}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onFocus={() => ref.current.blur()}
+        width={width + 20}
       >
-        <Background minWidth={minWidth}>
+        <Background width={width}>
           <ForegroundWrapper>
             <Foreground progress={progress} />
           </ForegroundWrapper>

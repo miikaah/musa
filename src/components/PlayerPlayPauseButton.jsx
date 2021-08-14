@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
 
 const ButtonContainer = styled.span`
-  margin-right: 12px;
+  margin-right: 8px;
   width: 20px;
 
   > button {

@@ -11,7 +11,7 @@ const VolumeButtonContainer = styled.span`
 
   > button {
     padding: 0 6px;
-    margin: 0 6px;
+    margin: 0 0 0 10px;
     font-size: 1rem;
   }
 `;
