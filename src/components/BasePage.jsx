@@ -8,7 +8,7 @@ const BasePageContainer = styled.div`
   }
 
   position: fixed;
-  z-index: 2;
+  z-index: 21;
   background-color: var(--color-bg);
   height: 100%;
   width: 100%;
