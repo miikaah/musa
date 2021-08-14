@@ -16,7 +16,6 @@ utilising Electron and React.
 
 - fix: ogg files not giving all metadata that they have
 - fix: Disable "Run initial scan" button when scan is running
-- feat: Use filename if no metadata
 - refactor: Toaster as the animate action is no longer needed
 - refactor: Move initial file system scan off of main thread as it lags during startup on Windows
 

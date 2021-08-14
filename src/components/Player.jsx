@@ -134,9 +134,10 @@ const Player = ({
         dispatch(replay(false));
       }
 
-      if (!currentItem || !currentItem.metadata) return;
+      const { metadata, name } = currentItem;
+      if (!currentItem || !metadata) return;
 
-      document.title = currentItem.metadata.title;
+      document.title = metadata.title || name || "Musa";
     };
     store.subscribe(handleStoreChange);
     // eslint-disable-next-line react-hooks/exhaustive-deps
