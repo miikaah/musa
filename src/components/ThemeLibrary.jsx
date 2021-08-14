@@ -69,7 +69,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
           <h5>Default theme</h5>
           <ThemeWrapper>
             <ThemeList>
-              <ThemeBlock colors={defaultTheme} />
+              <ThemeBlock theme={defaultTheme} />
             </ThemeList>
             <ThemeControls>
               <Button
@@ -87,7 +87,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
           <h5>Current theme</h5>
           <ThemeWrapper>
             <ThemeList>
-              <ThemeBlock colors={currentTheme} />
+              <ThemeBlock theme={currentTheme} />
             </ThemeList>
             <ThemeControls>
               <Button
@@ -105,10 +105,10 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
       <h5>Library</h5>
       <ThemeList>
         {themes &&
-          themes.map((theme, i) => (
+          themes.map((theme) => (
             <ThemeBlock
-              key={i}
-              colors={theme.colors}
+              key={theme.key}
+              theme={theme}
               setCurrentTheme={(theme) => handleCurrentThemeChange(theme)}
             />
           ))}

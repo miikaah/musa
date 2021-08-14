@@ -18,10 +18,21 @@ const Color = styled.span`
   background-color: ${({ rgb }) => rgb && `rgb(${rgb})`};
 `;
 
-const ThemeBlock = ({ colors, setCurrentTheme }) => {
-  if (!colors) return null;
+const ThemeBlock = ({ theme, setCurrentTheme }) => {
+  if (!theme) {
+    return null;
+  }
+
+  const { colors: themeColors, key } = theme;
+  const colors = themeColors || theme;
+
+  if (!colors) {
+    return null;
+  }
+
   return (
     <ThemeBlockContainer
+      title={key ? decodeURIComponent(key) : ""}
       rgb={colors.bg}
       onClick={() => setCurrentTheme(colors)}
     >
