@@ -9,9 +9,11 @@ const Container = styled.div`
 
   :hover {
     > div {
+      background-color: #777;
+
       > div {
         > div {
-          background-color: red;
+          background-color: #f00;
         }
       }
     }
