@@ -25,6 +25,7 @@ const LibraryContainer = styled.div`
   margin-top: var(--toolbar-height);
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   padding-bottom: 40px;
+  max-width: 80vw;
   ${listOverflow}
 `;
 
