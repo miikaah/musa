@@ -87,7 +87,7 @@ const SecondRow = styled.div`
 `;
 
 const SecondRowItem = styled.span`
-  margin-right: 2px;
+  ${({ hasMargins }) => hasMargins && `margin: 0 2px;`}
 `;
 
 const PlaylistItem = ({
@@ -224,9 +224,13 @@ const PlaylistItem = ({
         </FirstRow>
         <SecondRow>
           <SecondRowItem>{artist}</SecondRowItem>
-          <SecondRowItem>{track ? "\u00B7" : ""}</SecondRowItem>
+          <SecondRowItem hasMargins={!!track}>
+            {track ? "\u00B7" : ""}
+          </SecondRowItem>
           <SecondRowItem>{track}</SecondRowItem>
-          <SecondRowItem>{album ? "\u00B7" : ""}</SecondRowItem>
+          <SecondRowItem hasMargins={!!album}>
+            {album ? "\u00B7" : ""}
+          </SecondRowItem>
           <SecondRowItem>{album}</SecondRowItem>
         </SecondRow>
       </RowContainer>
