@@ -14,6 +14,7 @@ utilising Electron and React.
 
 ### V1
 
+- fix: ogg files not giving all metadata that they have
 - fix: Disable "Run initial scan" button when scan is running
 - feat: Use filename if no metadata
 - refactor: Toaster as the animate action is no longer needed
