@@ -170,8 +170,12 @@ function getPlayBase(newItem, newIndex) {
     currentItem: newItem,
     currentIndex: newIndex,
     isPlaying: true,
-    src: getFileUri(newItem.path),
-    cover: isEmpty(newItem.cover) ? "" : getFileUri(newItem.cover),
+    src: newItem.fileUrl || getFileUri(newItem.path),
+    cover: isEmpty(newItem.cover)
+      ? ""
+      : newItem.cover.startsWith("http://")
+      ? newItem.cover
+      : getFileUri(newItem.cover),
   };
 }
 

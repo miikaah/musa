@@ -1,4 +1,4 @@
-import { get, isEmpty } from "lodash-es";
+import { get } from "lodash-es";
 import { DB_NAME, DB_VERSION } from "./config";
 import {
   addToast,
@@ -29,21 +29,15 @@ export const REPLAYGAIN_TYPE = {
 };
 
 const getReplaygainTrackGainDb = (currentItem) => {
-  const dbString = get(currentItem, "metadata.replaygainTrackGain", "").replace(
-    / dB+/,
-    ""
-  );
-  return parseFloat(!isEmpty(dbString) ? dbString : 0);
+  return get(currentItem, "metadata.replayGainTrackGain", {
+    dB: 0,
+  }).dB;
 };
 
 const getReplaygainAlbumGainDb = (currentItem) => {
-  const dbString = get(currentItem, "metadata.replaygainAlbumGain", "").replace(
-    / dB+/,
-    ""
-  );
-  return parseFloat(
-    !isEmpty(dbString) ? dbString : getReplaygainTrackGainDb(currentItem)
-  );
+  return get(currentItem, "metadata.replayGainAlbumGain", {
+    dB: 0,
+  }).dB;
 };
 
 export const getReplaygainDb = (replaygainType, currentItem) => {
@@ -58,6 +52,28 @@ export const getReplaygainDb = (replaygainType, currentItem) => {
       return getReplaygainTrackGainDb(currentItem);
   }
 };
+
+export function formatDuration(duration) {
+  if (duration < 1) {
+    return "0:00";
+  }
+  if (typeof duration === "string") {
+    return duration;
+  }
+
+  let output = "";
+  if (duration >= 3600) {
+    output += prefixNumber(Math.floor(duration / 3600)) + ":";
+    output +=
+      prefixNumber(Math.floor((Math.floor(duration) % 3600) / 60)) + ":";
+  } else {
+    output += Math.floor((Math.floor(duration) % 3600) / 60) + ":";
+  }
+
+  output += prefixNumber(Math.floor(duration % 60));
+
+  return output;
+}
 
 export function prefixNumber(value) {
   return value < 10 ? `0${value}` : `${value}`;

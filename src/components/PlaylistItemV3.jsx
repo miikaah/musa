@@ -4,6 +4,7 @@ import { get, isNaN, isEqual } from "lodash-es";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components/macro";
 import { playIndex, replay } from "reducers/player.reducer";
+import { formatDuration } from "../util";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);
@@ -199,9 +200,9 @@ const PlaylistItem = ({
 
   const artist = get(item, "metadata.artist", "");
   const album = get(item, "metadata.album", "");
-  const track = get(item, "metadata.track", "");
+  const track = get(item, "track") || get(item, "metadata.track", "");
   const title = get(item, "metadata.title", item.name);
-  const duration = get(item, "metadata.duration", "");
+  const duration = formatDuration(get(item, "metadata.duration", ""));
   const coverSrc = get(item, "cover", "");
 
   return (
@@ -215,7 +216,14 @@ const PlaylistItem = ({
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
       <CoverWrapper>
-        {coverSrc && <CoverSmall src={`file://${coverSrc}`} alt="" />}
+        {coverSrc && (
+          <CoverSmall
+            src={
+              coverSrc.startsWith("http://") ? coverSrc : `file://${coverSrc}`
+            }
+            alt=""
+          />
+        )}
       </CoverWrapper>
       <RowContainer>
         <FirstRow>

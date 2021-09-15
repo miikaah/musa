@@ -12,6 +12,12 @@ export const setListing = (listing) => ({
   listing,
 });
 
+export const SET_LISTING_WITH_LABELS = "MUSA/LIBRARY/SET_LISTING_WITH_LABELS";
+export const setListingWithLabels = (listingWithLabels) => ({
+  type: SET_LISTING_WITH_LABELS,
+  listingWithLabels,
+});
+
 export const SET_SCAN_PROPS = "MUSA/LIBRARY/SET_SCAN_PROPS";
 export const setScanProps = ({ scanLength, scannedLength, reset }) => ({
   type: SET_SCAN_PROPS,
@@ -54,6 +60,12 @@ const library = (state = initialState, action) => {
         ...state,
         listing: action.listing,
         listingWithLabels: getListingWithLabels(action.listing),
+      };
+    }
+    case SET_LISTING_WITH_LABELS: {
+      return {
+        ...state,
+        listingWithLabels: action.listingWithLabels,
       };
     }
     case SET_SCAN_PROPS: {

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components/macro";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
-import Library from "components/Library";
+import Library from "components/LibraryV2";
 import Player from "components/Player";
 
 const ToolbarContainer = styled.div`

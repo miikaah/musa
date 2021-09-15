@@ -16,7 +16,7 @@ const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
   const onDragStart = (event) => {
     event.dataTransfer.setData(
       "text/plain",
-      JSON.stringify({ ...item, cover })
+      JSON.stringify({ item: { ...item, cover } })
     );
     event.stopPropagation();
   };
