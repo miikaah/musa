@@ -56,11 +56,8 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
     if (albums.length < 1 && !showAlbums) {
       if (ipc) {
         ipc.once("musa:artist:response", (event, data) => {
-          if (Array.isArray(data.albums) && data.albums.length) {
-            setAlbums(data.albums);
-          } else {
-            setFiles(data.files);
-          }
+          setAlbums(data.albums);
+          setFiles(data.files);
         });
         ipc.send("musa:artist:request", item.id);
       } else {
@@ -129,7 +126,8 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
         songs.map((album, i) => (
           <LibraryList key={album.id} item={album} cover={item.coverUrl} />
         ))}
-      {files.length > 0 &&
+      {showAlbums &&
+        files.length > 0 &&
         files.map((song, i) => (
           <LibraryItem key={`${song.name}-${i}`} item={song} />
         ))}
