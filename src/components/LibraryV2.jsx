@@ -6,6 +6,18 @@ import styled from "styled-components/macro";
 import { setListingWithLabels } from "reducers/library.reducer";
 import { listOverflow } from "../common.styles";
 
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
+
+let ipc;
+if (isElectron) {
+  ipc = window.require("electron").ipcRenderer;
+  /* eslint-disable no-console */
+  ipc.on("musa:log", (event, log) => console.log("(main)", log));
+  ipc.on("musa:error", (event, error) => console.error(error));
+  /* eslint-enable no-console */
+}
+
 const LibraryContainer = styled.div`
   text-align: left;
   border: 0 solid var(--color-secondary-highlight);
@@ -39,11 +51,18 @@ const LibraryLabel = styled.div`
 
 const Library = ({ dispatch, forwardRef, isVisible, listingWithLabels }) => {
   useEffect(() => {
-    fetch("http://100.79.27.108:4200/artists")
-      .then((response) => response.json())
-      .then((artists) => {
+    if (ipc) {
+      ipc.on("musa:artists:response", (event, artists) => {
         dispatch(setListingWithLabels(artists));
       });
+      ipc.send("musa:artists:request");
+    } else {
+      fetch("http://100.79.27.108:4200/artists")
+        .then((response) => response.json())
+        .then((artists) => {
+          dispatch(setListingWithLabels(artists));
+        });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

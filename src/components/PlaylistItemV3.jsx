@@ -216,14 +216,7 @@ const PlaylistItem = ({
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
       <CoverWrapper>
-        {coverSrc && (
-          <CoverSmall
-            src={
-              coverSrc.startsWith("http://") ? coverSrc : `file://${coverSrc}`
-            }
-            alt=""
-          />
-        )}
+        {coverSrc && <CoverSmall src={coverSrc} alt="" />}
       </CoverWrapper>
       <RowContainer>
         <FirstRow>

@@ -4,6 +4,14 @@ import styled from "styled-components/macro";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
 
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
+
+let ipc;
+if (isElectron) {
+  ipc = window.require("electron").ipcRenderer;
+}
+
 const LibraryListContainer = styled.ul`
   margin: 0;
   padding: 0;
@@ -47,27 +55,42 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
 
   const toggleAlbum = () => {
     if (albums.length < 1 && !showAlbums) {
-      fetch(item.url)
-        .then((response) => response.json())
-        .then((data) => {
+      if (ipc) {
+        ipc.on("musa:artist:response", (event, data) => {
           setAlbums(data.albums);
         });
+        ipc.send("musa:artist:request", item.id);
+      } else {
+        fetch(item.url)
+          .then((response) => response.json())
+          .then((data) => {
+            setAlbums(data.albums);
+          });
+      }
     }
     setShowAlbums(!showAlbums);
   };
 
   const toggleSongs = () => {
     if (songs.length < 1 && !showSongs) {
-      fetch(item.url)
-        .then((response) => response.json())
-        .then((data) => {
+      if (ipc) {
+        ipc.on("musa:album:response", (event, data) => {
           setSongs(data.files);
         });
+        ipc.send("musa:album:request", item.id);
+      } else {
+        fetch(item.url)
+          .then((response) => response.json())
+          .then((data) => {
+            setSongs(data.files);
+          });
+      }
     }
     setShowSongs(!showSongs);
   };
 
   const onDragStart = (event) => {
+    console.log({ isArtist, isAlbum, item });
     event.dataTransfer.setData(
       "text/plain",
       JSON.stringify({ isArtist, isAlbum, item })

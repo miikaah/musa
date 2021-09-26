@@ -231,7 +231,9 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!coverSrc) updateCurrentTheme(defaultTheme);
+    if (!coverSrc) {
+      updateCurrentTheme(defaultTheme);
+    }
   }, [coverSrc, defaultTheme]);
 
   const artist = get(currentItem, "metadata.artist", "");
