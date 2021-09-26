@@ -56,7 +56,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
   const toggleAlbum = () => {
     if (albums.length < 1 && !showAlbums) {
       if (ipc) {
-        ipc.on("musa:artist:response", (event, data) => {
+        ipc.once("musa:artist:response", (event, data) => {
           setAlbums(data.albums);
         });
         ipc.send("musa:artist:request", item.id);
@@ -74,7 +74,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
   const toggleSongs = () => {
     if (songs.length < 1 && !showSongs) {
       if (ipc) {
-        ipc.on("musa:album:response", (event, data) => {
+        ipc.once("musa:album:response", (event, data) => {
           setSongs(data.files);
         });
         ipc.send("musa:album:request", item.id);
