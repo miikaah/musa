@@ -28,7 +28,7 @@ const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
       onDragStart={onDragStart}
       onDoubleClick={() => dispatch(addToPlaylist(item))}
     >
-      {get(item, "metadata.title", item.name)}
+      {get(item, "metadata.title") || item.name}
     </LibraryItemContainer>
   );
 };
