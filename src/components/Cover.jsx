@@ -239,7 +239,7 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
   const artist = get(currentItem, "metadata.artist", "");
   const title = get(currentItem, "metadata.title", currentItem.name);
   const album = get(currentItem, "metadata.album", "");
-  const date = get(currentItem, "metadata.date", "");
+  const date = get(currentItem, "metadata.year", "");
 
   return (
     <Container>

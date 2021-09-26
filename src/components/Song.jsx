@@ -65,7 +65,7 @@ const Song = ({ item, dispatch }) => {
         <p>{get(item, "metadata.artist", "")}</p>
         <p>{get(item, "metadata.album", "")}</p>
         <p>{item.name}</p>
-        <p>{get(item, "metadata.date", "")}</p>
+        <p>{get(item, "metadata.year", "")}</p>
       </SongInfo>
     </SongContainer>
   );

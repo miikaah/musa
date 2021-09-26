@@ -200,7 +200,7 @@ const PlaylistItem = ({
 
   const artist = get(item, "metadata.artist", "");
   const album = get(item, "metadata.album", "");
-  const track = get(item, "track") || get(item, "metadata.track", "");
+  const track = get(item, "track");
   const title = get(item, "metadata.title", item.name);
   const duration = formatDuration(get(item, "metadata.duration", ""));
   const coverSrc = get(item, "cover", "");

@@ -47,8 +47,8 @@ const AppMain = ({ isLarge, dispatch }) => {
 
     if (isArtist) {
       if (ipc) {
-        ipc.on("musa:artistAlbums:response", (event, albums) => {
-          const songs = albums
+        ipc.once("musa:artistAlbums:response", (event, artist) => {
+          const songs = artist.albums
             .map((a) => a.files.map((f) => ({ ...f, cover: a.coverUrl })))
             .flat(Infinity);
 
@@ -78,7 +78,7 @@ const AppMain = ({ isLarge, dispatch }) => {
       }
     } else if (isAlbum) {
       if (ipc) {
-        ipc.on("musa:album:response:AppMain", (event, album) => {
+        ipc.once("musa:album:response:AppMain", (event, album) => {
           const mappedFiles = album.files.map((f) => ({
             ...f,
             cover: album.coverUrl,
