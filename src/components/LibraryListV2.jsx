@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { isEmpty } from "lodash-es";
 import styled from "styled-components/macro";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
@@ -49,15 +48,19 @@ const LibraryListFolder = styled.li`
 const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
   const [albums, setAlbums] = useState([]);
   const [songs, setSongs] = useState([]);
+  const [files, setFiles] = useState([]);
   const [showAlbums, setShowAlbums] = useState(false);
   const [showSongs, setShowSongs] = useState(false);
-  const isUndefinedItemName = item.name === "undefined";
 
   const toggleAlbum = () => {
     if (albums.length < 1 && !showAlbums) {
       if (ipc) {
         ipc.once("musa:artist:response", (event, data) => {
-          setAlbums(data.albums);
+          if (Array.isArray(data.albums) && data.albums.length) {
+            setAlbums(data.albums);
+          } else {
+            setFiles(data.files);
+          }
         });
         ipc.send("musa:artist:request", item.id);
       } else {
@@ -98,19 +101,8 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
     event.stopPropagation();
   };
 
-  const renderItemsWithoutAlbum = () =>
-    item.songs.filter(Boolean).map((song, i) => {
-      return <LibraryItem key={`${song.name}-${i}`} item={song} />;
-    });
-
   const renderFolderName = () =>
-    isAlbum ? (
-      <AlbumCover item={item} />
-    ) : isEmpty(item.name) ? (
-      item.path
-    ) : (
-      item.name
-    );
+    isAlbum ? <AlbumCover item={item} /> : <>{item.name || "Unknown title"}</>;
 
   const renderArtistsAndAlbums = () => (
     <LibraryListContainer isRoot={isArtist} draggable onDragStart={onDragStart}>
@@ -122,7 +114,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
       </LibraryListFolder>
       {showAlbums &&
         Array.isArray(albums) &&
-        albums.length &&
+        albums.length > 0 &&
         albums.map((album, i) => (
           <LibraryList
             key={album.id}
@@ -133,17 +125,19 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
         ))}
       {showSongs &&
         Array.isArray(songs) &&
-        songs.length &&
+        songs.length > 0 &&
         songs.map((album, i) => (
           <LibraryList key={album.id} item={album} cover={item.coverUrl} />
+        ))}
+      {files.length > 0 &&
+        files.map((song, i) => (
+          <LibraryItem key={`${song.name}-${i}`} item={song} />
         ))}
     </LibraryListContainer>
   );
 
   if (isArtist || isAlbum) {
-    return isUndefinedItemName
-      ? renderItemsWithoutAlbum()
-      : renderArtistsAndAlbums();
+    return renderArtistsAndAlbums();
   }
   return <LibraryItem item={item} cover={cover} hasAlbum />;
 };
