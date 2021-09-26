@@ -104,15 +104,15 @@ const AppMain = ({ isLarge, dispatch }) => {
     }
 
     if (ipc) {
-      ipc.once("musa:song:response", (event, song) => {
+      ipc.once("musa:audio:response", (event, audio) => {
         dispatch(
           addToPlaylist({
-            ...song,
-            cover: song.coverUrl,
+            ...audio,
+            cover: audio.coverUrl,
           })
         );
       });
-      ipc.send("musa:song:request", item.id);
+      ipc.send("musa:audio:request", item.id);
     } else {
       dispatch(addToPlaylist(item));
     }
