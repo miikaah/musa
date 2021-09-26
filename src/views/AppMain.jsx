@@ -103,7 +103,19 @@ const AppMain = ({ isLarge, dispatch }) => {
       }
     }
 
-    dispatch(addToPlaylist(item));
+    if (ipc) {
+      ipc.once("musa:song:response", (event, song) => {
+        dispatch(
+          addToPlaylist({
+            ...song,
+            cover: song.coverUrl,
+          })
+        );
+      });
+      ipc.send("musa:song:request", item.id);
+    } else {
+      dispatch(addToPlaylist(item));
+    }
   };
 
   return (

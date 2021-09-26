@@ -236,10 +236,12 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
     }
   }, [coverSrc, defaultTheme]);
 
-  const artist = get(currentItem, "metadata.artist", "");
-  const title = get(currentItem, "metadata.title", currentItem.name);
-  const album = get(currentItem, "metadata.album", "");
-  const date = get(currentItem, "metadata.year", "");
+  const artist =
+    get(currentItem, "metadata.artist") || currentItem.artistName || "";
+  const album =
+    get(currentItem, "metadata.album") || currentItem.albumName || "";
+  const title = get(currentItem, "metadata.title") || currentItem.name || "";
+  const year = get(currentItem, "metadata.year", "");
 
   return (
     <Container>
@@ -250,9 +252,9 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
         <div>
           <span>{artist}</span>
           {currentItem && currentItem.metadata && (
-            <span>{date ? "\u00B7" : ""}</span>
+            <span>{year ? "\u00B7" : ""}</span>
           )}
-          <span>{date}</span>
+          <span>{year}</span>
         </div>
       </Info>
     </Container>

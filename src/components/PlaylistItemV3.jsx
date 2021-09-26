@@ -198,10 +198,10 @@ const PlaylistItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
-  const artist = get(item, "metadata.artist", "");
-  const album = get(item, "metadata.album", "");
+  const artist = get(item, "metadata.artist") || item.artistName || "";
+  const album = get(item, "metadata.album") || item.albumName || "";
+  const title = get(item, "metadata.title") || item.name || "";
   const track = get(item, "track");
-  const title = get(item, "metadata.title", item.name);
   const duration = formatDuration(get(item, "metadata.duration", ""));
   const coverSrc = get(item, "cover", "");
 
