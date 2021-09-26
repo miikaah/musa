@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -23,6 +23,9 @@ import Search from "views/Search";
 import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
 import ProgressBar from "components/ProgressBar";
+
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
 
 const AppContainer = styled.div`
   text-align: left;
@@ -61,19 +64,27 @@ const App = ({ dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <Router>
-      <AppContainer>
-        <Toaster />
-        <ProgressBar />
-        <Toolbar />
-        <Switch>
-          <Route exact path="/" component={AppMain} />
-          <Route exact path="/settings" component={Settings} />
-          <Route exact path="/search" component={Search} />
-        </Switch>
-      </AppContainer>
-    </Router>
+  const Main = () => (
+    <AppContainer>
+      <Toaster />
+      <ProgressBar />
+      <Toolbar />
+      <Switch>
+        <Route exact path="/" component={AppMain} />
+        <Route exact path="/settings" component={Settings} />
+        <Route exact path="/search" component={Search} />
+      </Switch>
+    </AppContainer>
+  );
+
+  return isElectron ? (
+    <HashRouter>
+      <Main />
+    </HashRouter>
+  ) : (
+    <BrowserRouter>
+      <Main />
+    </BrowserRouter>
   );
 };
 

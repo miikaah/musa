@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { FALLBACK_THEME } from "../config";
-import { doIdbRequest, updateCurrentTheme } from "../util";
+import { updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 import ThemeBlock from "./ThemeBlock";
 import Button from "./Button";
@@ -42,14 +42,14 @@ const ThemeControls = styled.div`
 `;
 
 const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
-  const [themes, setThemes] = useState([]);
+  // const [themes, setThemes] = useState([]);
 
   useEffect(() => {
-    doIdbRequest({
-      method: "getAll",
-      storeName: "theme",
-      onReqSuccess: (req) => () => setThemes(req.result),
-    });
+    // doIdbRequest({
+    //   method: "getAll",
+    //   storeName: "theme",
+    //   onReqSuccess: (req) => () => setThemes(req.result),
+    // });
   }, []);
 
   const handleDefaultThemeChange = (theme) => {
@@ -57,10 +57,10 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
     dispatch(updateSettings({ defaultTheme: theme, currentTheme: theme }));
   };
 
-  const handleCurrentThemeChange = (theme) => {
-    updateCurrentTheme(theme);
-    dispatch(updateSettings({ currentTheme: theme }));
-  };
+  // const handleCurrentThemeChange = (theme) => {
+  //   updateCurrentTheme(theme);
+  //   dispatch(updateSettings({ currentTheme: theme }));
+  // };
 
   return (
     <ThemeLibraryContainer>
@@ -103,7 +103,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
       </DefaultAndCurrentThemes>
 
       <h5>Library</h5>
-      <ThemeList>
+      {/* <ThemeList>
         {themes &&
           themes.map((theme) => (
             <ThemeBlock
@@ -112,7 +112,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
               setCurrentTheme={(theme) => handleCurrentThemeChange(theme)}
             />
           ))}
-      </ThemeList>
+      </ThemeList> */}
     </ThemeLibraryContainer>
   );
 };

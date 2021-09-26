@@ -12,9 +12,12 @@ const ProgressBarContainer = styled.div`
   background-color: var(--color-slider-track);
 `;
 
-const ProgressBarValue = styled.div`
+const ProgressBarValue = styled.div.attrs(({ width }) => ({
+  style: {
+    width: `${width}%`,
+  },
+}))`
   background-color: red;
-  width: ${({ width }) => width}%;
   height: 4px;
 `;
 

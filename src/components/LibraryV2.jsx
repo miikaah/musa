@@ -10,7 +10,7 @@ const { REACT_APP_ENV } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
 
 let ipc;
-if (isElectron) {
+if (isElectron && window.require) {
   ipc = window.require("electron").ipcRenderer;
   /* eslint-disable no-console */
   ipc.on("musa:log", (event, log) => console.log("(main)", log));

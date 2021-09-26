@@ -10,7 +10,7 @@ const { REACT_APP_ENV } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
 
 let ipc;
-if (isElectron) {
+if (isElectron && window.require) {
   ipc = window.require("electron").ipcRenderer;
 }
 
@@ -24,16 +24,18 @@ const Container = styled.div`
 
 const AppMain = ({ isLarge, dispatch }) => {
   useEffect(() => {
-    ipc.on("musa:startScan", (event, scanLength) => {
-      dispatch(setScanProps({ scanLength }));
-    });
-    ipc.on("musa:updateScan", (event, scannedLength) => {
-      dispatch(setScanProps({ scannedLength }));
-    });
-    ipc.on("musa:endScan", () => {
-      dispatch(setScanProps({ reset: true }));
-    });
-    ipc.send("musa:onInit");
+    if (ipc) {
+      ipc.on("musa:startScan", (event, scanLength) => {
+        dispatch(setScanProps({ scanLength }));
+      });
+      ipc.on("musa:updateScan", (event, scannedLength) => {
+        dispatch(setScanProps({ scannedLength }));
+      });
+      ipc.on("musa:endScan", () => {
+        dispatch(setScanProps({ reset: true }));
+      });
+      ipc.send("musa:onInit");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

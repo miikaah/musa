@@ -8,7 +8,7 @@ const { REACT_APP_ENV } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
 
 let ipc;
-if (isElectron) {
+if (isElectron && window.require) {
   ipc = window.require("electron").ipcRenderer;
 }
 
@@ -90,7 +90,6 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
   };
 
   const onDragStart = (event) => {
-    console.log({ isArtist, isAlbum, item });
     event.dataTransfer.setData(
       "text/plain",
       JSON.stringify({ isArtist, isAlbum, item })

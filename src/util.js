@@ -1,5 +1,4 @@
 import { get } from "lodash-es";
-import { DB_NAME, DB_VERSION } from "./config";
 import {
   addToast,
   animateToast,
@@ -93,19 +92,19 @@ export function getStateFromIdb(onReqSuccess) {
 }
 
 export function doIdbRequest({ method, storeName, key, onReqSuccess }) {
-  const idbRequest = indexedDB.open(DB_NAME, DB_VERSION);
-
-  idbRequest.onsuccess = (idbEvent) => {
-    const db = idbEvent.target.result;
-    const store = db.transaction(storeName, "readwrite").objectStore(storeName);
-
-    let req;
-
-    if (key) req = store[method](key);
-    else req = store[method]();
-
-    req.onsuccess = onReqSuccess(req, db);
-  };
+  // const idbRequest = indexedDB.open(DB_NAME, DB_VERSION);
+  //
+  // idbRequest.onsuccess = (idbEvent) => {
+  //   const db = idbEvent.target.result;
+  //   const store = db.transaction(storeName, "readwrite").objectStore(storeName);
+  //
+  //   let req;
+  //
+  //   if (key) req = store[method](key);
+  //   else req = store[method]();
+  //
+  //   req.onsuccess = onReqSuccess(req, db);
+  // };
 }
 
 export function updateIdb({ req, db, osName, key, props }) {

@@ -9,12 +9,17 @@ import Button from "components/Button";
 import BasePage from "components/BasePage";
 import { doIdbRequest } from "../util";
 
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
+
+let ipc;
+if (isElectron && window.require) {
+  ipc = window.require("electron").ipcRenderer;
+}
+
 const SettingsBlock = styled.div`
   margin-bottom: 60px;
 `;
-
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
 
 const Settings = ({ musicLibraryPaths }) => {
   const runInitialScan = () => {
@@ -22,7 +27,7 @@ const Settings = ({ musicLibraryPaths }) => {
       method: "clear",
       storeName: "library",
       onReqSuccess: (req) => () => {
-        ipcRenderer.send("runInitialScan", musicLibraryPaths);
+        ipc.send("runInitialScan", musicLibraryPaths);
       },
     });
   };

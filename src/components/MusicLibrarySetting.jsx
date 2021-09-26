@@ -7,6 +7,14 @@ import styled from "styled-components/macro";
 import { doIdbRequest } from "../util";
 import Button from "./Button";
 
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
+
+let ipc;
+if (isElectron && window.require) {
+  ipc = window.require("electron").ipcRenderer;
+}
+
 const MusicLibrarySettingContainer = styled.div``;
 
 const MusicLibrarySettingPath = styled.div`
@@ -24,9 +32,6 @@ const MusicLibrarySettingPath = styled.div`
   }
 `;
 
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
-
 const songListProps = {
   method: "get",
   storeName: "songList",
@@ -35,7 +40,7 @@ const songListProps = {
 
 const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
   useEffect(() => {
-    ipcRenderer.on("addMusicLibraryPath", (event, path) => {
+    ipc.on("addMusicLibraryPath", (event, path) => {
       dispatch(
         updateSettings({
           musicLibraryPaths: Array.from(new Set([...musicLibraryPaths, path])),
@@ -53,7 +58,7 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
     doIdbRequest({
       ...songListProps,
       onReqSuccess: (req) => () => {
-        ipcRenderer.send(
+        ipc.send(
           "removeMusicLibraryPath",
           get(req, "result.list"),
           libPaths,
@@ -67,7 +72,7 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
     doIdbRequest({
       ...songListProps,
       onReqSuccess: (req) => () => {
-        ipcRenderer.send(
+        ipc.send(
           "addMusicLibraryPath",
           get(req, "result.list"),
           musicLibraryPaths
