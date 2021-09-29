@@ -1,4 +1,3 @@
-import { get } from "lodash-es";
 import {
   addToast,
   animateToast,
@@ -27,29 +26,20 @@ export const REPLAYGAIN_TYPE = {
   Off: "off",
 };
 
-const getReplaygainTrackGainDb = (currentItem) => {
-  return get(currentItem, "metadata.replayGainTrackGain", {
-    dB: 0,
-  }).dB;
-};
-
-const getReplaygainAlbumGainDb = (currentItem) => {
-  return get(currentItem, "metadata.replayGainAlbumGain", {
-    dB: 0,
-  }).dB;
-};
-
 export const getReplaygainDb = (replaygainType, currentItem) => {
-  switch (replaygainType) {
-    case REPLAYGAIN_TYPE.Album: {
-      return getReplaygainAlbumGainDb(currentItem);
-    }
-    case REPLAYGAIN_TYPE.Off: {
-      return 0;
-    }
-    default:
-      return getReplaygainTrackGainDb(currentItem);
+  const hasTrackGain = currentItem?.metadata?.replayGainTrackGain;
+  const trackGain = currentItem?.metadata?.replayGainTrackGain?.dB;
+  const hasAlbumGain = currentItem?.metadata?.replayGainAlbumGain;
+  const albumGain = currentItem?.metadata?.replayGainAlbumGain?.dB;
+
+  if (replaygainType === REPLAYGAIN_TYPE.Track) {
+    return hasTrackGain ? trackGain : hasAlbumGain ? albumGain : 0;
   }
+  if (replaygainType === REPLAYGAIN_TYPE.Album) {
+    return hasAlbumGain ? albumGain : hasTrackGain ? trackGain : 0;
+  }
+
+  return 0;
 };
 
 export function formatDuration(duration) {
