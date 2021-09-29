@@ -13,10 +13,9 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components/macro";
-import { get } from "lodash-es";
 import { FALLBACK_THEME } from "./config";
 import { updateSettings } from "reducers/settings.reducer";
-import { updateCurrentTheme, getStateFromIdb } from "./util";
+import { updateCurrentTheme } from "./util";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
 import Search from "views/Search";
@@ -26,6 +25,11 @@ import ProgressBar from "components/ProgressBar";
 
 const { REACT_APP_ENV } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
+
+let ipc;
+if (isElectron && window.require) {
+  ipc = window.require("electron").ipcRenderer;
+}
 
 const AppContainer = styled.div`
   text-align: left;
@@ -51,16 +55,18 @@ library.add(
 
 const App = ({ dispatch }) => {
   useEffect(() => {
-    getStateFromIdb((req, db) => () => {
-      const currentTheme = get(req, "result.defaultTheme", FALLBACK_THEME);
+    ipc.once("musa:settings:response:get", (event, settings) => {
+      const currentTheme = settings?.currentTheme || FALLBACK_THEME;
+
       updateCurrentTheme(currentTheme);
       dispatch(
         updateSettings({
-          ...req.result,
+          ...settings,
           currentTheme,
         })
       );
     });
+    ipc.send("musa:settings:request:get");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

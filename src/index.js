@@ -4,15 +4,24 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import rootReducer from "./reducers";
 import App from "./App.jsx";
-import { getStateFromIdb, updateStateInIdb } from "./util";
 import "./index.css";
+
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
+
+let ipc;
+if (isElectron && window.require) {
+  ipc = window.require("electron").ipcRenderer;
+}
 
 export const store = createStore(rootReducer);
 
 store.subscribe(() => {
-  getStateFromIdb((req, db) => () =>
-    updateStateInIdb(req, db, store.getState().settings)
-  );
+  const settings = store.getState().settings;
+
+  if (ipc) {
+    ipc.send("musa:settings:request:insert", settings);
+  }
 });
 
 ReactDOM.render(

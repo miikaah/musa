@@ -212,7 +212,7 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
       dispatch(updateSettings({ currentTheme: colors }));
 
       // Update to backend
-      if (ipc) {
+      if (ipc && coverTarget.src && colors) {
         ipc.send("musa:themes:request:insert", coverTarget.src, colors);
       }
     };
