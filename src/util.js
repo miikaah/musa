@@ -82,51 +82,6 @@ export function getFileUri(path) {
   return `file://${path}`.replace("#", "%23");
 }
 
-export function getStateFromIdb(onReqSuccess) {
-  doIdbRequest({
-    method: "get",
-    storeName: "state",
-    key: "state",
-    onReqSuccess,
-  });
-}
-
-export function doIdbRequest({ method, storeName, key, onReqSuccess }) {
-  // const idbRequest = indexedDB.open(DB_NAME, DB_VERSION);
-  //
-  // idbRequest.onsuccess = (idbEvent) => {
-  //   const db = idbEvent.target.result;
-  //   const store = db.transaction(storeName, "readwrite").objectStore(storeName);
-  //
-  //   let req;
-  //
-  //   if (key) req = store[method](key);
-  //   else req = store[method]();
-  //
-  //   req.onsuccess = onReqSuccess(req, db);
-  // };
-}
-
-export function updateIdb({ req, db, osName, key, props }) {
-  db.transaction(osName, "readwrite")
-    .objectStore(osName)
-    .put({
-      key,
-      ...req.result,
-      ...props,
-    });
-}
-
-export function updateStateInIdb(req, db, props) {
-  db.transaction("state", "readwrite")
-    .objectStore("state")
-    .put({
-      key: "state",
-      ...req.result,
-      ...props,
-    });
-}
-
 export function updateCurrentTheme(colors) {
   document.body.style.setProperty("--color-bg", `rgb(${colors.bg})`);
   document.body.style.setProperty(

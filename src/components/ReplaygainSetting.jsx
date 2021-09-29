@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import { get } from "lodash-es";
 import styled from "styled-components/macro";
-import { REPLAYGAIN_TYPE, getStateFromIdb, updateStateInIdb } from "../util";
+import { REPLAYGAIN_TYPE } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 
 const ReplaygainSettingSelect = styled.div`
@@ -35,22 +34,11 @@ const ArrowDown = styled.span`
 `;
 
 const ReplaygainSetting = ({ replaygainType, dispatch }) => {
-  const [type, setType] = useState();
-  const [reqIdb, setReq] = useState();
-  const [dbIdb, setDb] = useState();
-
-  useEffect(() => {
-    getStateFromIdb((req, db) => () => {
-      setType(get(req, "result.replaygainType", REPLAYGAIN_TYPE.Track));
-      setReq(req);
-      setDb(db);
-    });
-  }, []);
+  const [type, setType] = useState(replaygainType);
 
   const updateState = (event) => {
     setType(event.target.value);
     dispatch(updateSettings({ replaygainType: event.target.value }));
-    updateStateInIdb(reqIdb, dbIdb, { replaygainType: event.target.value });
   };
 
   return (

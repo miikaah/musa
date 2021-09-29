@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { updateSettings } from "reducers/settings.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { get } from "lodash-es";
 import styled from "styled-components/macro";
-import { doIdbRequest } from "../util";
 import Button from "./Button";
 
 const { REACT_APP_ENV } = process.env;
@@ -32,15 +30,10 @@ const MusicLibrarySettingPath = styled.div`
   }
 `;
 
-const songListProps = {
-  method: "get",
-  storeName: "songList",
-  key: "list",
-};
-
 const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
+  // TODO: implement
   useEffect(() => {
-    ipc.on("addMusicLibraryPath", (event, path) => {
+    ipc.once("musa:addMusicLibraryPath:response", (event, path) => {
       dispatch(
         updateSettings({
           musicLibraryPaths: Array.from(new Set([...musicLibraryPaths, path])),
@@ -50,36 +43,9 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [musicLibraryPaths]);
 
-  const removeLibraryPath = (path) => {
-    const paths = new Set(musicLibraryPaths);
-    paths.delete(path);
-    const libPaths = Array.from(paths);
-    dispatch(updateSettings({ musicLibraryPaths: libPaths }));
-    doIdbRequest({
-      ...songListProps,
-      onReqSuccess: (req) => () => {
-        ipc.send(
-          "removeMusicLibraryPath",
-          get(req, "result.list"),
-          libPaths,
-          path
-        );
-      },
-    });
-  };
+  const removeLibraryPath = (path) => {};
 
-  const addLibraryPath = () => {
-    doIdbRequest({
-      ...songListProps,
-      onReqSuccess: (req) => () => {
-        ipc.send(
-          "addMusicLibraryPath",
-          get(req, "result.list"),
-          musicLibraryPaths
-        );
-      },
-    });
-  };
+  const addLibraryPath = () => {};
 
   return (
     <MusicLibrarySettingContainer>

@@ -7,7 +7,6 @@ import ReplaygainSetting from "components/ReplaygainSetting";
 import MusicLibrarySetting from "components/MusicLibrarySetting";
 import Button from "components/Button";
 import BasePage from "components/BasePage";
-import { doIdbRequest } from "../util";
 
 const { REACT_APP_ENV } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
@@ -23,13 +22,10 @@ const SettingsBlock = styled.div`
 
 const Settings = ({ musicLibraryPaths }) => {
   const runInitialScan = () => {
-    doIdbRequest({
-      method: "clear",
-      storeName: "library",
-      onReqSuccess: (req) => () => {
-        ipc.send("runInitialScan", musicLibraryPaths);
-      },
-    });
+    // TODO: implement
+    if (ipc) {
+      ipc.send("musa:scan:request", musicLibraryPaths);
+    }
   };
 
   return (

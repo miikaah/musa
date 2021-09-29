@@ -60,7 +60,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
 
   useEffect(() => {
     if (ipc) {
-      ipc.on("musa:themes:response:getAll", (event, themes) => {
+      ipc.once("musa:themes:response:getAll", (event, themes) => {
         setThemes(themes);
       });
       ipc.send("musa:themes:request:getAll");
