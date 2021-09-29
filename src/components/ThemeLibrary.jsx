@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { FALLBACK_THEME } from "../config";
@@ -6,6 +6,14 @@ import { updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 import ThemeBlock from "./ThemeBlock";
 import Button from "./Button";
+
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
+
+let ipc;
+if (isElectron && window.require) {
+  ipc = window.require("electron").ipcRenderer;
+}
 
 const ThemeLibraryContainer = styled.div``;
 
@@ -32,7 +40,7 @@ const ThemeList = styled.div`
   display: flex;
   flex-wrap: wrap;
   background-color: #fff;
-  padding: 10px 0 0 10px;
+  padding: 12px;
   max-height: 300px;
   overflow-y: auto;
 `;
@@ -41,15 +49,23 @@ const ThemeControls = styled.div`
   margin-left: 20px;
 `;
 
+const NoThemes = styled.div`
+  width: 100%;
+  text-align: center;
+  color: #000;
+`;
+
 const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
-  // const [themes, setThemes] = useState([]);
+  const [themes, setThemes] = useState([]);
 
   useEffect(() => {
-    // doIdbRequest({
-    //   method: "getAll",
-    //   storeName: "theme",
-    //   onReqSuccess: (req) => () => setThemes(req.result),
-    // });
+    if (ipc) {
+      ipc.on("musa:themes:response:getAll", (event, themes) => {
+        setThemes(themes);
+      });
+      ipc.send("musa:themes:request:getAll");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDefaultThemeChange = (theme) => {
@@ -57,10 +73,10 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
     dispatch(updateSettings({ defaultTheme: theme, currentTheme: theme }));
   };
 
-  // const handleCurrentThemeChange = (theme) => {
-  //   updateCurrentTheme(theme);
-  //   dispatch(updateSettings({ currentTheme: theme }));
-  // };
+  const handleCurrentThemeChange = (theme) => {
+    updateCurrentTheme(theme);
+    dispatch(updateSettings({ currentTheme: theme }));
+  };
 
   return (
     <ThemeLibraryContainer>
@@ -69,7 +85,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
           <h5>Default theme</h5>
           <ThemeWrapper>
             <ThemeList>
-              <ThemeBlock theme={defaultTheme} />
+              <ThemeBlock theme={defaultTheme} hasMargin={false} />
             </ThemeList>
             <ThemeControls>
               <Button
@@ -87,7 +103,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
           <h5>Current theme</h5>
           <ThemeWrapper>
             <ThemeList>
-              <ThemeBlock theme={currentTheme} />
+              <ThemeBlock theme={currentTheme} hasMargin={false} />
             </ThemeList>
             <ThemeControls>
               <Button
@@ -103,16 +119,17 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
       </DefaultAndCurrentThemes>
 
       <h5>Library</h5>
-      {/* <ThemeList>
-        {themes &&
+      <ThemeList>
+        {themes.length > 0 &&
           themes.map((theme) => (
             <ThemeBlock
-              key={theme.key}
+              key={theme.id}
               theme={theme}
               setCurrentTheme={(theme) => handleCurrentThemeChange(theme)}
             />
           ))}
-      </ThemeList> */}
+        {themes.length < 1 && <NoThemes>No themes yet</NoThemes>}
+      </ThemeList>
     </ThemeLibraryContainer>
   );
 };

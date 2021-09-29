@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-const ThemeBlockContainer = styled.div`
+const Container = styled.div`
   display: flex;
   justify-content: center;
   cursor: pointer;
   width: 80px;
   height: 80px;
-  margin: 0 10px 10px 0;
   background-color: ${({ rgb }) => rgb && `rgb(${rgb})`};
+  margin: ${({ hasMargin }) => hasMargin && `0 10px 10px 0`};
 `;
 
 const Color = styled.span`
@@ -18,12 +18,12 @@ const Color = styled.span`
   background-color: ${({ rgb }) => rgb && `rgb(${rgb})`};
 `;
 
-const ThemeBlock = ({ theme, setCurrentTheme }) => {
+const ThemeBlock = ({ theme, setCurrentTheme, hasMargin = true }) => {
   if (!theme) {
     return null;
   }
 
-  const { colors: themeColors, key } = theme;
+  const { colors: themeColors, id } = theme;
   const colors = themeColors || theme;
 
   if (!colors) {
@@ -31,14 +31,15 @@ const ThemeBlock = ({ theme, setCurrentTheme }) => {
   }
 
   return (
-    <ThemeBlockContainer
-      title={key ? decodeURIComponent(key) : ""}
+    <Container
+      title={id ? decodeURIComponent(id) : ""}
       rgb={colors.bg}
       onClick={() => setCurrentTheme(colors)}
+      hasMargin={hasMargin}
     >
       <Color rgb={colors.primary} />
       <Color rgb={colors.secondary} />
-    </ThemeBlockContainer>
+    </Container>
   );
 };
 
