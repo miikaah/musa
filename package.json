@@ -10,13 +10,9 @@
     "build:electron": "cross-env REACT_APP_ENV=electron craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "lint": "eslint --ext .jsx,.js src",
-    "prepare": "husky install"
+    "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "npm run lint"
-    ],
     "*.{js,jsx,json,md}": [
       "prettier --write"
     ]
