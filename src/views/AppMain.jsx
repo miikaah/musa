@@ -24,7 +24,7 @@ const Container = styled.div`
   margin-top: var(--toolbar-height);
 `;
 
-const AppMain = ({ isLarge, dispatch, musicLibraryPath }) => {
+const AppMain = ({ isLarge, dispatch, isInit, musicLibraryPath }) => {
   useEffect(() => {
     if (ipc) {
       ipc.on("musa:scan:start", (event, scanLength, scanColor) => {
@@ -36,12 +36,8 @@ const AppMain = ({ isLarge, dispatch, musicLibraryPath }) => {
       ipc.on("musa:scan:end", () => {
         dispatch(setScanProps({ reset: true }));
       });
-      ipc.on("musa:scan:complete", () => {
-        dispatchToast(
-          "Update complete",
-          `update-complete-${Date.now()}`,
-          dispatch
-        );
+      ipc.on("musa:scan:complete", (event, asd) => {
+        dispatchToast("Update complete.", `update-complete`, dispatch);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,7 +123,7 @@ const AppMain = ({ isLarge, dispatch, musicLibraryPath }) => {
     }
   };
 
-  if (!musicLibraryPath) {
+  if (isInit && !musicLibraryPath) {
     return <Redirect to={{ pathname: "/settings" }} />;
   }
 
@@ -141,6 +137,7 @@ const AppMain = ({ isLarge, dispatch, musicLibraryPath }) => {
 
 export default connect(
   (state) => ({
+    isInit: state.settings.isInit,
     musicLibraryPath: state.settings.musicLibraryPath,
   }),
   (dispatch) => ({ dispatch })

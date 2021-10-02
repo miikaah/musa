@@ -21,7 +21,10 @@ store.subscribe(() => {
 
   if (ipc) {
     if (settings.isInit) {
-      ipc.send("musa:settings:request:insert", settings);
+      ipc.send("musa:settings:request:insert", {
+        ...settings,
+        isInit: null,
+      });
     }
   }
 });

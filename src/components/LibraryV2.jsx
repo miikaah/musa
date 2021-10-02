@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import LibraryList from "./LibraryListV2";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
-import { setListingWithLabels } from "reducers/library.reducer";
 import { listOverflow } from "../common.styles";
 
 const { REACT_APP_ENV } = process.env;
@@ -49,22 +48,6 @@ const LibraryLabel = styled.div`
 `;
 
 const Library = ({ dispatch, forwardRef, isVisible, listingWithLabels }) => {
-  useEffect(() => {
-    if (ipc) {
-      ipc.on("musa:artists:response", (event, artists) => {
-        dispatch(setListingWithLabels(artists));
-      });
-      ipc.send("musa:artists:request");
-    } else {
-      fetch("http://100.79.27.108:4200/artists")
-        .then((response) => response.json())
-        .then((artists) => {
-          dispatch(setListingWithLabels(artists));
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <LibraryContainer ref={forwardRef} isVisible={isVisible}>
       {listingWithLabels &&

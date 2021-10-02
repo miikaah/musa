@@ -22,9 +22,8 @@ const SettingsBlock = styled.div`
 
 const Settings = ({ musicLibraryPath }) => {
   const runInitialScan = () => {
-    // TODO: implement
     if (ipc) {
-      ipc.send("musa:scan:request", musicLibraryPath);
+      ipc.send("musa:scan");
     }
   };
 

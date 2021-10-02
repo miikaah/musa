@@ -15,6 +15,7 @@ import {
 import styled from "styled-components/macro";
 import { FALLBACK_THEME } from "./config";
 import { updateSettings } from "reducers/settings.reducer";
+import { setListingWithLabels } from "reducers/library.reducer";
 import { updateCurrentTheme, dispatchToast } from "./util";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
@@ -71,14 +72,31 @@ const App = ({ dispatch }) => {
       ipc.send("musa:settings:request:get");
 
       ipc.once("musa:ready", (event) => {
-        event.sender.send("musa:scan");
+        dispatchToast(
+          "Updating library",
+          `library-update-${Date.now()}`,
+          dispatch
+        );
+        ipc.send("musa:artists:request");
+        ipc.send("musa:scan");
       });
-      dispatchToast(
-        "Updating library metadata",
-        `library-update-${Date.now()}`,
-        dispatch
-      );
       ipc.send("musa:onInit");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (ipc) {
+      ipc.on("musa:artists:response", (event, artists) => {
+        dispatch(setListingWithLabels(artists));
+      });
+      ipc.send("musa:artists:request");
+    } else {
+      fetch("http://100.79.27.108:4200/artists")
+        .then((response) => response.json())
+        .then((artists) => {
+          dispatch(setListingWithLabels(artists));
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
