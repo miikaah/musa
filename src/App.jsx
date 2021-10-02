@@ -62,6 +62,7 @@ const App = ({ dispatch }) => {
       dispatch(
         updateSettings({
           ...settings,
+          isInit: true,
           currentTheme,
         })
       );

@@ -50,7 +50,6 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   useEffect(() => {
     if (ipc) {
       ipc.once("musa:find:response", (event, result) => {
-        console.log(result);
         setArtists(result.artists);
         setAlbums(result.albums);
         setAudios(result.audios);

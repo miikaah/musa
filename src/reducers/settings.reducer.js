@@ -10,8 +10,8 @@ export const updateSettings = (props) => ({
 export const VOLUME_DEFAULT = 50;
 
 const initialState = {
+  isInit: false,
   currentTheme: FALLBACK_THEME,
-  defaultTheme: FALLBACK_THEME,
   key: "state",
   replaygainType: REPLAYGAIN_TYPE.Album,
   volume: VOLUME_DEFAULT,

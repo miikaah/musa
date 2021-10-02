@@ -91,7 +91,7 @@ const contrast = (rgb1, rgb2) => {
   );
 };
 
-const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
+const Cover = ({ coverSrc, currentItem, dispatch }) => {
   const coverRef = useRef();
 
   useEffect(() => {
@@ -233,12 +233,6 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
     coverRef.current.addEventListener("load", onLoadCover);
   }, [dispatch]);
 
-  useEffect(() => {
-    if (!coverSrc) {
-      updateCurrentTheme(defaultTheme);
-    }
-  }, [coverSrc, defaultTheme]);
-
   const artist = currentItem?.metadata?.artist || currentItem?.artistName || "";
   const album = currentItem?.metadata?.album || currentItem?.albumName || "";
   const title = currentItem?.metadata?.title || currentItem?.name || "";
@@ -265,7 +259,6 @@ const Cover = ({ coverSrc, defaultTheme, currentItem, dispatch }) => {
 export default connect(
   (state) => ({
     coverSrc: state.player.cover,
-    defaultTheme: state.settings.defaultTheme,
     currentItem: state.player.currentItem,
   }),
   (dispatch) => ({ dispatch })
