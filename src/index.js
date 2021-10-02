@@ -20,7 +20,7 @@ store.subscribe(() => {
   const settings = store.getState().settings;
 
   if (ipc) {
-    if (settings && settings.isInit) {
+    if (settings.isInit) {
       ipc.send("musa:settings:request:insert", settings);
     }
   }

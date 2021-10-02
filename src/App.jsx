@@ -15,7 +15,7 @@ import {
 import styled from "styled-components/macro";
 import { FALLBACK_THEME } from "./config";
 import { updateSettings } from "reducers/settings.reducer";
-import { updateCurrentTheme } from "./util";
+import { updateCurrentTheme, dispatchToast } from "./util";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
 import Search from "views/Search";
@@ -55,19 +55,31 @@ library.add(
 
 const App = ({ dispatch }) => {
   useEffect(() => {
-    ipc.once("musa:settings:response:get", (event, settings) => {
-      const currentTheme = settings?.currentTheme || FALLBACK_THEME;
+    if (ipc) {
+      ipc.once("musa:settings:response:get", (event, settings) => {
+        const currentTheme = settings?.currentTheme || FALLBACK_THEME;
 
-      updateCurrentTheme(currentTheme);
-      dispatch(
-        updateSettings({
-          ...settings,
-          isInit: true,
-          currentTheme,
-        })
+        updateCurrentTheme(currentTheme);
+        dispatch(
+          updateSettings({
+            ...settings,
+            isInit: true,
+            currentTheme,
+          })
+        );
+      });
+      ipc.send("musa:settings:request:get");
+
+      ipc.once("musa:ready", (event) => {
+        event.sender.send("musa:scan");
+      });
+      dispatchToast(
+        "Updating library metadata",
+        `library-update-${Date.now()}`,
+        dispatch
       );
-    });
-    ipc.send("musa:settings:request:get");
+      ipc.send("musa:onInit");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

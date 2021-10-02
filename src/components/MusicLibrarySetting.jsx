@@ -30,35 +30,46 @@ const MusicLibrarySettingPath = styled.div`
   }
 `;
 
-const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
-  // TODO: implement
+const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
   useEffect(() => {
-    ipc.once("musa:addMusicLibraryPath:response", (event, path) => {
-      dispatch(
-        updateSettings({
-          musicLibraryPaths: Array.from(new Set([...musicLibraryPaths, path])),
-        })
-      );
-    });
+    if (ipc) {
+      ipc.once("musa:addMusicLibraryPath:response", (event, path) => {
+        dispatch(
+          updateSettings({
+            musicLibraryPath: path,
+          })
+        );
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [musicLibraryPaths]);
+  }, [musicLibraryPath]);
 
-  const removeLibraryPath = (path) => {};
+  const removeLibraryPath = () => {
+    dispatch(
+      updateSettings({
+        musicLibraryPath: "",
+      })
+    );
+  };
 
-  const addLibraryPath = () => {};
+  const addLibraryPath = () => {
+    ipc.send("musa:addMusicLibraryPath:request");
+  };
 
   return (
     <MusicLibrarySettingContainer>
-      <h5>Paths</h5>
-      {musicLibraryPaths.map((path, i) => (
-        <MusicLibrarySettingPath key={i}>
-          <input disabled readOnly value={path} />
-          <Button onClick={() => removeLibraryPath(path)} isSecondary>
-            <FontAwesomeIcon icon="trash" />
-          </Button>
-        </MusicLibrarySettingPath>
-      ))}
-      <Button onClick={addLibraryPath} isPrimary>
+      <h5>Path</h5>
+      <MusicLibrarySettingPath>
+        <input disabled readOnly value={musicLibraryPath} />
+        <Button
+          onClick={removeLibraryPath}
+          isSecondary
+          disabled={!musicLibraryPath}
+        >
+          <FontAwesomeIcon icon="trash" />
+        </Button>
+      </MusicLibrarySettingPath>
+      <Button onClick={addLibraryPath} isPrimary disabled={musicLibraryPath}>
         Add new
       </Button>
     </MusicLibrarySettingContainer>
@@ -67,7 +78,7 @@ const MusicLibrarySetting = ({ musicLibraryPaths, dispatch }) => {
 
 export default connect(
   (state) => ({
-    musicLibraryPaths: state.settings.musicLibraryPaths,
+    musicLibraryPath: state.settings.musicLibraryPath,
   }),
   (dispatch) => ({ dispatch })
 )(MusicLibrarySetting);

@@ -5,10 +5,16 @@ export const setListingWithLabels = (listingWithLabels) => ({
 });
 
 export const SET_SCAN_PROPS = "MUSA/LIBRARY/SET_SCAN_PROPS";
-export const setScanProps = ({ scanLength, scannedLength, reset }) => ({
+export const setScanProps = ({
+  scanLength,
+  scannedLength,
+  scanColor,
+  reset,
+}) => ({
   type: SET_SCAN_PROPS,
   scanLength,
   scannedLength,
+  scanColor,
   reset,
 });
 
@@ -18,11 +24,18 @@ export const setQuery = (query) => ({
   query,
 });
 
+const scanColor = {
+  RED: "#f00",
+  YELLOW: "#ff0",
+  GREEN: "#0f0",
+};
+
 const initialState = {
   listing: [],
   listingWithLabels: [],
   scanLength: -1,
   scannedLength: 0,
+  scanColor: scanColor.RED,
   query: "",
   albums: [],
   songs: [],
@@ -48,6 +61,7 @@ const library = (state = initialState, action) => {
         ...state,
         scanLength: action.scanLength || state.scanLength,
         scannedLength: action.scannedLength || state.scannedLength,
+        scanColor: action.scanColor || state.scanColor,
       };
     }
     case SET_QUERY: {

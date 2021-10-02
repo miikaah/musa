@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
+import { Redirect } from "react-router-dom";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import { setScanProps } from "reducers/library.reducer";
 import Playlist from "components/PlaylistV4";
 import Cover from "components/Cover";
+import { dispatchToast } from "../util";
 
 const { REACT_APP_ENV } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
@@ -22,19 +24,25 @@ const Container = styled.div`
   margin-top: var(--toolbar-height);
 `;
 
-const AppMain = ({ isLarge, dispatch }) => {
+const AppMain = ({ isLarge, dispatch, musicLibraryPath }) => {
   useEffect(() => {
     if (ipc) {
-      ipc.on("musa:startScan", (event, scanLength) => {
-        dispatch(setScanProps({ scanLength }));
+      ipc.on("musa:scan:start", (event, scanLength, scanColor) => {
+        dispatch(setScanProps({ scanLength, scanColor }));
       });
-      ipc.on("musa:updateScan", (event, scannedLength) => {
+      ipc.on("musa:scan:update", (event, scannedLength) => {
         dispatch(setScanProps({ scannedLength }));
       });
-      ipc.on("musa:endScan", () => {
+      ipc.on("musa:scan:end", () => {
         dispatch(setScanProps({ reset: true }));
       });
-      ipc.send("musa:onInit");
+      ipc.on("musa:scan:complete", () => {
+        dispatchToast(
+          "Update complete",
+          `update-complete-${Date.now()}`,
+          dispatch
+        );
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -119,6 +127,10 @@ const AppMain = ({ isLarge, dispatch }) => {
     }
   };
 
+  if (!musicLibraryPath) {
+    return <Redirect to={{ pathname: "/settings" }} />;
+  }
+
   return (
     <Container onDragOver={onDragOver} onDrop={onDrop}>
       <Cover />
@@ -128,6 +140,8 @@ const AppMain = ({ isLarge, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({}),
+  (state) => ({
+    musicLibraryPath: state.settings.musicLibraryPath,
+  }),
   (dispatch) => ({ dispatch })
 )(AppMain);

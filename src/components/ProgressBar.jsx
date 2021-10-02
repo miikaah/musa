@@ -12,23 +12,23 @@ const ProgressBarContainer = styled.div`
   background-color: var(--color-slider-track);
 `;
 
-const ProgressBarValue = styled.div.attrs(({ width }) => ({
+const ProgressBarValue = styled.div.attrs(({ width, scanColor }) => ({
   style: {
     width: `${width}%`,
   },
 }))`
-  background-color: red;
+  background-color: ${({ scanColor }) => scanColor};
   height: 4px;
 `;
 
-const ProgressBar = ({ scanLength, scannedLength }) => {
+const ProgressBar = ({ scanLength, scannedLength, scanColor }) => {
   const width = scanLength > 0 ? (scannedLength / scanLength) * 100 : 0;
 
   if (width < 1) return null;
 
   return (
     <ProgressBarContainer>
-      <ProgressBarValue width={width} />
+      <ProgressBarValue width={width} scanColor={scanColor} />
     </ProgressBarContainer>
   );
 };
@@ -36,4 +36,5 @@ const ProgressBar = ({ scanLength, scannedLength }) => {
 export default connect((state) => ({
   scanLength: state.library.scanLength,
   scannedLength: state.library.scannedLength,
+  scanColor: state.library.scanColor,
 }))(ProgressBar);

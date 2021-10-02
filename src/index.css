@@ -42,6 +42,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  opacity: 0.666;
+  cursor: default;
+}
+
 h1,
 h2,
 h3,
