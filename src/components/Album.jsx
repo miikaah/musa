@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { get, isEmpty } from "lodash-es";
 import styled, { css } from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
-import AlbumImage from "./common/AlbumImage";
+import AlbumImage from "./common/AlbumImageV2";
+import { formatDuration } from "../util";
 
 const AlbumContainer = styled.div`
   display: flex;
@@ -90,49 +90,56 @@ const AlbumSong = styled.div`
 `;
 
 const Album = ({ item, dispatch }) => {
-  if (isEmpty(item)) return null;
+  if (!item) {
+    return null;
+  }
 
   const addAlbumSongsToPlaylist = () => {
     dispatch(
       pasteToPlaylist(
-        item.songs.map((s) => ({
+        item.files.map((s) => ({
           ...s,
-          cover: item.cover,
+          cover: item.coverUrl,
         }))
       )
     );
 
-    const msg = `Added ${item.name} to playlist`;
-    const key = `${item.name}-${Date.now()}`;
+    const msg = `Added ${album} to playlist`;
+    const key = `${album}-${Date.now()}`;
     dispatchToast(msg, key, dispatch);
   };
 
   const addSongToPlaylist = (song) => {
-    dispatch(addToPlaylist({ ...song, cover: item.cover }));
+    dispatch(addToPlaylist({ ...song, cover: item.coverUrl }));
 
-    const title = get(song, "metadata.title", "");
+    const title = song?.metadata?.title || "";
     const msg = `Added ${title} to playlist`;
     const key = `${title}-${Date.now()}`;
     dispatchToast(msg, key, dispatch);
   };
+
+  const artist = item?.metadata?.artist || "";
+  const album = item?.metadata?.album || "";
+  const year = item?.metadata?.year || "";
+  const genre = (item?.metadata?.genre || []).join(", ");
 
   return (
     <AlbumContainer>
       <AlbumFullAdd onClick={addAlbumSongsToPlaylist}>
         <AlbumImage item={item} />
         <AlbumInfo>
-          <p>{item.artist}</p>
-          <p>{item.name}</p>
-          <p>{item.date}</p>
-          <p>{item.genre}</p>
+          <p>{artist}</p>
+          <p>{album}</p>
+          <p>{year}</p>
+          <p>{genre}</p>
         </AlbumInfo>
       </AlbumFullAdd>
       <AlbumSongs>
-        {item.songs.map((s, i) => (
+        {item.files.map((s, i) => (
           <AlbumSong key={i} onClick={() => addSongToPlaylist(s)}>
-            <span>{get(s, "metadata.track", "")}</span>
-            <span>{get(s, "metadata.title", "")}</span>
-            <span>{get(s, "metadata.duration", "")}</span>
+            <span>{s?.metadata?.track?.no || ""}</span>
+            <span>{s?.metadata?.title || ""}</span>
+            <span>{formatDuration(s?.metadata?.duration || "")}</span>
           </AlbumSong>
         ))}
       </AlbumSongs>

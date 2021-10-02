@@ -27,7 +27,7 @@ const LibraryContainer = styled.div`
   box-shadow: 25px 10px 31px -17px rgba(10, 10, 10, 0.75);
   position: absolute;
   min-width: 400px;
-  z-index: 11;
+  z-index: 1;
   height: 100vh;
   margin-top: var(--toolbar-height);
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};

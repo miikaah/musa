@@ -2,13 +2,20 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { setQuery } from "reducers/library.reducer";
-import fuzzysort from "fuzzysort";
 import styled from "styled-components/macro";
 import { useThrottle } from "../hooks";
 import Song from "components/Song";
 import Album from "components/Album";
 import Artist from "components/Artist";
 import BasePage from "components/BasePage";
+
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
+
+let ipc;
+if (isElectron && window.require) {
+  ipc = window.require("electron").ipcRenderer;
+}
 
 const SearchContainer = styled.div`
   input {
@@ -34,33 +41,35 @@ const SearchBlockWrapper = styled.div`
 `;
 
 const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
-  const [searchArtists, setSearchArtists] = useState([]);
-  const [searchAlbums, setSearchAlbums] = useState([]);
-  const [searchSongs, setSearchSongs] = useState([]);
-  const options = { limit: 10, key: "name", threshold: -50 };
+  const [artists, setArtists] = useState([]);
+  const [albums, setAlbums] = useState([]);
+  const [audios, setAudios] = useState([]);
 
   const throttledQuery = useThrottle(query, 16);
 
   useEffect(() => {
-    const artists = fuzzysort.go(query, listing, options);
-    const albums = fuzzysort.go(query, artistAlbums, options);
-    const songs = fuzzysort.go(query, artistSongs, options);
-    setSearchArtists(artists);
-    setSearchAlbums(albums);
-    setSearchSongs(songs);
+    if (ipc) {
+      ipc.once("musa:find:response", (event, result) => {
+        console.log(result);
+        setArtists(result.artists);
+        setAlbums(result.albums);
+        setAudios(result.audios);
+      });
+      ipc.send("musa:find:request", throttledQuery);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [throttledQuery]);
 
   const renderSearchResults = (results, type) => {
     switch (type) {
       case "artists": {
-        return results.map((r, i) => <Artist key={i} item={r.obj} />);
+        return results.map((r, i) => <Artist key={i} item={r} />);
       }
       case "albums": {
-        return results.map((r, i) => <Album key={i} item={r.obj} />);
+        return results.map((r, i) => <Album key={i} item={r} />);
       }
       case "songs": {
-        return results.map((r, i) => <Song key={i} item={r.obj} />);
+        return results.map((r, i) => <Song key={i} item={r} />);
       }
       default:
         return null;
@@ -80,19 +89,19 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
           <SearchBlock>
             <h2>Artists</h2>
             <SearchBlockWrapper>
-              {renderSearchResults(searchArtists, "artists")}
+              {renderSearchResults(artists, "artists")}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
             <h2>Albums</h2>
             <SearchBlockWrapper>
-              {renderSearchResults(searchAlbums, "albums")}
+              {renderSearchResults(albums, "albums")}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
             <h2>Songs</h2>
             <SearchBlockWrapper>
-              {renderSearchResults(searchSongs, "songs")}
+              {renderSearchResults(audios, "songs")}
             </SearchBlockWrapper>
           </SearchBlock>
         </div>
@@ -106,8 +115,6 @@ export default withRouter(
     (state) => ({
       listing: state.library.listing,
       query: state.library.query,
-      artistAlbums: state.library.albums,
-      artistSongs: state.library.songs,
     }),
     (dispatch) => ({ dispatch })
   )(Search)

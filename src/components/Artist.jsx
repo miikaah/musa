@@ -1,10 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { isEmpty } from "lodash-es";
 import styled from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
-import AlbumCover from "./common/AlbumCover";
+import AlbumCover from "./common/AlbumCoverV2";
 
 const ArtistContainer = styled.div`
   flex: 100%;
@@ -26,14 +25,16 @@ const ArtistAlbumList = styled.div`
 `;
 
 const Artist = ({ item, dispatch }) => {
-  if (isEmpty(item)) return null;
+  if (!item) {
+    return null;
+  }
 
   const addAlbumSongsToPlaylist = (album) => {
     dispatch(
       pasteToPlaylist(
-        album.songs.map((s) => ({
+        album.files.map((s) => ({
           ...s,
-          cover: album.cover,
+          cover: album.coverUrl,
         }))
       )
     );
@@ -41,19 +42,18 @@ const Artist = ({ item, dispatch }) => {
     const key = `${album.name}-${Date.now()}`;
     dispatchToast(msg, key, dispatch);
   };
+
   return (
     <ArtistContainer>
       <ArtistName>{item.name}</ArtistName>
       <ArtistAlbumList>
-        {item.albums
-          .filter((a) => a.name !== "undefined")
-          .map((a, i) => (
-            <AlbumCover
-              key={i}
-              item={a}
-              onClick={() => addAlbumSongsToPlaylist(a)}
-            />
-          ))}
+        {item.albums.map((a, i) => (
+          <AlbumCover
+            key={i}
+            item={a}
+            onClick={() => addAlbumSongsToPlaylist(a)}
+          />
+        ))}
       </ArtistAlbumList>
     </ArtistContainer>
   );

@@ -1,10 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { get, isEmpty } from "lodash-es";
 import styled from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
-import AlbumImage from "./common/AlbumImage";
+import AlbumImage from "./common/AlbumImageV2";
 
 const SongContainer = styled.div`
   display: flex;
@@ -48,24 +47,36 @@ const SongInfo = styled.div`
 `;
 
 const Song = ({ item, dispatch }) => {
-  if (isEmpty(item)) return null;
+  if (!item) {
+    return null;
+  }
 
   const addSongToPlaylist = () => {
-    dispatch(addToPlaylist(item));
+    dispatch(
+      addToPlaylist({
+        ...item,
+        cover: item.coverUrl,
+      })
+    );
 
     const msg = `Added ${item.name} to playlist`;
     const key = `${item.name}-${Date.now()}`;
     dispatchToast(msg, key, dispatch);
   };
 
+  const artist = item?.metadata?.artist;
+  const album = item?.metadata?.album;
+  const year = item?.metadata?.year;
+  const title = item?.metadata?.title;
+
   return (
     <SongContainer onClick={addSongToPlaylist}>
       <AlbumImage item={item} />
       <SongInfo>
-        <p>{get(item, "metadata.artist", "")}</p>
-        <p>{get(item, "metadata.album", "")}</p>
-        <p>{item.name}</p>
-        <p>{get(item, "metadata.year", "")}</p>
+        <p>{artist}</p>
+        <p>{album}</p>
+        <p>{title}</p>
+        <p>{year}</p>
       </SongInfo>
     </SongContainer>
   );

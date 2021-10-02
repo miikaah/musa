@@ -11,6 +11,7 @@
 
 html {
   overflow: hidden;
+  color: var(--color-white);
 }
 
 a {
