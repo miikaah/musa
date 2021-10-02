@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import LibraryList from "./LibraryListV2";
-import { isEmpty } from "lodash-es";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { setListingWithLabels } from "reducers/library.reducer";
@@ -69,26 +68,22 @@ const Library = ({ dispatch, forwardRef, isVisible, listingWithLabels }) => {
   return (
     <LibraryContainer ref={forwardRef} isVisible={isVisible}>
       {listingWithLabels &&
-        Object.keys(listingWithLabels).map((key) => {
-          if (isEmpty(listingWithLabels[key])) return null;
-          return (
-            <div key={key}>
-              <LibraryLabel>
-                <span>{key}</span>
-              </LibraryLabel>
-              {listingWithLabels[key].map((item, index) => (
-                <LibraryList key={item.id} item={item} isArtist />
-              ))}
-            </div>
-          );
-        })}
+        Object.entries(listingWithLabels).map(([key, artist]) => (
+          <div key={key}>
+            <LibraryLabel>
+              <span>{key}</span>
+            </LibraryLabel>
+            {artist.map((item, index) => (
+              <LibraryList key={item.id} item={item} isArtist />
+            ))}
+          </div>
+        ))}
     </LibraryContainer>
   );
 };
 
 const ConnectedLibrary = connect(
   (state) => ({
-    listing: state.library.listing,
     listingWithLabels: state.library.listingWithLabels,
   }),
   (dispatch) => ({ dispatch })
