@@ -170,7 +170,7 @@ function getPlayBase(newItem, newIndex) {
     currentIndex: newIndex,
     isPlaying: true,
     src: newItem.fileUrl,
-    cover: isEmpty(newItem.cover) ? "" : newItem.cover,
+    cover: newItem.cover || newItem.coverUrl || "",
   };
 }
 

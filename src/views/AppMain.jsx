@@ -51,8 +51,9 @@ const AppMain = ({ isLarge, dispatch }) => {
           const songs = artist.albums
             .map((a) => a.files.map((f) => ({ ...f, cover: a.coverUrl })))
             .flat(Infinity);
+          const files = [...songs, ...artist.files];
 
-          dispatch(pasteToPlaylist(songs));
+          dispatch(pasteToPlaylist(files));
         });
         ipc.send("musa:artistAlbums:request", item.id);
 

@@ -30,6 +30,9 @@ const Artist = ({ item, dispatch }) => {
   }
 
   const addAlbumSongsToPlaylist = (album) => {
+    const msg = `Added ${album.name} to playlist`;
+    const key = `${album.name}-${Date.now()}`;
+
     dispatch(
       pasteToPlaylist(
         album.files.map((s) => ({
@@ -38,8 +41,6 @@ const Artist = ({ item, dispatch }) => {
         }))
       )
     );
-    const msg = `Added ${album.name} to playlist`;
-    const key = `${album.name}-${Date.now()}`;
     dispatchToast(msg, key, dispatch);
   };
 

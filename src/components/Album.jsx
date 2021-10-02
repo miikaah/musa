@@ -95,6 +95,9 @@ const Album = ({ item, dispatch }) => {
   }
 
   const addAlbumSongsToPlaylist = () => {
+    const msg = `Added ${album} to playlist`;
+    const key = `${album}-${Date.now()}`;
+
     dispatch(
       pasteToPlaylist(
         item.files.map((s) => ({
@@ -103,18 +106,15 @@ const Album = ({ item, dispatch }) => {
         }))
       )
     );
-
-    const msg = `Added ${album} to playlist`;
-    const key = `${album}-${Date.now()}`;
     dispatchToast(msg, key, dispatch);
   };
 
   const addSongToPlaylist = (song) => {
-    dispatch(addToPlaylist({ ...song, cover: item.coverUrl }));
-
     const title = song?.metadata?.title || "";
     const msg = `Added ${title} to playlist`;
     const key = `${title}-${Date.now()}`;
+
+    dispatch(addToPlaylist({ ...song, cover: item.coverUrl }));
     dispatchToast(msg, key, dispatch);
   };
 
