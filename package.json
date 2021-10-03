@@ -7,7 +7,7 @@
     "start": "cross-env PORT=3667 BROWSER=none react-scripts start",
     "start:electron": "cross-env PORT=3666 BROWSER=none REACT_APP_ENV=electron craco start",
     "build": "craco build",
-    "build:electron": "cross-env REACT_APP_ENV=electron craco build",
+    "build:electron": "cross-env REACT_APP_ENV=electron GENERATE_SOURCEMAP=false craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "precommit": "lint-staged"
