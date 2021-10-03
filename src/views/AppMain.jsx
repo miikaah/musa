@@ -37,7 +37,7 @@ const AppMain = ({ isLarge, dispatch, isInit, musicLibraryPath }) => {
         dispatch(setScanProps({ reset: true }));
       });
       ipc.on("musa:scan:complete", (event, asd) => {
-        dispatchToast("Update complete.", `update-complete`, dispatch);
+        dispatchToast("Update complete", `update-complete`, dispatch);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
