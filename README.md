@@ -12,26 +12,16 @@ utilising Electron and React.
 
 ## Todo
 
-### V1
-
-- fix: ogg files not giving all metadata that they have
-- fix: Disable "Run initial scan" button when scan is running
-- refactor: Toaster as the animate action is no longer needed
-- refactor: Move initial file system scan off of main thread as it lags during startup on Windows
-
 #### Cross platform
 
 - feat: Make sure everything works on Linux
 
 ### V2
 
+- fix: Disable "Run initial scan" button when scan is running
 - feat: Write tags to music files
 - feat: Add ReplayGain scanning
 - feat: Add Dynamic Range scanning
-
-#### Reduce build size
-
-- feat: Replace ffprobe-static with a smaller solution
 
 #### Cross platform
 
