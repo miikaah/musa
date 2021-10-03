@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { get, isNaN, isEqual } from "lodash-es";
+import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components/macro";
 import { playIndex, replay } from "reducers/player.reducer";
@@ -121,8 +121,8 @@ const PlaylistItem = ({
     const end = Math.max(startIndex, endIndex);
     if (index === activeIndex) return true;
     if (
-      (!isNaN(startIndex) &&
-        !isNaN(endIndex) &&
+      (!Number.isNaN(startIndex) &&
+        !Number.isNaN(endIndex) &&
         index >= start &&
         index <= end) ||
       isSelected
@@ -198,12 +198,12 @@ const PlaylistItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
-  const artist = get(item, "metadata.artist") || item.artistName || "";
-  const album = get(item, "metadata.album") || item.albumName || "";
-  const title = get(item, "metadata.title") || item.name || "";
-  const track = get(item, "track");
-  const duration = formatDuration(get(item, "metadata.duration", ""));
-  const coverSrc = get(item, "cover", "");
+  const artist = item?.metadata?.artist || item.artistName || "";
+  const album = item?.metadata?.album || item.albumName || "";
+  const title = item?.metadata?.title || item.name || "";
+  const track = item.track || "";
+  const duration = formatDuration(item?.metadata?.duration || "0:00");
+  const coverSrc = item.cover || "";
 
   return (
     <PlaylistItemContainer

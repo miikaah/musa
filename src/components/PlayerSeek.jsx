@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import { get } from "lodash-es";
 import ProgressInput from "./ProgressInput";
 import { useInterval } from "../hooks";
 
@@ -20,7 +19,7 @@ const PlayerSeek = ({
 
   useInterval(() => {
     if (isPlaying) {
-      setCurrentTime(get(player, "current.currentTime", 0));
+      setCurrentTime(player?.current?.currentTime || 0);
     }
   }, 200);
 

@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import { connect } from "react-redux";
-import { defaultTo, sortBy, some, isEqual } from "lodash-es";
+import defaultTo from "lodash.defaultto";
+import sortBy from "lodash.sortby";
+import isEqual from "lodash.isequal";
 import Palette from "img-palette";
 import styled from "styled-components/macro";
 import { breakpoint } from "../breakpoints";
@@ -73,7 +75,7 @@ const Info = styled.div`
 `;
 
 const isVibrantCover = (mostPopularSwatch) => {
-  return some(mostPopularSwatch.rgb, (value) => value > 125);
+  return mostPopularSwatch.rgb.some((value) => value > 125);
 };
 
 const luminance = (r, g, b) => {

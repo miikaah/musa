@@ -1,4 +1,4 @@
-import { isNumber, isEmpty, isUndefined } from "lodash-es";
+import isEmpty from "lodash.isempty";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
 export const play = () => ({
@@ -95,9 +95,10 @@ const player = (state = initialState, action) => {
     }
     case PLAY_INDEX:
     case PLAY_NEXT: {
-      const newIndex = isNumber(action.index)
-        ? action.index
-        : state.currentIndex + 1;
+      const newIndex =
+        typeof action.index === "number"
+          ? action.index
+          : state.currentIndex + 1;
       const newItem = state.items[newIndex];
       if (newItem) {
         return {
@@ -128,7 +129,7 @@ const player = (state = initialState, action) => {
         items: [...state.items, action.item],
       };
     case PASTE_TO_PLAYLIST: {
-      if (isUndefined(action.index)) {
+      if (!action.index) {
         const newItems = [...state.items, ...action.items];
         return getStateByPlaylistChange(state, newItems);
       }

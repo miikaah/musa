@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { get } from "lodash-es";
 import styled from "styled-components/macro";
 import { addToPlaylist } from "reducers/player.reducer";
 
@@ -28,7 +27,7 @@ const LibraryItem = ({ item, cover, hasAlbum, dispatch }) => {
       onDragStart={onDragStart}
       onDoubleClick={() => dispatch(addToPlaylist(item))}
     >
-      {get(item, "metadata.title") || item.name}
+      {item?.metadata?.title || item.name}
     </LibraryItemContainer>
   );
 };

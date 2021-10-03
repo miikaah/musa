@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { get } from "lodash-es";
 
 export const useKeyPress = (key, callback) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.keyCode !== key) return;
-      if (get(event, "target.tagName") !== "BODY") return;
+      if (event?.target?.tagName !== "BODY") return;
 
       callback(event);
     };

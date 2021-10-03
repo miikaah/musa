@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { get } from "lodash-es";
 import styled from "styled-components/macro";
 import { formatDuration } from "../util";
 
@@ -20,9 +19,7 @@ const PlayerTimeDisplay = ({ currentTime, currentItem }) => {
     <TimeDisplay>
       <TimePlayed>{formatDuration(currentTime)}</TimePlayed>
       <span> / </span>
-      <span>
-        {formatDuration(get(currentItem, "metadata.duration", "0:00"))}
-      </span>
+      <span>{formatDuration(currentItem?.metadata?.duration || "0:00")}</span>
     </TimeDisplay>
   );
 };

@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { get, isEmpty } from "lodash-es";
 import styled from "styled-components/macro";
 import { prefixNumber } from "../util";
 
@@ -31,11 +30,11 @@ const DynamicRange = styled.span`
 `;
 
 const PlayerDrGauge = ({ currentItem }) => {
-  const dr = get(currentItem, "metadata.dynamicRange", "");
+  const dr = currentItem?.metadata?.dynamicRange;
   return (
-    <DynamicRangeContainer isHidden={isEmpty(dr)}>
+    <DynamicRangeContainer isHidden={!dr}>
       <DynamicRange dr={dr}>
-        {isEmpty(dr) ? "DR00" : `DR${prefixNumber(dr)}`}
+        {!dr ? "DR00" : `DR${prefixNumber(dr)}`}
       </DynamicRange>
     </DynamicRangeContainer>
   );

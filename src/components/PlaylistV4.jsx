@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import { isNaN, isEqual } from "lodash-es";
+import isEqual from "lodash.isequal";
 import styled from "styled-components/macro";
 import {
   pasteToPlaylist,
@@ -49,8 +49,8 @@ const Playlist = ({
 
   const isContinuousSelection = () => {
     return (
-      !isNaN(startIndex) &&
-      !isNaN(endIndex) &&
+      !Number.isNaN(startIndex) &&
+      !Number.isNaN(endIndex) &&
       startIndex !== endIndex &&
       selectedIndexes.size < 2
     );
@@ -140,7 +140,7 @@ const Playlist = ({
 
   const setNewIndexes = (event, newActiveIndex) => {
     if (event.shiftKey) {
-      setStartIndex(!isNaN(startIndex) ? startIndex : activeIndex);
+      setStartIndex(!Number.isNaN(startIndex) ? startIndex : activeIndex);
       setEndIndex(newActiveIndex);
       setActiveIndex(newActiveIndex);
       return;

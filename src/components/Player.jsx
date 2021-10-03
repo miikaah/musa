@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { get, isNaN, isEmpty, isNumber } from "lodash-es";
+import isEmpty from "lodash.isempty";
 import styled from "styled-components/macro";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
@@ -67,7 +67,7 @@ const Player = ({
     if (isPlaying || isEmpty(playlist)) {
       player.current.pause();
       dispatch(pause());
-      setCurrentTime(get(player, "current.currentTime", 0));
+      setCurrentTime(player?.current?.currentTime || 0);
       return;
     }
     // PLAY
@@ -89,7 +89,7 @@ const Player = ({
   };
 
   const setVolumeForPlayer = (v) => {
-    const vol = isNumber(v) ? v : volume;
+    const vol = typeof v === "number" ? v : volume;
     const trackGainPercentage = Math.pow(
       10,
       getReplaygainDb(replaygainType, currentItem) / 20
@@ -145,8 +145,8 @@ const Player = ({
 
   useEffect(() => {
     const getDuration = () => {
-      const duration = get(player, "current.duration", 0);
-      return Math.floor(isNaN(duration) ? 0 : duration);
+      const duration = player?.current?.duration || 0;
+      return Math.floor(Number.isNaN(duration) ? 0 : duration);
     };
 
     const handleLoadedData = (event) => {
