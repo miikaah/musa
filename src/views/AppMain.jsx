@@ -55,9 +55,8 @@ const AppMain = ({ isLarge, dispatch, isInit, musicLibraryPath }) => {
           const songs = artist.albums
             .map((a) => a.files.map((f) => ({ ...f, cover: a.coverUrl })))
             .flat(Infinity);
-          const files = [...songs, ...artist.files];
 
-          dispatch(pasteToPlaylist(files));
+          dispatch(pasteToPlaylist([...songs, ...artist.files]));
         });
         ipc.send("musa:artistAlbums:request", item.id);
 
@@ -78,7 +77,15 @@ const AppMain = ({ isLarge, dispatch, isInit, musicLibraryPath }) => {
               .map((a) => a.files.map((f) => ({ ...f, cover: a.coverUrl })))
               .flat(Infinity);
 
-            dispatch(pasteToPlaylist(songs));
+            const fileUrls = artist.files.map((f) => fetch(f.url));
+            const fileResponses = await Promise.all(fileUrls);
+            const files = [];
+
+            for (const r of fileResponses) {
+              files.push(await r.json());
+            }
+
+            dispatch(pasteToPlaylist([...songs, ...files]));
           });
       }
     } else if (isAlbum) {

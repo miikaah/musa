@@ -65,6 +65,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
           .then((response) => response.json())
           .then((data) => {
             setAlbums(data.albums);
+            setFiles(data.files);
           });
       }
     }
