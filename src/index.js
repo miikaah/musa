@@ -6,7 +6,7 @@ import rootReducer from "./reducers";
 import App from "./App.jsx";
 import "./index.css";
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
 
 let ipc;
@@ -24,6 +24,21 @@ store.subscribe(() => {
       ipc.send("musa:settings:request:insert", {
         ...settings,
         isInit: null,
+      });
+    }
+  } else {
+    if (settings.isInit) {
+      fetch(`${baseUrl}/settings`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          settings: {
+            ...settings,
+            isInit: null,
+          },
+        }),
       });
     }
   }

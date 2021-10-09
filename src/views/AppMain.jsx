@@ -123,7 +123,7 @@ const AppMain = ({ isLarge, dispatch, isInit, musicLibraryPath }) => {
     }
   };
 
-  if (isInit && !musicLibraryPath) {
+  if (isInit && isElectron && !musicLibraryPath) {
     return <Redirect to={{ pathname: "/settings" }} />;
   }
 

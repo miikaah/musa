@@ -33,17 +33,18 @@ const ArrowDown = styled.span`
   pointer-events: none;
 `;
 
-const ReplaygainSetting = ({ replaygainType, dispatch }) => {
-  const [type, setType] = useState(replaygainType);
+const ReplaygainSetting = ({ replaygainType, isInit, dispatch }) => {
+  if (!isInit) {
+    return null;
+  }
 
   const updateState = (event) => {
-    setType(event.target.value);
     dispatch(updateSettings({ replaygainType: event.target.value }));
   };
 
   return (
     <ReplaygainSettingSelect>
-      <select value={type} onChange={updateState}>
+      <select value={replaygainType} onChange={updateState}>
         <option value={REPLAYGAIN_TYPE.Track}>Track</option>
         <option value={REPLAYGAIN_TYPE.Album}>Album</option>
         <option value={REPLAYGAIN_TYPE.Off}>Off</option>
@@ -56,6 +57,7 @@ const ReplaygainSetting = ({ replaygainType, dispatch }) => {
 export default connect(
   (state) => ({
     replaygainType: state.settings.replaygainType,
+    isInit: state.settings.isInit,
   }),
   (dispatch) => ({ dispatch })
 )(ReplaygainSetting);

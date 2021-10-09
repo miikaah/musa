@@ -12,6 +12,7 @@
 html {
   overflow: hidden;
   color: var(--color-white);
+  background: rgb(33, 37, 43);
 }
 
 a {

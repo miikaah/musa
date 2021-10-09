@@ -81,6 +81,31 @@ const App = ({ dispatch }) => {
         ipc.send("musa:scan");
       });
       ipc.send("musa:onInit");
+    } else {
+      fetch(`${baseUrl}/settings`)
+        .then((response) => response.json())
+        .then((settings) => {
+          const currentTheme = settings?.currentTheme || FALLBACK_THEME;
+
+          updateCurrentTheme(currentTheme);
+
+          if (settings.currentTheme) {
+            dispatch(
+              updateSettings({
+                ...settings,
+                isInit: true,
+                currentTheme,
+              })
+            );
+          } else {
+            dispatch(
+              updateSettings({
+                isInit: true,
+                currentTheme,
+              })
+            );
+          }
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

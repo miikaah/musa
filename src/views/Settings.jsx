@@ -30,11 +30,13 @@ const Settings = ({ musicLibraryPath }) => {
   return (
     <BasePage>
       <h1>Settings</h1>
-      <SettingsBlock>
-        <h3>Library</h3>
-        <MusicLibrarySetting />
-      </SettingsBlock>
-      {musicLibraryPath && (
+      {isElectron && (
+        <SettingsBlock>
+          <h3>Library</h3>
+          <MusicLibrarySetting />
+        </SettingsBlock>
+      )}
+      {isElectron && musicLibraryPath && (
         <>
           <SettingsBlock>
             <h3>Theme</h3>
@@ -49,6 +51,18 @@ const Settings = ({ musicLibraryPath }) => {
             <Button onClick={runInitialScan} isPrimary>
               Re-run initial scan
             </Button>
+          </SettingsBlock>
+        </>
+      )}
+      {!isElectron && (
+        <>
+          <SettingsBlock>
+            <h3>Theme</h3>
+            <ThemeLibrary />
+          </SettingsBlock>
+          <SettingsBlock>
+            <h3>Replaygain</h3>
+            <ReplaygainSetting />
           </SettingsBlock>
         </>
       )}
