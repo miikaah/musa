@@ -24,7 +24,7 @@ import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
 import ProgressBar from "components/ProgressBar";
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
 
 let ipc;
@@ -92,7 +92,7 @@ const App = ({ dispatch }) => {
       });
       ipc.send("musa:artists:request");
     } else {
-      fetch("http://100.79.27.108:4200/artists")
+      fetch(`${baseUrl}/artists`)
         .then((response) => response.json())
         .then((artists) => {
           dispatch(setListingWithLabels(artists));

@@ -4,10 +4,10 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "start": "cross-env PORT=3667 BROWSER=none react-scripts start",
-    "start:electron": "cross-env PORT=3666 BROWSER=none REACT_APP_ENV=electron craco start",
+    "start": "env-cmd -f .env.local react-scripts start",
+    "start:electron": "env-cmd -f .env.electron.local craco start",
     "build": "craco build",
-    "build:electron": "cross-env REACT_APP_ENV=electron GENERATE_SOURCEMAP=false craco build",
+    "build:electron": "env-cmd -f .env.electron.prod craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "precommit": "lint-staged"
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@craco/craco": "^6.2.0",
     "babel-plugin-macros": "^3.1.0",
-    "cross-env": "^7.0.3",
+    "env-cmd": "^10.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "husky": "^7.0.1",
     "lint-staged": "^11.1.2",
