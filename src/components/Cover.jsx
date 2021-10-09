@@ -9,7 +9,7 @@ import { breakpoint } from "../breakpoints";
 import { updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
 
 let ipc;
@@ -97,13 +97,7 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
   const coverRef = useRef();
 
   useEffect(() => {
-    const handleGetThemeResponse = (coverTarget) => (ev, theme) => {
-      if (theme && theme.colors) {
-        updateCurrentTheme(theme.colors);
-        dispatch(updateSettings({ currentTheme: theme.colors }));
-        return;
-      }
-
+    const calculateTheme = (coverTarget) => {
       const palette = new Palette(coverTarget);
       const mostPopularSwatch = palette.swatches.find(
         (s) => s.population === palette.highestPopulation
@@ -214,9 +208,29 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       dispatch(updateSettings({ currentTheme: colors }));
 
       // Update to backend
-      if (ipc && coverTarget.src && colors) {
-        ipc.send("musa:themes:request:insert", coverTarget.src, colors);
+      if (coverTarget.src && colors) {
+        if (ipc) {
+          ipc.send("musa:themes:request:insert", coverTarget.src, colors);
+        } else {
+          fetch(`${baseUrl}/theme/${coverTarget.src.split("/").pop()}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ colors }),
+          });
+        }
       }
+    };
+
+    const handleIpcGetThemeResponse = (coverTarget) => (ev, theme) => {
+      if (theme && theme.colors) {
+        updateCurrentTheme(theme.colors);
+        dispatch(updateSettings({ currentTheme: theme.colors }));
+        return;
+      }
+
+      calculateTheme(coverTarget);
     };
 
     const onLoadCover = (event) => {
@@ -226,13 +240,26 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       if (ipc) {
         ipc.once(
           "musa:themes:response:get",
-          handleGetThemeResponse(coverTarget)
+          handleIpcGetThemeResponse(coverTarget)
         );
         ipc.send("musa:themes:request:get", coverTarget.src);
+      } else {
+        fetch(`${baseUrl}/theme/${coverTarget.src.split("/").pop()}`)
+          .then((response) => response.json())
+          .then((theme) => {
+            if (theme.colors) {
+              updateCurrentTheme(theme.colors);
+              dispatch(updateSettings({ currentTheme: theme.colors }));
+              return;
+            }
+
+            calculateTheme(coverTarget);
+          });
       }
     };
 
     coverRef.current.addEventListener("load", onLoadCover);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const artist = currentItem?.metadata?.artist || currentItem?.artistName || "";
@@ -242,7 +269,7 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
 
   return (
     <Container>
-      <Image src={coverSrc} ref={coverRef} />
+      <Image src={coverSrc} ref={coverRef} crossOrigin="" />
       <Info>
         <div>{title}</div>
         <div>{album}</div>
