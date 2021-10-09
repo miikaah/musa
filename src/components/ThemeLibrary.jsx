@@ -5,7 +5,7 @@ import { updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 import ThemeBlock from "./ThemeBlock";
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
 
 let ipc;
@@ -33,7 +33,8 @@ const ThemeList = styled.div`
   display: flex;
   flex-wrap: wrap;
   background-color: #fff;
-  padding: 12px;
+  padding: ${({ hasAllPadding }) =>
+    hasAllPadding ? "12px" : "12px 0 12px 12px"};
   max-height: 300px;
   overflow-y: auto;
 `;
@@ -53,6 +54,10 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
         setThemes(themes);
       });
       ipc.send("musa:themes:request:getAll");
+    } else {
+      fetch(`${baseUrl}/themes`)
+        .then((r) => r.json())
+        .then(({ themes }) => setThemes(themes));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -68,7 +73,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
         <CurrentTheme>
           <h5>Current theme</h5>
           <ThemeWrapper>
-            <ThemeList>
+            <ThemeList hasAllPadding>
               <ThemeBlock theme={currentTheme} hasMargin={false} />
             </ThemeList>
           </ThemeWrapper>
@@ -77,7 +82,7 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
 
       <h5>Library</h5>
       <ThemeList>
-        {themes.length > 0 &&
+        {Array.isArray(themes) &&
           themes.map((theme) => (
             <ThemeBlock
               key={theme.id}
@@ -85,7 +90,8 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
               setCurrentTheme={(theme) => handleCurrentThemeChange(theme)}
             />
           ))}
-        {themes.length < 1 && <NoThemes>No themes yet</NoThemes>}
+        {!Array.isArray(themes) ||
+          (themes.length < 1 && <NoThemes>No themes yet</NoThemes>)}
       </ThemeList>
     </ThemeLibraryContainer>
   );
