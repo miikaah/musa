@@ -5,7 +5,7 @@ import AlbumImage from "./AlbumImageV2";
 const AlbumCoverContainer = styled.div`
   display: flex;
   flex: 30%;
-  margin: 0 24px 30px 0;
+  margin: 0 22px 30px 0;
   max-width: 30%;
   position: relative;
   cursor: pointer;

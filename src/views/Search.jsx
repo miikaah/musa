@@ -9,7 +9,7 @@ import Album from "components/Album";
 import Artist from "components/Artist";
 import BasePage from "components/BasePage";
 
-const { REACT_APP_ENV } = process.env;
+const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
 
 let ipc;
@@ -55,6 +55,16 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
         setAudios(result.audios);
       });
       ipc.send("musa:find:request", throttledQuery);
+    } else {
+      if (throttledQuery) {
+        fetch(`${baseUrl}/find/${throttledQuery}`)
+          .then((response) => response.json())
+          .then((result) => {
+            setArtists(result.artists);
+            setAlbums(result.albums);
+            setAudios(result.audios);
+          });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [throttledQuery]);
