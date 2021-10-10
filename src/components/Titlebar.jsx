@@ -29,20 +29,14 @@ const Container = styled.div`
   -webkit-app-region: drag;
 `;
 
-const ButtonContainer = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-`;
-
 const buttonCss = css`
   width: 48px;
   height: 36px;
   outline: none;
   -webkit-app-region: no-drag;
   display: inline-block;
-  cursor: pointer;
   position: relative;
+  cursor: ${({ isMacOs }) => (isMacOs ? "default" : "pointer")};
 `;
 
 const MinButton = styled.div`
@@ -124,14 +118,11 @@ const buttonCss2 = css`
   -webkit-app-region: no-drag;
   width: 48px;
   height: 36px;
+  cursor: ${({ isMacOs }) => (isMacOs ? "default" : "pointer")};
 
   :hover {
     color: #fff;
     background: #9b9b9b;
-
-    > div {
-      border-color: #fff;
-    }
   }
 `;
 
@@ -148,9 +139,19 @@ const SettingsButton = styled.button`
 `;
 
 const Titlebar = ({ location, history }) => {
+  const [isMacOs, setIsMacOs] = useState(false);
   const [isLibraryVisible, setIsLibraryVisible] = useState(
     location.pathname === "/"
   );
+
+  useEffect(() => {
+    if (ipc) {
+      ipc.once("musa:window:platform:response", (event, platform) => {
+        setIsMacOs(platform === "darwin");
+      });
+      ipc.send("musa:window:platform:request");
+    }
+  });
 
   const libraryRef = useRef();
   const libraryButtonRef = useRef();
@@ -264,31 +265,43 @@ const Titlebar = ({ location, history }) => {
       <Library ref={libraryRef} isVisible={isLibraryVisible} />
       <Container>
         <div>
-          <LibraryButton onClick={toggleLibrary} ref={libraryButtonRef}>
+          <LibraryButton
+            onClick={toggleLibrary}
+            ref={libraryButtonRef}
+            isMacOs={isMacOs}
+          >
             <FontAwesomeIcon icon="bars" />
           </LibraryButton>
 
-          <SearchButton onClick={toggleSearch} ref={searchButtonRef}>
+          <SearchButton
+            onClick={toggleSearch}
+            ref={searchButtonRef}
+            isMacOs={isMacOs}
+          >
             <FontAwesomeIcon icon="search" />
           </SearchButton>
 
-          <SettingsButton onClick={toggleSettings} ref={settingsButtonRef}>
+          <SettingsButton
+            onClick={toggleSettings}
+            ref={settingsButtonRef}
+            isMacOs={isMacOs}
+          >
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
         </div>
         {ipc && (
-          <ButtonContainer>
-            <MinButton onClick={minimize}>
+          <div>
+            <MinButton onClick={minimize} isMacOs={isMacOs}>
               <div />
             </MinButton>
-            <MaxButton onClick={maxOrUnMax}>
+            <MaxButton onClick={maxOrUnMax} isMacOs={isMacOs}>
               <div />
             </MaxButton>
-            <CloseButton onClick={close}>
+            <CloseButton onClick={close} isMacOs={isMacOs}>
               <div />
               <div />
             </CloseButton>
-          </ButtonContainer>
+          </div>
         )}
       </Container>
     </>
