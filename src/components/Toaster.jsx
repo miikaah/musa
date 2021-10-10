@@ -9,7 +9,7 @@ const fade = keyframes`
 
 const ToasterContainer = styled.div`
   position: absolute;
-  bottom: 0;
+  bottom: 30px;
   display: flex;
   justify-content: center;
   flex-direction: column;

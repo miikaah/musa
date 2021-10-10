@@ -3,7 +3,8 @@
   --font-size-sm: 16px;
   --font-size-xs: 14px;
   --font-size-xxs: 12px;
-  --toolbar-height: 60px;
+  --toolbar-height: 80px;
+  --titlebar-height: 36px;
   --color-white: #fbfbfb;
   --color-black: #000;
   --color-slider-track: #424a56;

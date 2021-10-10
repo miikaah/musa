@@ -27,9 +27,9 @@ const LibraryContainer = styled.div`
   min-width: 400px;
   z-index: 1;
   height: 100vh;
-  margin-top: var(--toolbar-height);
+  margin-top: var(--titlebar-height);
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
-  padding-bottom: 40px;
+  padding-bottom: var(--toolbar-height);
   max-width: 80vw;
   ${listOverflow}
 `;

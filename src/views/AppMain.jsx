@@ -21,7 +21,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-  margin-top: var(--toolbar-height);
+  margin-top: var(--titlebar-height);
 `;
 
 const AppMain = ({ isLarge, dispatch, isInit, musicLibraryPath }) => {

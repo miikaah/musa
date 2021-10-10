@@ -13,6 +13,7 @@ import {
 import { KEYS, isCtrlDown } from "../util";
 import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
+import { listOverflow } from "../common.styles";
 
 const Container = styled.ul`
   padding: 14px 0;
@@ -21,8 +22,8 @@ const Container = styled.ul`
   border-left-width: 1px;
   border-right-width: 3px;
   background-color: var(--color-bg);
-  min-height: 94vh;
-  max-height: 94vh;
+  max-height: 89vh;
+  ${listOverflow}
   overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
   overflow-x: hidden;
   flex: 60%;

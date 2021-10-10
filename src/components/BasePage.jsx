@@ -12,7 +12,7 @@ const BasePageContainer = styled.div`
   background-color: var(--color-bg);
   height: 100%;
   width: 100%;
-  margin-top: var(--toolbar-height);
+  margin-top: var(--titlebar-height);
   overflow-y: auto;
 
   @media (max-width: ${breakpoint.xs}) {

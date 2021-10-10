@@ -20,6 +20,7 @@ import { updateCurrentTheme, dispatchToast } from "./util";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
 import Search from "views/Search";
+import Titlebar from "components/Titlebar";
 import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
 import ProgressBar from "components/ProgressBar";
@@ -129,6 +130,7 @@ const App = ({ dispatch }) => {
   const Main = () => (
     <AppContainer>
       <Toaster />
+      <Titlebar />
       <ProgressBar />
       <Toolbar />
       <Switch>
