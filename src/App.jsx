@@ -59,9 +59,11 @@ const App = ({ dispatch }) => {
   useEffect(() => {
     if (ipc) {
       ipc.once("musa:settings:response:get", (event, settings) => {
-        const currentTheme = settings?.currentTheme || {
-          colors: FALLBACK_THEME,
-        };
+        const currentTheme = settings?.currentTheme?.colors
+          ? settings?.currentTheme
+          : {
+              colors: FALLBACK_THEME,
+            };
 
         updateCurrentTheme(currentTheme?.colors);
         dispatch(
