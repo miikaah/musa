@@ -119,6 +119,8 @@ const buttonCss2 = css`
   width: 48px;
   height: 36px;
   cursor: ${({ isMacOs }) => (isMacOs ? "default" : "pointer")};
+  color: ${({ isActive }) => (isActive ? "#fff" : "inherit")};
+  background: ${({ isActive }) => (isActive ? "#9b9b9b" : "transparent")};
 
   :hover {
     color: #fff;
@@ -269,6 +271,7 @@ const Titlebar = ({ location, history }) => {
             onClick={toggleLibrary}
             ref={libraryButtonRef}
             isMacOs={isMacOs}
+            isActive={location.pathname === "/" && isLibraryVisible}
           >
             <FontAwesomeIcon icon="bars" />
           </LibraryButton>
@@ -277,6 +280,7 @@ const Titlebar = ({ location, history }) => {
             onClick={toggleSearch}
             ref={searchButtonRef}
             isMacOs={isMacOs}
+            isActive={location.pathname === "/search"}
           >
             <FontAwesomeIcon icon="search" />
           </SearchButton>
@@ -285,6 +289,7 @@ const Titlebar = ({ location, history }) => {
             onClick={toggleSettings}
             ref={settingsButtonRef}
             isMacOs={isMacOs}
+            isActive={location.pathname === "/settings"}
           >
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
