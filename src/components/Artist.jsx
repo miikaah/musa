@@ -1,61 +1,54 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
-import AlbumCover from "./common/AlbumCoverV2";
+
+const bottomBorder = css`
+  cursor: pointer;
+  border: 0 solid transparent;
+  border-bottom-width: 2px;
+`;
 
 const ArtistContainer = styled.div`
-  flex: 100%;
+  flex: 25%;
   display: flex;
-  flex-direction: column;
-  margin-bottom: 40px;
+  ${bottomBorder}
+
+  :hover {
+    border-color: var(--color-primary-highlight);
+  }
 `;
 
 const ArtistName = styled.div`
-  font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 `;
 
-const ArtistAlbumList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  flex: 50%;
-`;
-
-const Artist = ({ item, dispatch }) => {
-  if (!item) {
+const Artist = ({ item: artist, dispatch }) => {
+  if (!artist) {
     return null;
   }
 
-  const addAlbumSongsToPlaylist = (album) => {
-    const msg = `Added ${album.name} to playlist`;
-    const key = `${album.name}-${Date.now()}`;
+  const addAlbumSongsToPlaylist = () => {
+    artist.albums.forEach((album) => {
+      const msg = `Added ${album.name} to playlist`;
+      const key = `${album.name}-${Date.now()}`;
 
-    dispatch(
-      pasteToPlaylist(
-        album.files.map((s) => ({
-          ...s,
-          cover: album.coverUrl,
-        }))
-      )
-    );
-    dispatchToast(msg, key, dispatch);
+      dispatch(
+        pasteToPlaylist(
+          album.files.map((s) => ({
+            ...s,
+            cover: album.coverUrl,
+          }))
+        )
+      );
+      dispatchToast(msg, key, dispatch);
+    });
   };
 
   return (
-    <ArtistContainer>
-      <ArtistName>{item.name}</ArtistName>
-      <ArtistAlbumList>
-        {item.albums.map((a, i) => (
-          <AlbumCover
-            key={i}
-            item={a}
-            onClick={() => addAlbumSongsToPlaylist(a)}
-          />
-        ))}
-      </ArtistAlbumList>
+    <ArtistContainer onClick={addAlbumSongsToPlaylist}>
+      <ArtistName>{artist.name}</ArtistName>
     </ArtistContainer>
   );
 };

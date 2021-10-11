@@ -20,6 +20,7 @@ const FirstRow = styled.div`
   display: grid;
   grid-template-columns: 7fr 3fr;
   grid-column-gap: 40px;
+  margin-bottom: 20px;
 `;
 
 const SettingsBlock = styled.div`

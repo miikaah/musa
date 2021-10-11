@@ -293,7 +293,7 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
 
     coverRef.current.addEventListener("load", onLoadCover);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, []);
 
   const artist = currentItem?.metadata?.artist || currentItem?.artistName || "";
   const album = currentItem?.metadata?.album || currentItem?.albumName || "";

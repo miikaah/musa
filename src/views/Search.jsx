@@ -20,23 +20,18 @@ if (isElectron && window.require) {
 const SearchContainer = styled.div`
   input {
     width: 100%;
-  }
-
-  > div {
-    margin-bottom: 100px;
-  }
-`;
-
-const SearchBlock = styled.div`
-  margin-top: 40px;
-
-  > h2 {
     margin-bottom: 40px;
   }
 `;
 
+const SearchBlock = styled.div`
+  margin-bottom: 20px;
+  min-height: ${({ minHeight }) => minHeight && `${minHeight}px`};
+`;
+
 const SearchBlockWrapper = styled.div`
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
 `;
 
@@ -94,20 +89,20 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
             value={query}
             onChange={(e) => dispatch(setQuery(e.target.value))}
           />
-          <SearchBlock>
-            <h2>Artists</h2>
+          <SearchBlock minHeight={60}>
+            <h3>Artists</h3>
             <SearchBlockWrapper>
               {renderSearchResults(artists, "artists")}
             </SearchBlockWrapper>
           </SearchBlock>
-          <SearchBlock>
-            <h2>Albums</h2>
+          <SearchBlock minHeight={270}>
+            <h3>Albums</h3>
             <SearchBlockWrapper>
               {renderSearchResults(albums, "albums")}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
-            <h2>Songs</h2>
+            <h3>Songs</h3>
             <SearchBlockWrapper>
               {renderSearchResults(audios, "songs")}
             </SearchBlockWrapper>

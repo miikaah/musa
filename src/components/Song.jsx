@@ -8,7 +8,7 @@ import AlbumImage from "./common/AlbumImageV2";
 const SongContainer = styled.div`
   display: flex;
   flex: 48%;
-  margin: 0 10px 40px 0;
+  margin: 0 12px 20px 0;
   cursor: pointer;
   border: 2px solid transparent;
   border-top-width: 0;
@@ -17,10 +17,10 @@ const SongContainer = styled.div`
 
   > img {
     flex: 50%;
-    min-width: 160px;
-    max-width: 160px;
-    min-height: 160px;
-    max-height: 160px;
+    min-width: 80px;
+    max-width: 80px;
+    min-height: 80px;
+    max-height: 80px;
     background-color: $musa-black;
   }
 
@@ -37,11 +37,11 @@ const SongInfo = styled.div`
     margin: 0 0 10px;
   }
 
-  > p:not(:nth-child(3)) {
-    font-size: $musa-font-size-xs;
+  > p:not(:nth-child(1)) {
+    font-size: var(--font-size-xs);
   }
 
-  > p:nth-child(3) {
+  > p:nth-child(1) {
     font-weight: bold;
   }
 `;
@@ -65,18 +65,14 @@ const Song = ({ item, dispatch }) => {
   };
 
   const artist = item?.metadata?.artist;
-  const album = item?.metadata?.album;
-  const year = item?.metadata?.year;
   const title = item?.metadata?.title;
 
   return (
     <SongContainer onClick={addSongToPlaylist}>
       <AlbumImage item={item} />
       <SongInfo>
-        <p>{artist}</p>
-        <p>{album}</p>
         <p>{title}</p>
-        <p>{year}</p>
+        <p>{artist}</p>
       </SongInfo>
     </SongContainer>
   );
