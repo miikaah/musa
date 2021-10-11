@@ -34,7 +34,7 @@ const ThemeBlock = ({ theme, setCurrentTheme, hasMargin = true }) => {
     <Container
       title={id ? decodeURIComponent(id) : ""}
       rgb={colors.bg}
-      onClick={() => setCurrentTheme(colors)}
+      onClick={() => setCurrentTheme(theme)}
       hasMargin={hasMargin}
     >
       <Color rgb={colors.primary} />

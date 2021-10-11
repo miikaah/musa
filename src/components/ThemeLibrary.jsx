@@ -3,7 +3,9 @@ import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
+import { FALLBACK_THEME } from "../config";
 import ThemeBlock from "./ThemeBlock";
+import Button from "./Button";
 
 const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
@@ -29,6 +31,12 @@ const ThemeWrapper = styled.div`
   flex-direction: row;
 `;
 
+const RemoveThemeButton = styled(Button)`
+  max-width: 180px;
+  max-height: 50px;
+  margin-left: 12px;
+`;
+
 const ThemeList = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -45,8 +53,9 @@ const NoThemes = styled.div`
   color: #000;
 `;
 
-const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
+const ThemeLibrary = ({ currentTheme, dispatch }) => {
   const [themes, setThemes] = useState([]);
+  const hasThemes = Array.isArray(themes) && themes.length > 0;
 
   useEffect(() => {
     if (ipc) {
@@ -62,9 +71,20 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleCurrentThemeChange = (theme) => {
-    updateCurrentTheme(theme);
+  const changeCurrentTheme = (theme) => {
+    updateCurrentTheme(theme.colors);
     dispatch(updateSettings({ currentTheme: theme }));
+  };
+
+  const removeTheme = () => {
+    if (ipc) {
+      ipc.once("musa:themes:response:remove", () => {
+        setThemes(themes.filter((t) => t.id !== currentTheme.id));
+        updateCurrentTheme(FALLBACK_THEME);
+        dispatch(updateSettings({ currentTheme: FALLBACK_THEME }));
+      });
+      ipc.send("musa:themes:request:remove", currentTheme.id);
+    }
   };
 
   return (
@@ -76,22 +96,26 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
             <ThemeList hasAllPadding>
               <ThemeBlock theme={currentTheme} hasMargin={false} />
             </ThemeList>
+            {hasThemes && ipc && (
+              <RemoveThemeButton onClick={removeTheme} isSecondary>
+                Remove theme
+              </RemoveThemeButton>
+            )}
           </ThemeWrapper>
         </CurrentTheme>
       </CurrentThemeContainer>
 
-      <h5>Library</h5>
+      <h5>Library ({hasThemes ? themes.length : 0} themes)</h5>
       <ThemeList>
-        {Array.isArray(themes) &&
+        {hasThemes &&
           themes.map((theme) => (
             <ThemeBlock
               key={theme.id}
               theme={theme}
-              setCurrentTheme={(theme) => handleCurrentThemeChange(theme)}
+              setCurrentTheme={changeCurrentTheme}
             />
           ))}
-        {!Array.isArray(themes) ||
-          (themes.length < 1 && <NoThemes>No themes yet</NoThemes>)}
+        {!hasThemes && <NoThemes>No themes yet</NoThemes>}
       </ThemeList>
     </ThemeLibraryContainer>
   );
@@ -99,7 +123,6 @@ const ThemeLibrary = ({ defaultTheme, currentTheme, dispatch }) => {
 
 export default connect(
   (state) => ({
-    defaultTheme: state.settings.defaultTheme,
     currentTheme: state.settings.currentTheme,
   }),
   (dispatch) => ({ dispatch })
