@@ -88,7 +88,6 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   return (
     <BasePage>
       <SearchContainer>
-        <h1>Search</h1>
         <div>
           <input
             autoFocus

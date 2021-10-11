@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 import { FALLBACK_THEME } from "../config";
@@ -15,36 +15,47 @@ if (isElectron && window.require) {
   ipc = window.require("electron").ipcRenderer;
 }
 
-const ThemeLibraryContainer = styled.div``;
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  grid-column-gap: 40px;
+  margin-bottom: 40px;
+`;
 
 const CurrentThemeContainer = styled.div`
   display: flex;
   margin-bottom: 40px;
 `;
 
-const CurrentTheme = styled.div`
-  flex: 50%;
-`;
+const CurrentTheme = styled.div``;
 
 const ThemeWrapper = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;
 
 const RemoveThemeButton = styled(Button)`
-  max-width: 180px;
-  max-height: 50px;
-  margin-left: 12px;
+  width: 200px;
+  margin-top: 12px;
 `;
 
-const ThemeList = styled.div`
+const themeStyles = css`
   display: flex;
   flex-wrap: wrap;
   background-color: #fff;
-  padding: ${({ hasAllPadding }) =>
-    hasAllPadding ? "12px" : "12px 0 12px 12px"};
   max-height: 300px;
+`;
+
+const ThemeList = styled.div`
+  ${themeStyles}
+  padding: 12px 0 0 12px;
   overflow-y: auto;
+`;
+
+const ThemeList2 = styled.div`
+  ${themeStyles}
+  padding: 12px;
+  max-width: 104px;
 `;
 
 const NoThemes = styled.div`
@@ -88,18 +99,32 @@ const ThemeLibrary = ({ currentTheme, dispatch }) => {
   };
 
   return (
-    <ThemeLibraryContainer>
+    <Container>
+      <div>
+        <h5>Library ({themes.length})</h5>
+        <ThemeList>
+          {hasThemes &&
+            themes.map((theme) => (
+              <ThemeBlock
+                key={theme.id}
+                theme={theme}
+                setCurrentTheme={changeCurrentTheme}
+              />
+            ))}
+          {!hasThemes && <NoThemes>No themes yet</NoThemes>}
+        </ThemeList>
+      </div>
       <CurrentThemeContainer>
         <CurrentTheme>
           <h5>Current theme</h5>
           <ThemeWrapper>
-            <ThemeList hasAllPadding>
+            <ThemeList2>
               <ThemeBlock
                 theme={currentTheme}
                 hasMargin={false}
                 setCurrentTheme={() => {}}
               />
-            </ThemeList>
+            </ThemeList2>
             {hasThemes && ipc && (
               <RemoveThemeButton onClick={removeTheme} isSecondary>
                 Remove theme
@@ -108,20 +133,7 @@ const ThemeLibrary = ({ currentTheme, dispatch }) => {
           </ThemeWrapper>
         </CurrentTheme>
       </CurrentThemeContainer>
-
-      <h5>Library ({hasThemes ? themes.length : 0} themes)</h5>
-      <ThemeList>
-        {hasThemes &&
-          themes.map((theme) => (
-            <ThemeBlock
-              key={theme.id}
-              theme={theme}
-              setCurrentTheme={changeCurrentTheme}
-            />
-          ))}
-        {!hasThemes && <NoThemes>No themes yet</NoThemes>}
-      </ThemeList>
-    </ThemeLibraryContainer>
+    </Container>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withRouter } from "react-router";
@@ -140,7 +141,17 @@ const SettingsButton = styled.button`
   ${buttonCss2}
 `;
 
-const Titlebar = ({ location, history }) => {
+const Title = styled.div`
+  font-size: 0.9rem;
+`;
+
+const locationToTitleMap = {
+  "/": "Musa",
+  "/search": "Search",
+  "/settings": "Settings",
+};
+
+const Titlebar = ({ location, history, currentLocation }) => {
   const [isMacOs, setIsMacOs] = useState(false);
   const [isLibraryVisible, setIsLibraryVisible] = useState(
     location.pathname === "/"
@@ -294,6 +305,7 @@ const Titlebar = ({ location, history }) => {
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
         </div>
+        <Title>{locationToTitleMap[location.pathname]}</Title>
         {ipc && (
           <div>
             <MinButton onClick={minimize} isMacOs={isMacOs}>
@@ -313,4 +325,12 @@ const Titlebar = ({ location, history }) => {
   );
 };
 
-export default withRouter(Titlebar);
+export default withRouter(
+  connect(
+    (state) => ({
+      musicLibraryPath: state.settings.musicLibraryPath,
+      currentLocation: state.settings.currentLocation,
+    }),
+    (dispatch) => ({ dispatch })
+  )(Titlebar)
+);

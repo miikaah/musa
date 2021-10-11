@@ -58,7 +58,6 @@ const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
 
   return (
     <MusicLibrarySettingContainer>
-      <h5>Path</h5>
       <MusicLibrarySettingPath>
         <input disabled readOnly value={musicLibraryPath} />
         <Button
