@@ -26,6 +26,7 @@ const Colors = {
   TypographyGhost: "#d2d2d2",
   TypographyGhostLight: "#4a4a4a",
   PrimaryRgb: [117, 53, 151],
+  SecondaryRgb: [33, 115, 126],
   SliderTrack: "#424a56",
   SliderTrackRgb: [66, 74, 86],
   WhiteRgb: [255, 255, 255],
@@ -153,13 +154,22 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       primary = swatchesByPopulationDesc.find(
         (s) => s.population === primaryPop
       );
+
       if (!primary || isEqual(primary.rgb, bg.rgb))
         for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
           primary = swatchesByPopulationDesc[i];
-          if (!isEqual(primary.rgb, bg.rgb)) break;
+
+          if (!isEqual(primary.rgb, bg.rgb)) {
+            break;
+          }
         }
-      if (!primary || isEqual(primary.rgb, bg.rgb))
+      if (!primary || isEqual(primary.rgb, bg.rgb)) {
         primary = { rgb: Colors.PrimaryRgb };
+      }
+      const contrastBgPr = contrast(bg.rgb, primary.rgb);
+      if (Math.abs(1 - contrastBgPr) < 0.1) {
+        primary = { rgb: Colors.PrimaryRgb };
+      }
 
       secondary = swatchesByPopulationDesc.find(
         (s) => s.population === secondaryPop
@@ -167,14 +177,21 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       if (!secondary || isEqual(secondary.rgb, bg.rgb))
         for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
           secondary = swatchesByPopulationDesc[i];
+
           if (
             !isEqual(secondary.rgb, bg.rgb) &&
             !isEqual(secondary.rgb, primary.rgb)
-          )
+          ) {
             break;
+          }
         }
-      if (!secondary || isEqual(secondary.rgb, bg.rgb))
-        secondary = { rgb: Colors.PrimaryRgb };
+      if (!secondary || isEqual(secondary.rgb, bg.rgb)) {
+        secondary = { rgb: Colors.SecondaryRgb };
+      }
+      const contrastBgSe = contrast(bg.rgb, secondary.rgb);
+      if (Math.abs(1 - contrastBgSe) < 0.1) {
+        secondary = { rgb: Colors.SecondaryRgb };
+      }
 
       // Set slider highlight to a different color if not enough contrast to slider track
       // or background color
@@ -182,8 +199,9 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       if (
         contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2 ||
         contrast(slider.rgb, bg.rgb) < 1.2
-      )
+      ) {
         slider = secondary;
+      }
 
       // Switch to dark text for light covers
       if (contrast(Colors.WhiteRgb, primary.rgb) < 2.6) {
@@ -205,20 +223,35 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       };
 
       updateCurrentTheme(colors);
-      dispatch(updateSettings({ currentTheme: colors }));
 
-      // Update to backend
       if (coverTarget.src && colors) {
         if (ipc) {
           ipc.send("musa:themes:request:insert", coverTarget.src, colors);
+          dispatch(
+            updateSettings({
+              currentTheme: {
+                id: coverTarget.src,
+                colors,
+              },
+            })
+          );
         } else {
-          fetch(`${baseUrl}/theme/${coverTarget.src.split("/").pop()}`, {
+          const themeId = coverTarget.src.split("/").pop();
+          fetch(`${baseUrl}/theme/${themeId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ colors }),
           });
+          dispatch(
+            updateSettings({
+              currentTheme: {
+                id: themeId,
+                colors,
+              },
+            })
+          );
         }
       }
     };
@@ -226,7 +259,7 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
     const handleIpcGetThemeResponse = (coverTarget) => (ev, theme) => {
       if (theme && theme.colors) {
         updateCurrentTheme(theme.colors);
-        dispatch(updateSettings({ currentTheme: theme.colors }));
+        dispatch(updateSettings({ currentTheme: theme }));
         return;
       }
 
@@ -249,7 +282,7 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
           .then((theme) => {
             if (theme.colors) {
               updateCurrentTheme(theme.colors);
-              dispatch(updateSettings({ currentTheme: theme.colors }));
+              dispatch(updateSettings({ currentTheme: theme }));
               return;
             }
 

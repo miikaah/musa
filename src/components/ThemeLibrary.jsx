@@ -94,7 +94,11 @@ const ThemeLibrary = ({ currentTheme, dispatch }) => {
           <h5>Current theme</h5>
           <ThemeWrapper>
             <ThemeList hasAllPadding>
-              <ThemeBlock theme={currentTheme} hasMargin={false} />
+              <ThemeBlock
+                theme={currentTheme}
+                hasMargin={false}
+                setCurrentTheme={() => {}}
+              />
             </ThemeList>
             {hasThemes && ipc && (
               <RemoveThemeButton onClick={removeTheme} isSecondary>
