@@ -62,6 +62,7 @@ const NoThemes = styled.div`
   width: 100%;
   text-align: center;
   color: #000;
+  padding-bottom: 12px;
 `;
 
 const ThemeLibrary = ({ currentTheme, dispatch }) => {
