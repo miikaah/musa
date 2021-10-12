@@ -8,6 +8,7 @@ import AlbumImage from "./common/AlbumImageV2";
 const AlbumContainer = styled.div`
   display: flex;
   flex: 45%;
+  max-width: 50%;
   margin: 0 10px 20px 0;
 `;
 
@@ -19,7 +20,8 @@ const bottomBorder = css`
 
 const AlbumFullAdd = styled.div`
   display: flex;
-  flex: 60%;
+  flex: 100%;
+  max-height: 80px;
   ${bottomBorder}
 
   > img {

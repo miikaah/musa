@@ -20,19 +20,31 @@ if (isElectron && window.require) {
 const SearchContainer = styled.div`
   input {
     width: 100%;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+
+    ::placeholder {
+      color: #919191;
+      font-size: 0.9em;
+    }
   }
 `;
 
 const SearchBlock = styled.div`
-  margin-bottom: 20px;
-  min-height: ${({ minHeight }) => minHeight && `${minHeight}px`};
+  margin-bottom: 12px;
+  color: #000;
+
+  h3 {
+    color: var(--color-typography);
+  }
 `;
 
 const SearchBlockWrapper = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  min-height: ${({ minHeight }) => minHeight && `${minHeight}px`};
+  background: #fff;
+  padding: 10px 0 0 10px;
 `;
 
 const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
@@ -40,7 +52,7 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
   const [albums, setAlbums] = useState([]);
   const [audios, setAudios] = useState([]);
 
-  const throttledQuery = useThrottle(query, 16);
+  const throttledQuery = useThrottle(query, ipc ? 0 : 16);
 
   useEffect(() => {
     if (ipc) {
@@ -87,23 +99,24 @@ const Search = ({ listing, query, artistAlbums, artistSongs, dispatch }) => {
           <input
             autoFocus
             value={query}
+            placeholder="...Don't type too fast"
             onChange={(e) => dispatch(setQuery(e.target.value))}
           />
-          <SearchBlock minHeight={60}>
+          <SearchBlock>
             <h3>Artists</h3>
-            <SearchBlockWrapper>
+            <SearchBlockWrapper minHeight={43}>
               {renderSearchResults(artists, "artists")}
             </SearchBlockWrapper>
           </SearchBlock>
-          <SearchBlock minHeight={270}>
+          <SearchBlock>
             <h3>Albums</h3>
-            <SearchBlockWrapper>
+            <SearchBlockWrapper minHeight={270}>
               {renderSearchResults(albums, "albums")}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
             <h3>Songs</h3>
-            <SearchBlockWrapper>
+            <SearchBlockWrapper minHeight={306}>
               {renderSearchResults(audios, "songs")}
             </SearchBlockWrapper>
           </SearchBlock>
