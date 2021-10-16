@@ -6,6 +6,7 @@ import { withRouter } from "react-router";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
 import Library from "components/LibraryV2";
+import { breakpoint } from "../breakpoints";
 
 const { REACT_APP_ENV } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
@@ -131,6 +132,9 @@ const buttonCss2 = css`
 
 const LibraryButton = styled.button`
   ${buttonCss2}
+
+  background: ${({ isActive, isSmall }) =>
+    isActive && isSmall ? "#9b9b9b" : "transparent"};
 `;
 
 const SearchButton = styled.button`
@@ -156,9 +160,10 @@ const locationToTitleMap = {
 };
 
 const Titlebar = ({ location, history, currentLocation }) => {
+  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const [isMacOs, setIsMacOs] = useState(false);
   const [isLibraryVisible, setIsLibraryVisible] = useState(
-    location.pathname === "/"
+    location.pathname === "/" || window.innerWidth > breakpoint.lg
   );
 
   useEffect(() => {
@@ -170,13 +175,28 @@ const Titlebar = ({ location, history, currentLocation }) => {
     }
   });
 
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      const izSmall = window.innerWidth < breakpoint.lg;
+
+      setIsSmall(izSmall);
+      setIsLibraryVisible(!izSmall);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const libraryRef = useRef();
   const libraryButtonRef = useRef();
   const settingsButtonRef = useRef();
   const searchButtonRef = useRef();
 
   useEffect(() => {
+    // Close library when clicking outside it like the playlist
     const handleClick = (e) => {
+      if (!isSmall) {
+        return;
+      }
+
       if (
         libraryButtonRef.current &&
         libraryButtonRef.current.contains(e.target)
@@ -196,6 +216,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
     return () => {
       document.removeEventListener("click", handleClick);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const goToSearchByKeyEvent = (event) => {
@@ -218,7 +239,16 @@ const Titlebar = ({ location, history, currentLocation }) => {
 
     if (location.pathname !== "/") {
       history.push("/");
+
+      if (!isSmall) {
+        return;
+      }
+
       setIsLibraryVisible(true);
+      return;
+    }
+
+    if (!isSmall) {
       return;
     }
 
@@ -287,6 +317,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
             ref={libraryButtonRef}
             isMacOs={isMacOs}
             isActive={location.pathname === "/" && isLibraryVisible}
+            isSmall={isSmall}
           >
             <FontAwesomeIcon icon="bars" />
           </LibraryButton>

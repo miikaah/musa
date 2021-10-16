@@ -1,12 +1,12 @@
-import React, { useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import Palette from "img-palette";
 import styled from "styled-components/macro";
-import { breakpoint } from "../breakpoints";
 import { updateCurrentTheme } from "../util";
+import { breakpoint } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
 
 const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
@@ -32,29 +32,21 @@ const Colors = {
   WhiteRgb: [255, 255, 255],
 };
 
-const marginTop = 12;
-const marginBottom = 20;
-
 const Container = styled.div`
   flex: 40%;
+  margin-left: ${({ isSmall }) => (isSmall ? "0" : "500")}px;
 `;
 
 const Image = styled.img`
   display: block;
   height: auto;
-  width: 100%;
   margin: 0 auto;
-  max-height: ${800 + marginTop + marginBottom}px;
-  max-width: 800px;
-
-  @media (max-width: ${breakpoint.lg}) {
-    max-height: ${600 + marginTop + marginBottom}px;
-    max-width: 600px;
-  }
+  width: 100%;
 `;
 
 const Info = styled.div`
-  padding: 20px;
+  padding: ${({ isSmall }) =>
+    isSmall ? "20px 20px 20px 10px" : "20px 20px 20px 10px"};
 
   > div:nth-child(1) {
     padding-bottom: 8px;
@@ -95,6 +87,7 @@ const contrast = (rgb1, rgb2) => {
 };
 
 const Cover = ({ coverSrc, currentItem, dispatch }) => {
+  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const coverRef = useRef();
 
   useEffect(() => {
@@ -295,15 +288,22 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setIsSmall(window.innerWidth < breakpoint.lg);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const artist = currentItem?.metadata?.artist || currentItem?.artistName || "";
   const album = currentItem?.metadata?.album || currentItem?.albumName || "";
   const title = currentItem?.metadata?.title || currentItem?.name || "";
   const year = currentItem?.metadata?.year || "";
 
   return (
-    <Container>
+    <Container isSmall={isSmall}>
       <Image src={coverSrc} ref={coverRef} crossOrigin="" />
-      <Info>
+      <Info isSmall={isSmall}>
         <div>{title}</div>
         <div>{album}</div>
         <div>

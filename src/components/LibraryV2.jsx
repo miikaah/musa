@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LibraryList from "./LibraryListV2";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { listOverflow } from "../common.styles";
+import { breakpoint } from "../breakpoints";
 
 const { REACT_APP_ENV } = process.env;
 const isElectron = REACT_APP_ENV === "electron";
@@ -22,15 +23,16 @@ const LibraryContainer = styled.div`
   border-left-width: 4px;
   border-right-width: 1px;
   background-color: var(--color-bg);
-  box-shadow: 25px 10px 31px -17px rgba(10, 10, 10, 0.75);
+  box-shadow: ${({ isSmall }) =>
+    isSmall && "25px 10px 31px -17px rgba(10, 10, 10, 0.75)"};
   position: absolute;
   min-width: 400px;
   z-index: 1;
+  width: ${({ isSmall }) => (isSmall ? "400px" : "var(--library-width)")};
   height: 100vh;
   margin-top: var(--titlebar-height);
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   padding-bottom: var(--toolbar-height);
-  max-width: 80vw;
   ${listOverflow}
 `;
 
@@ -48,8 +50,17 @@ const LibraryLabel = styled.div`
 `;
 
 const Library = ({ dispatch, forwardRef, isVisible, listingWithLabels }) => {
+  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setIsSmall(window.innerWidth < breakpoint.lg);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <LibraryContainer ref={forwardRef} isVisible={isVisible}>
+    <LibraryContainer ref={forwardRef} isVisible={isVisible} isSmall={isSmall}>
       {listingWithLabels &&
         Object.entries(listingWithLabels).map(([key, artist]) => (
           <div key={key}>

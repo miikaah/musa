@@ -12,6 +12,12 @@ utilising Electron and React.
 
 ## Todo
 
+### fix
+
+- fix: Do not allow duplicate indices in random find
+- fix: Do not allow empty string to nullify random find state in Search when navigating from and back to Search
+- fix: Make cover not jump
+
 #### Cross platform
 
 - feat: Make sure everything works on Linux
