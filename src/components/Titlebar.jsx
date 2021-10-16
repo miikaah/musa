@@ -216,8 +216,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isSmall]);
 
   const goToSearchByKeyEvent = (event) => {
     if (!isCtrlDown(event)) {
