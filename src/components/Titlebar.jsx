@@ -145,6 +145,10 @@ const Title = styled.div`
   font-size: 0.9rem;
 `;
 
+const ActionsContainer = styled.div`
+  visibility: ${({ isElectron }) => (isElectron ? "visible" : "hidden")};
+`;
+
 const locationToTitleMap = {
   "/": "Musa",
   "/search": "Search",
@@ -306,20 +310,18 @@ const Titlebar = ({ location, history, currentLocation }) => {
           </SettingsButton>
         </div>
         <Title>{locationToTitleMap[location.pathname]}</Title>
-        {ipc && (
-          <div>
-            <MinButton onClick={minimize} isMacOs={isMacOs}>
-              <div />
-            </MinButton>
-            <MaxButton onClick={maxOrUnMax} isMacOs={isMacOs}>
-              <div />
-            </MaxButton>
-            <CloseButton onClick={close} isMacOs={isMacOs}>
-              <div />
-              <div />
-            </CloseButton>
-          </div>
-        )}
+        <ActionsContainer isElectron={isElectron}>
+          <MinButton onClick={minimize} isMacOs={isMacOs}>
+            <div />
+          </MinButton>
+          <MaxButton onClick={maxOrUnMax} isMacOs={isMacOs}>
+            <div />
+          </MaxButton>
+          <CloseButton onClick={close} isMacOs={isMacOs}>
+            <div />
+            <div />
+          </CloseButton>
+        </ActionsContainer>
       </Container>
     </>
   );

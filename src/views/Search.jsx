@@ -149,7 +149,7 @@ const Search = ({ query, artistAlbums, artistSongs, dispatch }) => {
         </SearchBlock>
         <SearchBlock>
           <h3>Songs</h3>
-          <SearchBlockWrapper height={306}>
+          <SearchBlockWrapper height={isElectron ? 306 : 240}>
             {renderSearchResults(audios, "songs")}
           </SearchBlockWrapper>
         </SearchBlock>
