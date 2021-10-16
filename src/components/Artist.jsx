@@ -11,8 +11,9 @@ const bottomBorder = css`
 `;
 
 const ArtistContainer = styled.div`
-  flex: 25%;
   display: flex;
+  flex: 25%;
+  max-width: 25%;
   ${bottomBorder}
 
   :hover {
@@ -22,6 +23,10 @@ const ArtistContainer = styled.div`
 
 const ArtistName = styled.div`
   margin-bottom: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 95%;
 `;
 
 const Artist = ({ item: artist, dispatch }) => {
@@ -48,7 +53,7 @@ const Artist = ({ item: artist, dispatch }) => {
 
   return (
     <ArtistContainer onClick={addAlbumSongsToPlaylist}>
-      <ArtistName>{artist.name}</ArtistName>
+      <ArtistName title={artist.name}>{artist.name}</ArtistName>
     </ArtistContainer>
   );
 };

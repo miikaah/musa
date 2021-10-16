@@ -68,8 +68,11 @@ export function prefixNumber(value) {
   return value < 10 ? `0${value}` : `${value}`;
 }
 
-export function getFileUri(path) {
-  return `file://${path}`.replace("#", "%23");
+export function cleanUrl(url) {
+  if (!url) {
+    return url;
+  }
+  return url.replaceAll("#", "%23");
 }
 
 export function updateCurrentTheme(colors) {

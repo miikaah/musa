@@ -4,7 +4,7 @@ import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components/macro";
 import { playIndex, replay } from "reducers/player.reducer";
-import { formatDuration } from "../util";
+import { formatDuration, cleanUrl } from "../util";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);
@@ -216,7 +216,7 @@ const PlaylistItem = ({
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
       <CoverWrapper>
-        {coverSrc && <CoverSmall src={coverSrc} alt="" />}
+        {coverSrc && <CoverSmall src={cleanUrl(coverSrc)} alt="" />}
       </CoverWrapper>
       <RowContainer>
         <FirstRow>

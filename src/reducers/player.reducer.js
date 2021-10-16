@@ -1,4 +1,5 @@
 import isEmpty from "lodash.isempty";
+import { cleanUrl } from "../util";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
 export const play = () => ({
@@ -170,8 +171,8 @@ function getPlayBase(newItem, newIndex) {
     currentItem: newItem,
     currentIndex: newIndex,
     isPlaying: true,
-    src: newItem.fileUrl,
-    cover: newItem.cover || newItem.coverUrl || "",
+    src: cleanUrl(newItem.fileUrl),
+    cover: cleanUrl(newItem.cover) || cleanUrl(newItem.coverUrl) || "",
   };
 }
 
