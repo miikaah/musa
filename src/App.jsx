@@ -57,22 +57,25 @@ library.add(
 
 const App = ({ dispatch }) => {
   useEffect(() => {
+    const update = (settings) => {
+      const currentTheme = settings?.currentTheme?.colors
+        ? settings?.currentTheme
+        : {
+            colors: FALLBACK_THEME,
+          };
+
+      updateCurrentTheme(currentTheme?.colors);
+      dispatch(
+        updateSettings({
+          ...settings,
+          isInit: true,
+          currentTheme,
+        })
+      );
+    };
     if (ipc) {
       ipc.once("musa:settings:response:get", (event, settings) => {
-        const currentTheme = settings?.currentTheme?.colors
-          ? settings?.currentTheme
-          : {
-              colors: FALLBACK_THEME,
-            };
-
-        updateCurrentTheme(currentTheme?.colors);
-        dispatch(
-          updateSettings({
-            ...settings,
-            isInit: true,
-            currentTheme,
-          })
-        );
+        update(settings);
       });
       ipc.send("musa:settings:request:get");
 
@@ -89,28 +92,7 @@ const App = ({ dispatch }) => {
     } else {
       fetch(`${baseUrl}/settings`)
         .then((response) => response.json())
-        .then((settings) => {
-          const currentTheme = settings?.currentTheme || FALLBACK_THEME;
-
-          updateCurrentTheme(currentTheme);
-
-          if (settings.currentTheme) {
-            dispatch(
-              updateSettings({
-                ...settings,
-                isInit: true,
-                currentTheme,
-              })
-            );
-          } else {
-            dispatch(
-              updateSettings({
-                isInit: true,
-                currentTheme,
-              })
-            );
-          }
-        });
+        .then(update);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
