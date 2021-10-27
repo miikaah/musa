@@ -86,7 +86,6 @@ const App = ({ dispatch }) => {
           dispatch
         );
         ipc.send("musa:artists:request");
-        ipc.send("musa:scan");
       });
       ipc.send("musa:onInit");
     } else {
