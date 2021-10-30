@@ -89,7 +89,7 @@ const App = ({ dispatch }) => {
       });
       ipc.send("musa:onInit");
     } else {
-      fetch(`${baseUrl}/settings`)
+      fetch(`${baseUrl}/state`)
         .then((response) => response.json())
         .then(update);
     }

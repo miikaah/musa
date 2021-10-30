@@ -28,7 +28,7 @@ store.subscribe(() => {
     }
   } else {
     if (settings.isInit) {
-      fetch(`${baseUrl}/settings`, {
+      fetch(`${baseUrl}/state`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

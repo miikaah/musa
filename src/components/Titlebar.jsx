@@ -156,7 +156,9 @@ const ActionsContainer = styled.div`
 const locationToTitleMap = {
   "/": "Musa",
   "/search": "Search",
+  "/search/": "Search",
   "/settings": "Settings",
+  "/settings/": "Settings",
 };
 
 const Titlebar = ({ location, history, currentLocation }) => {
@@ -258,7 +260,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
   const toggleSettings = (event) => {
     settingsButtonRef.current.blur();
 
-    if (location.pathname === "/settings") {
+    if (location.pathname.startsWith("/settings")) {
       history.push("/");
     } else {
       history.push("/settings");
@@ -270,7 +272,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
   const toggleSearch = (event) => {
     searchButtonRef.current.blur();
 
-    if (location.pathname === "/search") {
+    if (location.pathname.startsWith("/search")) {
       history.push("/");
     } else {
       history.push("/search");
@@ -325,7 +327,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
             onClick={toggleSearch}
             ref={searchButtonRef}
             isMacOs={isMacOs}
-            isActive={location.pathname === "/search"}
+            isActive={location.pathname.startsWith("/search")}
           >
             <FontAwesomeIcon icon="search" />
           </SearchButton>
@@ -334,7 +336,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
             onClick={toggleSettings}
             ref={settingsButtonRef}
             isMacOs={isMacOs}
-            isActive={location.pathname === "/settings"}
+            isActive={location.pathname.startsWith("/settings")}
           >
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
