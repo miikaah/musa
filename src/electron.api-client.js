@@ -9,7 +9,7 @@ const getSettings = () => {
   });
 };
 
-const insertSettings = ({ settings }) => {
+const insertSettings = (settings) => {
   return new Promise((resolve, reject) => {
     ipc.send("musa:settings:request:insert", {
       ...settings,
