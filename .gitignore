@@ -10,6 +10,7 @@
 
 # production
 /build
+/build-server
 
 # misc
 .DS_Store
@@ -20,6 +21,8 @@
 .env.production.local
 .env.electron.local
 .env.electron.prod
+.env.server.local
+.env.server.prod
 
 npm-debug.log*
 yarn-debug.log*

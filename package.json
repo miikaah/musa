@@ -4,9 +4,9 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "start": "env-cmd -f .env.local react-scripts start",
+    "start": "env-cmd -f .env.server.local react-scripts start",
     "start:electron": "env-cmd -f .env.electron.local craco start",
-    "build": "craco build",
+    "build": "env-cmd -f .env.server.prod craco build",
     "build:electron": "env-cmd -f .env.electron.prod craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
