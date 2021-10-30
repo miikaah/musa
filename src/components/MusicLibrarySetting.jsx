@@ -1,19 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { updateSettings } from "reducers/settings.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
 import Button from "./Button";
+import Api from "api-client";
 
-const { REACT_APP_ENV } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
-
-const MusicLibrarySettingContainer = styled.div``;
+const Container = styled.div``;
 
 const MusicLibrarySettingPath = styled.div`
   display: flex;
@@ -31,19 +24,6 @@ const MusicLibrarySettingPath = styled.div`
 `;
 
 const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
-  useEffect(() => {
-    if (ipc) {
-      ipc.once("musa:addMusicLibraryPath:response", (event, path) => {
-        dispatch(
-          updateSettings({
-            musicLibraryPath: path,
-          })
-        );
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [musicLibraryPath]);
-
   const removeLibraryPath = () => {
     dispatch(
       updateSettings({
@@ -53,11 +33,17 @@ const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
   };
 
   const addLibraryPath = () => {
-    ipc.send("musa:addMusicLibraryPath:request");
+    Api.addMusicLibraryPath().then((path) => {
+      dispatch(
+        updateSettings({
+          musicLibraryPath: path,
+        })
+      );
+    });
   };
 
   return (
-    <MusicLibrarySettingContainer>
+    <Container>
       <MusicLibrarySettingPath>
         <input disabled readOnly value={musicLibraryPath} />
         <Button
@@ -71,7 +57,7 @@ const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
       <Button onClick={addLibraryPath} isPrimary disabled={musicLibraryPath}>
         Add new
       </Button>
-    </MusicLibrarySettingContainer>
+    </Container>
   );
 };
 

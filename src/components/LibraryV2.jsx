@@ -5,18 +5,6 @@ import styled from "styled-components/macro";
 import { listOverflow } from "../common.styles";
 import { breakpoint } from "../breakpoints";
 
-const { REACT_APP_ENV } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-  /* eslint-disable no-console */
-  ipc.on("musa:log", (event, log) => console.log("(main)", log));
-  ipc.on("musa:error", (event, error) => console.error(error));
-  /* eslint-enable no-console */
-}
-
 const LibraryContainer = styled.div`
   text-align: left;
   border: 0 solid var(--color-secondary-highlight);

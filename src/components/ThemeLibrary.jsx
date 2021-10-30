@@ -3,17 +3,12 @@ import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
 import { updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
-import { FALLBACK_THEME } from "../config";
 import ThemeBlock from "./ThemeBlock";
 import Button from "./Button";
+import Api from "api-client";
+import config, { FALLBACK_THEME } from "config";
 
-const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
+const { isElectron } = config;
 
 const Container = styled.div`
   display: grid;
@@ -70,16 +65,7 @@ const ThemeLibrary = ({ currentTheme, dispatch }) => {
   const hasThemes = Array.isArray(themes) && themes.length > 0;
 
   useEffect(() => {
-    if (ipc) {
-      ipc.once("musa:themes:response:getAll", (event, themes) => {
-        setThemes(themes);
-      });
-      ipc.send("musa:themes:request:getAll");
-    } else {
-      fetch(`${baseUrl}/themes`)
-        .then((r) => r.json())
-        .then(({ themes }) => setThemes(themes));
-    }
+    Api.getThemes().then(setThemes);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -88,15 +74,14 @@ const ThemeLibrary = ({ currentTheme, dispatch }) => {
     dispatch(updateSettings({ currentTheme: theme }));
   };
 
-  const removeTheme = () => {
-    if (ipc) {
-      ipc.once("musa:themes:response:remove", () => {
-        setThemes(themes.filter((t) => t.id !== currentTheme.id));
-        updateCurrentTheme(FALLBACK_THEME);
-        dispatch(updateSettings({ currentTheme: FALLBACK_THEME }));
-      });
-      ipc.send("musa:themes:request:remove", currentTheme.id);
-    }
+  const removeTheme = async () => {
+    const { id } = currentTheme;
+
+    await Api.removeTheme(id);
+
+    setThemes(themes.filter((t) => t.id !== id));
+    updateCurrentTheme(FALLBACK_THEME);
+    dispatch(updateSettings({ currentTheme: FALLBACK_THEME }));
   };
 
   return (
@@ -126,7 +111,7 @@ const ThemeLibrary = ({ currentTheme, dispatch }) => {
                 setCurrentTheme={() => {}}
               />
             </ThemeList2>
-            {hasThemes && ipc && (
+            {hasThemes && isElectron && (
               <RemoveThemeButton onClick={removeTheme} isSecondary>
                 Remove theme
               </RemoveThemeButton>
