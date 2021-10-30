@@ -315,7 +315,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
             onClick={toggleLibrary}
             ref={libraryButtonRef}
             isMacOs={isMacOs}
-            isActive={location.pathname === "/" && isLibraryVisible}
+            isActive={location.pathname === "/" && isLibraryVisible && isSmall}
             isSmall={isSmall}
           >
             <FontAwesomeIcon icon="bars" />
