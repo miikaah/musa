@@ -13,10 +13,11 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components/macro";
-import { FALLBACK_THEME } from "./config";
+import config, { FALLBACK_THEME } from "config";
 import { updateSettings } from "reducers/settings.reducer";
 import { setListingWithLabels } from "reducers/library.reducer";
 import { updateCurrentTheme, dispatchToast } from "./util";
+import Api from "api-client";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
 import Search from "views/Search";
@@ -25,13 +26,7 @@ import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
 import ProgressBar from "components/ProgressBar";
 
-const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
+const { isElectron } = config;
 
 const AppContainer = styled.div`
   text-align: left;
@@ -73,42 +68,28 @@ const App = ({ dispatch }) => {
         })
       );
     };
-    if (ipc) {
-      ipc.once("musa:settings:response:get", (event, settings) => {
-        update(settings);
-      });
-      ipc.send("musa:settings:request:get");
 
-      ipc.once("musa:ready", (event) => {
-        dispatchToast(
-          "Updating library",
-          `library-update-${Date.now()}`,
-          dispatch
-        );
-        ipc.send("musa:artists:request");
+    Api.getSettings()
+      .then(update)
+      .then(() => Api.onInit())
+      .then(() => {
+        if (isElectron) {
+          dispatchToast(
+            "Updating library",
+            `library-update-${Date.now()}`,
+            dispatch
+          );
+
+          Api.getArtists().then((artists) =>
+            dispatch(setListingWithLabels(artists))
+          );
+        }
       });
-      ipc.send("musa:onInit");
-    } else {
-      fetch(`${baseUrl}/state`)
-        .then((response) => response.json())
-        .then(update);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (ipc) {
-      ipc.on("musa:artists:response", (event, artists) => {
-        dispatch(setListingWithLabels(artists));
-      });
-      ipc.send("musa:artists:request");
-    } else {
-      fetch(`${baseUrl}/artists`)
-        .then((response) => response.json())
-        .then((artists) => {
-          dispatch(setListingWithLabels(artists));
-        });
-    }
+    Api.getArtists().then((artists) => dispatch(setListingWithLabels(artists)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

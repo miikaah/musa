@@ -2,14 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components/macro";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
+import config from "config";
+import Api from "api-client";
 
-const { REACT_APP_ENV } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
+const { isElectron } = config;
 
 const LibraryListContainer = styled.ul`
   margin: 0;
@@ -52,40 +48,23 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
   const [showAlbums, setShowAlbums] = useState(false);
   const [showSongs, setShowSongs] = useState(false);
 
-  const toggleAlbum = () => {
+  const toggleAlbum = async () => {
     if (albums.length < 1 && !showAlbums) {
-      if (ipc) {
-        ipc.once("musa:artist:response", (event, data) => {
-          setAlbums(data.albums);
-          setFiles(data.files);
-        });
-        ipc.send("musa:artist:request", item.id);
-      } else {
-        fetch(item.url)
-          .then((response) => response.json())
-          .then((data) => {
-            setAlbums(data.albums);
-            setFiles(data.files);
-          });
-      }
+      const identifier = isElectron ? item.id : item.url;
+      const artist = await Api.getArtistById(identifier);
+
+      setAlbums(artist.albums);
+      setFiles(artist.files);
     }
     setShowAlbums(!showAlbums);
   };
 
-  const toggleSongs = () => {
+  const toggleSongs = async () => {
     if (songs.length < 1 && !showSongs) {
-      if (ipc) {
-        ipc.once("musa:album:response", (event, data) => {
-          setSongs(data.files);
-        });
-        ipc.send("musa:album:request", item.id);
-      } else {
-        fetch(item.url)
-          .then((response) => response.json())
-          .then((data) => {
-            setSongs(data.files);
-          });
-      }
+      const identifier = isElectron ? item.id : item.url;
+      const album = await Api.getAlbumById(identifier);
+
+      setSongs(album.files);
     }
     setShowSongs(!showSongs);
   };

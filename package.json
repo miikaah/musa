@@ -4,12 +4,13 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "start": "env-cmd -f .env.server.local react-scripts start",
-    "start:electron": "env-cmd -f .env.electron.local craco start",
-    "build": "env-cmd -f .env.server.prod craco build",
-    "build:electron": "env-cmd -f .env.electron.prod craco build",
-    "test": "craco test",
-    "eject": "react-scripts eject",
+    "start": "npm run cac:server && env-cmd -f .env.server.local react-scripts start",
+    "start:electron": "npm run cac:electron && env-cmd -f .env.electron.local craco start",
+    "build": "npm run cac:server && env-cmd -f .env.server.prod craco build",
+    "build:electron": "npm run cac:electron && env-cmd -f .env.electron.prod craco build",
+    "cac:server": "node create-api-client.mjs server",
+    "cac:electron": "node create-api-client.mjs electron",
+    "test": "npm run cac:server && craco test",
     "precommit": "lint-staged"
   },
   "lint-staged": {

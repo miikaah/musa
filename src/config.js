@@ -1,3 +1,6 @@
+const { REACT_APP_ENV } = process.env;
+const isElectron = REACT_APP_ENV === "electron";
+
 export const FALLBACK_THEME = {
   bg: [33, 37, 43],
   primary: [117, 53, 151],
@@ -7,3 +10,9 @@ export const FALLBACK_THEME = {
   typographyPrimary: "#fbfbfb",
   typographySecondary: "#fbfbfb",
 };
+
+const config = {
+  isElectron,
+};
+
+export default config;

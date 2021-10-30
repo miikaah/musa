@@ -8,14 +8,7 @@ import styled from "styled-components/macro";
 import { updateCurrentTheme } from "../util";
 import { breakpoint } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
-
-const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
+import Api from "api-client";
 
 const Colors = {
   Bg: "#21252b",
@@ -218,70 +211,33 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       updateCurrentTheme(colors);
 
       if (coverTarget.src && colors) {
-        if (ipc) {
-          ipc.send("musa:themes:request:insert", coverTarget.src, colors);
+        Api.insertTheme({ id: coverTarget.src, colors }).then(({ id }) => {
           dispatch(
             updateSettings({
               currentTheme: {
-                id: coverTarget.src,
+                id,
                 colors,
               },
             })
           );
-        } else {
-          const themeId = coverTarget.src.split("/").pop();
-          fetch(`${baseUrl}/theme/${themeId}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ colors }),
-          });
-          dispatch(
-            updateSettings({
-              currentTheme: {
-                id: themeId,
-                colors,
-              },
-            })
-          );
-        }
+        });
       }
     };
 
-    const handleIpcGetThemeResponse = (coverTarget) => (ev, theme) => {
-      if (theme && theme.colors) {
+    const onLoadCover = async (event) => {
+      // Save to variable here, because the target is set to null in the event
+      // variable when it goes out of scope
+      const coverTarget = event.target;
+
+      const theme = await Api.getThemeById({ id: coverTarget.src });
+
+      if (theme?.colors) {
         updateCurrentTheme(theme.colors);
         dispatch(updateSettings({ currentTheme: theme }));
         return;
       }
 
       calculateTheme(coverTarget);
-    };
-
-    const onLoadCover = (event) => {
-      // Save to variable here, because the target is set to null in the event
-      // variable when it goes out of scope
-      const coverTarget = event.target;
-      if (ipc) {
-        ipc.once(
-          "musa:themes:response:get",
-          handleIpcGetThemeResponse(coverTarget)
-        );
-        ipc.send("musa:themes:request:get", coverTarget.src);
-      } else {
-        fetch(`${baseUrl}/theme/${coverTarget.src.split("/").pop()}`)
-          .then((response) => response.json())
-          .then((theme) => {
-            if (theme.colors) {
-              updateCurrentTheme(theme.colors);
-              dispatch(updateSettings({ currentTheme: theme }));
-              return;
-            }
-
-            calculateTheme(coverTarget);
-          });
-      }
     };
 
     coverRef.current.addEventListener("load", onLoadCover);
