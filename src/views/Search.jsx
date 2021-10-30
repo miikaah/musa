@@ -102,6 +102,14 @@ const Search = ({ query, artistAlbums, artistSongs, dispatch }) => {
         setAudios(result.audios);
       });
       ipc.send("musa:find:request:random");
+    } else {
+      fetch(`${baseUrl}/find-random`)
+        .then((response) => response.json())
+        .then((result) => {
+          setArtists(result.artists);
+          setAlbums(result.albums);
+          setAudios(result.audios);
+        });
     }
   };
 
