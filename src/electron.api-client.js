@@ -1,4 +1,14 @@
-const ipc = window.require("electron").ipcRenderer;
+let ipc;
+if (window.require) {
+  ipc = window.require("electron").ipcRenderer;
+} else {
+  // For dev
+  ipc = {
+    once: () => {},
+    on: () => {},
+    send: () => {},
+  };
+}
 
 const getSettings = () => {
   return new Promise((resolve, reject) => {

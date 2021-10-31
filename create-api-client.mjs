@@ -4,7 +4,12 @@ import path from "path";
 const [, , type] = process.argv;
 
 const start = async () => {
-  if (type === "server") {
+  if (type === "dev") {
+    await fs.copyFile(
+      path.join("src", "dev.api-client.js"),
+      path.join("src", "api-client.js")
+    );
+  } else if (type === "server") {
     await fs.copyFile(
       path.join("src", "server.api-client.js"),
       path.join("src", "api-client.js")
