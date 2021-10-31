@@ -15,6 +15,8 @@ import Api from "api-client";
 const { isElectron } = config;
 
 const SearchContainer = styled.div`
+  padding-bottom: 60px;
+
   input {
     width: 100%;
 
@@ -125,13 +127,13 @@ const Search = ({ query, artistAlbums, artistSongs, dispatch }) => {
         </SearchBlock>
         <SearchBlock>
           <h3>Albums</h3>
-          <SearchBlockWrapper height={240}>
+          <SearchBlockWrapper height={200}>
             {renderSearchResults(albums, "albums")}
           </SearchBlockWrapper>
         </SearchBlock>
         <SearchBlock>
           <h3>Songs</h3>
-          <SearchBlockWrapper height={isElectron ? 306 : 240}>
+          <SearchBlockWrapper height={300}>
             {renderSearchResults(audios, "songs")}
           </SearchBlockWrapper>
         </SearchBlock>
