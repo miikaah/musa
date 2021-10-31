@@ -9,6 +9,7 @@ import { updateCurrentTheme } from "../util";
 import { breakpoint } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
 import Api from "api-client";
+import { fadeIn } from "animations";
 
 const Colors = {
   Bg: "#21252b",
@@ -35,6 +36,19 @@ const Image = styled.img`
   height: auto;
   margin: 0 auto;
   width: 100%;
+  animation: ${fadeIn} 0.1666s;
+
+  @media (max-width: ${breakpoint.md + 219}px) {
+    min-height: 40vw;
+  }
+
+  @media (min-width: ${breakpoint.md + 219}px) {
+    min-height: 40vw;
+  }
+
+  @media (min-width: ${breakpoint.lg}px) {
+    min-height: 30vw;
+  }
 `;
 
 const Info = styled.div`

@@ -1,19 +1,52 @@
 import React, { useState } from "react";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
 import config from "config";
 import Api from "api-client";
+import { expandHeight, contractHeight, fadeOut } from "animations";
 
 const { isElectron } = config;
 
-const LibraryListContainer = styled.ul`
+const getTiming = (len) => {
+  if (len < 2) {
+    return "0.05s";
+  } else if (len < 7) {
+    return "0.1666s";
+  } else if (len < 10) {
+    return "0.2666s";
+  } else {
+    return "0.3s";
+  }
+};
+
+const Container = styled.ul`
   margin: 0;
   padding: 0;
   list-style-type: none;
   text-align: left;
   padding-left: ${({ isRoot }) => (isRoot ? 0 : 12)}px;
   padding-right: 12px;
+  ${({ isRoot, expand, albumsLen, filesLen }) => {
+    if (isRoot && expand) {
+      return css`
+        overflow: hidden;
+        animation: ${expandHeight(albumsLen, filesLen)} ${getTiming(albumsLen)}
+          ease-out;
+      `;
+    }
+    if (isRoot && !expand) {
+      return css`
+        overflow: hidden;
+        animation: ${contractHeight(albumsLen, filesLen)}
+          ${getTiming(albumsLen)} ease-in;
+
+        > ul {
+          animation: ${fadeOut} ${getTiming(albumsLen)};
+        }
+      `;
+    }
+  }}
 
   > li:nth-child(2) {
     padding-top: 4px;
@@ -29,7 +62,7 @@ const LibraryListContainer = styled.ul`
   }
 `;
 
-const LibraryListFolder = styled.li`
+const Folder = styled.li`
   cursor: pointer;
   padding: 2px 12px;
   letter-spacing: 0.666px;
@@ -46,6 +79,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
   const [songs, setSongs] = useState([]);
   const [files, setFiles] = useState([]);
   const [showAlbums, setShowAlbums] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(false);
   const [showSongs, setShowSongs] = useState(false);
 
   const toggleAlbum = async () => {
@@ -56,7 +90,17 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
       setAlbums(artist.albums);
       setFiles(artist.files);
     }
-    setShowAlbums(!showAlbums);
+
+    if (!showAlbums) {
+      setShowAlbums(true);
+      setShowAnimation(true);
+    } else {
+      setShowAnimation(false);
+      setTimeout(
+        () => setShowAlbums(false),
+        Number(getTiming(albums.length).replace("s", "")) * 1000
+      );
+    }
   };
 
   const toggleSongs = async () => {
@@ -82,13 +126,17 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
     isAlbum ? <AlbumCover item={item} /> : <>{item.name || "Unknown title"}</>;
 
   const renderArtistsAndAlbums = () => (
-    <LibraryListContainer isRoot={isArtist} draggable onDragStart={onDragStart}>
-      <LibraryListFolder
-        key={item.id}
-        onClick={isArtist ? toggleAlbum : toggleSongs}
-      >
+    <Container
+      isRoot={isArtist}
+      draggable
+      onDragStart={onDragStart}
+      expand={showAnimation}
+      albumsLen={albums.length}
+      filesLen={files.length}
+    >
+      <Folder key={item.id} onClick={isArtist ? toggleAlbum : toggleSongs}>
         {renderFolderName()}
-      </LibraryListFolder>
+      </Folder>
       {showAlbums &&
         Array.isArray(albums) &&
         albums.length > 0 &&
@@ -111,7 +159,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
         files.map((song, i) => (
           <LibraryItem key={`${song.name}-${i}`} item={song} />
         ))}
-    </LibraryListContainer>
+    </Container>
   );
 
   if (isArtist || isAlbum) {

@@ -5,7 +5,7 @@ import styled from "styled-components/macro";
 import { listOverflow } from "../common.styles";
 import { breakpoint } from "../breakpoints";
 
-const LibraryContainer = styled.div`
+const Container = styled.div`
   text-align: left;
   border: 0 solid var(--color-secondary-highlight);
   border-left-width: 4px;
@@ -24,7 +24,7 @@ const LibraryContainer = styled.div`
   ${listOverflow}
 `;
 
-const LibraryLabel = styled.div`
+const Label = styled.div`
   text-align: right;
   padding: 20px;
 
@@ -48,19 +48,19 @@ const Library = ({ dispatch, forwardRef, isVisible, listingWithLabels }) => {
   }, []);
 
   return (
-    <LibraryContainer ref={forwardRef} isVisible={isVisible} isSmall={isSmall}>
+    <Container ref={forwardRef} isVisible={isVisible} isSmall={isSmall}>
       {listingWithLabels &&
         Object.entries(listingWithLabels).map(([key, artist]) => (
           <div key={key}>
-            <LibraryLabel>
+            <Label>
               <span>{key}</span>
-            </LibraryLabel>
+            </Label>
             {artist.map((item, index) => (
               <LibraryList key={item.id} item={item} isArtist />
             ))}
           </div>
         ))}
-    </LibraryContainer>
+    </Container>
   );
 };
 
