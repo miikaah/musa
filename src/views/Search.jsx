@@ -9,14 +9,10 @@ import Album from "components/Album";
 import Artist from "components/Artist";
 import BasePage from "components/BasePage";
 import Button from "components/Button";
+import config from "config";
+import Api from "api-client";
 
-const { REACT_APP_ENV, REACT_APP_API_BASE_URL: baseUrl } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
+const { isElectron } = config;
 
 const SearchContainer = styled.div`
   input {
@@ -70,47 +66,25 @@ const Search = ({ query, artistAlbums, artistSongs, dispatch }) => {
   const [albums, setAlbums] = useState([]);
   const [audios, setAudios] = useState([]);
 
-  const queryToBackend = useThrottle(query, ipc ? 0 : 16);
+  const queryToBackend = useThrottle(query, isElectron ? 0 : 16);
 
   useEffect(() => {
-    if (ipc) {
-      ipc.once("musa:find:response", (event, result) => {
+    if (queryToBackend) {
+      Api.find(queryToBackend).then((result) => {
         setArtists(result.artists);
         setAlbums(result.albums);
         setAudios(result.audios);
       });
-      ipc.send("musa:find:request", queryToBackend);
-    } else {
-      if (queryToBackend) {
-        fetch(`${baseUrl}/find/${queryToBackend}`)
-          .then((response) => response.json())
-          .then((result) => {
-            setArtists(result.artists);
-            setAlbums(result.albums);
-            setAudios(result.audios);
-          });
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryToBackend]);
 
   const findRandom = () => {
-    if (ipc) {
-      ipc.once("musa:find:response:random", (event, result) => {
-        setArtists(result.artists);
-        setAlbums(result.albums);
-        setAudios(result.audios);
-      });
-      ipc.send("musa:find:request:random");
-    } else {
-      fetch(`${baseUrl}/find-random`)
-        .then((response) => response.json())
-        .then((result) => {
-          setArtists(result.artists);
-          setAlbums(result.albums);
-          setAudios(result.audios);
-        });
-    }
+    Api.findRandom().then((result) => {
+      setArtists(result.artists);
+      setAlbums(result.albums);
+      setAudios(result.audios);
+    });
   };
 
   const renderSearchResults = (results, type) => {
@@ -136,7 +110,7 @@ const Search = ({ query, artistAlbums, artistSongs, dispatch }) => {
           <input
             autoFocus
             value={query}
-            placeholder="...Don't type too fast"
+            placeholder="...Search"
             onChange={(e) => dispatch(setQuery(e.target.value))}
           />
           <RandomButton isPrimary isSmall onClick={findRandom}>

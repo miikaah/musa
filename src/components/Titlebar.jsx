@@ -7,14 +7,10 @@ import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
 import Library from "components/LibraryV2";
 import { breakpoint } from "../breakpoints";
+import config from "config";
+import Api from "api-client";
 
-const { REACT_APP_ENV } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
+const { isElectron } = config;
 
 const Container = styled.div`
   display: flex;
@@ -169,11 +165,8 @@ const Titlebar = ({ location, history, currentLocation }) => {
   );
 
   useEffect(() => {
-    if (ipc) {
-      ipc.once("musa:window:platform:response", (event, platform) => {
-        setIsMacOs(platform === "darwin");
-      });
-      ipc.send("musa:window:platform:request");
+    if (isElectron) {
+      Api.getPlatform().then((platform) => setIsMacOs(platform === "darwin"));
     }
   });
 
@@ -282,30 +275,29 @@ const Titlebar = ({ location, history, currentLocation }) => {
   };
 
   const minimize = () => {
-    ipc.send("musa:window:minimize");
+    Api.minimizeWindow();
   };
 
   const maximize = () => {
-    ipc.send("musa:window:maximize");
+    Api.maximizeWindow();
   };
 
   const unmaximize = () => {
-    ipc.send("musa:window:unmaximize");
+    Api.unmaximizeWindow();
   };
 
-  const maxOrUnMax = () => {
-    ipc.once("musa:window:isMaximized:response", (event, isMaximized) => {
-      if (isMaximized) {
-        unmaximize();
-      } else {
-        maximize();
-      }
-    });
-    ipc.send("musa:window:isMaximized:request");
+  const maxOrUnMax = async () => {
+    const isMaximized = await Api.isWindowMaximized();
+
+    if (isMaximized) {
+      unmaximize();
+    } else {
+      maximize();
+    }
   };
 
   const close = () => {
-    ipc.send("musa:window:close");
+    Api.closeWindow();
   };
 
   return (

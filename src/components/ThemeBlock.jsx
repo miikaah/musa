@@ -23,8 +23,7 @@ const ThemeBlock = ({ theme, setCurrentTheme, hasMargin = true }) => {
     return null;
   }
 
-  const { colors: themeColors, id } = theme;
-  const colors = themeColors || theme;
+  const { colors, filename } = theme;
 
   if (!colors) {
     return null;
@@ -32,7 +31,7 @@ const ThemeBlock = ({ theme, setCurrentTheme, hasMargin = true }) => {
 
   return (
     <Container
-      title={id ? decodeURIComponent(id) : ""}
+      title={filename || ""}
       rgb={colors.bg}
       onClick={() => setCurrentTheme(theme)}
       hasMargin={hasMargin}

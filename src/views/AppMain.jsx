@@ -7,14 +7,10 @@ import { setScanProps } from "reducers/library.reducer";
 import Playlist from "components/PlaylistV4";
 import Cover from "components/Cover";
 import { dispatchToast } from "../util";
+import config from "config";
+import Api from "api-client";
 
-const { REACT_APP_ENV } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
+const { isElectron } = config;
 
 const Container = styled.div`
   padding: 0;
@@ -24,22 +20,20 @@ const Container = styled.div`
   margin-top: var(--titlebar-height);
 `;
 
-const AppMain = ({ isLarge, dispatch, isInit, musicLibraryPath }) => {
+const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
   useEffect(() => {
-    if (ipc) {
-      ipc.on("musa:scan:start", (event, scanLength, scanColor) => {
-        dispatch(setScanProps({ scanLength, scanColor }));
-      });
-      ipc.on("musa:scan:update", (event, scannedLength) => {
-        dispatch(setScanProps({ scannedLength }));
-      });
-      ipc.on("musa:scan:end", () => {
-        dispatch(setScanProps({ reset: true }));
-      });
-      ipc.on("musa:scan:complete", (event) => {
-        dispatchToast("Update complete", `update-complete`, dispatch);
-      });
-    }
+    Api.addScanStartListener(({ scanLength, scanColor }) => {
+      dispatch(setScanProps({ scanLength, scanColor }));
+    });
+    Api.addScanUpdateListener(({ scannedLength }) => {
+      dispatch(setScanProps({ scannedLength }));
+    });
+    Api.addScanEndListener(() => {
+      dispatch(setScanProps({ reset: true }));
+    });
+    Api.addScanCompleteListener(() => {
+      dispatchToast("Update complete", "update-complete", dispatch);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,84 +44,27 @@ const AppMain = ({ isLarge, dispatch, isInit, musicLibraryPath }) => {
     const { isArtist, isAlbum, item } = data;
 
     if (isArtist) {
-      if (ipc) {
-        ipc.once("musa:artistAlbums:response", (event, artist) => {
-          const songs = artist.albums
-            .map((a) => a.files.map((f) => ({ ...f, cover: a.coverUrl })))
-            .flat(Infinity);
+      const artist = await Api.getArtistAlbums(item.id);
+      const songs = artist.albums
+        .map((a) => a.files.map((f) => ({ ...f, cover: a.coverUrl })))
+        .flat(Infinity);
 
-          dispatch(pasteToPlaylist([...songs, ...artist.files]));
-        });
-        ipc.send("musa:artistAlbums:request", item.id);
+      dispatch(pasteToPlaylist([...songs, ...artist.files]));
 
-        return;
-      } else {
-        return fetch(item.url)
-          .then((response) => response.json())
-          .then(async (artist) => {
-            const albumUrls = artist.albums.map((a) => fetch(a.url));
-            const responses = await Promise.all(albumUrls);
-            const albums = [];
-
-            for (const r of responses) {
-              albums.push(await r.json());
-            }
-
-            const songs = albums
-              .map((a) => a.files.map((f) => ({ ...f, cover: a.coverUrl })))
-              .flat(Infinity);
-
-            const fileUrls = artist.files.map((f) => fetch(f.url));
-            const fileResponses = await Promise.all(fileUrls);
-            const files = [];
-
-            for (const r of fileResponses) {
-              files.push(await r.json());
-            }
-
-            dispatch(pasteToPlaylist([...songs, ...files]));
-          });
-      }
+      return;
     } else if (isAlbum) {
-      if (ipc) {
-        ipc.once("musa:album:response:AppMain", (event, album) => {
-          const mappedFiles = album.files.map((f) => ({
-            ...f,
-            cover: album.coverUrl,
-          }));
+      const album = await Api.getAlbumById(isElectron ? item.id : item.url);
+      const mappedFiles = album.files.map((f) => ({
+        ...f,
+        cover: album.coverUrl,
+      }));
 
-          dispatch(pasteToPlaylist(mappedFiles));
-        });
-        ipc.send("musa:album:request:AppMain", item.id);
+      dispatch(pasteToPlaylist(mappedFiles));
 
-        return;
-      } else {
-        return fetch(item.url)
-          .then((response) => response.json())
-          .then((album) => {
-            const mappedFiles = album.files.map((f) => ({
-              ...f,
-              cover: album.coverUrl,
-            }));
-
-            dispatch(pasteToPlaylist(mappedFiles));
-          });
-      }
+      return;
     }
 
-    if (ipc) {
-      ipc.once("musa:audio:response", (event, audio) => {
-        dispatch(
-          addToPlaylist({
-            ...audio,
-            cover: audio.coverUrl,
-          })
-        );
-      });
-      ipc.send("musa:audio:request", item.id);
-    } else {
-      dispatch(addToPlaylist(item));
-    }
+    dispatch(addToPlaylist(item));
   };
 
   if (isInit && isElectron && !musicLibraryPath) {

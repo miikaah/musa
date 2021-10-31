@@ -11,7 +11,9 @@ export const VOLUME_DEFAULT = 50;
 
 const initialState = {
   isInit: false,
-  currentTheme: FALLBACK_THEME,
+  currentTheme: {
+    colors: FALLBACK_THEME,
+  },
   key: "state",
   replaygainType: REPLAYGAIN_TYPE.Album,
   volume: VOLUME_DEFAULT,

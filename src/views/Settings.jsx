@@ -7,14 +7,10 @@ import ReplaygainSetting from "components/ReplaygainSetting";
 import MusicLibrarySetting from "components/MusicLibrarySetting";
 import Button from "components/Button";
 import BasePage from "components/BasePage";
+import config from "config";
+import Api from "api-client";
 
-const { REACT_APP_ENV } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
-
-let ipc;
-if (isElectron && window.require) {
-  ipc = window.require("electron").ipcRenderer;
-}
+const { isElectron } = config;
 
 const FirstRow = styled.div`
   display: grid;
@@ -33,9 +29,7 @@ const ActionButton = styled(Button)`
 
 const Settings = ({ musicLibraryPath }) => {
   const runInitialScan = () => {
-    if (ipc) {
-      ipc.send("musa:scan");
-    }
+    Api.refreshLibrary();
   };
 
   return (

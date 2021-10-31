@@ -6,9 +6,7 @@ import { updateSettings } from "reducers/settings.reducer";
 import ThemeBlock from "./ThemeBlock";
 import Button from "./Button";
 import Api from "api-client";
-import config, { FALLBACK_THEME } from "config";
-
-const { isElectron } = config;
+import { FALLBACK_THEME } from "config";
 
 const Container = styled.div`
   display: grid;
@@ -77,11 +75,17 @@ const ThemeLibrary = ({ currentTheme, dispatch }) => {
   const removeTheme = async () => {
     const { id } = currentTheme;
 
-    await Api.removeTheme(id);
+    await Api.removeTheme({ id });
 
     setThemes(themes.filter((t) => t.id !== id));
     updateCurrentTheme(FALLBACK_THEME);
-    dispatch(updateSettings({ currentTheme: FALLBACK_THEME }));
+    dispatch(
+      updateSettings({
+        currentTheme: {
+          colors: FALLBACK_THEME,
+        },
+      })
+    );
   };
 
   return (
@@ -111,7 +115,7 @@ const ThemeLibrary = ({ currentTheme, dispatch }) => {
                 setCurrentTheme={() => {}}
               />
             </ThemeList2>
-            {hasThemes && isElectron && (
+            {hasThemes && (
               <RemoveThemeButton onClick={removeTheme} isSecondary>
                 Remove theme
               </RemoveThemeButton>

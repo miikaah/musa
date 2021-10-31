@@ -4,7 +4,11 @@ const defaultHeaders = {
   "Content-Type": "application/json",
 };
 
-const put = async ({ path, body, headers = {} }) => {
+const get = async (path) => {
+  return fetch(`${baseUrl}${path}`).then((response) => response.json());
+};
+
+const put = async (path, { body, headers = {} }) => {
   return fetch(`${baseUrl}${path}`, {
     method: "PUT",
     headers: {
@@ -12,16 +16,21 @@ const put = async ({ path, body, headers = {} }) => {
       ...headers,
     },
     body: JSON.stringify(body),
+  }).then((response) => response.json());
+};
+
+const del = async (path) => {
+  return fetch(`${baseUrl}${path}`, {
+    method: "DELETE",
   });
 };
 
 const getSettings = async () => {
-  return fetch(`${baseUrl}/state`).then((response) => response.json());
+  return get("/state");
 };
 
 const insertSettings = async (settings) => {
-  return put({
-    path: "/state",
+  return put("/state", {
     body: {
       settings: {
         ...settings,
@@ -32,11 +41,15 @@ const insertSettings = async (settings) => {
 };
 
 const getArtists = async () => {
-  return fetch(`${baseUrl}/artists`).then((response) => response.json());
+  return get("/artists");
 };
 
 const getArtistById = async (url) => {
   return fetch(url).then((response) => response.json());
+};
+
+const getArtistAlbums = async (id) => {
+  return get(`/artist-albums/${id}`);
 };
 
 const getAlbumById = async (url) => {
@@ -44,24 +57,56 @@ const getAlbumById = async (url) => {
 };
 
 const getThemes = async () => {
-  return fetch(`${baseUrl}/themes`).then((response) => response.json());
-};
-
-const insertTheme = async ({ id, colors }) => {
-  return put({ path: `/theme/${id.split("/").pop()}`, body: { colors } });
+  return get("/themes");
 };
 
 const getThemeById = async ({ id }) => {
-  return fetch(`${baseUrl}/theme/${id.split("/").pop()}`).then((response) =>
-    response.json()
-  );
+  return get(`/theme/${id.split("/").pop()}`);
 };
 
-const removeTheme = async ({ id }) => {};
+const insertTheme = async ({ id, colors }) => {
+  return put(`/theme/${id.split("/").pop()}`, { body: { colors } });
+};
+
+const removeTheme = async ({ id }) => {
+  return del(`/theme/${id}`);
+};
+
+const find = async (queryToBackend) => {
+  return get(`/find/${queryToBackend}`);
+};
+
+const findRandom = async () => {
+  return get("/find-random");
+};
+
+// Electron specific Apis
 
 const addMusicLibraryPath = async () => {};
 
+const getPlatform = async () => {};
+
+const minimizeWindow = () => {};
+
+const maximizeWindow = () => {};
+
+const unmaximizeWindow = () => {};
+
+const isWindowMaximized = async () => {};
+
+const closeWindow = () => {};
+
+const refreshLibrary = () => {};
+
 const onInit = async () => {};
+
+const addScanStartListener = (callback) => {};
+
+const addScanUpdateListener = (callback) => {};
+
+const addScanEndListener = (callback) => {};
+
+const addScanCompleteListener = (callback) => {};
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -69,11 +114,25 @@ export default {
   insertSettings,
   getArtists,
   getArtistById,
+  getArtistAlbums,
   getAlbumById,
   getThemes,
-  insertTheme,
   getThemeById,
+  insertTheme,
   removeTheme,
+  find,
+  findRandom,
   addMusicLibraryPath,
+  getPlatform,
+  minimizeWindow,
+  maximizeWindow,
+  unmaximizeWindow,
+  isWindowMaximized,
+  closeWindow,
+  refreshLibrary,
   onInit,
+  addScanStartListener,
+  addScanUpdateListener,
+  addScanEndListener,
+  addScanCompleteListener,
 };

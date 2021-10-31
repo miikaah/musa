@@ -211,13 +211,10 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       updateCurrentTheme(colors);
 
       if (coverTarget.src && colors) {
-        Api.insertTheme({ id: coverTarget.src, colors }).then(({ id }) => {
+        Api.insertTheme({ id: coverTarget.src, colors }).then((theme) => {
           dispatch(
             updateSettings({
-              currentTheme: {
-                id,
-                colors,
-              },
+              currentTheme: theme,
             })
           );
         });
