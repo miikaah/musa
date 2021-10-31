@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-import { setQuery } from "reducers/library.reducer";
+import { setQuery, setSearchResults } from "reducers/library.reducer";
 import styled from "styled-components/macro";
-import { useThrottle } from "hooks";
+import { useDebounce } from "hooks";
 import Song from "components/Song";
 import Album from "components/Album";
 import Artist from "components/Artist";
@@ -63,19 +63,13 @@ const RandomButton = styled(Button)`
   align-self: center;
 `;
 
-const Search = ({ query, artistAlbums, artistSongs, dispatch }) => {
-  const [artists, setArtists] = useState([]);
-  const [albums, setAlbums] = useState([]);
-  const [audios, setAudios] = useState([]);
-
-  const queryToBackend = useThrottle(query, isElectron ? 0 : 16);
+const Search = ({ query, artists, albums, audios, dispatch }) => {
+  const queryToBackend = useDebounce(query, isElectron ? 0 : 16);
 
   useEffect(() => {
     if (queryToBackend) {
       Api.find(queryToBackend).then((result) => {
-        setArtists(result.artists);
-        setAlbums(result.albums);
-        setAudios(result.audios);
+        dispatch(setSearchResults(result));
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,26 +77,9 @@ const Search = ({ query, artistAlbums, artistSongs, dispatch }) => {
 
   const findRandom = () => {
     Api.findRandom().then((result) => {
-      setArtists(result.artists);
-      setAlbums(result.albums);
-      setAudios(result.audios);
+      dispatch(setQuery(""));
+      dispatch(setSearchResults(result));
     });
-  };
-
-  const renderSearchResults = (results, type) => {
-    switch (type) {
-      case "artists": {
-        return results.map((r, i) => <Artist key={i} item={r} />);
-      }
-      case "albums": {
-        return results.map((r, i) => <Album key={i} item={r} />);
-      }
-      case "songs": {
-        return results.map((r, i) => <Song key={i} item={r} />);
-      }
-      default:
-        return null;
-    }
   };
 
   return (
@@ -122,19 +99,25 @@ const Search = ({ query, artistAlbums, artistSongs, dispatch }) => {
         <SearchBlock>
           <h3>Artists</h3>
           <SearchBlockWrapper height={43}>
-            {renderSearchResults(artists, "artists")}
+            {artists.map((r, i) => (
+              <Artist key={i} item={r} />
+            ))}
           </SearchBlockWrapper>
         </SearchBlock>
         <SearchBlock>
           <h3>Albums</h3>
           <SearchBlockWrapper height={200}>
-            {renderSearchResults(albums, "albums")}
+            {albums.map((r, i) => (
+              <Album key={i} item={r} />
+            ))}
           </SearchBlockWrapper>
         </SearchBlock>
         <SearchBlock>
           <h3>Songs</h3>
           <SearchBlockWrapper height={300}>
-            {renderSearchResults(audios, "songs")}
+            {audios.map((r, i) => (
+              <Song key={i} item={r} />
+            ))}
           </SearchBlockWrapper>
         </SearchBlock>
       </SearchContainer>
@@ -146,6 +129,9 @@ export default withRouter(
   connect(
     (state) => ({
       query: state.library.query,
+      artists: state.library.searchArtists,
+      albums: state.library.searchAlbums,
+      audios: state.library.searchAudios,
     }),
     (dispatch) => ({ dispatch })
   )(Search)

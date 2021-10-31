@@ -24,6 +24,12 @@ export const setQuery = (query) => ({
   query,
 });
 
+export const SET_SEARCH_RESULTS = "MUSA/LIBRARY/SET_SEARCH_RESULTS";
+export const setSearchResults = (result) => ({
+  type: SET_SEARCH_RESULTS,
+  result,
+});
+
 const scanColor = {
   RED: "#f00",
   YELLOW: "#ff0",
@@ -31,14 +37,14 @@ const scanColor = {
 };
 
 const initialState = {
-  listing: [],
   listingWithLabels: [],
   scanLength: -1,
   scannedLength: 0,
   scanColor: scanColor.RED,
   query: "",
-  albums: [],
-  songs: [],
+  searchArtists: [],
+  searchAlbums: [],
+  searchAudios: [],
 };
 
 const library = (state = initialState, action) => {
@@ -68,6 +74,14 @@ const library = (state = initialState, action) => {
       return {
         ...state,
         query: action.query,
+      };
+    }
+    case SET_SEARCH_RESULTS: {
+      return {
+        ...state,
+        searchArtists: action.result.artists,
+        searchAlbums: action.result.albums,
+        searchAudios: action.result.audios,
       };
     }
     default:

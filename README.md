@@ -1,6 +1,6 @@
 # The app
 
-Musa is a user interface for musa-electron made with Create React App.
+Musa is a user interface for musa-electron and musa-server made with Create React App.
 It is an exploration into how to create a cross-platform music player
 utilising Electron and React.
 
@@ -15,7 +15,6 @@ utilising Electron and React.
 ### fix
 
 - fix: Do not allow duplicate indices in random find
-- fix: Do not allow empty string to nullify random find state in Search when navigating from and back to Search
 - fix: Make cover not jump
 
 #### Cross platform
