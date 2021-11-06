@@ -34,11 +34,12 @@ const Artist = ({ item: artist, dispatch }) => {
     return null;
   }
 
-  const addAlbumSongsToPlaylist = () => {
-    artist.albums.forEach((album) => {
-      const msg = `Added ${album.name} to playlist`;
-      const key = `${album.name}-${Date.now()}`;
+  const title = artist.name;
 
+  const addAlbumSongsToPlaylist = () => {
+    const albumsLen = artist.albums.length;
+
+    artist.albums.forEach((album) => {
       dispatch(
         pasteToPlaylist(
           album.files.map((s) => ({
@@ -47,13 +48,21 @@ const Artist = ({ item: artist, dispatch }) => {
           }))
         )
       );
-      dispatchToast(msg, key, dispatch);
     });
+
+    if (artist.files.length > 0) {
+      dispatch(pasteToPlaylist(artist.files));
+    }
+
+    const msg = `Added ${title} (${albumsLen} albums) to playlist`;
+    const key = `${title}-${Date.now()}`;
+
+    dispatchToast(msg, key, dispatch);
   };
 
   return (
     <ArtistContainer onClick={addAlbumSongsToPlaylist}>
-      <ArtistName title={artist.name}>{artist.name}</ArtistName>
+      <ArtistName title={title}>{title}</ArtistName>
     </ArtistContainer>
   );
 };
