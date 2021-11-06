@@ -27,7 +27,7 @@ export const expandHeight = (albumsLen, filesLen) => keyframes`
   }
 `;
 
-export const expandHeightFiles = (filesLen) => filesLen * 17;
+export const expandHeightFiles = (filesLen) => 100 + filesLen * 17;
 
 export const expandHeightAlbum = (songsLen) => keyframes`
   from {

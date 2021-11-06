@@ -68,7 +68,7 @@ const Container = styled.ul`
         return css`
           overflow: hidden;
           animation: ${contractHeight(albumsLen, filesLen)}
-            ${getContractTiming(albumsLen)} ease-in;
+            ${getContractTiming(albumsLen)} ease;
 
           > ul {
             animation: ${fadeOut} ${getContractTiming(albumsLen)};
@@ -77,7 +77,7 @@ const Container = styled.ul`
       } else {
         return css`
           overflow: hidden;
-          animation: ${contractHeightAlbum(songsLen)} 0.1666s ease-in;
+          animation: ${contractHeightAlbum(songsLen)} 0.1666s ease;
 
           > ul,
           li:not(:first-of-type) {
