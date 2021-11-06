@@ -3,30 +3,35 @@ import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components/macro";
 
 const fade = keyframes`
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 `;
 
 const ToasterContainer = styled.div`
   position: absolute;
-  bottom: 30px;
+  bottom: 90px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   flex-direction: column;
   z-index: 3;
   margin-top: 0;
   pointer-events: none;
   width: 100vw;
-  height: 200px;
+  height: 50vh;
 `;
 
 const ToastContainer = styled.div`
-  background-color: var(--color-primary-highlight);
-  min-width: 30%;
-  max-width: 40%;
+  background: var(--color-primary-highlight);
+  min-width: 360px;
+  max-width: 360px;
   margin: 4px auto;
-  border-radius: 20px;
-  animation: ${fade} 2.5s ease-in-out 1s forwards;
+  border-radius: 40px;
+  border: 1px solid var(--color-primary-highlight);
+  animation: ${fade} 1.5s ease-out 1s forwards;
 `;
 
 const Toast = styled.div`
@@ -35,15 +40,17 @@ const Toast = styled.div`
   text-align: center;
 `;
 
-const Toaster = ({ messages }) => (
-  <ToasterContainer>
-    {Array.from(messages.values()).map((message, i) => (
-      <ToastContainer key={i}>
-        <Toast>{message.msg}</Toast>
-      </ToastContainer>
-    ))}
-  </ToasterContainer>
-);
+const Toaster = ({ messages }) => {
+  return (
+    <ToasterContainer>
+      {Object.entries(messages).map(([key, message]) => (
+        <ToastContainer key={key}>
+          <Toast>{message}</Toast>
+        </ToastContainer>
+      ))}
+    </ToasterContainer>
+  );
+};
 
 export default connect(
   (state) => ({

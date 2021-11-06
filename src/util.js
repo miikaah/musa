@@ -1,8 +1,4 @@
-import {
-  addToast,
-  animateToast,
-  removeToast,
-} from "./reducers/toaster.reducer";
+import { addToast, removeToast } from "./reducers/toaster.reducer";
 
 export const KEYS = {
   Backspace: 8,
@@ -103,8 +99,7 @@ export function updateCurrentTheme(colors) {
 
 export function dispatchToast(msg, key, dispatch) {
   dispatch(addToast(msg, key));
-  setTimeout(() => dispatch(animateToast(key)), 1000);
-  setTimeout(() => dispatch(removeToast(key)), 3000);
+  setTimeout(() => dispatch(removeToast(key)), 3050);
 }
 
 export const isCtrlDown = (event) => event.ctrlKey || event.metaKey;
