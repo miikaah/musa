@@ -8,13 +8,29 @@ import { expandHeight, contractHeight, fadeOut } from "animations";
 
 const { isElectron } = config;
 
-const getTiming = (len) => {
+const getExpandTiming = (len) => {
   if (len < 2) {
-    return "0.05s";
+    return "0.1s";
   } else if (len < 7) {
     return "0.1666s";
   } else if (len < 10) {
     return "0.2666s";
+  } else if (len < 14) {
+    return "0.3666s";
+  } else if (len < 18) {
+    return "0.4666s";
+  } else if (len < 22) {
+    return "0.5666s";
+  } else {
+    return "0.6s";
+  }
+};
+
+const getContractTiming = (len) => {
+  if (len < 2) {
+    return "0.1666s";
+  } else if (len < 7) {
+    return "0.2s";
   } else {
     return "0.3s";
   }
@@ -31,18 +47,18 @@ const Container = styled.ul`
     if (isRoot && expand) {
       return css`
         overflow: hidden;
-        animation: ${expandHeight(albumsLen, filesLen)} ${getTiming(albumsLen)}
-          ease-out;
+        animation: ${expandHeight(albumsLen, filesLen)}
+          ${getExpandTiming(albumsLen)} ease-out;
       `;
     }
     if (isRoot && !expand) {
       return css`
         overflow: hidden;
         animation: ${contractHeight(albumsLen, filesLen)}
-          ${getTiming(albumsLen)} ease-in;
+          ${getContractTiming(albumsLen)} ease-in;
 
         > ul {
-          animation: ${fadeOut} ${getTiming(albumsLen)};
+          animation: ${fadeOut} ${getContractTiming(albumsLen)};
         }
       `;
     }
@@ -98,7 +114,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
       setShowAnimation(false);
       setTimeout(
         () => setShowAlbums(false),
-        Number(getTiming(albums.length).replace("s", "")) * 1000
+        Number(getContractTiming(albums.length).replace("s", "")) * 1000 - 100
       );
     }
   };
