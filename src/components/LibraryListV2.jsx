@@ -4,7 +4,13 @@ import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
 import config from "config";
 import Api from "api-client";
-import { expandHeight, contractHeight, fadeOut } from "animations";
+import {
+  expandHeight,
+  contractHeight,
+  fadeOut,
+  expandHeightAlbum,
+  contractHeightAlbum,
+} from "animations";
 
 const { isElectron } = config;
 
@@ -43,24 +49,42 @@ const Container = styled.ul`
   text-align: left;
   padding-left: ${({ isRoot }) => (isRoot ? 0 : 12)}px;
   padding-right: 12px;
-  ${({ isRoot, expand, albumsLen, filesLen }) => {
-    if (isRoot && expand) {
-      return css`
-        overflow: hidden;
-        animation: ${expandHeight(albumsLen, filesLen)}
-          ${getExpandTiming(albumsLen)} ease-out;
-      `;
-    }
-    if (isRoot && !expand) {
-      return css`
-        overflow: hidden;
-        animation: ${contractHeight(albumsLen, filesLen)}
-          ${getContractTiming(albumsLen)} ease-in;
+  ${({ isRoot, expand, albumsLen, songsLen, filesLen }) => {
+    if (expand) {
+      if (isRoot) {
+        return css`
+          overflow: hidden;
+          animation: ${expandHeight(albumsLen, filesLen)}
+            ${getExpandTiming(albumsLen)} ease-out;
+        `;
+      } else {
+        return css`
+          overflow: hidden;
+          animation: ${expandHeightAlbum(songsLen)} 0.1666s ease-out;
+        `;
+      }
+    } else {
+      if (isRoot) {
+        return css`
+          overflow: hidden;
+          animation: ${contractHeight(albumsLen, filesLen)}
+            ${getContractTiming(albumsLen)} ease-in;
 
-        > ul {
-          animation: ${fadeOut} ${getContractTiming(albumsLen)};
-        }
-      `;
+          > ul {
+            animation: ${fadeOut} ${getContractTiming(albumsLen)};
+          }
+        `;
+      } else {
+        return css`
+          overflow: hidden;
+          animation: ${contractHeightAlbum(songsLen)} 0.1666s ease-in;
+
+          > ul,
+          li:not(:first-of-type) {
+            animation: ${fadeOut} 0.1666s;
+          }
+        `;
+      }
     }
   }}
 
@@ -126,7 +150,14 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
 
       setSongs(album.files);
     }
-    setShowSongs(!showSongs);
+
+    if (!showSongs) {
+      setShowSongs(true);
+      setShowAnimation(true);
+    } else {
+      setShowAnimation(false);
+      setTimeout(() => setShowSongs(false), 150);
+    }
   };
 
   const onDragStart = (event) => {
@@ -148,6 +179,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum }) => {
       onDragStart={onDragStart}
       expand={showAnimation}
       albumsLen={albums.length}
+      songsLen={songs.length}
       filesLen={files.length}
     >
       <Folder key={item.id} onClick={isArtist ? toggleAlbum : toggleSongs}>

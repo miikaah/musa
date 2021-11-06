@@ -20,18 +20,38 @@ export const fadeOut = keyframes`
 
 export const expandHeight = (albumsLen, filesLen) => keyframes`
   from {
-    height: 23px;
+    max-height: 23px;
   }
   to {
-    height: ${23 + albumsLen * 74 + filesLen * 17}px;
+    max-height: ${23 + albumsLen * 100 + expandHeightFiles(filesLen)}px;
+  }
+`;
+
+export const expandHeightFiles = (filesLen) => filesLen * 17;
+
+export const expandHeightAlbum = (songsLen) => keyframes`
+  from {
+    max-height: 100px;
+  }
+  to {
+    max-height: ${40 + 100 + expandHeightFiles(songsLen)}px;
   }
 `;
 
 export const contractHeight = (albumsLen, filesLen) => keyframes`
   from {
-    height: ${23 + albumsLen * 74 + filesLen * 17}px;
+    max-height: ${23 + albumsLen * 100 + expandHeightFiles(filesLen)}px;
   }
   to {
-    height: 23px;
+    max-height: 23px;
+  }
+`;
+
+export const contractHeightAlbum = (songsLen) => keyframes`
+  from {
+    max-height: ${40 + 100 + expandHeightFiles(songsLen)}px;
+  }
+  to {
+    max-height: 100px;
   }
 `;
