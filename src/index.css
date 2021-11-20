@@ -43,6 +43,13 @@ button {
   border: 0;
   padding: 0;
   cursor: pointer;
+  font-family: Verdana, Tahoma, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+select {
+  font-family: Verdana, Tahoma, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 button:disabled {

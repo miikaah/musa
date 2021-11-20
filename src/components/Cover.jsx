@@ -10,6 +10,7 @@ import { breakpoint } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
 import Api from "api-client";
 import { fadeIn } from "animations";
+import CoverInfo from "./CoverInfo";
 
 const Colors = {
   Bg: "#21252b",
@@ -48,29 +49,6 @@ const Image = styled.img`
 
   @media (min-width: ${breakpoint.lg}px) {
     min-height: 30vw;
-  }
-`;
-
-const Info = styled.div`
-  padding: ${({ isSmall }) =>
-    isSmall ? "20px 20px 20px 10px" : "20px 20px 20px 10px"};
-
-  > div:nth-child(1) {
-    padding-bottom: 8px;
-  }
-
-  > div:nth-child(2) {
-    font-weight: bold;
-    padding-bottom: 8px;
-    font-size: 30px;
-  }
-
-  > div:nth-child(3) {
-    font-size: var(--font-size-xs);
-
-    > span:nth-child(2) {
-      margin: 0 4px;
-    }
   }
 `;
 
@@ -262,25 +240,10 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const artist = currentItem?.metadata?.artist || currentItem?.artistName || "";
-  const album = currentItem?.metadata?.album || currentItem?.albumName || "";
-  const title = currentItem?.metadata?.title || currentItem?.name || "";
-  const year = currentItem?.metadata?.year || "";
-
   return (
     <Container isSmall={isSmall}>
       <Image src={coverSrc} ref={coverRef} crossOrigin="" />
-      <Info isSmall={isSmall}>
-        <div>{title}</div>
-        <div>{album}</div>
-        <div>
-          <span>{artist}</span>
-          {currentItem && currentItem?.metadata && (
-            <span>{year ? "\u00B7" : ""}</span>
-          )}
-          <span>{year}</span>
-        </div>
-      </Info>
+      <CoverInfo item={currentItem} isSmall={isSmall} />
     </Container>
   );
 };

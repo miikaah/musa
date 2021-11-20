@@ -37,10 +37,11 @@ const Info = styled.div`
 `;
 
 const PlayerCurrentlyPlaying = ({ currentItem }) => {
-  console.log(currentItem);
-  const {
-    metadata: { artist, title, name },
-  } = currentItem;
+  if (typeof currentItem?.metadata !== "object") {
+    return null;
+  }
+
+  const { artist, title, name } = currentItem.metadata;
   const songTitle = title || name || "No title";
 
   return (
