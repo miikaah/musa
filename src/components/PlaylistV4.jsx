@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import {
   pasteToPlaylist,
   removeRangeFromPlaylist,
@@ -15,7 +15,7 @@ import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
 import { listOverflow } from "../common.styles";
 
-const Container = styled.ul`
+const commonCss = css`
   padding: 14px 0;
   margin: 0;
   border: 0 solid var(--color-primary-highlight);
@@ -23,10 +23,29 @@ const Container = styled.ul`
   border-right-width: 3px;
   background-color: var(--color-bg);
   max-height: 89vh;
+  flex: 60%;
+`;
+
+const Container = styled.ul`
+  ${commonCss}
   ${listOverflow}
   overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
   overflow-x: hidden;
-  flex: 60%;
+`;
+
+const Instructions = styled.div`
+  ${commonCss}
+  ${listOverflow}
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  > div {
+    text-align: center;
+    font-weight: bold;
+    opacity: 0.3666;
+    margin-bottom: 16px;
+  }
 `;
 
 const PLAYLIST_CLASSNAME = "playlist";
@@ -314,6 +333,23 @@ const Playlist = ({
       });
     setTimeout(() => setHideOverflow(false), 500);
   };
+
+  if (playlist.length < 1) {
+    return (
+      <Instructions>
+        <div>Drag and drop Artists, Albums and Songs here</div>
+        <div>Ctrl / Cmd + A is Select All</div>
+        <div>Ctrl / Cmd + X is Cut</div>
+        <div>Ctrl / Cmd + C is Copy</div>
+        <div>Ctrl / Cmd + V is Paste</div>
+        <div>Backspace / Del is Remove</div>
+        <div>Ctrl / Cmd + Shift + D is Duplicate</div>
+        <div>Enter is New Playlist From Selection</div>
+        <div>Up Arrow is Move Up</div>
+        <div>Down Arrow is Move Down</div>
+      </Instructions>
+    );
+  }
 
   return (
     <Container
