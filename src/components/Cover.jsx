@@ -30,6 +30,16 @@ const Colors = {
 const Container = styled.div`
   flex: 40%;
   margin-left: ${({ isSmall }) => (isSmall ? "0" : "500")}px;
+
+  @media (min-width: ${breakpoint.lg}px) {
+    flex: 49.2%;
+    min-height: 30vw;
+  }
+
+  @media (min-width: ${breakpoint.lg + 350}px) {
+    flex: 49%;
+    min-height: 30vw;
+  }
 `;
 
 const Image = styled.img`

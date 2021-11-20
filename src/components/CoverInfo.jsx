@@ -47,8 +47,6 @@ const ToggleMetadataButton = styled(Button)`
 
 const Metadata = styled.div`
   margin-top: 4px;
-  overflow-y: auto;
-  padding-bottom: 120px;
 
   > div {
     display: flex;
