@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
+import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import Button from "./Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { updateSettings } from "reducers/settings.reducer";
 
 const Container = styled.div`
   padding: ${({ isSmall }) =>
@@ -74,9 +76,7 @@ const getSampleRate = (sampleRate) => {
   return `${sampleRate} Hz`;
 };
 
-const CoverInfo = ({ item, isSmall }) => {
-  const [showMetadata, setShowMetadata] = useState(false);
-
+const CoverInfo = ({ item, isSmall, showMetadata, dispatch }) => {
   if (Object.keys(item) < 1) {
     return null;
   }
@@ -93,7 +93,7 @@ const CoverInfo = ({ item, isSmall }) => {
   const sampleRate = getSampleRate(item?.metadata?.sampleRate);
 
   const toggleMetadata = () => {
-    setShowMetadata(!showMetadata);
+    dispatch(updateSettings({ showMetadata: !showMetadata }));
   };
 
   return (
@@ -146,4 +146,9 @@ const CoverInfo = ({ item, isSmall }) => {
   );
 };
 
-export default CoverInfo;
+export default connect(
+  (state) => ({
+    showMetadata: state.settings.showMetadata,
+  }),
+  (dispatch) => ({ dispatch })
+)(CoverInfo);
