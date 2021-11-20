@@ -7,6 +7,8 @@ const Image = styled.img`
   animation: ${fadeIn} 0.2s;
 `;
 
-const AlbumImage = ({ item }) => <Image alt="" src={cleanUrl(item.coverUrl)} />;
+const AlbumImage = ({ item }) => (
+  <Image alt="" src={cleanUrl(item.coverUrl || item.cover)} />
+);
 
 export default AlbumImage;

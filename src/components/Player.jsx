@@ -12,7 +12,7 @@ import PlayerVolume from "./PlayerVolume";
 import PlayerPlayPauseButton from "./PlayerPlayPauseButton";
 import PlayerVolumeButton from "./PlayerVolumeButton";
 import PlayerTimeDisplay from "./PlayerTimeDisplay";
-import PlayerDrGauge from "./PlayerDrGauge";
+import PlayerCurrentlyPlaying from "./PlayerCurrentlyPlaying";
 
 const PlayerContainer = styled.div`
   display: flex;
@@ -28,7 +28,8 @@ const PlayerContainer = styled.div`
 
 const PlayerLeftContainer = styled.div`
   display: flex;
-  height: 20px;
+  min-width: 300px;
+  max-width: 300px;
 `;
 
 const PlayerMiddleContainer = styled.div`
@@ -37,7 +38,8 @@ const PlayerMiddleContainer = styled.div`
 `;
 
 const PlayerRightContainer = styled.div`
-  margin-top: -4px;
+  display: flex;
+  height: 20px;
 `;
 
 const VOLUME_MUTED = 0;
@@ -169,11 +171,7 @@ const Player = ({
     <PlayerContainer>
       <audio controls src={src} ref={player} />
       <PlayerLeftContainer>
-        <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
-        <PlayerVolume
-          volume={volume}
-          setVolumeForStateAndPlayer={setVolumeForStateAndPlayer}
-        />
+        <PlayerCurrentlyPlaying currentItem={currentItem} />
       </PlayerLeftContainer>
       <PlayerMiddleContainer>
         <PlayerPlayPauseButton playOrPause={playOrPause} />
@@ -189,7 +187,11 @@ const Player = ({
         />
       </PlayerMiddleContainer>
       <PlayerRightContainer>
-        <PlayerDrGauge currentItem={currentItem} />
+        <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
+        <PlayerVolume
+          volume={volume}
+          setVolumeForStateAndPlayer={setVolumeForStateAndPlayer}
+        />
       </PlayerRightContainer>
     </PlayerContainer>
   );
