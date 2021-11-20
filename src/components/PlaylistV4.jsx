@@ -42,6 +42,7 @@ const Instructions = styled.div`
 
   > div {
     text-align: center;
+    font-size: 14px;
     font-weight: bold;
     opacity: 0.3666;
     margin-bottom: 16px;
