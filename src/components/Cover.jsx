@@ -50,15 +50,19 @@ const Image = styled.img`
   animation: ${fadeIn} 0.1666s;
 
   @media (max-width: ${breakpoint.md + 219}px) {
-    min-height: 40vw;
+    min-height: 41vw;
   }
 
   @media (min-width: ${breakpoint.md + 219}px) {
-    min-height: 40vw;
+    min-height: 41vw;
   }
 
   @media (min-width: ${breakpoint.lg}px) {
-    min-height: 30vw;
+    min-height: 32vw;
+  }
+
+  @media (min-width: ${breakpoint.lg + 350}px) {
+    min-height: 35vw;
   }
 `;
 
