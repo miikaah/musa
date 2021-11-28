@@ -30,6 +30,7 @@ const Colors = {
 const Container = styled.div`
   flex: 41.7%;
   max-width: 576px;
+  max-height: 576px;
   margin-left: ${({ isSmall }) => (isSmall ? "0" : "500")}px;
   visibility: ${({ isCoverLoaded }) => (isCoverLoaded ? "visible" : "hidden")};
 `;
@@ -37,7 +38,7 @@ const Container = styled.div`
 const Image = styled.img`
   width: 100%;
   height: 100%;
-  max-height: ${({ maxHeight }) => maxHeight}px;
+  max-height: ${({ maxHeight }) => maxHeight && `${maxHeight}px`};
   animation: ${fadeIn} 0.1666s;
   transition: ${({ isCoverLoaded }) => isCoverLoaded && "max-height 0.3s"};
 `;
@@ -241,6 +242,11 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
 
       calculateTheme(coverTarget);
     };
+
+    if (!isCoverLoaded && !coverSrc) {
+      setIsCoverLoaded(true);
+      calcMaxHeight();
+    }
 
     const ref = coverRef.current;
 
