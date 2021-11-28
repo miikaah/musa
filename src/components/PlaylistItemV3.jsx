@@ -45,6 +45,7 @@ const CoverWrapper = styled.div`
 const CoverSmall = styled.img`
   width: 50px;
   height: 50px;
+  background: #d7d7d7;
 `;
 
 const RowContainer = styled.div`
@@ -216,7 +217,7 @@ const PlaylistItem = ({
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
       <CoverWrapper>
-        {coverSrc && <CoverSmall src={cleanUrl(coverSrc)} alt="" />}
+        <CoverSmall src={cleanUrl(coverSrc)} alt="" />
       </CoverWrapper>
       <RowContainer>
         <FirstRow>

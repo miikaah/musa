@@ -3,30 +3,27 @@ import AlbumImageV2 from "./common/AlbumImageV2";
 import styled, { css } from "styled-components/macro";
 import { fadeIn } from "animations";
 
-const commonContainerCss = css`
+const commonImageCss = css`
   width: 50px;
   height: 50px;
   box-shadow: 0 0 10px rgb(0 0 0 / 30%);
-  border: 1px solid #d7d7d7;
+  background: #d7d7d7;
 `;
 
 const Container = styled.div`
   display: flex;
 
   img {
-    ${commonContainerCss}
+    ${commonImageCss}
+    object-fit: cover;
   }
 `;
 
-const commonInfoCss = css`
+const Info = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 290px;
   padding: 12px;
-`;
-
-const Info = styled.div`
-  ${commonInfoCss}
 
   > div {
     overflow: hidden;
@@ -47,62 +44,40 @@ const Info = styled.div`
   }
 `;
 
-const PlaceholderContainer = styled.div`
-  display: flex;
-`;
-
 const PlaceholderImage = styled.div`
-  ${commonContainerCss}
+  ${commonImageCss}
 `;
 
-const PlaceholderLineContainer = styled.div`
-  ${commonInfoCss}
-
-  > div {
-    background: #d7d7d7;
-    border-radius: 50px;
-    animation: ${fadeIn} 0.2s;
-    margin-top: 5px;
-  }
-
-  > div:first-of-type {
-    width: 80px;
-    height: 10px;
-  }
-
-  > div:last-of-type {
-    width: 66px;
-    height: 10px;
-  }
+const PlaceholderLine = styled.div`
+  background: #d7d7d7;
+  border-radius: 50px;
+  animation: ${fadeIn} 0.2s;
+  margin-top: ${({ isFirst }) => !isFirst && 5}px;
+  width: ${({ isFirst }) => (isFirst ? 80 : 60)}px;
+  height: 10px;
 `;
 
-const PlaceholderLine = styled.div``;
-
-const PlayerCurrentlyPlaying = ({ currentItem }) => {
-  if (typeof currentItem?.metadata !== "object") {
-    return (
-      <PlaceholderContainer>
-        <PlaceholderImage />
-        <PlaceholderLineContainer>
-          <PlaceholderLine />
-          <PlaceholderLine />
-        </PlaceholderLineContainer>
-      </PlaceholderContainer>
-    );
-  }
-
-  const { artist, title, name } = currentItem.metadata;
-  const songTitle = title || name || "No title";
+const PlayerCurrentlyPlaying = React.memo(({ currentItem }) => {
+  const { artist, title } = currentItem.metadata || {};
+  const songTitle = title || currentItem?.name;
 
   return (
     <Container>
-      <AlbumImageV2 item={currentItem} />
+      {currentItem.cover ? (
+        <AlbumImageV2 item={currentItem} />
+      ) : (
+        <PlaceholderImage />
+      )}
       <Info>
-        <div title={songTitle}>{songTitle}</div>
-        <div>{artist || ""}</div>
+        {songTitle ? (
+          <div title={songTitle}>{songTitle}</div>
+        ) : (
+          <PlaceholderLine isFirst />
+        )}
+        {songTitle || artist ? <div>{artist}</div> : <PlaceholderLine />}
       </Info>
     </Container>
   );
-};
+});
 
 export default PlayerCurrentlyPlaying;
