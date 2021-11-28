@@ -45,7 +45,13 @@ const CoverWrapper = styled.div`
 const CoverSmall = styled.img`
   width: 50px;
   height: 50px;
+`;
+
+const PlaceholderImage = styled.div`
+  width: 50px;
+  height: 50px;
   background: #d7d7d7;
+  opacity: 0.666;
 `;
 
 const RowContainer = styled.div`
@@ -217,7 +223,11 @@ const PlaylistItem = ({
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
       <CoverWrapper>
-        <CoverSmall src={cleanUrl(coverSrc)} alt="" />
+        {coverSrc ? (
+          <CoverSmall src={cleanUrl(coverSrc)} alt="" />
+        ) : (
+          <PlaceholderImage />
+        )}
       </CoverWrapper>
       <RowContainer>
         <FirstRow>

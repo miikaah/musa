@@ -36,6 +36,8 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
+  visibility: ${({ isCoverLoaded, src }) =>
+    isCoverLoaded && src ? "visible" : "hidden"};
   width: 100%;
   height: 100%;
   max-height: ${({ maxHeight }) => maxHeight && `${maxHeight}px`};

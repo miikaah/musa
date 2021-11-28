@@ -46,6 +46,7 @@ const Info = styled.div`
 
 const PlaceholderImage = styled.div`
   ${commonImageCss}
+  opacity: 0.666;
 `;
 
 const PlaceholderLine = styled.div`
@@ -55,6 +56,7 @@ const PlaceholderLine = styled.div`
   margin-top: ${({ isFirst }) => !isFirst && 5}px;
   width: ${({ isFirst }) => (isFirst ? 80 : 60)}px;
   height: 10px;
+  opacity: 0.666;
 `;
 
 const PlayerCurrentlyPlaying = React.memo(({ currentItem }) => {
