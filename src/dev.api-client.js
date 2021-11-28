@@ -143,15 +143,15 @@ const addScanStartListener = (callback) => {
 };
 
 const addScanUpdateListener = (callback) => {
-  return ElectronApi.addScanStartListener(callback);
+  return ElectronApi.addScanUpdateListener(callback);
 };
 
 const addScanEndListener = (callback) => {
-  return ElectronApi.addScanStartListener(callback);
+  return ElectronApi.addScanEndListener(callback);
 };
 
 const addScanCompleteListener = (callback) => {
-  return ElectronApi.addScanStartListener(callback);
+  return ElectronApi.addScanCompleteListener(callback);
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
