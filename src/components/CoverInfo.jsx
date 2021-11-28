@@ -1,9 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
-import Button from "./Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { updateSettings } from "reducers/settings.reducer";
 
 const Container = styled.div`
   padding: ${({ isSmall }) =>
@@ -36,15 +33,6 @@ const MetadataContainer = styled.div`
   max-height: 200px;
 `;
 
-const ToggleMetadataButton = styled(Button)`
-  max-width: 110px;
-  padding: 0;
-  margin: 0 auto 0 0;
-  font-size: 14px;
-  font-weight: normal;
-  text-align: left;
-`;
-
 const Metadata = styled.div`
   margin-top: 4px;
 
@@ -71,7 +59,7 @@ const getBitrate = (bitrate) => {
 };
 
 const getSampleRate = (sampleRate) => {
-  return `${sampleRate} Hz`;
+  return sampleRate ? `${sampleRate} Hz` : "";
 };
 
 const CoverInfo = ({ item, isSmall, showMetadata, dispatch }) => {
@@ -90,10 +78,6 @@ const CoverInfo = ({ item, isSmall, showMetadata, dispatch }) => {
   const bitrate = getBitrate(item?.metadata?.bitrate);
   const sampleRate = getSampleRate(item?.metadata?.sampleRate);
 
-  const toggleMetadata = () => {
-    dispatch(updateSettings({ showMetadata: !showMetadata }));
-  };
-
   return (
     <Container isSmall={isSmall}>
       <div>{title}</div>
@@ -104,9 +88,6 @@ const CoverInfo = ({ item, isSmall, showMetadata, dispatch }) => {
         <span>{year}</span>
       </div>
       <MetadataContainer>
-        <ToggleMetadataButton onClick={toggleMetadata}>
-          Metadata <FontAwesomeIcon icon="angle-down" />
-        </ToggleMetadataButton>
         {showMetadata && (
           <Metadata>
             <div>

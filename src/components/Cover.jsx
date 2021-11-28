@@ -28,42 +28,18 @@ const Colors = {
 };
 
 const Container = styled.div`
-  flex: 40%;
+  flex: 41.7%;
+  max-width: 576px;
   margin-left: ${({ isSmall }) => (isSmall ? "0" : "500")}px;
-
-  @media (min-width: ${breakpoint.lg}px) {
-    flex: 49.2%;
-    min-height: 30vw;
-  }
-
-  @media (min-width: ${breakpoint.lg + 350}px) {
-    flex: 49%;
-    min-height: 30vw;
-  }
+  visibility: ${({ isCoverLoaded }) => (isCoverLoaded ? "visible" : "hidden")};
 `;
 
 const Image = styled.img`
-  display: block;
-  height: auto;
-  margin: 0 auto;
   width: 100%;
+  height: 100%;
+  max-height: ${({ maxHeight }) => maxHeight}px;
   animation: ${fadeIn} 0.1666s;
-
-  @media (max-width: ${breakpoint.md + 219}px) {
-    min-height: 41vw;
-  }
-
-  @media (min-width: ${breakpoint.md + 219}px) {
-    min-height: 41vw;
-  }
-
-  @media (min-width: ${breakpoint.lg}px) {
-    min-height: 32vw;
-  }
-
-  @media (min-width: ${breakpoint.lg + 350}px) {
-    min-height: 35vw;
-  }
+  transition: ${({ isCoverLoaded }) => isCoverLoaded && "max-height 0.3s"};
 `;
 
 const isVibrantCover = (mostPopularSwatch) => {
@@ -85,9 +61,29 @@ const contrast = (rgb1, rgb2) => {
   );
 };
 
-const Cover = ({ coverSrc, currentItem, dispatch }) => {
+const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
+  const [isCoverLoaded, setIsCoverLoaded] = useState(false);
+  const [maxHeight, setMaxHeight] = useState();
+  const containerRef = useRef();
   const coverRef = useRef();
+
+  const calcMaxHeight = () => {
+    let heightToWidthRatio = Math.min(
+      1,
+      coverRef.current.naturalHeight / coverRef.current.naturalWidth
+    );
+
+    if (heightToWidthRatio > 0.949) {
+      heightToWidthRatio = 1;
+    }
+
+    setMaxHeight(
+      heightToWidthRatio
+        ? heightToWidthRatio * containerRef.current.offsetWidth
+        : containerRef.current.offsetWidth
+    );
+  };
 
   useEffect(() => {
     const calculateTheme = (coverTarget) => {
@@ -232,6 +228,9 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       // variable when it goes out of scope
       const coverTarget = event.target;
 
+      setIsCoverLoaded(true);
+      calcMaxHeight();
+
       const theme = await Api.getThemeById({ id: coverTarget.src });
 
       if (theme?.colors) {
@@ -243,24 +242,46 @@ const Cover = ({ coverSrc, currentItem, dispatch }) => {
       calculateTheme(coverTarget);
     };
 
-    coverRef.current.addEventListener("load", onLoadCover);
+    const ref = coverRef.current;
+
+    ref.addEventListener("load", onLoadCover);
+
+    return () => {
+      ref.removeEventListener("load", onLoadCover);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
+    const onResize = () => {
       setIsSmall(window.innerWidth < breakpoint.lg);
-    });
+      calcMaxHeight();
+    };
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Container isSmall={isSmall}>
-      <Image src={coverSrc} ref={coverRef} crossOrigin="" />
+    <Container
+      isSmall={isSmall}
+      ref={containerRef}
+      isCoverLoaded={isCoverLoaded}
+    >
+      <Image
+        src={coverSrc}
+        ref={coverRef}
+        crossOrigin=""
+        maxHeight={maxHeight}
+        isCoverLoaded={isCoverLoaded}
+      />
       <CoverInfo item={currentItem} isSmall={isSmall} />
     </Container>
   );
-};
+});
 
 export default connect(
   (state) => ({

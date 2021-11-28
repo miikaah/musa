@@ -18,7 +18,6 @@ const initialState = {
   replaygainType: REPLAYGAIN_TYPE.Album,
   volume: VOLUME_DEFAULT,
   musicLibraryPath: "",
-  showMetadata: false,
 };
 
 const settings = (state = initialState, action) => {
