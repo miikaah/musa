@@ -62,7 +62,7 @@ const getSampleRate = (sampleRate) => {
   return sampleRate ? `${sampleRate} Hz` : "";
 };
 
-const CoverInfo = ({ item, isSmall, showMetadata, dispatch }) => {
+const CoverInfo = ({ item, isSmall, dispatch }) => {
   if (Object.keys(item) < 1) {
     return null;
   }
@@ -88,46 +88,42 @@ const CoverInfo = ({ item, isSmall, showMetadata, dispatch }) => {
         <span>{year}</span>
       </div>
       <MetadataContainer>
-        {showMetadata && (
-          <Metadata>
-            <div>
-              <span>Genre</span>
-              <span title={genre}>{genre}</span>
-            </div>
-            <div>
-              <span>Replaygain track</span>
-              <span>{item?.metadata?.replayGainTrackGain?.dB}</span>
-            </div>
-            <div>
-              <span>Replaygain album</span>
-              <span>{item?.metadata?.replayGainAlbumGain?.dB}</span>
-            </div>
-            <div>
-              <span>Dynamic range track</span>
-              <span>{item?.metadata?.dynamicRange}</span>
-            </div>
-            <div>
-              <span>Dynamic range album</span>
-              <span>{item?.metadata?.dynamicRangeAlbum}</span>
-            </div>
-            <div>
-              <span>Bitrate</span>
-              <span>{bitrate}</span>
-            </div>
-            <div>
-              <span>Sample rate</span>
-              <span>{sampleRate}</span>
-            </div>
-          </Metadata>
-        )}
+        <Metadata>
+          <div>
+            <span>Genre</span>
+            <span title={genre}>{genre}</span>
+          </div>
+          <div>
+            <span>Replaygain track</span>
+            <span>{item?.metadata?.replayGainTrackGain?.dB}</span>
+          </div>
+          <div>
+            <span>Replaygain album</span>
+            <span>{item?.metadata?.replayGainAlbumGain?.dB}</span>
+          </div>
+          <div>
+            <span>Dynamic range track</span>
+            <span>{item?.metadata?.dynamicRange}</span>
+          </div>
+          <div>
+            <span>Dynamic range album</span>
+            <span>{item?.metadata?.dynamicRangeAlbum}</span>
+          </div>
+          <div>
+            <span>Bitrate</span>
+            <span>{bitrate}</span>
+          </div>
+          <div>
+            <span>Sample rate</span>
+            <span>{sampleRate}</span>
+          </div>
+        </Metadata>
       </MetadataContainer>
     </Container>
   );
 };
 
 export default connect(
-  (state) => ({
-    showMetadata: state.settings.showMetadata,
-  }),
+  (state) => ({}),
   (dispatch) => ({ dispatch })
 )(CoverInfo);
