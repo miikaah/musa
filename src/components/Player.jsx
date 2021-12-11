@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash.isempty";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
 import { store } from "..";
@@ -14,12 +14,17 @@ import PlayerVolumeButton from "./PlayerVolumeButton";
 import PlayerTimeDisplay from "./PlayerTimeDisplay";
 import PlayerCurrentlyPlaying from "./PlayerCurrentlyPlaying";
 
+const sharedCss = css`
+  min-height: 54px;
+`;
+
 const PlayerContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
   width: 100%;
+  ${sharedCss}
 
   audio {
     display: none;
@@ -28,13 +33,15 @@ const PlayerContainer = styled.div`
 
 const PlayerLeftContainer = styled.div`
   display: flex;
-  min-width: 300px;
-  max-width: 300px;
+  min-width: 340px;
+  max-width: 340px;
+  ${sharedCss}
 `;
 
 const PlayerMiddleContainer = styled.div`
   display: flex;
   align-items: center;
+  min-width: 378px;
 `;
 
 const PlayerRightContainer = styled.div`
