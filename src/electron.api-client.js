@@ -29,12 +29,12 @@ const insertSettings = (settings) => {
   });
 };
 
-const getAudioById = async () => {
+const getAudioById = async (id) => {
   return new Promise((resolve, reject) => {
     ipc.once("musa:audio:response", (event, audio) => {
       resolve(audio);
     });
-    ipc.send("musa:audio:request");
+    ipc.send("musa:audio:request", id);
   });
 };
 
