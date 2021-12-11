@@ -293,7 +293,7 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
 
 export default connect(
   (state) => ({
-    coverSrc: state.player.cover,
+    coverSrc: state.player.coverUrl,
     currentItem: state.player.currentItem,
   }),
   (dispatch) => ({ dispatch })

@@ -24,12 +24,9 @@ const DiskNumber = styled.div`
   font-size: 11px;
 `;
 
-const LibraryItem = ({ item, cover, hasAlbum, hasMultipleDisks, dispatch }) => {
+const LibraryItem = ({ item, hasAlbum, hasMultipleDisks, dispatch }) => {
   const onDragStart = (event) => {
-    event.dataTransfer.setData(
-      "text/plain",
-      JSON.stringify({ item: { ...item, cover } })
-    );
+    event.dataTransfer.setData("text/plain", JSON.stringify({ item }));
     event.stopPropagation();
   };
 

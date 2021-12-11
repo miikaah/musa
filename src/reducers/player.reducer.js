@@ -65,7 +65,7 @@ const initialState = {
   currentItem: {},
   currentIndex: -1,
   src: "",
-  cover: "",
+  coverUrl: "",
   isPlaying: false,
   replay: false,
 };
@@ -174,7 +174,7 @@ function getPlayBase(newItem, newIndex) {
     currentIndex: newIndex,
     isPlaying: true,
     src: cleanUrl(newItem.fileUrl),
-    cover: cleanUrl(newItem.cover) || cleanUrl(newItem.coverUrl) || "",
+    coverUrl: cleanUrl(newItem.coverUrl) || "",
   };
 }
 

@@ -46,7 +46,7 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
     if (isArtist) {
       const artist = await Api.getArtistAlbums(item.id);
       const songs = artist.albums
-        .map((a) => a.files.map((f) => ({ ...f, cover: a.coverUrl })))
+        .map((a) => a.files.map((f) => ({ ...f, coverUrl: a.coverUrl })))
         .flat(Infinity);
 
       dispatch(pasteToPlaylist([...songs, ...artist.files]));
@@ -56,7 +56,7 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
       const album = await Api.getAlbumById(isElectron ? item.id : item.url);
       const mappedFiles = album.files.map((f) => ({
         ...f,
-        cover: album.coverUrl,
+        coverUrl: album.coverUrl,
       }));
 
       dispatch(pasteToPlaylist(mappedFiles));
@@ -66,7 +66,7 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
 
     const audio = await Api.getAudioById(isElectron ? item.id : item.url);
 
-    dispatch(addToPlaylist({ ...audio, cover: audio.coverUrl }));
+    dispatch(addToPlaylist(audio));
   };
 
   if (isInit && isElectron && !musicLibraryPath) {

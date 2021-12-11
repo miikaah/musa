@@ -58,12 +58,7 @@ const Song = ({ item, dispatch }) => {
   }
 
   const addSongToPlaylist = () => {
-    dispatch(
-      addToPlaylist({
-        ...item,
-        cover: item.coverUrl,
-      })
-    );
+    dispatch(addToPlaylist(item));
 
     const msg = `Added ${item.name} to playlist`;
     const key = `${item.name}-${Date.now()}`;

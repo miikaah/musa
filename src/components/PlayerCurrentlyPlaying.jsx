@@ -65,7 +65,7 @@ const PlayerCurrentlyPlaying = React.memo(({ currentItem }) => {
 
   return (
     <Container>
-      {currentItem.cover ? (
+      {currentItem.coverUrl ? (
         <AlbumImageV2 item={currentItem} />
       ) : (
         <PlaceholderImage />

@@ -210,7 +210,7 @@ const PlaylistItem = ({
   const title = item?.metadata?.title || item.name || "";
   const track = item.track || "";
   const duration = formatDuration(item?.metadata?.duration || "0:00");
-  const coverSrc = item.cover || "";
+  const coverSrc = item.coverUrl || "";
 
   return (
     <PlaylistItemContainer

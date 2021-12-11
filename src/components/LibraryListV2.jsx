@@ -114,7 +114,7 @@ const Folder = styled.li`
   }
 `;
 
-const LibraryList = ({ item, cover, isArtist, isAlbum, hasMultipleDisks }) => {
+const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
   const [albums, setAlbums] = useState([]);
   const [songs, setSongs] = useState([]);
   const [files, setFiles] = useState([]);
@@ -189,12 +189,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum, hasMultipleDisks }) => {
         Array.isArray(albums) &&
         albums.length > 0 &&
         albums.map((album, i) => (
-          <LibraryList
-            key={album.id}
-            item={album}
-            cover={item.coverUrl}
-            isAlbum
-          />
+          <LibraryList key={album.id} item={album} isAlbum />
         ))}
       {showSongs &&
         Array.isArray(songs) &&
@@ -203,7 +198,6 @@ const LibraryList = ({ item, cover, isArtist, isAlbum, hasMultipleDisks }) => {
           <LibraryList
             key={album.id}
             item={album}
-            cover={item.coverUrl}
             hasMultipleDisks={
               !(songs[songs.length - 1]?.track || "").startsWith("1")
             }
@@ -221,12 +215,7 @@ const LibraryList = ({ item, cover, isArtist, isAlbum, hasMultipleDisks }) => {
     return renderArtistsAndAlbums();
   }
   return (
-    <LibraryItem
-      item={item}
-      cover={cover}
-      hasAlbum
-      hasMultipleDisks={hasMultipleDisks}
-    />
+    <LibraryItem item={item} hasAlbum hasMultipleDisks={hasMultipleDisks} />
   );
 };
 
