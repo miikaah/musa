@@ -64,7 +64,9 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
       return;
     }
 
-    dispatch(addToPlaylist(item));
+    const audio = await Api.getAudioById(isElectron ? item.id : item.url);
+
+    dispatch(addToPlaylist(audio));
   };
 
   if (isInit && isElectron && !musicLibraryPath) {

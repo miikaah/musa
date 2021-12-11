@@ -29,6 +29,15 @@ const insertSettings = (settings) => {
   });
 };
 
+const getAudioById = async () => {
+  return new Promise((resolve, reject) => {
+    ipc.once("musa:audio:response", (event, audio) => {
+      resolve(audio);
+    });
+    ipc.send("musa:audio:request");
+  });
+};
+
 const getArtists = async () => {
   return new Promise((resolve, reject) => {
     ipc.once("musa:artists:response", (event, artists) => {
@@ -205,6 +214,7 @@ const addScanCompleteListener = (callback) => {
 export default {
   getSettings,
   insertSettings,
+  getAudioById,
   getArtists,
   getArtistById,
   getArtistAlbums,

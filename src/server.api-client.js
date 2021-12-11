@@ -8,6 +8,10 @@ const get = async (path) => {
   return fetch(`${baseUrl}${path}`).then((response) => response.json());
 };
 
+const getByUrl = async (url) => {
+  return fetch(url).then((response) => response.json());
+};
+
 const put = async (path, { body, headers = {} }) => {
   return fetch(`${baseUrl}${path}`, {
     method: "PUT",
@@ -40,12 +44,16 @@ const insertSettings = async (settings) => {
   });
 };
 
+const getAudioById = async (url) => {
+  return getByUrl(url);
+};
+
 const getArtists = async () => {
   return get("/artists");
 };
 
 const getArtistById = async (url) => {
-  return fetch(url).then((response) => response.json());
+  return getByUrl(url);
 };
 
 const getArtistAlbums = async (id) => {
@@ -53,7 +61,7 @@ const getArtistAlbums = async (id) => {
 };
 
 const getAlbumById = async (url) => {
-  return fetch(url).then((response) => response.json());
+  return getByUrl(url);
 };
 
 const getThemes = async () => {
@@ -112,6 +120,7 @@ const addScanCompleteListener = (callback) => {};
 export default {
   getSettings,
   insertSettings,
+  getAudioById,
   getArtists,
   getArtistById,
   getArtistAlbums,

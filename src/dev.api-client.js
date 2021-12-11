@@ -20,6 +20,14 @@ const insertSettings = (settings) => {
   }
 };
 
+const getAudioById = async (idOrUrl) => {
+  if (isElectron) {
+    return ElectronApi.getAudioById(idOrUrl);
+  } else {
+    return ServerApi.getAudioById(idOrUrl);
+  }
+};
+
 const getArtists = async () => {
   if (isElectron) {
     return ElectronApi.getArtists();
@@ -28,11 +36,11 @@ const getArtists = async () => {
   }
 };
 
-const getArtistById = async (id) => {
+const getArtistById = async (idOrUrl) => {
   if (isElectron) {
-    return ElectronApi.getArtistById(id);
+    return ElectronApi.getArtistById(idOrUrl);
   } else {
-    return ServerApi.getArtistById(id);
+    return ServerApi.getArtistById(idOrUrl);
   }
 };
 
@@ -44,11 +52,11 @@ const getArtistAlbums = async (id) => {
   }
 };
 
-const getAlbumById = async (id) => {
+const getAlbumById = async (idOrUrl) => {
   if (isElectron) {
-    return ElectronApi.getAlbumById(id);
+    return ElectronApi.getAlbumById(idOrUrl);
   } else {
-    return ServerApi.getAlbumById(id);
+    return ServerApi.getAlbumById(idOrUrl);
   }
 };
 
@@ -158,6 +166,7 @@ const addScanCompleteListener = (callback) => {
 export default {
   getSettings,
   insertSettings,
+  getAudioById,
   getArtists,
   getArtistById,
   getArtistAlbums,
