@@ -1,14 +1,10 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import isEqual from "lodash.isequal";
 import styled, { css } from "styled-components/macro";
 import {
   pasteToPlaylist,
   removeRangeFromPlaylist,
   removeIndexesFromPlaylist,
-  emptyPlaylist,
-  playIndex,
-  replay,
 } from "reducers/player.reducer";
 import { KEYS, isCtrlDown } from "../util";
 import { useKeyPress } from "../hooks";
@@ -179,13 +175,6 @@ const Playlist = ({
     }
   };
 
-  const shouldReplaySong = () => {
-    return (
-      activeIndex === currentIndex &&
-      isEqual(currentItem, playlist[activeIndex])
-    );
-  };
-
   const setNewIndexes = (event, newActiveIndex) => {
     if (event.shiftKey) {
       setStartIndex(!Number.isNaN(startIndex) ? startIndex : activeIndex);
@@ -220,36 +209,6 @@ const Playlist = ({
     if (playlist.length) return setActiveIndex(0);
   };
   useKeyPress(KEYS.Down, moveDown);
-
-  const createNewPlaylistFromSelection = () => {
-    if (isContinuousSelection() || selectedIndexes.size > 1) {
-      let selItems;
-      if (isContinuousSelection()) {
-        const { selectedItems } = getContinuousSelData(true);
-        selItems = selectedItems;
-      }
-      if (selectedIndexes.size > 1) {
-        const { selectedItems } = getIndexesSelData(true);
-        selItems = selectedItems;
-      }
-
-      dispatch(emptyPlaylist());
-      dispatch(pasteToPlaylist(selItems, 0));
-      setStartIndex(NaN);
-      setEndIndex(NaN);
-      setActiveIndex(0);
-      return;
-    }
-
-    // PLAY OR REPLAY ACTIVE ITEM
-    if (activeIndex < 0) return;
-    if (shouldReplaySong()) {
-      dispatch(replay(true));
-      return;
-    }
-    dispatch(playIndex(activeIndex));
-  };
-  useKeyPress(KEYS.Enter, createNewPlaylistFromSelection);
 
   const removeItems = () => {
     if (isContinuousSelection()) {
@@ -412,10 +371,6 @@ const Playlist = ({
           <ControlsInstruction>
             <div>Duplicate selection</div>
             <div>Ctrl / Cmd + Shift + D</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>New playlist From selection</div>
-            <div>Enter</div>
           </ControlsInstruction>
           <ControlsInstruction>
             <div>Move Up</div>
