@@ -40,12 +40,39 @@ const Instructions = styled.div`
   flex-direction: column;
   justify-content: center;
 
-  > div {
+  > div:first-of-type {
     text-align: center;
-    font-size: 14px;
     font-weight: bold;
+    margin: 33% 0 60px;
+    font-size: 18px;
+  }
+
+  > div {
     opacity: 0.3666;
-    margin-bottom: 16px;
+  }
+`;
+
+const ControlsInstructions = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+  align-self: center;
+`;
+
+const ControlsHeader = styled.div`
+  display: flex;
+  margin: 20px 0 8px;
+  font-weight: bold;
+  font-size: 14px;
+`;
+
+const ControlsInstruction = styled.div`
+  display: flex;
+  font-size: 13px;
+
+  > div:first-of-type {
+    width: 60%;
+    text-align: left;
   }
 `;
 
@@ -342,15 +369,63 @@ const Playlist = ({
     return (
       <Instructions>
         <div>Drag and drop Artists, Albums and Songs here</div>
-        <div>Ctrl / Cmd + A is Select All</div>
-        <div>Ctrl / Cmd + X is Cut</div>
-        <div>Ctrl / Cmd + C is Copy</div>
-        <div>Ctrl / Cmd + V is Paste</div>
-        <div>Backspace / Del is Remove</div>
-        <div>Ctrl / Cmd + Shift + D is Duplicate</div>
-        <div>Enter is New Playlist From Selection</div>
-        <div>Up Arrow is Move Up</div>
-        <div>Down Arrow is Move Down</div>
+        <ControlsInstructions>
+          <ControlsHeader>Play controls</ControlsHeader>
+          <ControlsInstruction>
+            <div>Play / Pause</div>
+            <div>Spacebar</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Mute</div>
+            <div>M</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Toggle Search</div>
+            <div>Ctrl / Cmd + F</div>
+          </ControlsInstruction>
+
+          <ControlsHeader>Playlist controls</ControlsHeader>
+          <ControlsInstruction>
+            <div>Select</div>
+            <div>Click + Drag</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Select All</div>
+            <div>Ctrl / Cmd + A</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Cut</div>
+            <div>Ctrl / Cmd + X</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Copy</div>
+            <div>Ctrl / Cmd + C</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Paste</div>
+            <div>Ctrl / Cmd + V</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Remove</div>
+            <div>Backspace / Delete</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Duplicate selection</div>
+            <div>Ctrl / Cmd + Shift + D</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>New playlist From selection</div>
+            <div>Enter</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Move Up</div>
+            <div>Up Arrow</div>
+          </ControlsInstruction>
+          <ControlsInstruction>
+            <div>Move Down</div>
+            <div>Down Arrow</div>
+          </ControlsInstruction>
+        </ControlsInstructions>
       </Instructions>
     );
   }
