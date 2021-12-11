@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { isCtrlDown } from "./util";
 
 export const useKeyPress = (key, callback) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.keyCode !== key) return;
-      if (event?.target?.tagName !== "BODY") return;
+      if (event?.target?.tagName === "INPUT" && !isCtrlDown(event)) return;
 
       callback(event);
     };

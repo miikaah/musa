@@ -203,7 +203,9 @@ const Titlebar = ({ location, history, currentLocation }) => {
         return;
       }
 
-      setIsLibraryVisible(false);
+      if (location.pathname === "/") {
+        setIsLibraryVisible(false);
+      }
     };
 
     document.addEventListener("click", handleClick);
@@ -211,7 +213,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [isSmall]);
+  }, [isSmall, location]);
 
   const goToSearchByKeyEvent = (event) => {
     if (!isCtrlDown(event)) {
@@ -224,7 +226,6 @@ const Titlebar = ({ location, history, currentLocation }) => {
     }
 
     history.push("/search");
-    setIsLibraryVisible(false);
   };
   useKeyPress(KEYS.F, goToSearchByKeyEvent);
 
@@ -235,10 +236,8 @@ const Titlebar = ({ location, history, currentLocation }) => {
       history.push("/");
 
       if (!isSmall) {
-        return;
+        setIsLibraryVisible(true);
       }
-
-      setIsLibraryVisible(true);
       return;
     }
 
