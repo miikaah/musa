@@ -282,7 +282,10 @@ const Playlist = ({
   const paste = (event) => {
     if (!isCtrlDown(event)) return;
     dispatch(
-      pasteToPlaylist(clipboard, event.shiftKey ? activeIndex - 1 : activeIndex)
+      pasteToPlaylist(
+        clipboard,
+        activeIndex < 0 ? playlist.length : activeIndex
+      )
     );
   };
   useKeyPress(KEYS.V, paste);

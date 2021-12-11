@@ -130,16 +130,18 @@ const player = (state = initialState, action) => {
         items: [...state.items, action.item],
       };
     case PASTE_TO_PLAYLIST: {
-      if (!action.index) {
+      if (!action.index && action.index !== 0) {
         const newItems = [...state.items, ...action.items];
         return getStateByPlaylistChange(state, newItems);
       }
+
       const playlistStart = state.items.slice(0, action.index + 1);
       const playlistEnd = state.items.slice(
         action.index + 1,
         state.items.length
       );
       const newItems = [...playlistStart, ...action.items, ...playlistEnd];
+
       return getStateByPlaylistChange(state, newItems);
     }
     case REMOVE_RANGE_FROM_PLAYLIST: {
