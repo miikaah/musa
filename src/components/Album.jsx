@@ -66,15 +66,15 @@ const Album = ({ item, dispatch }) => {
       pasteToPlaylist(
         item.files.map((s) => ({
           ...s,
-          cover: item.coverUrl,
+          coverUrl: item.coverUrl,
         }))
       )
     );
     dispatchToast(msg, key, dispatch);
   };
 
-  const artist = item?.metadata?.artist || "";
-  const album = item?.metadata?.album || "";
+  const artist = item?.metadata?.artist || item.artistName || "";
+  const album = item?.metadata?.album || item.name || "";
 
   return (
     <AlbumContainer>

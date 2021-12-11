@@ -44,7 +44,7 @@ const Artist = ({ item: artist, dispatch }) => {
         pasteToPlaylist(
           album.files.map((s) => ({
             ...s,
-            cover: album.coverUrl,
+            coverUrl: album.coverUrl,
           }))
         )
       );
