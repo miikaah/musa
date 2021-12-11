@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { breakpoint } from "../breakpoints";
 
 const BasePageContainer = styled.div`
   h1 {
@@ -14,10 +13,6 @@ const BasePageContainer = styled.div`
   width: 100%;
   margin-top: var(--titlebar-height);
   overflow-y: auto;
-
-  @media (max-width: ${breakpoint.xs}) {
-    padding: 0 8px;
-  }
 `;
 
 const BasePageWrapper = styled.div`

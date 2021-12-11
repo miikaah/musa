@@ -5,6 +5,8 @@ import styled from "styled-components/macro";
 const Container = styled.div`
   padding: ${({ isSmall }) =>
     isSmall ? "20px 20px 20px 10px" : "20px 20px 20px 10px"};
+  min-width: ${({ isSmall }) => (isSmall ? 394 : 432)}px;
+  max-width: 96%;
 
   > div:nth-child(1) {
     padding-bottom: 8px;
@@ -40,12 +42,12 @@ const Metadata = styled.div`
     display: flex;
 
     > span {
-      padding-right: 20px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     > span:first-of-type {
+      padding-right: 20px;
       flex: 0 1 50%;
     }
     > span:last-of-type {

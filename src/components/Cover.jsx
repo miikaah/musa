@@ -29,9 +29,9 @@ const Colors = {
 
 const Container = styled.div`
   flex: 41.7%;
-  max-width: 576px;
-  max-height: 576px;
-  margin-left: ${({ isSmall }) => (isSmall ? "0" : "500")}px;
+  max-width: ${({ isSmall }) => (isSmall ? 394 : 576)}px;
+  max-height: ${({ isSmall }) => (isSmall ? 394 : 576)}px;
+  margin-left: ${({ isSmall }) => (isSmall ? 0 : 500)}px;
   visibility: ${({ isCoverLoaded }) => (isCoverLoaded ? "visible" : "hidden")};
 `;
 
