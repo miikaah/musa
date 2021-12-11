@@ -1,10 +1,13 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
+import isEqual from "lodash.isequal";
 import styled, { css } from "styled-components/macro";
 import {
   pasteToPlaylist,
   removeRangeFromPlaylist,
   removeIndexesFromPlaylist,
+  playIndex,
+  replay,
 } from "reducers/player.reducer";
 import { KEYS, isCtrlDown } from "../util";
 import { useKeyPress } from "../hooks";
@@ -210,6 +213,45 @@ const Playlist = ({
   };
   useKeyPress(KEYS.Down, moveDown);
 
+  const shouldReplaySong = () => {
+    if (
+      activeIndex === currentIndex &&
+      isEqual(currentItem, playlist[activeIndex])
+    ) {
+      return true;
+    }
+
+    if (isIndexesSelection()) {
+      const idx = Math.min(...Array.from(selectedIndexes.values()));
+
+      return idx === currentIndex && isEqual(currentItem, playlist[idx]);
+    }
+
+    if (isContinuousSelection()) {
+      const idx = Math.min(startIndex, endIndex);
+
+      return idx === currentIndex && isEqual(currentItem, playlist[idx]);
+    }
+
+    return false;
+  };
+
+  const playOrReplayActiveItem = () => {
+    if (shouldReplaySong()) {
+      dispatch(replay(true));
+      return;
+    }
+
+    const indices = [activeIndex, startIndex, endIndex].filter(
+      (idx) => typeof idx === "number" && isFinite(idx) && idx > -1
+    );
+
+    dispatch(
+      playIndex(Math.min(...indices, ...Array.from(selectedIndexes.values())))
+    );
+  };
+  useKeyPress(KEYS.Enter, playOrReplayActiveItem);
+
   const removeItems = () => {
     if (isContinuousSelection()) {
       handleContinuousSelection({
@@ -344,6 +386,10 @@ const Playlist = ({
           </ControlsInstruction>
 
           <ControlsHeader>Playlist controls</ControlsHeader>
+          <ControlsInstruction>
+            <div>Play / Replay</div>
+            <div>Enter</div>
+          </ControlsInstruction>
           <ControlsInstruction>
             <div>Select</div>
             <div>Click + Drag</div>
