@@ -16,6 +16,8 @@ utilising Electron and React.
 
 - fix: Do not allow duplicate indices in random find
 - fix: Add timestamp to cover so that update works
+- feat: Add artist albums to albums find if not enough search results
+- feat: Genre search
 
 #### Cross platform
 
