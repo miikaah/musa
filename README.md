@@ -15,7 +15,7 @@ utilising Electron and React.
 ### fix
 
 - fix: Do not allow duplicate indices in random find
-- fix: Make cover not jump
+- fix: Add timestamp to cover so that update works
 
 #### Cross platform
 
@@ -23,7 +23,6 @@ utilising Electron and React.
 
 ### V2
 
-- fix: Disable "Run initial scan" button when scan is running
 - feat: Write tags to music files
 - feat: Add ReplayGain scanning
 - feat: Add Dynamic Range scanning
