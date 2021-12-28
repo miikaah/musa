@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, HashRouter, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -53,6 +53,8 @@ library.add(
 );
 
 const App = ({ dispatch }) => {
+  const [isReady, setIsReady] = useState();
+
   useEffect(() => {
     const update = (settings) => {
       const currentTheme = settings?.currentTheme?.colors
@@ -69,6 +71,7 @@ const App = ({ dispatch }) => {
           currentTheme,
         })
       );
+      setIsReady(true);
     };
 
     Api.getSettings()
@@ -94,6 +97,10 @@ const App = ({ dispatch }) => {
     Api.getArtists().then((artists) => dispatch(setListingWithLabels(artists)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (!isReady) {
+    return null;
+  }
 
   const Main = () => (
     <AppContainer>
