@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
 import styled from "styled-components/macro";
 import ThemeLibrary from "components/ThemeLibrary";
 import ReplaygainSetting from "components/ReplaygainSetting";
@@ -84,11 +83,9 @@ const Settings = ({ musicLibraryPath }) => {
   );
 };
 
-export default withRouter(
-  connect(
-    (state) => ({
-      musicLibraryPath: state.settings.musicLibraryPath,
-    }),
-    (dispatch) => ({ dispatch })
-  )(Settings)
-);
+export default connect(
+  (state) => ({
+    musicLibraryPath: state.settings.musicLibraryPath,
+  }),
+  (dispatch) => ({ dispatch })
+)(Settings);

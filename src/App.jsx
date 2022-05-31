@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, HashRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -108,11 +108,11 @@ const App = ({ dispatch }) => {
       <Titlebar />
       <ProgressBar />
       <Toolbar />
-      <Switch>
-        <Route exact path="/" component={AppMain} />
-        <Route exact path="/settings" component={Settings} />
-        <Route exact path="/search" component={Search} />
-      </Switch>
+      <Routes>
+        <Route exact path="/" element={<AppMain />} />
+        <Route exact path="/settings" element={<Settings />} />
+        <Route exact path="/search" element={<Search />} />
+      </Routes>
     </AppContainer>
   );
 

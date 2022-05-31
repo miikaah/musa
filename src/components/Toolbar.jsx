@@ -1,5 +1,5 @@
 import React from "react";
-import { withRouter } from "react-router";
+import { useNavigate } from "react-router";
 import styled from "styled-components/macro";
 import Player from "components/Player";
 
@@ -18,10 +18,12 @@ const ToolbarContainer = styled.div`
   box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 16px;
 `;
 
-const Toolbar = ({ history }) => {
+const Toolbar = () => {
+  const navigate = useNavigate();
+
   const handleToolbarClick = (event) => {
     if (event.target.id === "Toolbar") {
-      history.push("/");
+      navigate("/");
     }
   };
 
@@ -34,4 +36,4 @@ const Toolbar = ({ history }) => {
   );
 };
 
-export default withRouter(Toolbar);
+export default Toolbar;

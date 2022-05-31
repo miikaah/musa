@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { withRouter } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
 import Library from "components/LibraryV2";
@@ -157,9 +157,11 @@ const locationToTitleMap = {
   "/settings/": "Settings",
 };
 
-const Titlebar = ({ location, history, currentLocation }) => {
+const Titlebar = ({ currentLocation }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const [isMacOs, setIsMacOs] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isLibraryVisible, setIsLibraryVisible] = useState(
     location.pathname === "/" || window.innerWidth > breakpoint.lg
   );
@@ -221,11 +223,11 @@ const Titlebar = ({ location, history, currentLocation }) => {
     }
 
     if (location.pathname === "/search") {
-      history.push("/");
+      navigate("/");
       return;
     }
 
-    history.push("/search");
+    navigate("/search");
   };
   useKeyPress(KEYS.F, goToSearchByKeyEvent);
 
@@ -233,7 +235,7 @@ const Titlebar = ({ location, history, currentLocation }) => {
     libraryButtonRef.current.blur();
 
     if (location.pathname !== "/") {
-      history.push("/");
+      navigate("/");
 
       if (!isSmall) {
         setIsLibraryVisible(true);
@@ -253,9 +255,9 @@ const Titlebar = ({ location, history, currentLocation }) => {
     settingsButtonRef.current.blur();
 
     if (location.pathname.startsWith("/settings")) {
-      history.push("/");
+      navigate("/");
     } else {
-      history.push("/settings");
+      navigate("/settings");
     }
 
     event.stopPropagation();
@@ -265,9 +267,9 @@ const Titlebar = ({ location, history, currentLocation }) => {
     searchButtonRef.current.blur();
 
     if (location.pathname.startsWith("/search")) {
-      history.push("/");
+      navigate("/");
     } else {
-      history.push("/search");
+      navigate("/search");
     }
 
     event.stopPropagation();
@@ -350,12 +352,10 @@ const Titlebar = ({ location, history, currentLocation }) => {
   );
 };
 
-export default withRouter(
-  connect(
-    (state) => ({
-      musicLibraryPath: state.settings.musicLibraryPath,
-      currentLocation: state.settings.currentLocation,
-    }),
-    (dispatch) => ({ dispatch })
-  )(Titlebar)
-);
+export default connect(
+  (state) => ({
+    musicLibraryPath: state.settings.musicLibraryPath,
+    currentLocation: state.settings.currentLocation,
+  }),
+  (dispatch) => ({ dispatch })
+)(Titlebar);

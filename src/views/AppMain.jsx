@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import { setScanProps } from "reducers/library.reducer";
 import Playlist from "components/PlaylistV4";
@@ -70,7 +70,7 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
   };
 
   if (isInit && isElectron && !musicLibraryPath) {
-    return <Redirect to={{ pathname: "/settings" }} />;
+    return <Navigate to="/settings" />;
   }
 
   return (

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
 import { setQuery, setSearchResults } from "reducers/library.reducer";
 import styled from "styled-components/macro";
 import { useDebounce } from "hooks";
@@ -125,14 +124,12 @@ const Search = ({ query, artists, albums, audios, dispatch }) => {
   );
 };
 
-export default withRouter(
-  connect(
-    (state) => ({
-      query: state.library.query,
-      artists: state.library.searchArtists,
-      albums: state.library.searchAlbums,
-      audios: state.library.searchAudios,
-    }),
-    (dispatch) => ({ dispatch })
-  )(Search)
-);
+export default connect(
+  (state) => ({
+    query: state.library.query,
+    artists: state.library.searchArtists,
+    albums: state.library.searchAlbums,
+    audios: state.library.searchAudios,
+  }),
+  (dispatch) => ({ dispatch })
+)(Search);
