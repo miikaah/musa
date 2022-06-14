@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
+import isEqual from "lodash.isequal";
 import rootReducer from "./reducers";
 import App from "./App.jsx";
 import Api from "api-client";
@@ -10,14 +11,16 @@ import "./index.css";
 
 export const store = createStore(rootReducer);
 
+let previousSettings;
 store.subscribe(() => {
   const settings = store.getState().settings;
 
-  if (settings.isInit) {
+  if (settings.isInit && !isEqual(previousSettings, settings)) {
     Api.insertSettings({
       ...settings,
       isInit: null,
     });
+    previousSettings = settings;
   }
 });
 
