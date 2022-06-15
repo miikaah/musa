@@ -29,7 +29,7 @@ const AlbumFullAdd = styled.div`
     max-width: 80px;
     min-height: 80px;
     max-height: 80px;
-    background-color: #000;
+    background-color: #d7d7d7;
   }
 
   :hover {
@@ -50,6 +50,12 @@ const AlbumInfo = styled.div`
 
   > p:nth-child(1) {
     font-weight: bold;
+    max-height: 38px;
+    overflow: hidden;
+  }
+
+  > p > span:nth-child(2) {
+    margin: 0 4px;
   }
 `;
 
@@ -75,14 +81,19 @@ const Album = ({ item, dispatch }) => {
 
   const artist = item?.metadata?.artist || item.artistName || "";
   const album = item?.metadata?.album || item.name || "";
+  const year = item?.metadata?.year || "";
 
   return (
     <AlbumContainer>
       <AlbumFullAdd onClick={addAlbumSongsToPlaylist}>
         <AlbumImage item={item} />
         <AlbumInfo>
-          <p>{album}</p>
-          <p>{artist}</p>
+          <p title={album}>{album}</p>
+          <p>
+            <span>{artist}</span>
+            <span>{artist && year ? "\u00B7" : ""}</span>
+            {year && <span>{year}</span>}
+          </p>
         </AlbumInfo>
       </AlbumFullAdd>
     </AlbumContainer>

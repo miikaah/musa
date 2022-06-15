@@ -5,7 +5,6 @@ import styled from "styled-components/macro";
 import { useDebounce } from "hooks";
 import Song from "components/Song";
 import Album from "components/Album";
-import Artist from "components/Artist";
 import BasePage from "components/BasePage";
 import Button from "components/Button";
 import config from "config";
@@ -27,10 +26,10 @@ const SearchContainer = styled.div`
 `;
 
 const SearchBlock = styled.div`
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   color: #000;
 
-  h3 {
+  h5 {
     color: var(--color-typography);
   }
 `;
@@ -96,23 +95,15 @@ const Search = ({ query, artists, albums, audios, dispatch }) => {
           </RandomButton>
         </InputContainer>
         <SearchBlock>
-          <h3>Artists</h3>
-          <SearchBlockWrapper height={43}>
-            {artists.map((r, i) => (
-              <Artist key={i} item={r} />
-            ))}
-          </SearchBlockWrapper>
-        </SearchBlock>
-        <SearchBlock>
-          <h3>Albums</h3>
-          <SearchBlockWrapper height={200}>
+          <h5>Albums</h5>
+          <SearchBlockWrapper height={300}>
             {albums.map((r, i) => (
               <Album key={i} item={r} />
             ))}
           </SearchBlockWrapper>
         </SearchBlock>
         <SearchBlock>
-          <h3>Songs</h3>
+          <h5>Songs</h5>
           <SearchBlockWrapper height={300}>
             {audios.map((r, i) => (
               <Song key={i} item={r} />
