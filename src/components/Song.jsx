@@ -75,7 +75,7 @@ const Song = ({ item, dispatch }) => {
   };
 
   const artist = item?.metadata?.artist || item?.artistName || "";
-  const album = item?.albumName || "";
+  const album = item?.metadata?.album || item?.albumName || "";
   const title = item?.metadata?.title || item?.name || "";
   const year = item?.metadata?.year || "";
 
