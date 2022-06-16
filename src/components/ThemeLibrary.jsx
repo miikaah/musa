@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
 import { updateCurrentTheme } from "../util";
@@ -43,6 +43,7 @@ const ThemeList = styled.div`
   ${themeStyles}
   padding: 12px 0 0 12px;
   overflow-y: auto;
+  min-height: 300px;
 `;
 
 const ThemeList2 = styled.div`
@@ -58,14 +59,8 @@ const NoThemes = styled.div`
   padding-bottom: 12px;
 `;
 
-const ThemeLibrary = ({ currentTheme, dispatch }) => {
-  const [themes, setThemes] = useState([]);
+const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
   const hasThemes = Array.isArray(themes) && themes.length > 0;
-
-  useEffect(() => {
-    Api.getThemes().then(setThemes);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const changeCurrentTheme = (theme) => {
     updateCurrentTheme(theme.colors);

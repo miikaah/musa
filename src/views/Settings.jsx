@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import ThemeLibrary from "components/ThemeLibrary";
@@ -27,9 +27,24 @@ const ActionButton = styled(Button)`
 `;
 
 const Settings = ({ musicLibraryPath }) => {
+  const [themes, setThemes] = useState([]);
+  const [hasFetchedThemes, setHasFetchedThemes] = useState(false);
+
+  useEffect(() => {
+    Api.getThemes()
+      .then(setThemes)
+      .then(() => setHasFetchedThemes(true))
+      .catch(() => setHasFetchedThemes(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const runInitialScan = () => {
     Api.refreshLibrary();
   };
+
+  if (!hasFetchedThemes) {
+    return <BasePage></BasePage>;
+  }
 
   return (
     <BasePage>
@@ -61,7 +76,7 @@ const Settings = ({ musicLibraryPath }) => {
             <>
               <SettingsBlock>
                 <h3>Theme</h3>
-                <ThemeLibrary />
+                <ThemeLibrary themes={themes} setThemes={setThemes} />
               </SettingsBlock>
             </>
           )}

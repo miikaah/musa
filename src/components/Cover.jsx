@@ -9,7 +9,6 @@ import { updateCurrentTheme } from "../util";
 import { breakpoint } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
 import Api from "api-client";
-import { fadeIn } from "animations";
 import CoverInfo from "./CoverInfo";
 
 const Colors = {
@@ -41,7 +40,6 @@ const Image = styled.img`
   width: 100%;
   height: 100%;
   max-height: ${({ maxHeight }) => maxHeight && `${maxHeight}px`};
-  animation: ${fadeIn} 0.1666s;
   transition: ${({ isCoverLoaded }) => isCoverLoaded && "max-height 0.3s"};
 `;
 
