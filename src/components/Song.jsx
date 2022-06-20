@@ -36,22 +36,26 @@ const SongInfo = styled.div`
 
   > p {
     margin: 0 0 6px;
-    max-height: 38px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
   }
 
   > p:not(:nth-child(1)) {
     font-size: var(--font-size-xs);
+    white-space: nowrap;
   }
 
   > p:nth-child(1) {
     font-weight: bold;
+    max-height: 38px;
   }
 
   > p:nth-child(2),
   > p:nth-child(3) {
     font-size: var(--font-size-xxs);
     margin: 0 0 3px;
+    max-height: 15px;
   }
 
   > p > span:nth-child(2) {
@@ -82,7 +86,7 @@ const Song = ({ item, dispatch }) => {
       <AlbumImage item={item} />
       <SongInfo>
         <p title={title}>{title}</p>
-        {album && <p>{album}</p>}
+        {album && <p title={album}>{album}</p>}
         <p>
           <span>{artist}</span>
           <span>{artist && year ? "\u00B7" : ""}</span>

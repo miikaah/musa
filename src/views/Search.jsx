@@ -9,6 +9,7 @@ import {
 } from "reducers/library.reducer";
 import styled, { css } from "styled-components/macro";
 import { useDebounce } from "hooks";
+import { KEYS } from "../util";
 import Song from "components/Song";
 import Album from "components/Album";
 import Artist from "components/Artist";
@@ -126,6 +127,7 @@ const Search = ({
 }) => {
   const [previousFilter, setPreviousFilter] = useState("");
   const [isFetching, setIsFetching] = useState(false);
+  const [isDeletingFilter, setIsDeletingFilter] = useState(false);
   const queryToBackend = useDebounce(query, isElectron ? 0 : 16);
 
   useEffect(() => {
@@ -133,7 +135,7 @@ const Search = ({
       const [artistFilter, albumFilter] = filter.split(",");
       const firstChar = artistFilter.substring(0, 1).toUpperCase();
       const strictArtists = (listingWithLabels[firstChar] || []).filter((a) =>
-        a.name.toLowerCase().startsWith(artistFilter.toLowerCase())
+        a.name.toLowerCase().includes(artistFilter.toLowerCase())
       );
 
       if (!albumFilter) {
@@ -160,18 +162,24 @@ const Search = ({
               setSearchResults({
                 artists: strictArtists,
                 albums: artist.albums,
-                audios: mappedFiles,
+                audios: [...mappedFiles, ...artist.files],
               })
             );
 
-            if (previousFilter !== `${filter},` && !filter.endsWith(",")) {
+            if (
+              !isDeletingFilter &&
+              previousFilter !== `${filter},` &&
+              !filter.endsWith(",")
+            ) {
               dispatch(setFilter(`${filter},`));
             }
           });
         }
       } else if (albumFilter && filter.length > previousFilter.length) {
-        const strictAlbums = albums.filter((a) =>
-          a.name.toLowerCase().startsWith(albumFilter)
+        const strictAlbums = albums.filter(
+          (a) =>
+            a?.name.toLowerCase().startsWith(albumFilter) ||
+            a?.metadata?.album.toLowerCase().startsWith(albumFilter)
         );
 
         if (strictAlbums.length > 1) {
@@ -211,11 +219,20 @@ const Search = ({
             a.name.toLowerCase().startsWith(albumFilter)
           );
 
+          const mappedFiles = strictAlbums
+            .map((a) =>
+              a.files.map((f) => ({
+                ...f,
+                coverUrl: a.coverUrl,
+              }))
+            )
+            .flat(Infinity);
+
           dispatch(
             setSearchResults({
               artists: strictArtists,
               albums: strictAlbums,
-              audios: [],
+              audios: mappedFiles,
             })
           );
         });
@@ -278,6 +295,21 @@ const Search = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryToBackend]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      setIsDeletingFilter(
+        event?.target?.tagName === "INPUT" &&
+          (event.keyCode === KEYS.Backspace || event.keyCode === KEYS.Delete)
+      );
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   const findRandom = () => {
     setIsFetching(true);
     dispatch(setQuery(""));
@@ -334,7 +366,7 @@ const Search = ({
             <h5>Albums{` (${albums.length})`}</h5>
             <SearchBlockWrapper>
               {albums.map((a, i) => (
-                <Album key={i} item={a} />
+                <Album key={i} item={a} filter={filter} />
               ))}
             </SearchBlockWrapper>
           </SearchBlock>

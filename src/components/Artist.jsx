@@ -35,7 +35,7 @@ const Artist = ({ item: artist, dispatch }) => {
 
   return (
     <ArtistContainer
-      onClick={(name) => dispatch(setFilter(`${title.toLowerCase()},`))}
+      onClick={() => dispatch(setFilter(`${title.toLowerCase()},`))}
     >
       <ArtistName title={title}>{title}</ArtistName>
     </ArtistContainer>

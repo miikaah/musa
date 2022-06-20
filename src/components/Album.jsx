@@ -1,8 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
+import { setFilter } from "reducers/library.reducer";
 import AlbumImage from "./common/AlbumImageV2";
 
 const AlbumContainer = styled.div`
@@ -57,7 +59,23 @@ const AlbumInfo = styled.div`
   }
 `;
 
-const Album = ({ item, dispatch }) => {
+const IconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-self: stretch;
+  width: 30px;
+
+  svg {
+    align-self: center;
+  }
+
+  :hover {
+    cursor: pointer;
+    color: var(--color-primary-highlight);
+  }
+`;
+
+const Album = ({ item, filter, dispatch }) => {
   if (!item) {
     return null;
   }
@@ -77,6 +95,18 @@ const Album = ({ item, dispatch }) => {
     dispatchToast(msg, key, dispatch);
   };
 
+  const handleFiltering = () => {
+    if (isFilteringByThisAlbum) {
+      dispatch(setFilter(`${filter.split(",")[0]},`));
+    } else {
+      dispatch(
+        setFilter(
+          `${artistFilter || artist.toLowerCase()},${album.toLowerCase()}`
+        )
+      );
+    }
+  };
+
   const artist =
     item?.metadata?.artist ||
     item.artistName ||
@@ -84,6 +114,11 @@ const Album = ({ item, dispatch }) => {
     "";
   const album = item?.metadata?.album || item.name || "";
   const year = item?.metadata?.year || item?.year || "";
+  const [artistFilter, albumFilter] = filter.split(",");
+  const isFilteringByThisAlbum =
+    artistFilter &&
+    albumFilter &&
+    album.toLowerCase().startsWith((albumFilter || "").trim());
 
   return (
     <AlbumContainer>
@@ -98,6 +133,13 @@ const Album = ({ item, dispatch }) => {
           </p>
         </AlbumInfo>
       </AlbumFullAdd>
+      <IconWrapper onClick={handleFiltering}>
+        {isFilteringByThisAlbum ? (
+          <FontAwesomeIcon icon="chevron-left" />
+        ) : (
+          <FontAwesomeIcon icon="chevron-right" />
+        )}
+      </IconWrapper>
     </AlbumContainer>
   );
 };
