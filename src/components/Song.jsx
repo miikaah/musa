@@ -7,10 +7,8 @@ import AlbumImage from "./common/AlbumImageV2";
 
 const SongContainer = styled.div`
   display: flex;
-  flex: 48%;
-  max-width: 48%;
   max-height: 80px;
-  margin: 0 12px 20px 0;
+  margin: 0 10px 10px 0;
   cursor: pointer;
   border: 2px solid transparent;
   border-top-width: 0;

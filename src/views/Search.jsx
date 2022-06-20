@@ -12,8 +12,9 @@ import Api from "api-client";
 
 const { isElectron } = config;
 
-const SearchContainer = styled.div`
-  padding-bottom: 60px;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
 
   input {
     width: 100%;
@@ -25,7 +26,16 @@ const SearchContainer = styled.div`
   }
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+
+  > div:first-child {
+    margin-right: 20px;
+  }
+`;
+
 const SearchBlock = styled.div`
+  flex: 50%;
   margin-bottom: 20px;
   color: #000;
 
@@ -36,16 +46,12 @@ const SearchBlock = styled.div`
 
 const SearchBlockWrapper = styled.div`
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  ${({ height }) =>
-    height &&
-    `
-    min-height: ${height}px;
-    max-height: ${height}px;
-  `}
+  flex-direction: column;
+  min-height: 730px;
+  max-height: 730px;
   background: #fff;
   padding: 10px 0 0 10px;
+  overflow: auto;
 `;
 
 const InputContainer = styled.div`
@@ -82,7 +88,7 @@ const Search = ({ query, artists, albums, audios, dispatch }) => {
 
   return (
     <BasePage>
-      <SearchContainer>
+      <Container>
         <InputContainer>
           <input
             autoFocus
@@ -94,23 +100,25 @@ const Search = ({ query, artists, albums, audios, dispatch }) => {
             Random
           </RandomButton>
         </InputContainer>
-        <SearchBlock>
-          <h5>Albums</h5>
-          <SearchBlockWrapper height={300}>
-            {albums.map((r, i) => (
-              <Album key={i} item={r} />
-            ))}
-          </SearchBlockWrapper>
-        </SearchBlock>
-        <SearchBlock>
-          <h5>Songs</h5>
-          <SearchBlockWrapper height={300}>
-            {audios.map((r, i) => (
-              <Song key={i} item={r} />
-            ))}
-          </SearchBlockWrapper>
-        </SearchBlock>
-      </SearchContainer>
+        <Wrapper>
+          <SearchBlock>
+            <h5>Albums</h5>
+            <SearchBlockWrapper>
+              {albums.map((r, i) => (
+                <Album key={i} item={r} />
+              ))}
+            </SearchBlockWrapper>
+          </SearchBlock>
+          <SearchBlock>
+            <h5>Songs</h5>
+            <SearchBlockWrapper>
+              {audios.map((r, i) => (
+                <Song key={i} item={r} />
+              ))}
+            </SearchBlockWrapper>
+          </SearchBlock>
+        </Wrapper>
+      </Container>
     </BasePage>
   );
 };

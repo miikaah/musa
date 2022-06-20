@@ -7,9 +7,7 @@ import AlbumImage from "./common/AlbumImageV2";
 
 const AlbumContainer = styled.div`
   display: flex;
-  flex: 45%;
-  max-width: 50%;
-  margin: 0 10px 20px 0;
+  margin: 0 10px 10px 0;
 `;
 
 const bottomBorder = css`
