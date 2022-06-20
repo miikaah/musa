@@ -30,10 +30,21 @@ export const setFilter = (filter) => ({
   filter,
 });
 
+export const SET_IS_RANDOM = "MUSA/LIBRARY/SET_IS_RANDOM";
+export const setIsSearchRandom = (isRandom) => ({
+  type: SET_IS_RANDOM,
+  isRandom,
+});
+
 export const SET_SEARCH_RESULTS = "MUSA/LIBRARY/SET_SEARCH_RESULTS";
 export const setSearchResults = (result) => ({
   type: SET_SEARCH_RESULTS,
   result,
+});
+
+export const CLEAR_SEARCH = "MUSA/LIBRARY/CLEAR_SEARCH";
+export const clearSearch = () => ({
+  type: CLEAR_SEARCH,
 });
 
 const scanColor = {
@@ -49,6 +60,7 @@ const initialState = {
   scanColor: scanColor.RED,
   query: "",
   filter: "",
+  isRandom: false,
   searchArtists: [],
   searchAlbums: [],
   searchAudios: [],
@@ -89,12 +101,29 @@ const library = (state = initialState, action) => {
         filter: action.filter,
       };
     }
+    case SET_IS_RANDOM: {
+      return {
+        ...state,
+        isRandom: action.isRandom,
+      };
+    }
     case SET_SEARCH_RESULTS: {
       return {
         ...state,
         searchArtists: action.result.artists,
         searchAlbums: action.result.albums,
         searchAudios: action.result.audios,
+      };
+    }
+    case CLEAR_SEARCH: {
+      return {
+        ...state,
+        query: "",
+        filter: "",
+        isRandom: false,
+        searchArtists: [],
+        searchAlbums: [],
+        searchAudios: [],
       };
     }
     default:

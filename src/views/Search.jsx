@@ -4,8 +4,10 @@ import {
   setQuery,
   setFilter,
   setSearchResults,
+  setIsSearchRandom,
+  clearSearch,
 } from "reducers/library.reducer";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 import { useDebounce } from "hooks";
 import Song from "components/Song";
 import Album from "components/Album";
@@ -20,6 +22,7 @@ const Container = styled.div`
   position: fixed;
   z-index: 2;
   width: 100%;
+  height: 100%;
   background-color: var(--color-bg);
   margin-top: var(--titlebar-height);
 
@@ -39,8 +42,8 @@ const ContainerWrapper = styled.div`
   overflow: auto;
   padding: 20px;
 
-  @media (min-width: 1350px) {
-    width: 90%;
+  @media (min-width: 960px) {
+    max-width: 960px;
   }
 `;
 
@@ -49,17 +52,17 @@ const Wrapper = styled.div`
   overflow: auto;
 
   > div:first-child {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 150px;
+    max-width: 150px;
   }
 
   > div:not(:first-child) {
-    min-width: 449.81px;
-    max-width: 449.81px;
+    min-width: 374.81px;
+    max-width: 374.81px;
   }
 
   > div:not(:last-child) {
-    margin-right: 20px;
+    margin-right: 10px;
   }
 `;
 
@@ -86,21 +89,29 @@ const InputContainer = styled.div`
   display: flex;
   margin-bottom: 20px;
 
-  input:first-child {
-    min-width: 449.81px;
+  > input {
+    width: 345px;
+    margin-right: 10px;
   }
 
-  input {
-    width: 449.81px;
-    margin-right: 20px;
+  > button:first-of-type {
+    margin-right: 10px;
   }
 `;
 
-const RandomButton = styled(Button)`
+const buttonStyles = css`
   max-width: 100px;
   max-height: 40px;
   justify-self: end;
   align-self: center;
+`;
+
+const RandomButton = styled(Button)`
+  ${buttonStyles}
+`;
+
+const ClearButton = styled(Button)`
+  ${buttonStyles}
 `;
 
 const Search = ({
@@ -110,6 +121,7 @@ const Search = ({
   albums,
   audios,
   listingWithLabels,
+  isSearchRandom,
   dispatch,
 }) => {
   const [previousFilter, setPreviousFilter] = useState("");
@@ -135,11 +147,20 @@ const Search = ({
           );
         } else if (strictArtists.length === 1) {
           Api.getArtistAlbums(strictArtists[0].id).then((artist) => {
+            const mappedFiles = artist.albums
+              .map((a) =>
+                a.files.map((f) => ({
+                  ...f,
+                  coverUrl: a.coverUrl,
+                }))
+              )
+              .flat(Infinity);
+
             dispatch(
               setSearchResults({
                 artists: strictArtists,
                 albums: artist.albums,
-                audios: [],
+                audios: mappedFiles,
               })
             );
 
@@ -154,11 +175,20 @@ const Search = ({
         );
 
         if (strictAlbums.length > 1) {
+          const mappedFiles = strictAlbums
+            .map((a) =>
+              a.files.map((f) => ({
+                ...f,
+                coverUrl: a.coverUrl,
+              }))
+            )
+            .flat(Infinity);
+
           dispatch(
             setSearchResults({
               artists: strictArtists,
               albums: strictAlbums,
-              audios: [],
+              audios: mappedFiles,
             })
           );
         } else if (strictAlbums.length === 1) {
@@ -192,7 +222,12 @@ const Search = ({
       }
 
       dispatch(setQuery(""));
-    } else if (!isFetching && filter.length < 1 && query.length < 1) {
+    } else if (
+      !isSearchRandom &&
+      !isFetching &&
+      filter.length < 1 &&
+      query.length < 1
+    ) {
       dispatch(
         setSearchResults({
           artists: [],
@@ -203,6 +238,10 @@ const Search = ({
     }
 
     setPreviousFilter(filter);
+
+    if (filter) {
+      dispatch(setIsSearchRandom(false));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, listingWithLabels]);
 
@@ -218,7 +257,12 @@ const Search = ({
         );
         dispatch(setFilter(""));
       });
-    } else if (!isFetching && filter.length < 1 && query.length < 1) {
+    } else if (
+      !isSearchRandom &&
+      !isFetching &&
+      filter.length < 1 &&
+      query.length < 1
+    ) {
       dispatch(
         setSearchResults({
           artists: [],
@@ -227,6 +271,10 @@ const Search = ({
         })
       );
     }
+
+    if (queryToBackend) {
+      dispatch(setIsSearchRandom(false));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryToBackend]);
 
@@ -234,12 +282,17 @@ const Search = ({
     setIsFetching(true);
     dispatch(setQuery(""));
     dispatch(setFilter(""));
+    dispatch(setIsSearchRandom(true));
 
     Api.findRandom().then((result) => {
       dispatch(setSearchResults(result));
       setIsFetching(false);
     });
   };
+
+  const artistToRender = artists.length
+    ? artists
+    : Object.values(listingWithLabels).flat(Infinity);
 
   return (
     <Container>
@@ -248,7 +301,7 @@ const Search = ({
           <input
             autoFocus
             value={filter}
-            placeholder="...Filter"
+            placeholder="...Filter by artist,album"
             onChange={(e) => dispatch(setFilter(e.target.value))}
           />
           <div />
@@ -260,21 +313,25 @@ const Search = ({
           <RandomButton isPrimary isSmall onClick={findRandom}>
             Random
           </RandomButton>
+          <ClearButton
+            isSecondary
+            isSmall
+            onClick={() => dispatch(clearSearch())}
+          >
+            Clear
+          </ClearButton>
         </InputContainer>
         <Wrapper>
           <SearchBlock>
-            <h5>Artists</h5>
+            <h5>Artists{` (${artistToRender.length})`}</h5>
             <SearchBlockWrapper>
-              {(artists.length
-                ? artists
-                : Object.values(listingWithLabels).flat(Infinity)
-              ).map((a, i) => (
+              {artistToRender.map((a, i) => (
                 <Artist key={i} item={a} />
               ))}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
-            <h5>Albums</h5>
+            <h5>Albums{` (${albums.length})`}</h5>
             <SearchBlockWrapper>
               {albums.map((a, i) => (
                 <Album key={i} item={a} />
@@ -282,7 +339,7 @@ const Search = ({
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
-            <h5>Songs</h5>
+            <h5>Songs{` (${audios.length})`}</h5>
             <SearchBlockWrapper>
               {audios.map((a, i) => (
                 <Song key={i} item={a} />
@@ -303,6 +360,7 @@ export default connect(
     albums: state.library.searchAlbums,
     audios: state.library.searchAudios,
     listingWithLabels: state.library.listingWithLabels,
+    isSearchRandom: state.library.isRandom,
   }),
   (dispatch) => ({ dispatch })
 )(Search);
