@@ -1,8 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
-import { dispatchToast } from "../util";
-import { pasteToPlaylist } from "reducers/player.reducer";
+import { setFilter } from "reducers/library.reducer";
 
 const bottomBorder = css`
   cursor: pointer;
@@ -12,8 +11,6 @@ const bottomBorder = css`
 
 const ArtistContainer = styled.div`
   display: flex;
-  flex: 25%;
-  max-width: 25%;
   ${bottomBorder}
 
   :hover {
@@ -22,11 +19,11 @@ const ArtistContainer = styled.div`
 `;
 
 const ArtistName = styled.div`
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  max-width: 95%;
+  max-width: 96%;
 `;
 
 const Artist = ({ item: artist, dispatch }) => {
@@ -36,32 +33,10 @@ const Artist = ({ item: artist, dispatch }) => {
 
   const title = artist.name;
 
-  const addAlbumSongsToPlaylist = () => {
-    const albumsLen = artist.albums.length;
-
-    artist.albums.forEach((album) => {
-      dispatch(
-        pasteToPlaylist(
-          album.files.map((s) => ({
-            ...s,
-            coverUrl: album.coverUrl,
-          }))
-        )
-      );
-    });
-
-    if (artist.files.length > 0) {
-      dispatch(pasteToPlaylist(artist.files));
-    }
-
-    const msg = `Added ${title} (${albumsLen} albums) to playlist`;
-    const key = `${title}-${Date.now()}`;
-
-    dispatchToast(msg, key, dispatch);
-  };
-
   return (
-    <ArtistContainer onClick={addAlbumSongsToPlaylist}>
+    <ArtistContainer
+      onClick={(name) => dispatch(setFilter(`${title.toLowerCase()},`))}
+    >
       <ArtistName title={title}>{title}</ArtistName>
     </ArtistContainer>
   );

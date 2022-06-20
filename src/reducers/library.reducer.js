@@ -24,6 +24,12 @@ export const setQuery = (query) => ({
   query,
 });
 
+export const SET_FILTER = "MUSA/LIBRARY/SET_FILTER";
+export const setFilter = (filter) => ({
+  type: SET_FILTER,
+  filter,
+});
+
 export const SET_SEARCH_RESULTS = "MUSA/LIBRARY/SET_SEARCH_RESULTS";
 export const setSearchResults = (result) => ({
   type: SET_SEARCH_RESULTS,
@@ -42,6 +48,7 @@ const initialState = {
   scannedLength: 0,
   scanColor: scanColor.RED,
   query: "",
+  filter: "",
   searchArtists: [],
   searchAlbums: [],
   searchAudios: [],
@@ -74,6 +81,12 @@ const library = (state = initialState, action) => {
       return {
         ...state,
         query: action.query,
+      };
+    }
+    case SET_FILTER: {
+      return {
+        ...state,
+        filter: action.filter,
       };
     }
     case SET_SEARCH_RESULTS: {

@@ -77,9 +77,13 @@ const Album = ({ item, dispatch }) => {
     dispatchToast(msg, key, dispatch);
   };
 
-  const artist = item?.metadata?.artist || item.artistName || "";
+  const artist =
+    item?.metadata?.artist ||
+    item.artistName ||
+    (item?.files || [])[0]?.metadata?.artist ||
+    "";
   const album = item?.metadata?.album || item.name || "";
-  const year = item?.metadata?.year || "";
+  const year = item?.metadata?.year || item?.year || "";
 
   return (
     <AlbumContainer>

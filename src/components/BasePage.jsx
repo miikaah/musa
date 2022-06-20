@@ -17,15 +17,15 @@ const BasePageContainer = styled.div`
 
 const BasePageWrapper = styled.div`
   padding: 20px;
-  max-width: 960px;
+  max-width: ${({ setMaxWidth }) => setMaxWidth && "960px"};
   min-width: 344px;
   margin: 0 auto 50px;
 `;
 
-const BasePage = ({ children }) => {
+const BasePage = ({ children, setMaxWidth = true }) => {
   return (
     <BasePageContainer>
-      <BasePageWrapper>{children}</BasePageWrapper>
+      <BasePageWrapper setMaxWidth={setMaxWidth}>{children}</BasePageWrapper>
     </BasePageContainer>
   );
 };
