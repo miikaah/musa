@@ -79,8 +79,8 @@ const SearchBlock = styled.div`
 const SearchBlockWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 650px;
-  max-height: 650px;
+  min-height: ${({ isElectron }) => (isElectron ? 730 : 650)}px;
+  max-height: ${({ isElectron }) => (isElectron ? 730 : 650)}px;
   background: #fff;
   padding: 10px 0 0 10px;
   overflow: auto;
@@ -356,7 +356,7 @@ const Search = ({
         <Wrapper>
           <SearchBlock>
             <h5>Artists{` (${artistToRender.length})`}</h5>
-            <SearchBlockWrapper>
+            <SearchBlockWrapper isElectron={isElectron}>
               {artistToRender.map((a, i) => (
                 <Artist key={i} item={a} />
               ))}
@@ -364,7 +364,7 @@ const Search = ({
           </SearchBlock>
           <SearchBlock>
             <h5>Albums{` (${albums.length})`}</h5>
-            <SearchBlockWrapper>
+            <SearchBlockWrapper isElectron={isElectron}>
               {albums.map((a, i) => (
                 <Album key={i} item={a} filter={filter} />
               ))}
@@ -372,7 +372,7 @@ const Search = ({
           </SearchBlock>
           <SearchBlock>
             <h5>Songs{` (${audios.length})`}</h5>
-            <SearchBlockWrapper>
+            <SearchBlockWrapper isElectron={isElectron}>
               {audios.map((a, i) => (
                 <Song key={i} item={a} />
               ))}
