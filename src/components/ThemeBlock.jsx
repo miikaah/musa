@@ -1,21 +1,27 @@
 import React from "react";
 import styled from "styled-components/macro";
 
-const Container = styled.div`
+const Container = styled.span.attrs(({ rgb }) => ({
+  style: {
+    backgroundColor: rgb && `rgb(${rgb})`,
+  },
+}))`
   display: flex;
   justify-content: center;
   cursor: pointer;
   width: 80px;
   height: 80px;
-  background-color: ${({ rgb }) => rgb && `rgb(${rgb})`};
   margin: ${({ hasMargin }) => hasMargin && `0 10px 10px 0`};
 `;
 
-const Color = styled.span`
+const Color = styled.span.attrs(({ rgb }) => ({
+  style: {
+    backgroundColor: rgb && `rgb(${rgb})`,
+  },
+}))`
   display: inline-block;
   width: 30px;
   height: 30px;
-  background-color: ${({ rgb }) => rgb && `rgb(${rgb})`};
 `;
 
 const ThemeBlock = ({ theme, setCurrentTheme, hasMargin = true }) => {

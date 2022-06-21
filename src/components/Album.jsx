@@ -9,7 +9,7 @@ import AlbumImage from "./common/AlbumImageV2";
 
 const AlbumContainer = styled.div`
   display: flex;
-  margin: 0 10px 10px 0;
+  margin: 0 8px 10px 0;
 `;
 
 const bottomBorder = css`
@@ -21,14 +21,14 @@ const bottomBorder = css`
 const AlbumFullAdd = styled.div`
   display: flex;
   flex: 100%;
-  max-height: 80px;
+  max-height: 70px;
   ${bottomBorder}
 
   > img {
-    min-width: 80px;
-    max-width: 80px;
-    min-height: 80px;
-    max-height: 80px;
+    min-width: 70px;
+    max-width: 70px;
+    min-height: 70px;
+    max-height: 70px;
     background-color: #d7d7d7;
   }
 
@@ -45,10 +45,11 @@ const AlbumInfo = styled.div`
   }
 
   > p:not(:nth-child(1)) {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-xxs);
   }
 
   > p:nth-child(1) {
+    font-size: var(--font-size-xs);
     font-weight: bold;
     max-height: 38px;
     overflow: hidden;

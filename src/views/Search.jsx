@@ -79,8 +79,8 @@ const SearchBlock = styled.div`
 const SearchBlockWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 730px;
-  max-height: 730px;
+  min-height: 650px;
+  max-height: 650px;
   background: #fff;
   padding: 10px 0 0 10px;
   overflow: auto;

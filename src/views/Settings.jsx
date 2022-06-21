@@ -86,7 +86,7 @@ const Settings = ({ musicLibraryPath }) => {
         <>
           <SettingsBlock>
             <h3>Theme</h3>
-            <ThemeLibrary />
+            <ThemeLibrary themes={themes} setThemes={setThemes} />
           </SettingsBlock>
           <SettingsBlock>
             <h3>Replaygain</h3>

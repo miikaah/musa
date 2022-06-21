@@ -19,6 +19,7 @@ const ArtistContainer = styled.div`
 `;
 
 const ArtistName = styled.div`
+  font-size: var(--font-size-xs);
   margin-bottom: 6px;
   text-overflow: ellipsis;
   overflow: hidden;

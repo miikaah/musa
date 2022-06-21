@@ -7,8 +7,8 @@ import AlbumImage from "./common/AlbumImageV2";
 
 const SongContainer = styled.div`
   display: flex;
-  max-height: 80px;
-  margin: 0 10px 10px 0;
+  max-height: 70px;
+  margin: 0 8px 10px 0;
   cursor: pointer;
   border: 2px solid transparent;
   border-top-width: 0;
@@ -17,10 +17,10 @@ const SongContainer = styled.div`
 
   > img {
     flex: 50%;
-    min-width: 80px;
-    max-width: 80px;
-    min-height: 80px;
-    max-height: 80px;
+    min-width: 70px;
+    max-width: 70px;
+    min-height: 70px;
+    max-height: 70px;
     background-color: #d7d7d7;
   }
 
@@ -31,7 +31,7 @@ const SongContainer = styled.div`
 
 const SongInfo = styled.div`
   flex: 50%;
-  padding: 4px 20px;
+  padding: 0 20px 4px;
   max-width: 308px;
 
   > p {
@@ -41,14 +41,10 @@ const SongInfo = styled.div`
     white-space: normal;
   }
 
-  > p:not(:nth-child(1)) {
-    font-size: var(--font-size-xs);
-    white-space: nowrap;
-  }
-
   > p:nth-child(1) {
+    font-size: var(--font-size-xs);
     font-weight: bold;
-    max-height: 38px;
+    max-height: 32px;
   }
 
   > p:nth-child(2),
@@ -56,6 +52,7 @@ const SongInfo = styled.div`
     font-size: var(--font-size-xxs);
     margin: 0 0 3px;
     max-height: 15px;
+    white-space: nowrap;
   }
 
   > p > span:nth-child(2) {
