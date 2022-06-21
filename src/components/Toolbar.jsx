@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router";
 import styled from "styled-components/macro";
 import Player from "components/Player";
 
@@ -19,20 +18,10 @@ const ToolbarContainer = styled.div`
 `;
 
 const Toolbar = () => {
-  const navigate = useNavigate();
-
-  const handleToolbarClick = (event) => {
-    if (event.target.id === "Toolbar") {
-      navigate("/");
-    }
-  };
-
   return (
-    <>
-      <ToolbarContainer id="Toolbar" onClick={handleToolbarClick}>
-        <Player />
-      </ToolbarContainer>
-    </>
+    <ToolbarContainer>
+      <Player />
+    </ToolbarContainer>
   );
 };
 

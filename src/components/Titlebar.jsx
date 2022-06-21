@@ -218,7 +218,7 @@ const Titlebar = ({ currentLocation }) => {
   }, [isSmall, location]);
 
   const goToSearchByKeyEvent = (event) => {
-    if (!isCtrlDown(event)) {
+    if (!isCtrlDown(event) || !event.shiftKey) {
       return;
     }
 
@@ -275,6 +275,12 @@ const Titlebar = ({ currentLocation }) => {
     event.stopPropagation();
   };
 
+  const goBackToRoot = (event) => {
+    if (event.target.id === "Titlebar" || event.target.id === "TitlebarTitle") {
+      navigate("/");
+    }
+  };
+
   const minimize = () => {
     Api.minimizeWindow();
   };
@@ -304,7 +310,7 @@ const Titlebar = ({ currentLocation }) => {
   return (
     <>
       <Library ref={libraryRef} isVisible={isLibraryVisible} />
-      <Container>
+      <Container id="Titlebar" onClick={goBackToRoot}>
         <div>
           <LibraryButton
             onClick={toggleLibrary}
@@ -334,7 +340,9 @@ const Titlebar = ({ currentLocation }) => {
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
         </div>
-        <Title>{locationToTitleMap[location.pathname]}</Title>
+        <Title id="TitlebarTitle" onClick={goBackToRoot}>
+          {locationToTitleMap[location.pathname]}
+        </Title>
         <ActionsContainer isElectron={isElectron}>
           <MinButton onClick={minimize} isMacOs={isMacOs}>
             <div />

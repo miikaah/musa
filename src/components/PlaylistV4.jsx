@@ -42,7 +42,7 @@ const Instructions = styled.div`
   > div:first-of-type {
     text-align: center;
     font-weight: bold;
-    margin: 33% 0 60px;
+    margin: 0 0 60px;
     font-size: 18px;
   }
 
@@ -382,7 +382,7 @@ const Playlist = ({
           </ControlsInstruction>
           <ControlsInstruction>
             <div>Toggle Search</div>
-            <div>Ctrl / Cmd + F</div>
+            <div>Ctrl / Cmd + Shift + F</div>
           </ControlsInstruction>
 
           <ControlsHeader>Playlist controls</ControlsHeader>
