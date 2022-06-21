@@ -21,14 +21,14 @@ const bottomBorder = css`
 const AlbumFullAdd = styled.div`
   display: flex;
   flex: 100%;
-  max-height: 70px;
+  max-height: 80px;
   ${bottomBorder}
 
   > img {
-    min-width: 70px;
-    max-width: 70px;
-    min-height: 70px;
-    max-height: 70px;
+    min-width: 80px;
+    max-width: 80px;
+    min-height: 80px;
+    max-height: 80px;
     background-color: #d7d7d7;
   }
 
@@ -49,7 +49,6 @@ const AlbumInfo = styled.div`
   }
 
   > p:nth-child(1) {
-    font-size: var(--font-size-xs);
     font-weight: bold;
     max-height: 38px;
     overflow: hidden;

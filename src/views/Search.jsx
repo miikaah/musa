@@ -79,8 +79,8 @@ const SearchBlock = styled.div`
 const SearchBlockWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: ${({ isElectron }) => (isElectron ? 730 : 650)}px;
-  max-height: ${({ isElectron }) => (isElectron ? 730 : 650)}px;
+  min-height: ${({ isElectron }) => (isElectron ? 730 : 640)}px;
+  max-height: ${({ isElectron }) => (isElectron ? 730 : 640)}px;
   background: #fff;
   padding: 10px 0 0 10px;
   overflow: auto;
