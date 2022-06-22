@@ -34,6 +34,10 @@ const AlbumInfo = styled.div`
 
   > p {
     margin: 0 0 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   > p:last-child {
