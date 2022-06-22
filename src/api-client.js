@@ -108,7 +108,7 @@ const findRandom = async () => {
   }
 };
 
-// Electron specific Apis
+// Electron specific APIs
 
 const addMusicLibraryPath = async () => {
   return ElectronApi.addMusicLibraryPath();
