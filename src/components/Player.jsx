@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash.isempty";
 import styled, { css } from "styled-components/macro";
@@ -51,6 +51,12 @@ const PlayerRightContainer = styled.div`
 
 const VOLUME_MUTED = 0;
 
+const audioContext = new AudioContext();
+const gainNode = audioContext.createGain();
+
+const audioEl = document.createElement("audio");
+audioEl.crossOrigin = "anonymous";
+
 const Player = ({
   playlist,
   isPlaying,
@@ -64,8 +70,6 @@ const Player = ({
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT);
   const [currentTime, setCurrentTime] = useState(0);
 
-  const player = useRef(null);
-
   const isMuted = () => volume === VOLUME_MUTED;
 
   const playOrPause = (event) => {
@@ -74,16 +78,19 @@ const Player = ({
     }
     // PAUSE
     if (isPlaying || isEmpty(playlist)) {
-      player.current.pause();
+      audioEl.pause();
       dispatch(pause());
-      setCurrentTime(player?.current?.currentTime || 0);
+      setCurrentTime(audioEl.currentTime || 0);
       return;
     }
     // PLAY
+    // Have to call resume because of Autoplay Policy. See: https://developer.chrome.com/blog/autoplay/#webaudio
+    audioContext.resume();
+
     if (!isEmpty(src)) {
       // BUGFIX: pause->play starting from beginning
-      player.current.currentTime = currentTime;
-      player.current.play();
+      audioEl.currentTime = currentTime;
+      audioEl.play();
       dispatch(play());
       return;
     }
@@ -92,21 +99,35 @@ const Player = ({
   };
   useKeyPress(KEYS.Space, playOrPause);
 
-  const getVolumeForAudioEl = (volume) => {
-    const vol = volume / 100;
-    return vol < 0.02 ? VOLUME_MUTED : vol;
-  };
+  useEffect(() => {
+    const track = audioContext.createMediaElementSource(audioEl);
+
+    track.connect(gainNode).connect(audioContext.destination);
+
+    return () => {
+      audioContext.close();
+    };
+  }, []);
 
   const setVolumeForPlayer = (v) => {
     const vol = typeof v === "number" ? v : volume;
-    const trackGainPercentage = Math.pow(
-      10,
-      getReplaygainDb(replaygainType, currentItem) / 20
+    const trackGainPercentage =
+      // Clamp the max increase so that well produced music doesn't sound too loud compared to other music
+      Math.min(
+        3,
+        // Clamp the max reduction so that badly compressed music doesn't have too little amplitude
+        Math.max(
+          0.25,
+          Math.pow(10, getReplaygainDb(replaygainType, currentItem) / 20)
+        )
+      ) || 1; // getReplaygainDb() might return 0 so turn that into 1 so that volume doesn't accidentally go to zero
+    console.log(
+      "vol",
+      vol / 100,
+      trackGainPercentage,
+      (vol / 100) * trackGainPercentage
     );
-    const realVolume =
-      Math.min(100, Math.max(1, vol * parseFloat(trackGainPercentage))) ||
-      VOLUME_DEFAULT;
-    player.current.volume = getVolumeForAudioEl(realVolume);
+    gainNode.gain.value = (vol / 100) * trackGainPercentage;
   };
 
   const setVolumeForStateAndPlayer = (v) => {
@@ -132,7 +153,7 @@ const Player = ({
       const { replay: shouldReplay, currentItem } = state;
 
       if (shouldReplay) {
-        player.current.currentTime = 0;
+        audioEl.currentTime = 0;
         setCurrentTime(0);
 
         if (!state.isPlaying) {
@@ -154,36 +175,48 @@ const Player = ({
 
   useEffect(() => {
     const getDuration = () => {
-      const duration = player?.current?.duration || 0;
+      const duration = audioEl.duration || 0;
       return Math.floor(Number.isNaN(duration) ? 0 : duration);
     };
 
     const handleLoadedData = (event) => {
       setDuration(getDuration());
-      player.current.play();
-    };
-    const dispatchPlayNext = () => dispatch(playNext());
 
-    player.current.addEventListener("loadeddata", handleLoadedData);
-    player.current.addEventListener("ended", dispatchPlayNext);
+      audioContext.resume();
+      audioEl.play();
+    };
+    const dispatchPlayNext = () => {
+      dispatch(playNext());
+    };
+
+    audioEl.addEventListener("loadeddata", handleLoadedData);
+    audioEl.addEventListener("ended", dispatchPlayNext);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player]);
+  }, []);
 
   useEffect(() => {
     setVolumeForPlayer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, volume, replaygainType, currentItem]);
+  }, [src, volume, replaygainType, currentItem]);
+
+  useEffect(() => {
+    audioEl.currentTime = 0;
+    setCurrentTime(0);
+  }, [currentItem]);
+
+  useEffect(() => {
+    audioEl.src = src;
+  }, [src]);
 
   return (
     <PlayerContainer>
-      <audio controls src={src} ref={player} />
       <PlayerLeftContainer>
         <PlayerCurrentlyPlaying currentItem={currentItem} />
       </PlayerLeftContainer>
       <PlayerMiddleContainer>
         <PlayerPlayPauseButton playOrPause={playOrPause} />
         <PlayerSeek
-          player={player}
+          player={audioEl}
           duration={duration}
           currentTime={currentTime}
           setCurrentTime={setCurrentTime}

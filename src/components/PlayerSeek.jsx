@@ -19,13 +19,14 @@ const PlayerSeek = ({
 
   useInterval(() => {
     if (isPlaying) {
-      setCurrentTime(player?.current?.currentTime || 0);
+      setCurrentTime(player.currentTime || 0);
     }
   }, 200);
 
   const seek = (seekPosInSeconds) => {
     if (prevCurrentTime === seekPosInSeconds) return;
-    player.current.currentTime = seekPosInSeconds;
+
+    player.currentTime = seekPosInSeconds;
     setCurrentTime(seekPosInSeconds);
     setPrevCurrentTime(seekPosInSeconds);
     // Makes it possible to seek back to same spot after timeout
