@@ -53,7 +53,7 @@ const PlayerRightContainer = styled.div`
 const FirEnabledIndicator = styled.div`
   width: 4px;
   height: 4px;
-  background: var(--color-secondary-highlight);
+  background: var(--color-primary-highlight);
   border-radius: 50%;
   position: absolute;
   bottom: 0;
@@ -78,7 +78,6 @@ const Player = ({
   preAmpDb,
   firMakeUpGainDb,
   firFile,
-  firFiles,
   src,
   currentItem,
   dispatch,
@@ -129,7 +128,7 @@ const Player = ({
       console.error(e);
       dispatch(updateSettings({ firFile: "" }));
       dispatchToast(
-        "Failed to fetch FIR file. Disabled FIR.",
+        "Disabled Impulse response EQ because IR file failed to load",
         `fir-toast-${Date.now()}`,
         dispatch
       );
@@ -192,13 +191,13 @@ const Player = ({
 
   const setVolumeForPlayer = (v) => {
     const vol = typeof v === "number" ? v : volume;
-    const replaygainInDb = getReplaygainDb(replaygainType, currentItem);
-    const trackGainPercentage = replaygainInDb
+    const replaygainDb = getReplaygainDb(replaygainType, currentItem);
+    const trackGainPercentage = replaygainDb
       ? // Clamp the max increase so that well produced music doesn't sound too loud compared to other music
         Math.min(
           3,
           // Clamp the max reduction so that badly compressed music doesn't have too little amplitude
-          Math.max(0.25, Math.pow(10, replaygainInDb / 20))
+          Math.max(0.25, Math.pow(10, replaygainDb / 20))
         )
       : 1;
     const preAmpPercentage = preAmpDb ? Math.pow(10, preAmpDb / 20) : 1;
@@ -331,7 +330,6 @@ export default connect(
     preAmpDb: state.settings.preAmpDb,
     firMakeUpGainDb: state.settings.firMakeUpGainDb,
     firFile: state.settings.firFile,
-    firFiles: state.settings.firFiles,
   }),
   (dispatch) => ({ dispatch })
 )(Player);

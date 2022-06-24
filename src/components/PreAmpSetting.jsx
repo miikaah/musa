@@ -21,7 +21,7 @@ const PreAmpSetting = ({ isInit, preAmpDb, dispatch }) => {
         placeholder="db"
         step="1"
         min="0"
-        max="100"
+        max="12"
         type="number"
         value={value}
         onChange={updateState}

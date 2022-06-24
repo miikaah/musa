@@ -18,10 +18,10 @@ const UseFirSetting = ({ isInit }) => {
 
   return (
     <>
-      <h5>Use FIR</h5>
+      <h5>Impulse response EQ</h5>
       <FirFilesContainer>
-        {Object.entries(firFileMap).map(([name, filename], i) => (
-          <UseFirFile key={`fir-file-${i}`} name={name} filename={filename} />
+        {Object.entries(firFileMap).map(([name, filename]) => (
+          <UseFirFile key={filename} name={name} filename={filename} />
         ))}
       </FirFilesContainer>
     </>

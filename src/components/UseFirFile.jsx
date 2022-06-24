@@ -11,6 +11,11 @@ const Container = styled.div`
     align-self: center;
   }
 
+  > input:not(:first-of-type) {
+    max-width: 70px;
+    padding: 0 12px;
+  }
+
   > label {
     margin: 16px 0;
   }
@@ -35,13 +40,12 @@ const UseFirFile = ({
     return null;
   }
 
-  const updateUseFir = (event) => {
+  const toggleFir = (event) => {
     event.target.blur();
 
     dispatch(
       updateSettings({
-        useFir: event.target.checked,
-        firMakeUpGainDb: firMakeUpGainValue,
+        firMakeUpGainDb: event.target.checked ? firMakeUpGainValue : 0,
         firFile: event.target.checked
           ? filename
           : filename !== firFile
@@ -79,7 +83,7 @@ const UseFirFile = ({
       <input
         id={checkboxId}
         type="checkbox"
-        onChange={updateUseFir}
+        onChange={toggleFir}
         checked={firFile === filename}
       />
       <label htmlFor={checkboxId}>{name}</label>
@@ -87,7 +91,7 @@ const UseFirFile = ({
         placeholder="db"
         step="1"
         min="0"
-        max="100"
+        max="30"
         type="number"
         disabled={firFile !== filename}
         value={firMakeUpGainValue}
