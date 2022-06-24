@@ -36,6 +36,8 @@ const UseFirFile = ({
   }
 
   const updateUseFir = (event) => {
+    event.target.blur();
+
     dispatch(
       updateSettings({
         useFir: event.target.checked,

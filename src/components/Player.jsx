@@ -122,7 +122,7 @@ const Player = ({
     }
 
     try {
-      const response = await fetch(`/firs/${firFile}`);
+      const response = await fetch(`./firs/${firFile}`);
       const arraybuffer = await response.arrayBuffer();
       convolver.buffer = await audioContext.decodeAudioData(arraybuffer);
     } catch (e) {
