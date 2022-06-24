@@ -7,7 +7,6 @@ import UseFirFile from "./UseFirFile";
 const FirFilesContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-bottom 100px;
   max-width: 486px;
 `;
 

@@ -14,10 +14,12 @@ const Container = styled.div`
   > input:not(:first-of-type) {
     max-width: 70px;
     padding: 0 12px;
+    max-height: 30px;
   }
 
   > label {
-    margin: 16px 0;
+    margin: 8px 0 8px 0;
+    font-size: var(--font-size-xs);
   }
 `;
 
