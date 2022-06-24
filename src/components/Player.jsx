@@ -5,7 +5,7 @@ import styled, { css } from "styled-components/macro";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
 import { store } from "..";
-import { KEYS, getReplaygainDb } from "../util";
+import { KEYS, getReplaygainDb, dispatchToast } from "../util";
 import { useKeyPress } from "../hooks";
 import PlayerSeek from "./PlayerSeek";
 import PlayerVolume from "./PlayerVolume";
@@ -24,6 +24,7 @@ const PlayerContainer = styled.div`
   align-items: center;
   font-size: 0.8rem;
   width: 100%;
+  position: relative;
   ${sharedCss}
 
   audio {
@@ -49,22 +50,38 @@ const PlayerRightContainer = styled.div`
   height: 20px;
 `;
 
+const FirEnabledIndicator = styled.div`
+  width: 4px;
+  height: 4px;
+  background: var(--color-secondary-highlight);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+`;
+
 const VOLUME_MUTED = 0;
 
 const audioContext = new AudioContext();
 const gainNode = audioContext.createGain();
+const convolver = audioContext.createConvolver();
 
 const audioEl = document.createElement("audio");
 audioEl.crossOrigin = "anonymous";
+let track;
 
 const Player = ({
   playlist,
   isPlaying,
   volume,
   replaygainType,
-  dispatch,
+  preAmpDb,
+  firMakeUpGainDb,
+  firFile,
+  firFiles,
   src,
   currentItem,
+  dispatch,
 }) => {
   const [duration, setDuration] = useState(0);
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT);
@@ -99,35 +116,100 @@ const Player = ({
   };
   useKeyPress(KEYS.Space, playOrPause);
 
-  useEffect(() => {
-    const track = audioContext.createMediaElementSource(audioEl);
+  const fetchHeadphoneFir = async () => {
+    if (!firFile) {
+      return;
+    }
 
-    track.connect(gainNode).connect(audioContext.destination);
+    try {
+      const response = await fetch(`/firs/${firFile}`);
+      const arraybuffer = await response.arrayBuffer();
+      convolver.buffer = await audioContext.decodeAudioData(arraybuffer);
+    } catch (e) {
+      console.error(e);
+      dispatch(updateSettings({ firFile: "" }));
+      dispatchToast(
+        "Failed to fetch FIR file. Disabled FIR.",
+        `fir-toast-${Date.now()}`,
+        dispatch
+      );
+
+      throw e;
+    }
+  };
+
+  useEffect(() => {
+    fetchHeadphoneFir()
+      .then(() => {
+        track = audioContext.createMediaElementSource(audioEl);
+
+        if (firFile) {
+          track
+            .connect(gainNode)
+            .connect(convolver)
+            .connect(audioContext.destination);
+        } else {
+          track.connect(gainNode).connect(audioContext.destination);
+        }
+      })
+      .catch(console.error);
 
     return () => {
       audioContext.close();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setVolumeForPlayer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preAmpDb, firMakeUpGainDb, firFile]);
+
+  useEffect(() => {
+    if (!track) {
+      return;
+    }
+
+    try {
+      if (firFile) {
+        fetchHeadphoneFir()
+          .then(() => {
+            gainNode.disconnect(0);
+            gainNode.connect(convolver).connect(audioContext.destination);
+          })
+          .catch(console.error);
+      } else {
+        gainNode.disconnect(convolver);
+        gainNode.connect(audioContext.destination);
+      }
+
+      setVolumeForPlayer();
+    } catch (e) {
+      console.error(e);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firFile]);
 
   const setVolumeForPlayer = (v) => {
     const vol = typeof v === "number" ? v : volume;
-    const trackGainPercentage =
-      // Clamp the max increase so that well produced music doesn't sound too loud compared to other music
-      Math.min(
-        3,
-        // Clamp the max reduction so that badly compressed music doesn't have too little amplitude
-        Math.max(
-          0.25,
-          Math.pow(10, getReplaygainDb(replaygainType, currentItem) / 20)
+    const replaygainInDb = getReplaygainDb(replaygainType, currentItem);
+    const trackGainPercentage = replaygainInDb
+      ? // Clamp the max increase so that well produced music doesn't sound too loud compared to other music
+        Math.min(
+          3,
+          // Clamp the max reduction so that badly compressed music doesn't have too little amplitude
+          Math.max(0.25, Math.pow(10, replaygainInDb / 20))
         )
-      ) || 1; // getReplaygainDb() might return 0 so turn that into 1 so that volume doesn't accidentally go to zero
-    console.log(
-      "vol",
-      vol / 100,
-      trackGainPercentage,
-      (vol / 100) * trackGainPercentage
-    );
-    gainNode.gain.value = (vol / 100) * trackGainPercentage;
+      : 1;
+    const preAmpPercentage = preAmpDb ? Math.pow(10, preAmpDb / 20) : 1;
+    const firMakeUpGainPercentage =
+      firFile && firMakeUpGainDb ? Math.pow(10, firMakeUpGainDb / 20) : 1;
+
+    gainNode.gain.value =
+      (vol / 100) *
+      trackGainPercentage *
+      preAmpPercentage *
+      firMakeUpGainPercentage;
   };
 
   const setVolumeForStateAndPlayer = (v) => {
@@ -227,6 +309,7 @@ const Player = ({
         />
       </PlayerMiddleContainer>
       <PlayerRightContainer>
+        {firFile && <FirEnabledIndicator />}
         <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
         <PlayerVolume
           volume={volume}
@@ -245,6 +328,10 @@ export default connect(
     currentItem: state.player.currentItem,
     volume: state.settings.volume,
     replaygainType: state.settings.replaygainType,
+    preAmpDb: state.settings.preAmpDb,
+    firMakeUpGainDb: state.settings.firMakeUpGainDb,
+    firFile: state.settings.firFile,
+    firFiles: state.settings.firFiles,
   }),
   (dispatch) => ({ dispatch })
 )(Player);

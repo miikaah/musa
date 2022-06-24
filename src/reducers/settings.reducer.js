@@ -1,4 +1,4 @@
-import { FALLBACK_THEME } from "../config";
+import { FALLBACK_THEME, firFileMap } from "config";
 import { REPLAYGAIN_TYPE } from "../util";
 
 export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS";
@@ -16,6 +16,19 @@ const initialState = {
   },
   key: "state",
   replaygainType: REPLAYGAIN_TYPE.Album,
+  preAmpDb: 0,
+  firMakeUpGainDb: 0,
+  firFile: "",
+  firFiles: Object.entries(firFileMap).reduce(
+    (acc, [name, filename]) => ({
+      ...acc,
+      [filename]: {
+        name,
+        makeUpGain: 0,
+      },
+    }),
+    {}
+  ),
   volume: VOLUME_DEFAULT,
   musicLibraryPath: "",
 };

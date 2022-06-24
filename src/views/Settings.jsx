@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import ThemeLibrary from "components/ThemeLibrary";
 import ReplaygainSetting from "components/ReplaygainSetting";
+import PreAmpSetting from "components/PreAmpSetting";
+import UseFirSetting from "components/UseFirSetting";
 import MusicLibrarySetting from "components/MusicLibrarySetting";
 import Button from "components/Button";
 import BasePage from "components/BasePage";
@@ -20,6 +22,14 @@ const FirstRow = styled.div`
 
 const SettingsBlock = styled.div`
   margin-bottom: 20px;
+`;
+
+const ExperimentalContainer = styled.div`
+  display: flex;
+
+  > div {
+    margin-right: 20px;
+  }
 `;
 
 const ActionButton = styled(Button)`
@@ -46,11 +56,18 @@ const Settings = ({ musicLibraryPath }) => {
     return <BasePage></BasePage>;
   }
 
+  const getThemesBlock = () => (
+    <SettingsBlock>
+      <h3>Theme</h3>
+      <ThemeLibrary themes={themes} setThemes={setThemes} />
+    </SettingsBlock>
+  );
+
   return (
     <BasePage>
       {isElectron && (
         <div>
-          {isElectron && (
+          {
             <FirstRow>
               <SettingsBlock>
                 <h3>Library</h3>
@@ -71,29 +88,28 @@ const Settings = ({ musicLibraryPath }) => {
                 </SettingsBlock>
               </div>
             </FirstRow>
-          )}
-          {isElectron && musicLibraryPath && (
-            <>
-              <SettingsBlock>
-                <h3>Theme</h3>
-                <ThemeLibrary themes={themes} setThemes={setThemes} />
-              </SettingsBlock>
-            </>
-          )}
+          }
+          {musicLibraryPath && getThemesBlock()}
         </div>
       )}
       {!isElectron && (
         <>
-          <SettingsBlock>
-            <h3>Theme</h3>
-            <ThemeLibrary themes={themes} setThemes={setThemes} />
-          </SettingsBlock>
+          {getThemesBlock()}
           <SettingsBlock>
             <h3>Replaygain</h3>
             <ReplaygainSetting />
           </SettingsBlock>
         </>
       )}
+      <h3>Experimental</h3>
+      <ExperimentalContainer>
+        <SettingsBlock>
+          <PreAmpSetting />
+        </SettingsBlock>
+        <SettingsBlock>
+          <UseFirSetting />
+        </SettingsBlock>
+      </ExperimentalContainer>
     </BasePage>
   );
 };
