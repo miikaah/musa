@@ -1,213 +1,107 @@
-let ipc;
-if (window.require) {
-  ipc = window.require("electron").ipcRenderer;
-} else {
-  // For dev
-  ipc = {
-    once: () => {},
-    on: () => {},
-    send: () => {},
-  };
-}
-
-const getSettings = () => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:settings:response:get", (event, settings) => {
-      resolve(settings);
-    });
-    ipc.send("musa:settings:request:get");
-  });
+const getSettings = async () => {
+  return window.electron.getSettings();
 };
 
 const insertSettings = (settings) => {
-  return new Promise((resolve, reject) => {
-    ipc.send("musa:settings:request:insert", {
-      ...settings,
-      isInit: null,
-    });
-    resolve();
-  });
-};
-
-const getAudioById = async (id) => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:audio:response", (event, audio) => {
-      resolve(audio);
-    });
-    ipc.send("musa:audio:request", id);
-  });
+  return window.electron.insertSettings(settings);
 };
 
 const getArtists = async () => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:artists:response", (event, artists) => {
-      resolve(artists);
-    });
-    ipc.send("musa:artists:request");
-  });
+  return window.electron.getArtists();
 };
 
 const getArtistById = async (id) => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:artist:response", (event, artist) => {
-      resolve(artist);
-    });
-    ipc.send("musa:artist:request", id);
-  });
+  return window.electron.getArtistById(id);
 };
 
 const getArtistAlbums = async (id) => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:artistAlbums:response", (event, artist) => {
-      resolve(artist);
-    });
-    ipc.send("musa:artistAlbums:request", id);
-  });
+  return window.electron.getArtistAlbums(id);
 };
 
 const getAlbumById = async (id) => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:album:response", (event, album) => {
-      resolve(album);
-    });
-    ipc.send("musa:album:request", id);
-  });
+  return window.electron.getAlbumById(id);
+};
+
+const getAudioById = async (id) => {
+  return window.electron.getAudioById(id);
 };
 
 const getThemes = async () => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:themes:response:getAll", (event, themes) => {
-      resolve(themes);
-    });
-    ipc.send("musa:themes:request:getAll");
-  });
-};
-
-const insertTheme = async ({ id, colors }) => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:themes:response:insert", (event, theme) => {
-      resolve(theme);
-    });
-    ipc.send("musa:themes:request:insert", id, colors);
-  });
+  return window.electron.getAllThemes();
 };
 
 const getThemeById = async ({ id }) => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:themes:response:get", (event, theme) => {
-      resolve(theme);
-    });
-    ipc.send("musa:themes:request:get", id);
-  });
+  return window.electron.getThemeById(id);
+};
+
+const insertTheme = async ({ id, colors }) => {
+  return window.electron.insertTheme(id, colors);
 };
 
 const removeTheme = async ({ id }) => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:themes:response:remove", () => {
-      resolve();
-    });
-    ipc.send("musa:themes:request:remove", id);
-  });
+  return window.electron.removeThemeById(id);
 };
 
-const find = async (queryToBackend) => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:find:response", (event, result) => {
-      resolve(result);
-    });
-    ipc.send("musa:find:request", queryToBackend);
-  });
+const find = async (query) => {
+  return window.electron.find(query);
 };
 
 const findRandom = async () => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:find:response:random", (event, result) => {
-      resolve(result);
-    });
-    ipc.send("musa:find:request:random");
-  });
+  return window.electron.findRandom();
 };
 
 // Electron specific Apis
 
+const onInit = async () => {
+  return window.electron.onInit();
+};
+
 const addMusicLibraryPath = async () => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:addMusicLibraryPath:response", (event, path) => {
-      resolve(path);
-    });
-    ipc.send("musa:addMusicLibraryPath:request");
-  });
+  return window.electron.addMusicLibraryPath();
 };
 
 const getPlatform = async () => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:window:platform:response", (event, platform) => {
-      resolve(platform);
-    });
-    ipc.send("musa:window:platform:request");
-  });
+  return window.electron.getPlatform();
 };
 
 const minimizeWindow = () => {
-  ipc.send("musa:window:minimize");
+  window.electron.minimizeWindow();
 };
 
 const maximizeWindow = () => {
-  ipc.send("musa:window:maximize");
+  window.electron.maximizeWindow();
 };
 
 const unmaximizeWindow = () => {
-  ipc.send("musa:window:unmaximize");
+  window.electron.unmaximizeWindow();
 };
 
 const isWindowMaximized = async () => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:window:isMaximized:response", (event, isMaximized) => {
-      resolve(isMaximized);
-    });
-    ipc.send("musa:window:isMaximized:request");
-  });
+  return window.electron.isWindowMaximized();
 };
 
 const closeWindow = () => {
-  ipc.send("musa:window:close");
+  window.electron.closeWindow();
 };
 
 const refreshLibrary = () => {
-  ipc.send("musa:scan");
-};
-
-const onInit = async () => {
-  return new Promise((resolve, reject) => {
-    ipc.once("musa:ready", (event) => {
-      resolve();
-    });
-    ipc.send("musa:onInit");
-  });
+  window.electron.scan();
 };
 
 const addScanStartListener = (callback) => {
-  ipc.on("musa:scan:start", (event, scanLength, scanColor) => {
-    callback({ scanLength, scanColor });
-  });
+  window.electron.addScanStartListener(callback);
 };
 
 const addScanUpdateListener = (callback) => {
-  ipc.on("musa:scan:update", (event, scannedLength) => {
-    callback({ scannedLength });
-  });
+  window.electron.addScanUpdateListener(callback);
 };
 
 const addScanEndListener = (callback) => {
-  ipc.on("musa:scan:end", () => {
-    callback();
-  });
+  window.electron.addScanEndListener(callback);
 };
 
 const addScanCompleteListener = (callback) => {
-  ipc.on("musa:scan:complete", () => {
-    callback();
-  });
+  window.electron.addScanCompleteListener(callback);
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export

@@ -5,10 +5,10 @@
   "homepage": "./",
   "scripts": {
     "start": "env-cmd -f .env.server.local react-scripts start",
-    "start:electron": "env-cmd -f .env.electron.local craco start",
-    "build": "env-cmd -f .env.server.prod craco build",
-    "build:electron": "env-cmd -f .env.electron.prod craco build",
-    "test": "craco test",
+    "start:electron": "env-cmd -f .env.electron.local react-scripts start",
+    "build": "env-cmd -f .env.server.prod react-scripts build",
+    "build:electron": "env-cmd -f .env.electron.prod react-scripts build",
+    "test": "react-scripts test",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -41,7 +41,6 @@
     "styled-components": "^5.3.5"
   },
   "devDependencies": {
-    "@craco/craco": "^v7.0.0-alpha.3",
     "babel-plugin-macros": "^3.1.0",
     "env-cmd": "^10.1.0",
     "eslint-plugin-prettier": "^4.0.0",
