@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
-import Palette from "img-palette";
+import Palette from "../img-palette/img-palette";
 import styled from "styled-components/macro";
 import { updateCurrentTheme } from "../util";
 import { breakpoint } from "../breakpoints";
