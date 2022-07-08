@@ -88,10 +88,19 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
 
   useEffect(() => {
     const calculateTheme = (coverTarget) => {
-      const palette = new Palette(coverTarget);
-      const mostPopularSwatch = palette.swatches.find(
+      let palette = new Palette(coverTarget);
+      let mostPopularSwatch = palette.swatches.find(
         (s) => s.population === palette.highestPopulation
       );
+
+      // If didn't get some swatches try again
+      if (!palette.vibrantSwatch || !palette.lightVibrantSwatch) {
+        palette = new Palette(coverTarget);
+        mostPopularSwatch = palette.swatches.find(
+          (s) => s.population === palette.highestPopulation
+        );
+      }
+
       const swatchesByPopulationDesc = sortBy(
         palette.swatches,
         (s) => -s.population
@@ -131,20 +140,17 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
         ];
       }
 
+      // Make sure highlights are different than background
+
       const primaryPop = Math.max.apply(
         Math,
         primarySwatches.map((s) => defaultTo(s.population, 0))
       );
-      const secondaryPop = Math.max.apply(
-        Math,
-        secondarySwatches.map((s) => defaultTo(s.population, 0))
-      );
-      // Make sure highlights are different than background
       primary = swatchesByPopulationDesc.find(
         (s) => s.population === primaryPop
       );
 
-      if (!primary || isEqual(primary.rgb, bg.rgb))
+      if (!primary || isEqual(primary.rgb, bg.rgb)) {
         for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
           primary = swatchesByPopulationDesc[i];
 
@@ -152,18 +158,26 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
             break;
           }
         }
+      }
+
       if (!primary || isEqual(primary.rgb, bg.rgb)) {
         primary = { rgb: Colors.PrimaryRgb };
       }
+
       const contrastBgPr = contrast(bg.rgb, primary.rgb);
-      if (Math.abs(1 - contrastBgPr) < 0.1) {
+      if (Math.abs(1 - contrastBgPr) < 0.05) {
         primary = { rgb: Colors.PrimaryRgb };
       }
-
       secondary = swatchesByPopulationDesc.find(
         (s) => s.population === secondaryPop
       );
-      if (!secondary || isEqual(secondary.rgb, bg.rgb))
+
+      const secondaryPop = Math.max.apply(
+        Math,
+        secondarySwatches.map((s) => defaultTo(s.population, 0))
+      );
+
+      if (!secondary || isEqual(secondary.rgb, bg.rgb)) {
         for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
           secondary = swatchesByPopulationDesc[i];
 
@@ -174,9 +188,12 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
             break;
           }
         }
+      }
+
       if (!secondary || isEqual(secondary.rgb, bg.rgb)) {
         secondary = { rgb: Colors.SecondaryRgb };
       }
+
       const contrastBgSe = contrast(bg.rgb, secondary.rgb);
       if (Math.abs(1 - contrastBgSe) < 0.1) {
         secondary = { rgb: Colors.SecondaryRgb };
