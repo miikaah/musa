@@ -241,6 +241,9 @@ const Player = ({
           // Double click has a delay in it so run this the next time
           // microtask queue gets emptied
           setTimeout(() => playOrPause());
+        } else {
+          // Need to fire this on duplicate play
+          audioEl.play();
         }
         dispatch(replay(false));
       }

@@ -41,13 +41,6 @@ export const pasteToPlaylist = (items, index) => ({
   index,
 });
 
-export const REMOVE_RANGE_FROM_PLAYLIST = "MUSA/PLAYER/REMOVE_RANGE";
-export const removeRangeFromPlaylist = (startIndex, endIndex) => ({
-  type: REMOVE_RANGE_FROM_PLAYLIST,
-  startIndex,
-  endIndex,
-});
-
 export const REMOVE_INDEXES_FROM_PLAYLIST =
   "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST";
 export const removeIndexesFromPlaylist = (indexes) => ({
@@ -76,6 +69,7 @@ const player = (state = initialState, action) => {
       // * If play is paused and playlist has items resume playback
       // * else take the first song in the playlist
       let newItem, newIndex;
+
       if (!isEmpty(state.currentItem)) {
         newItem = state.currentItem;
         newIndex = state.currentIndex;
@@ -83,12 +77,14 @@ const player = (state = initialState, action) => {
         newItem = state.items[0];
         newIndex = 0;
       }
+
       if (!isEmpty(newItem)) {
         return {
           ...state,
           ...getPlayBase(newItem, newIndex),
         };
       }
+
       return {
         ...state,
         isPlaying: false,
@@ -101,7 +97,18 @@ const player = (state = initialState, action) => {
           ? action.index
           : state.currentIndex + 1;
       const newItem = state.items[newIndex];
+
       if (newItem) {
+        // This is a duplicate play so need to set replay even though index is moved forward
+        if (state.currentItem?.id === newItem.id) {
+          return {
+            ...state,
+            ...getPlayBase(newItem, newIndex),
+            replay: true,
+          };
+        }
+
+        // Move to next index
         return {
           ...state,
           ...getPlayBase(newItem, newIndex),
@@ -130,9 +137,11 @@ const player = (state = initialState, action) => {
         items: [...state.items, action.item],
       };
     case PASTE_TO_PLAYLIST: {
+      // The action doesn't have index set so append items to the end of the playlist
       if (!action.index && action.index !== 0) {
         const newItems = [...state.items, ...action.items];
-        return getStateByPlaylistChange(state, newItems);
+
+        return getStateByPlaylistChange(state, newItems, state.currentIndex);
       }
 
       const playlistStart = state.items.slice(0, action.index + 1);
@@ -141,20 +150,28 @@ const player = (state = initialState, action) => {
         state.items.length
       );
       const newItems = [...playlistStart, ...action.items, ...playlistEnd];
+      const newIndex =
+        action.index < state.currentIndex
+          ? action.items.length + state.currentIndex
+          : state.currentIndex;
 
-      return getStateByPlaylistChange(state, newItems);
-    }
-    case REMOVE_RANGE_FROM_PLAYLIST: {
-      const newItems = state.items.filter(
-        (_, index) => index < action.startIndex || index > action.endIndex
-      );
-      return getStateByPlaylistChange(state, newItems);
+      return getStateByPlaylistChange(state, newItems, newIndex);
     }
     case REMOVE_INDEXES_FROM_PLAYLIST: {
       const newItems = state.items.filter(
         (_, index) => !action.indexes.includes(index)
       );
-      return getStateByPlaylistChange(state, newItems);
+      const isRemovingCurrentIndex = action.indexes.includes(
+        state.currentIndex
+      );
+      const indexesBelowCurrentIndex = action.indexes.filter(
+        (i) => i < state.currentIndex
+      );
+      const newIndex = isRemovingCurrentIndex
+        ? -1
+        : state.currentIndex - indexesBelowCurrentIndex.length;
+
+      return getStateByPlaylistChange(state, newItems, newIndex);
     }
     case EMPTY_PLAYLIST: {
       return {
@@ -178,11 +195,11 @@ function getPlayBase(newItem, newIndex) {
   };
 }
 
-function getStateByPlaylistChange(state, newItems) {
+function getStateByPlaylistChange(state, newItems, currentIndex) {
   return {
     ...state,
     items: newItems,
-    currentIndex: newItems.indexOf(state.currentItem),
+    currentIndex,
   };
 }
 

@@ -4,7 +4,6 @@ import isEqual from "lodash.isequal";
 import styled, { css } from "styled-components/macro";
 import {
   pasteToPlaylist,
-  removeRangeFromPlaylist,
   removeIndexesFromPlaylist,
   playIndex,
   replay,
@@ -109,16 +108,21 @@ const Playlist = ({
     const selectedItems = getSelected
       ? playlist.filter((_, index) => index >= sIndex && index <= eIndex)
       : clipboard;
-    return { startIndex: sIndex, endIndex: eIndex, selectedItems };
+    const indexes = [];
+
+    for (let i = sIndex; i <= eIndex; i++) {
+      indexes.push(i);
+    }
+
+    return { indexes, selectedItems };
   };
 
   const handleContinuousSelection = ({ type, getSelected = true }) => {
-    const { startIndex, endIndex, selectedItems } =
-      getContinuousSelData(getSelected);
+    const { indexes, selectedItems } = getContinuousSelData(getSelected);
 
     switch (type) {
       case "remove": {
-        dispatch(removeRangeFromPlaylist(startIndex, endIndex));
+        dispatch(removeIndexesFromPlaylist(indexes));
         setSelectedIndexes(new Set());
         setStartIndex(NaN);
         setEndIndex(NaN);
