@@ -111,54 +111,106 @@ const findRandom = async () => {
 // Electron specific APIs
 
 const addMusicLibraryPath = async () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.addMusicLibraryPath();
 };
 
 const getPlatform = async () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.getPlatform();
 };
 
 const minimizeWindow = () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.minimizeWindow();
 };
 
 const maximizeWindow = () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.maximizeWindow();
 };
 
 const unmaximizeWindow = () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.unmaximizeWindow();
 };
 
 const isWindowMaximized = async () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.isWindowMaximized();
 };
 
 const closeWindow = () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.closeWindow();
 };
 
 const refreshLibrary = () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.refreshLibrary();
 };
 
 const onInit = async () => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.onInit();
 };
 
 const addScanStartListener = (callback) => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.addScanStartListener(callback);
 };
 
 const addScanUpdateListener = (callback) => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.addScanUpdateListener(callback);
 };
 
 const addScanEndListener = (callback) => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.addScanEndListener(callback);
 };
 
 const addScanCompleteListener = (callback) => {
+  if (!isElectron) {
+    return;
+  }
+
   return ElectronApi.addScanCompleteListener(callback);
 };
 
