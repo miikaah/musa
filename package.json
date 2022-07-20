@@ -7,7 +7,7 @@
     "start": "env-cmd -f .env.server.local react-scripts start",
     "start:electron": "env-cmd -f .env.electron.local react-scripts start",
     "build": "env-cmd -f .env.server.prod react-scripts build",
-    "build:electron": "env-cmd -f .env.electron.prod react-scripts build",
+    "build:electron": "env-cmd -f .env.electron.prod react-scripts build && git rev-parse HEAD > version",
     "test": "react-scripts test",
     "precommit": "lint-staged"
   },
