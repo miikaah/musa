@@ -9,14 +9,14 @@ async function main() {
     });
 
     if (version === latestCommitHash) {
-      console.log("Frontend does not need to be rebuilt\n");
+      console.log("Skipping frontend build as there are no changes\n");
 
       return process.exit(0);
     }
 
     build();
   } catch (e) {
-    if (e.message.includes("no such file or directory, open 'version'")) {
+    if (e.message.includes("no such file or directory")) {
       build();
 
       return;
