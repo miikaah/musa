@@ -16,7 +16,9 @@ utilising Electron and React.
 
 - feat: Remember scroll positions in Search
 - feat: More complex searches like lock search term + random and genre / year search
-- feat: Write tags to music files
+- feat: Write mp3 tags
+- feat: Write flac tags
+- feat: Write ogg tags
 - feat: Add ReplayGain scanning
 - feat: Add Dynamic Range scanning
 - feat: Open mp3, flac and ogg files from filesystem
