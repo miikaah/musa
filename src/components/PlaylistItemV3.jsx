@@ -63,7 +63,7 @@ const RowContainer = styled.div`
 
 const FirstRow = styled.div`
   display: grid;
-  grid-template-columns: 9fr 1fr;
+  grid-template-columns: 85fr 5fr 10fr;
 `;
 
 const Icon = styled.span`
@@ -79,6 +79,11 @@ const Title = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+`;
+
+const EditButton = styled.button`
+  display: inline-block;
+  text-align: right;
 `;
 
 const Duration = styled.span`
@@ -114,6 +119,7 @@ const PlaylistItem = ({
   onMouseDownItem,
   onMouseUpItem,
   onScrollPlaylist,
+  openModal,
 }) => {
   const elRef = useRef(null);
 
@@ -232,6 +238,7 @@ const PlaylistItem = ({
       <RowContainer>
         <FirstRow>
           <Title>{title}</Title>
+          <EditButton onClick={() => openModal([item])}>...</EditButton>
           <Duration>{duration}</Duration>
         </FirstRow>
         <SecondRow>

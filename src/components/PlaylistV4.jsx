@@ -81,6 +81,7 @@ const Playlist = ({
   playlist,
   currentItem,
   currentIndex,
+  openModal,
   dispatch,
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -467,6 +468,7 @@ const Playlist = ({
               onMouseDownItem={onMouseDown}
               onMouseUpItem={onMouseUp}
               onScrollPlaylist={scroll}
+              openModal={openModal}
             />
           )
       )}

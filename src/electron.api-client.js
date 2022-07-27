@@ -50,6 +50,10 @@ const findRandom = async () => {
   return window.electron.findRandom();
 };
 
+const writeTags = async (id, tags) => {
+  return window.electron.writeTags(id, tags);
+};
+
 // Electron specific Apis
 
 const onInit = async () => {
@@ -119,6 +123,7 @@ export default {
   removeTheme,
   find,
   findRandom,
+  writeTags,
   addMusicLibraryPath,
   getPlatform,
   minimizeWindow,

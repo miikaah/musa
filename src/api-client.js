@@ -108,6 +108,14 @@ const findRandom = async () => {
   }
 };
 
+const writeTags = async (id, tags) => {
+  if (isElectron) {
+    return ElectronApi.writeTags(id, tags);
+  } else {
+    console.error("Not implemented");
+  }
+};
+
 // Electron specific APIs
 
 const addMusicLibraryPath = async () => {
@@ -229,6 +237,7 @@ export default {
   removeTheme,
   find,
   findRandom,
+  writeTags,
   addMusicLibraryPath,
   getPlatform,
   minimizeWindow,

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { Navigate } from "react-router-dom";
@@ -6,6 +6,8 @@ import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import { setScanProps } from "reducers/library.reducer";
 import Playlist from "components/PlaylistV4";
 import Cover from "components/Cover";
+import Modal from "components/Modal";
+import TagEditor from "components/TagEditor";
 import { dispatchToast } from "../util";
 import config from "config";
 import Api from "api-client";
@@ -21,6 +23,9 @@ const Container = styled.div`
 `;
 
 const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [filesToEdit, setFilesToBeEdited] = useState([]);
+
   useEffect(() => {
     Api.addScanStartListener(({ scanLength, scanColor }) => {
       dispatch(setScanProps({ scanLength, scanColor }));
@@ -73,10 +78,20 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
     return <Navigate to="/settings" />;
   }
 
+  const openModal = (items) => {
+    setFilesToBeEdited(items);
+    setShowModal(true);
+  };
+
   return (
     <Container onDragOver={onDragOver} onDrop={onDrop}>
       <Cover />
-      <Playlist />
+      <Playlist openModal={openModal} />
+      {showModal && (
+        <Modal maxWidth={960} closeModal={() => setShowModal(false)}>
+          <TagEditor files={filesToEdit} />
+        </Modal>
+      )}
     </Container>
   );
 };

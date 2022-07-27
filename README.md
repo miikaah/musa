@@ -14,11 +14,14 @@ utilising Electron and React.
 
 ### V4
 
+- fix: Bug in the playlist where moving the last playing song up causes the playlist to start again
+- fix: Bug where state file is not read as JSON
 - feat: Remember scroll positions in Search
 - feat: More complex searches like lock search term + random and genre / year search
-- feat: Write mp3 tags
-- feat: Write flac tags
-- feat: Write ogg tags
+- feat: Update flac tags
+- feat: Update ogg tags
+- feat: Write tags from sratch
+- feat: Bulk album tags editor
 - feat: Add ReplayGain scanning
 - feat: Add Dynamic Range scanning
 - feat: Open mp3, flac and ogg files from filesystem

@@ -157,7 +157,7 @@ const locationToTitleMap = {
   "/settings/": "Settings",
 };
 
-const Titlebar = ({ currentLocation }) => {
+const Titlebar = ({ currentLocation, dispatch }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const [isMacOs, setIsMacOs] = useState(false);
   const location = useLocation();
