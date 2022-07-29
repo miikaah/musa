@@ -4,7 +4,7 @@ import styled, { css } from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
-import { setFilter } from "reducers/library.reducer";
+import { setFilter } from "reducers/search.reducer";
 import AlbumImage from "./common/AlbumImageV2";
 
 const AlbumContainer = styled.div`

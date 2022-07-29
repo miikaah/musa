@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
-import { setFilter } from "reducers/library.reducer";
+import { setFilter } from "reducers/search.reducer";
 
 const bottomBorder = css`
   cursor: pointer;

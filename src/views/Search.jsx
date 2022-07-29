@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import {
   setQuery,
@@ -6,7 +6,8 @@ import {
   setSearchResults,
   setIsSearchRandom,
   clearSearch,
-} from "reducers/library.reducer";
+  updateScrollPosition,
+} from "reducers/search.reducer";
 import styled, { css } from "styled-components/macro";
 import { useDebounce } from "hooks";
 import { KEYS } from "../util";
@@ -79,8 +80,8 @@ const SearchBlock = styled.div`
 const SearchBlockWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: ${({ isElectron }) => (isElectron ? 730 : 640)}px;
-  max-height: ${({ isElectron }) => (isElectron ? 730 : 640)}px;
+  min-height: ${isElectron ? 730 : 640}px;
+  max-height: ${isElectron ? 730 : 640}px;
   background: #fff;
   padding: 10px 0 0 10px;
   overflow: auto;
@@ -121,14 +122,18 @@ const Search = ({
   artists,
   albums,
   audios,
-  listingWithLabels,
   isSearchRandom,
+  scrollPos,
+  listingWithLabels,
   dispatch,
 }) => {
   const [previousFilter, setPreviousFilter] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [isDeletingFilter, setIsDeletingFilter] = useState(false);
   const queryToBackend = useDebounce(query, 300);
+  const artistListRef = useRef();
+  const albumListRef = useRef();
+  const audioListRef = useRef();
 
   useEffect(() => {
     if (filter && filter !== `${previousFilter},`) {
@@ -274,6 +279,12 @@ const Search = ({
         );
         dispatch(setFilter(""));
       });
+
+      dispatch(setIsSearchRandom(false));
+      dispatch(updateScrollPosition({ artists: 0, albums: 0, audios: 0 }));
+      artistListRef.current.scrollTop = 0;
+      albumListRef.current.scrollTop = 0;
+      audioListRef.current.scrollTop = 0;
     } else if (
       !isSearchRandom &&
       !isFetching &&
@@ -287,10 +298,6 @@ const Search = ({
           audios: [],
         })
       );
-    }
-
-    if (queryToBackend) {
-      dispatch(setIsSearchRandom(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryToBackend]);
@@ -308,6 +315,13 @@ const Search = ({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
+  }, []);
+
+  useEffect(() => {
+    artistListRef.current.scrollTop = scrollPos.artists;
+    albumListRef.current.scrollTop = scrollPos.albums;
+    audioListRef.current.scrollTop = scrollPos.audios;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const findRandom = () => {
@@ -356,7 +370,14 @@ const Search = ({
         <Wrapper>
           <SearchBlock>
             <h5>Artists{` (${artistToRender.length})`}</h5>
-            <SearchBlockWrapper isElectron={isElectron}>
+            <SearchBlockWrapper
+              ref={artistListRef}
+              onScroll={(event) => {
+                dispatch(
+                  updateScrollPosition({ artists: event.target.scrollTop })
+                );
+              }}
+            >
               {artistToRender.map((a, i) => (
                 <Artist key={i} item={a} />
               ))}
@@ -364,7 +385,14 @@ const Search = ({
           </SearchBlock>
           <SearchBlock>
             <h5>Albums{` (${albums.length})`}</h5>
-            <SearchBlockWrapper isElectron={isElectron}>
+            <SearchBlockWrapper
+              ref={albumListRef}
+              onScroll={(event) => {
+                dispatch(
+                  updateScrollPosition({ albums: event.target.scrollTop })
+                );
+              }}
+            >
               {albums.map((a, i) => (
                 <Album key={i} item={a} filter={filter} />
               ))}
@@ -372,7 +400,14 @@ const Search = ({
           </SearchBlock>
           <SearchBlock>
             <h5>Songs{` (${audios.length})`}</h5>
-            <SearchBlockWrapper isElectron={isElectron}>
+            <SearchBlockWrapper
+              ref={audioListRef}
+              onScroll={(event) => {
+                dispatch(
+                  updateScrollPosition({ audios: event.target.scrollTop })
+                );
+              }}
+            >
               {audios.map((a, i) => (
                 <Song key={i} item={a} />
               ))}
@@ -386,13 +421,14 @@ const Search = ({
 
 export default connect(
   (state) => ({
-    query: state.library.query,
-    filter: state.library.filter,
-    artists: state.library.searchArtists,
-    albums: state.library.searchAlbums,
-    audios: state.library.searchAudios,
+    query: state.search.query,
+    filter: state.search.filter,
+    artists: state.search.searchArtists,
+    albums: state.search.searchAlbums,
+    audios: state.search.searchAudios,
+    isSearchRandom: state.search.isRandom,
+    scrollPos: state.search.scrollPos,
     listingWithLabels: state.library.listingWithLabels,
-    isSearchRandom: state.library.isRandom,
   }),
   (dispatch) => ({ dispatch })
 )(Search);

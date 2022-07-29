@@ -14,7 +14,6 @@ utilising Electron and React.
 
 ### V4
 
-- feat: Remember scroll positions in Search
 - feat: More complex searches like lock search term + random and genre / year search
 - feat: Update flac tags
 - feat: Update ogg tags

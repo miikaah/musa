@@ -18,35 +18,6 @@ export const setScanProps = ({
   reset,
 });
 
-export const SET_QUERY = "MUSA/LIBRARY/SET_QUERY";
-export const setQuery = (query) => ({
-  type: SET_QUERY,
-  query,
-});
-
-export const SET_FILTER = "MUSA/LIBRARY/SET_FILTER";
-export const setFilter = (filter) => ({
-  type: SET_FILTER,
-  filter,
-});
-
-export const SET_IS_RANDOM = "MUSA/LIBRARY/SET_IS_RANDOM";
-export const setIsSearchRandom = (isRandom) => ({
-  type: SET_IS_RANDOM,
-  isRandom,
-});
-
-export const SET_SEARCH_RESULTS = "MUSA/LIBRARY/SET_SEARCH_RESULTS";
-export const setSearchResults = (result) => ({
-  type: SET_SEARCH_RESULTS,
-  result,
-});
-
-export const CLEAR_SEARCH = "MUSA/LIBRARY/CLEAR_SEARCH";
-export const clearSearch = () => ({
-  type: CLEAR_SEARCH,
-});
-
 const scanColor = {
   RED: "#f00",
   YELLOW: "#ff0",
@@ -58,12 +29,6 @@ const initialState = {
   scanLength: -1,
   scannedLength: 0,
   scanColor: scanColor.RED,
-  query: "",
-  filter: "",
-  isRandom: false,
-  searchArtists: [],
-  searchAlbums: [],
-  searchAudios: [],
 };
 
 const library = (state = initialState, action) => {
@@ -87,43 +52,6 @@ const library = (state = initialState, action) => {
         scanLength: action.scanLength || state.scanLength,
         scannedLength: action.scannedLength || state.scannedLength,
         scanColor: action.scanColor || state.scanColor,
-      };
-    }
-    case SET_QUERY: {
-      return {
-        ...state,
-        query: action.query,
-      };
-    }
-    case SET_FILTER: {
-      return {
-        ...state,
-        filter: action.filter,
-      };
-    }
-    case SET_IS_RANDOM: {
-      return {
-        ...state,
-        isRandom: action.isRandom,
-      };
-    }
-    case SET_SEARCH_RESULTS: {
-      return {
-        ...state,
-        searchArtists: action.result.artists,
-        searchAlbums: action.result.albums,
-        searchAudios: action.result.audios,
-      };
-    }
-    case CLEAR_SEARCH: {
-      return {
-        ...state,
-        query: "",
-        filter: "",
-        isRandom: false,
-        searchArtists: [],
-        searchAlbums: [],
-        searchAudios: [],
       };
     }
     default:
