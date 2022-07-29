@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { Navigate } from "react-router-dom";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
-import { setScanProps } from "reducers/library.reducer";
 import Playlist from "components/PlaylistV4";
 import Cover from "components/Cover";
 import Modal from "components/Modal";
 import TagEditor from "components/TagEditor";
-import { dispatchToast } from "../util";
 import config from "config";
 import Api from "api-client";
 
@@ -25,22 +23,6 @@ const Container = styled.div`
 const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
   const [showModal, setShowModal] = useState(false);
   const [filesToEdit, setFilesToBeEdited] = useState([]);
-
-  useEffect(() => {
-    Api.addScanStartListener(({ scanLength, scanColor }) => {
-      dispatch(setScanProps({ scanLength, scanColor }));
-    });
-    Api.addScanUpdateListener(({ scannedLength }) => {
-      dispatch(setScanProps({ scannedLength }));
-    });
-    Api.addScanEndListener(() => {
-      dispatch(setScanProps({ reset: true }));
-    });
-    Api.addScanCompleteListener(() => {
-      dispatchToast("Update complete", "update-complete", dispatch);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onDragOver = (event) => event.preventDefault();
 

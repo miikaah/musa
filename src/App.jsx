@@ -18,7 +18,7 @@ import {
 import styled from "styled-components/macro";
 import config, { FALLBACK_THEME } from "config";
 import { updateSettings } from "reducers/settings.reducer";
-import { setListingWithLabels } from "reducers/library.reducer";
+import { setScanProps, setListingWithLabels } from "reducers/library.reducer";
 import { updateCurrentTheme, dispatchToast } from "./util";
 import Api from "api-client";
 import AppMain from "views/AppMain";
@@ -58,6 +58,22 @@ library.add(
 
 const App = ({ dispatch }) => {
   const [isReady, setIsReady] = useState();
+
+  useEffect(() => {
+    Api.addScanStartListener(({ scanLength, scanColor }) => {
+      dispatch(setScanProps({ scanLength, scanColor }));
+    });
+    Api.addScanUpdateListener(({ scannedLength }) => {
+      dispatch(setScanProps({ scannedLength }));
+    });
+    Api.addScanEndListener(() => {
+      dispatch(setScanProps({ reset: true }));
+    });
+    Api.addScanCompleteListener(() => {
+      dispatchToast("Update complete", "update-complete", dispatch);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const update = (settings) => {
