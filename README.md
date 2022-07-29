@@ -14,6 +14,7 @@ utilising Electron and React.
 
 ### V4
 
+- feat: Textarea for tag comment field
 - feat: More complex searches like lock search term + random and genre / year search
 - feat: Update flac tags
 - feat: Update ogg tags
