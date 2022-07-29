@@ -150,10 +150,16 @@ const player = (state = initialState, action) => {
         state.items.length
       );
       const newItems = [...playlistStart, ...action.items, ...playlistEnd];
-      const newIndex =
+      let newIndex =
         action.index < state.currentIndex
           ? action.items.length + state.currentIndex
           : state.currentIndex;
+
+      // If there is no new index found after paste assume it's a copy-paste operation
+      // where the currently playing index is being copy-pasted and try to find index by item
+      if (newIndex < 0) {
+        newIndex = newItems.findIndex((item) => item === state.currentItem);
+      }
 
       return getStateByPlaylistChange(state, newItems, newIndex);
     }
