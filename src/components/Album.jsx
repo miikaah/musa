@@ -38,7 +38,7 @@ const AlbumFullAdd = styled.div`
 `;
 
 const AlbumInfo = styled.div`
-  padding: 4px 20px;
+  padding: 0 10px 4px 14px;
 
   > p {
     margin: 0 0 10px;
@@ -52,6 +52,7 @@ const AlbumInfo = styled.div`
     font-weight: bold;
     max-height: 38px;
     overflow: hidden;
+    letter-spacing: -0.5px;
   }
 
   > p > span:nth-child(2) {

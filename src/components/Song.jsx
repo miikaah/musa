@@ -31,8 +31,8 @@ const SongContainer = styled.div`
 
 const SongInfo = styled.div`
   flex: 50%;
-  padding: 0 20px 4px;
-  max-width: 308px;
+  padding: 0 0 4px 14px;
+  max-width: 268px;
 
   > p {
     margin: 0 0 6px;
@@ -44,6 +44,7 @@ const SongInfo = styled.div`
   > p:nth-child(1) {
     font-weight: bold;
     max-height: 38px;
+    letter-spacing: -0.5px;
   }
 
   > p:nth-child(2),
