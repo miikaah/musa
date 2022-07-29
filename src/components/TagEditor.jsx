@@ -200,6 +200,7 @@ const TagEditor = ({ files = [], dispatch }) => {
               <TagTextarea
                 field={(file?.metadata?.comment || []).join(" ")}
                 updateValue={setComment}
+                isDisabled={isDisabled}
               />
             </Wrapper>
             <SaveButton onClick={(event) => saveTags(event, file)} isPrimary>
