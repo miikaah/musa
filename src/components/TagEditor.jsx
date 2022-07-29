@@ -28,9 +28,11 @@ const Wrapper = styled.div`
 
   > input {
     width: 100%;
+    border-style: solid;
   }
 
-  > input:disabled {
+  > input:disabled,
+  > textarea:disabled {
     background-color: #f2f2f2;
   }
 `;
