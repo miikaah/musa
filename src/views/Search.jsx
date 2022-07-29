@@ -128,7 +128,7 @@ const Search = ({
   const [previousFilter, setPreviousFilter] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [isDeletingFilter, setIsDeletingFilter] = useState(false);
-  const queryToBackend = useDebounce(query, isElectron ? 0 : 16);
+  const queryToBackend = useDebounce(query, 300);
 
   useEffect(() => {
     if (filter && filter !== `${previousFilter},`) {
