@@ -102,12 +102,16 @@ const EditButton = styled.button`
   border: 1px solid transparent;
   position: relative;
   height: 100%;
+  min-width: 21px;
 
   :hover {
-    background-color: rgb(255, 255, 255, 0.333);
-    border-color: rgb(255, 255, 255, 0.333);
-    border-radius: 50%;
-    box-shadow: 0 0 0 5px rgb(255, 255, 255, 0.333);
+    > div {
+      width: 100%;
+      height: 100%;
+      background-color: rgb(255, 255, 255, 0.333);
+      border-radius: 50%;
+      box-shadow: 0 0 0 5px rgb(255, 255, 255, 0.333);
+    }
   }
 
   > span {
@@ -284,6 +288,7 @@ const PlaylistItem = ({
         <FirstRow>
           <Title>{title}</Title>
           <EditButton onClick={() => openModal([item])}>
+            <div />
             <span />
             <span />
             <span />
