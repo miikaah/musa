@@ -15,7 +15,6 @@ utilising Electron and React.
 ### V4
 
 - fix: Bug in the playlist where moving the last playing song up causes the playlist to start again
-- fix: Bug where state file is not read as JSON
 - feat: Remember scroll positions in Search
 - feat: More complex searches like lock search term + random and genre / year search
 - feat: Update flac tags
