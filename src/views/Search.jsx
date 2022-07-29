@@ -136,7 +136,7 @@ const Search = ({
   const audioListRef = useRef();
 
   useEffect(() => {
-    if (filter && filter !== `${previousFilter},`) {
+    if (filter) {
       const [artistFilter, albumFilter] = filter.split(",");
       const firstChar = artistFilter.substring(0, 1).toUpperCase();
       const strictArtists = (listingWithLabels[firstChar] || []).filter((a) =>
@@ -144,7 +144,26 @@ const Search = ({
       );
 
       if (!albumFilter) {
-        if (strictArtists.length > 1) {
+        if (strictArtists.length > 1 && filter.trim().endsWith(",")) {
+          Api.getArtistAlbums(strictArtists[0].id).then((artist) => {
+            const mappedFiles = artist.albums
+              .map((a) =>
+                a.files.map((f) => ({
+                  ...f,
+                  coverUrl: a.coverUrl,
+                }))
+              )
+              .flat(Infinity);
+
+            dispatch(
+              setSearchResults({
+                artists: strictArtists,
+                albums: artist.albums,
+                audios: [...mappedFiles, ...artist.files],
+              })
+            );
+          });
+        } else if (strictArtists.length > 1) {
           dispatch(
             setSearchResults({
               artists: strictArtists,
