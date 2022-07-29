@@ -15,6 +15,12 @@ const colorCss = css`
       > span {
         color: var(--color-typography-primary);
       }
+
+      > button {
+        > span {
+          background-color: var(--color-typography-primary);
+        }
+      }
     }
   }
 `;
@@ -24,7 +30,17 @@ const PlaylistItemContainer = styled.li`
   display: flex;
   max-height: 60px;
 
-  &:hover {
+  > div {
+    > div {
+      > button {
+        > span {
+          background-color: var(--color-bg);
+        }
+      }
+    }
+  }
+
+  :hover {
     ${colorCss}
   }
 
@@ -63,7 +79,7 @@ const RowContainer = styled.div`
 
 const FirstRow = styled.div`
   display: grid;
-  grid-template-columns: 85fr 5fr 10fr;
+  grid-template-columns: 85fr 3fr 12fr;
 `;
 
 const Icon = styled.span`
@@ -83,7 +99,36 @@ const Title = styled.span`
 
 const EditButton = styled.button`
   display: inline-block;
-  text-align: right;
+  border: 1px solid transparent;
+  position: relative;
+  height: 100%;
+
+  :hover {
+    background-color: rgb(255, 255, 255, 0.333);
+    border-color: rgb(255, 255, 255, 0.333);
+    border-radius: 50%;
+    box-shadow: 0 0 0 5px rgb(255, 255, 255, 0.333);
+  }
+
+  > span {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    position: absolute;
+    top: 6px;
+  }
+
+  > span:nth-of-type(1) {
+    left: 2px;
+  }
+
+  > span:nth-of-type(2) {
+    left: 8px;
+  }
+
+  > span:nth-of-type(3) {
+    left: 14px;
+  }
 `;
 
 const Duration = styled.span`
@@ -238,7 +283,11 @@ const PlaylistItem = ({
       <RowContainer>
         <FirstRow>
           <Title>{title}</Title>
-          <EditButton onClick={() => openModal([item])}>...</EditButton>
+          <EditButton onClick={() => openModal([item])}>
+            <span />
+            <span />
+            <span />
+          </EditButton>
           <Duration>{duration}</Duration>
         </FirstRow>
         <SecondRow>
