@@ -73,3 +73,9 @@ input {
   padding: 10px 30px;
   font-size: var(--font-size-md);
 }
+
+textarea {
+  padding: 10px 30px;
+  font-size: var(--font-size-md);
+  font-family: Arial, sans-serif;
+}

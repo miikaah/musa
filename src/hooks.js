@@ -5,7 +5,12 @@ export const useKeyPress = (key, callback) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.keyCode !== key) return;
-      if (event?.target?.tagName === "INPUT" && !isCtrlDown(event)) return;
+      if (
+        (event?.target?.tagName === "INPUT" ||
+          event?.target?.tagName === "TEXTAREA") &&
+        (!isCtrlDown(event) || !event.shiftKey)
+      )
+        return;
 
       callback(event);
     };

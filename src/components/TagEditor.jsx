@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import TagInput from "./TagInput";
+import TagTextarea from "./TagTextarea";
 import Button from "./Button";
 import Api from "api-client";
 import { dispatchToast } from "../util";
@@ -51,6 +52,7 @@ const TagEditor = ({ files = [], dispatch }) => {
   const [disks, setDisks] = useState();
   const [genre, setGenre] = useState();
   const [composer, setComposer] = useState();
+  const [comment, setComment] = useState();
 
   const getCodecInfo = (file) => {
     const { codec, codecProfile, container } = file?.metadata || {};
@@ -106,6 +108,12 @@ const TagEditor = ({ files = [], dispatch }) => {
     }
     if (typeof composer !== "undefined") {
       tags.composer = composer;
+    }
+    if (typeof comment !== "undefined") {
+      tags.comment = {
+        language: "eng",
+        text: comment,
+      };
     }
 
     const err = await Api.writeTags(file.id, tags);
@@ -189,9 +197,9 @@ const TagEditor = ({ files = [], dispatch }) => {
               <span>Codec</span>
               <TagInput field={getCodecInfo(file)} isDisabled />
               <span>Comment</span>
-              <TagInput
+              <TagTextarea
                 field={(file?.metadata?.comment || []).join(" ")}
-                isDisabled
+                updateValue={setComment}
               />
             </Wrapper>
             <SaveButton onClick={(event) => saveTags(event, file)} isPrimary>
