@@ -84,7 +84,7 @@ const SearchBlockWrapper = styled.div`
   max-height: ${isElectron ? 730 : 640}px;
   background: #fff;
   padding: 10px 0 0 10px;
-  overflow: auto;
+  overflow-y: scroll;
 `;
 
 const InputContainer = styled.div`
@@ -347,9 +347,9 @@ const Search = ({
     setIsFetching(true);
     dispatch(setQuery(""));
     dispatch(setFilter(""));
-    dispatch(setIsSearchRandom(true));
 
     Api.findRandom().then((result) => {
+      dispatch(setIsSearchRandom(true));
       dispatch(setSearchResults(result));
       setIsFetching(false);
     });
@@ -358,6 +358,13 @@ const Search = ({
   const artistToRender = artists.length
     ? artists
     : Object.values(listingWithLabels).flat(Infinity);
+
+  // NOTE: Need to keep track of this because at least on Windows
+  //       when going from long scrolled list to a short one that can not be
+  //       scrolled, when React re-renders it scrolls the list elements to top
+  //       before it replaces the elements inside of them causing an annoying
+  //       flash of different albums covers and titles
+  const isFetchingRandomFirstTime = isFetching && !isSearchRandom;
 
   return (
     <Container>
@@ -397,9 +404,11 @@ const Search = ({
                 );
               }}
             >
-              {artistToRender.map((a, i) => (
-                <Artist key={i} item={a} />
-              ))}
+              {React.useMemo(() => {
+                return artistToRender.map((a, i) => (
+                  <Artist key={i} item={a} />
+                ));
+              }, [artistToRender])}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
@@ -412,9 +421,18 @@ const Search = ({
                 );
               }}
             >
-              {albums.map((a, i) => (
-                <Album key={i} item={a} filter={filter} />
-              ))}
+              {React.useMemo(
+                () =>
+                  isFetchingRandomFirstTime ? (
+                    <div>...</div>
+                  ) : (
+                    albums.map((a, i) => {
+                      return <Album key={i} item={a} filter={filter} />;
+                    })
+                  ),
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+                [albums, isFetchingRandomFirstTime]
+              )}
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
@@ -427,9 +445,18 @@ const Search = ({
                 );
               }}
             >
-              {audios.map((a, i) => (
-                <Song key={i} item={a} />
-              ))}
+              {React.useMemo(
+                () =>
+                  isFetchingRandomFirstTime ? (
+                    <div>...</div>
+                  ) : (
+                    audios.map((a, i) => {
+                      return <Song key={i} item={a} />;
+                    })
+                  ),
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+                [audios, isFetchingRandomFirstTime]
+              )}
             </SearchBlockWrapper>
           </SearchBlock>
         </Wrapper>
