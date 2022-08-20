@@ -112,7 +112,7 @@ const findRandomWithLockedSearchTerm = async (term) => {
   if (isElectron) {
     return ElectronApi.findRandomWithLockedSearchTerm(term);
   } else {
-    console.error("Not implemented");
+    return ServerApi.findRandom(term);
   }
 };
 

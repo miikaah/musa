@@ -84,8 +84,8 @@ const find = async (queryToBackend) => {
   return get(`/find/${queryToBackend}`);
 };
 
-const findRandom = async () => {
-  return get("/find-random");
+const findRandom = async (query) => {
+  return query ? get(`/find-random/${query}`) : get("/find-random");
 };
 
 // Electron specific Apis
