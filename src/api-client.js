@@ -92,6 +92,14 @@ const removeTheme = async ({ id }) => {
   }
 };
 
+const getAllGenres = async () => {
+  if (isElectron) {
+    return ElectronApi.getAllGenres();
+  } else {
+    return ServerApi.getAllGenres();
+  }
+};
+
 const find = async (queryToBackend) => {
   if (isElectron) {
     return ElectronApi.find(queryToBackend);
@@ -243,6 +251,7 @@ export default {
   getThemeById,
   insertTheme,
   removeTheme,
+  getAllGenres,
   find,
   findRandom,
   findRandomWithLockedSearchTerm,

@@ -17,8 +17,10 @@ import Song from "components/Song";
 import Album from "components/Album";
 import Artist from "components/Artist";
 import Button from "components/Button";
+import Select from "components/Select";
 import config from "config";
 import Api from "api-client";
+import { ArrowDown as ArrowDownStyled } from "common.styles";
 
 const { isElectron } = config;
 
@@ -95,7 +97,8 @@ const InputContainer = styled.div`
 
   > div:nth-of-type(1),
   > div:nth-of-type(3) {
-    width: 345px;
+    min-width: 345px;
+    max-width: 345px;
     margin-right: 10px;
     position: relative;
   }
@@ -106,6 +109,10 @@ const InputContainer = styled.div`
 `;
 
 const SearchInputContainer = styled.div`
+  > input {
+    padding-right: 80px;
+  }
+
   > svg {
     position: absolute;
     top: 50%;
@@ -120,6 +127,14 @@ const SearchInputContainer = styled.div`
       cursor: pointer;
     }
   }
+`;
+
+const ArrowDown = styled(ArrowDownStyled)`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 50px;
+  border-top-color: #000;
 `;
 
 const buttonStyles = css`
@@ -152,6 +167,8 @@ const Search = ({
   const [previousFilter, setPreviousFilter] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [isDeletingFilter, setIsDeletingFilter] = useState(false);
+  const [genres, setGenres] = useState([]);
+  const [showGenreSelect, setShowGenreSelect] = useState(false);
   const queryToBackend = useDebounce(query, 300);
   const artistListRef = useRef();
   const albumListRef = useRef();
@@ -365,6 +382,11 @@ const Search = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    Api.getAllGenres().then(setGenres);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const findRandom = () => {
     setIsFetching(true);
     dispatch(setFilter(""));
@@ -396,6 +418,11 @@ const Search = ({
   //       flash of different albums covers and titles
   const isFetchingRandomFirstTime = isFetching && !isSearchRandom;
 
+  const updateQuery = (e) => {
+    dispatch(setQuery(e.target.value));
+    dispatch(setIsSearchTermLocked(false));
+  };
+
   const toggleSearchLock = () => {
     if (!query) {
       return;
@@ -406,6 +433,16 @@ const Search = ({
   const clear = () => {
     dispatch(setIsSearchTermLocked(false));
     dispatch(clearSearch());
+  };
+
+  const setGenre = (event) => {
+    dispatch(setIsSearchTermLocked(false));
+    dispatch(setQuery(`g:${event.target.innerHTML}`));
+    setShowGenreSelect(false);
+  };
+
+  const toggleGenreSelect = () => {
+    setShowGenreSelect(!showGenreSelect);
   };
 
   return (
@@ -424,9 +461,17 @@ const Search = ({
           <SearchInputContainer query={query}>
             <input
               value={query}
-              placeholder="Search"
-              onChange={(e) => dispatch(setQuery(e.target.value))}
+              placeholder="Search by term or year"
+              onChange={updateQuery}
             />
+            <ArrowDown onClick={toggleGenreSelect} />
+            <Select showSelect={showGenreSelect} top={45} maxWidth={345}>
+              {genres.map((genre, i) => (
+                <div key={i} title={genre} onClick={setGenre}>
+                  {genre}
+                </div>
+              ))}
+            </Select>
             {isSearchTermLocked ? (
               <FontAwesomeIcon onClick={toggleSearchLock} icon="lock" />
             ) : (

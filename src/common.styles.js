@@ -1,4 +1,4 @@
-import { css } from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 
 export const listOverflow = css`
   min-height: 89vh;
@@ -24,4 +24,13 @@ export const listOverflow = css`
     min-height: 77vh;
     max-height: 77vh;
   }
+`;
+
+export const ArrowDown = styled.span`
+  cursor: pointer;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid var(--color-typography-primary);
 `;

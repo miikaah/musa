@@ -80,6 +80,10 @@ const removeTheme = async ({ id }) => {
   return del(`/theme/${id}`);
 };
 
+const getAllGenres = async () => {
+  return get("/genres");
+};
+
 const find = async (queryToBackend) => {
   return get(`/find/${queryToBackend}`);
 };
@@ -129,6 +133,7 @@ export default {
   getThemeById,
   insertTheme,
   removeTheme,
+  getAllGenres,
   find,
   findRandom,
   addMusicLibraryPath,

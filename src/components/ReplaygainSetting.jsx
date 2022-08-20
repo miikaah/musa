@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { REPLAYGAIN_TYPE } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
+import { ArrowDown as ArrowDownStyled } from "common.styles";
 
 const ReplaygainSettingSelect = styled.div`
   position: relative;
@@ -20,16 +21,10 @@ const ReplaygainSettingSelect = styled.div`
   }
 `;
 
-const ArrowDown = styled.span`
+const ArrowDown = styled(ArrowDownStyled)`
   position: absolute;
-  cursor: pointer;
-  width: 0;
-  height: 0;
   left: 170px;
   top: 15px;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid var(--color-typography-primary);
   pointer-events: none;
 `;
 

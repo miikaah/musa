@@ -42,6 +42,10 @@ const removeTheme = async ({ id }) => {
   return window.electron.removeThemeById(id);
 };
 
+const getAllGenres = async () => {
+  return window.electron.getAllGenres();
+};
+
 const find = async (query) => {
   return window.electron.find(query);
 };
@@ -125,6 +129,7 @@ export default {
   getThemeById,
   insertTheme,
   removeTheme,
+  getAllGenres,
   find,
   findRandom,
   findRandomWithLockedSearchTerm,

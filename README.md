@@ -14,7 +14,6 @@ utilising Electron and React.
 
 ### V4
 
-- feat: genre / year search
 - feat: Update flac tags
 - feat: Update ogg tags
 - feat: Write tags from sratch
