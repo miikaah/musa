@@ -14,7 +14,7 @@ utilising Electron and React.
 
 ### V4
 
-- feat: More complex searches like lock search term + random and genre / year search
+- feat: genre / year search
 - feat: Update flac tags
 - feat: Update ogg tags
 - feat: Write tags from sratch

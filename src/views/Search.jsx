@@ -5,10 +5,12 @@ import {
   setFilter,
   setSearchResults,
   setIsSearchRandom,
+  setIsSearchTermLocked,
   clearSearch,
   updateScrollPosition,
 } from "reducers/search.reducer";
 import styled, { css } from "styled-components/macro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDebounce } from "hooks";
 import { KEYS } from "../util";
 import Song from "components/Song";
@@ -91,13 +93,32 @@ const InputContainer = styled.div`
   display: flex;
   margin-bottom: 20px;
 
-  > input {
+  > div:nth-of-type(1),
+  > div:nth-of-type(3) {
     width: 345px;
     margin-right: 10px;
+    position: relative;
   }
 
   > button:first-of-type {
     margin-right: 10px;
+  }
+`;
+
+const SearchInputContainer = styled.div`
+  > svg {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 16px;
+
+    path {
+      fill: ${({ query }) => (query ? "#000" : "#ccc")};
+    }
+
+    :hover {
+      cursor: pointer;
+    }
   }
 `;
 
@@ -123,6 +144,7 @@ const Search = ({
   albums,
   audios,
   isSearchRandom,
+  isSearchTermLocked,
   scrollPos,
   listingWithLabels,
   dispatch,
@@ -287,7 +309,7 @@ const Search = ({
   }, [filter, listingWithLabels]);
 
   useEffect(() => {
-    if (queryToBackend) {
+    if (queryToBackend && !isSearchTermLocked) {
       Api.find(queryToBackend).then((result) => {
         dispatch(
           setSearchResults({
@@ -345,14 +367,22 @@ const Search = ({
 
   const findRandom = () => {
     setIsFetching(true);
-    dispatch(setQuery(""));
     dispatch(setFilter(""));
 
-    Api.findRandom().then((result) => {
-      dispatch(setIsSearchRandom(true));
-      dispatch(setSearchResults(result));
-      setIsFetching(false);
-    });
+    if (isSearchTermLocked) {
+      Api.findRandomWithLockedSearchTerm(query).then((result) => {
+        dispatch(setIsSearchRandom(true));
+        dispatch(setSearchResults(result));
+        setIsFetching(false);
+      });
+    } else {
+      Api.findRandom().then((result) => {
+        dispatch(setQuery(""));
+        dispatch(setIsSearchRandom(true));
+        dispatch(setSearchResults(result));
+        setIsFetching(false);
+      });
+    }
   };
 
   const artistToRender = artists.length
@@ -366,30 +396,47 @@ const Search = ({
   //       flash of different albums covers and titles
   const isFetchingRandomFirstTime = isFetching && !isSearchRandom;
 
+  const toggleSearchLock = () => {
+    if (!query) {
+      return;
+    }
+    dispatch(setIsSearchTermLocked(!isSearchTermLocked));
+  };
+
+  const clear = () => {
+    dispatch(setIsSearchTermLocked(false));
+    dispatch(clearSearch());
+  };
+
   return (
     <Container>
       <ContainerWrapper>
         <InputContainer>
-          <input
-            autoFocus
-            value={filter}
-            placeholder="...Filter by artist,album"
-            onChange={(e) => dispatch(setFilter(e.target.value))}
-          />
+          <div>
+            <input
+              autoFocus
+              value={filter}
+              placeholder="Filter by artist,album"
+              onChange={(e) => dispatch(setFilter(e.target.value))}
+            />
+          </div>
           <div />
-          <input
-            value={query}
-            placeholder="...Search"
-            onChange={(e) => dispatch(setQuery(e.target.value))}
-          />
+          <SearchInputContainer query={query}>
+            <input
+              value={query}
+              placeholder="Search"
+              onChange={(e) => dispatch(setQuery(e.target.value))}
+            />
+            {isSearchTermLocked ? (
+              <FontAwesomeIcon onClick={toggleSearchLock} icon="lock" />
+            ) : (
+              <FontAwesomeIcon onClick={toggleSearchLock} icon="lock-open" />
+            )}
+          </SearchInputContainer>
           <RandomButton isPrimary isSmall onClick={findRandom}>
             Random
           </RandomButton>
-          <ClearButton
-            isSecondary
-            isSmall
-            onClick={() => dispatch(clearSearch())}
-          >
+          <ClearButton isSecondary isSmall onClick={clear}>
             Clear
           </ClearButton>
         </InputContainer>
@@ -473,6 +520,7 @@ export default connect(
     albums: state.search.searchAlbums,
     audios: state.search.searchAudios,
     isSearchRandom: state.search.isRandom,
+    isSearchTermLocked: state.search.isSearchTermLocked,
     scrollPos: state.search.scrollPos,
     listingWithLabels: state.library.listingWithLabels,
   }),

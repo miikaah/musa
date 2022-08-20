@@ -50,6 +50,10 @@ const findRandom = async () => {
   return window.electron.findRandom();
 };
 
+const findRandomWithLockedSearchTerm = async (term) => {
+  return window.electron.findRandomWithLockedSearchTerm(term);
+};
+
 const writeTags = async (id, tags) => {
   return window.electron.writeTags(id, tags);
 };
@@ -123,6 +127,7 @@ export default {
   removeTheme,
   find,
   findRandom,
+  findRandomWithLockedSearchTerm,
   writeTags,
   addMusicLibraryPath,
   getPlatform,

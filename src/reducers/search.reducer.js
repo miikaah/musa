@@ -16,6 +16,13 @@ export const setIsSearchRandom = (isRandom) => ({
   isRandom,
 });
 
+export const SET_IS_SEARCH_TERM_LOCKED =
+  "MUSA/SEARCH/SET_IS_SEARCH_TERM_LOCKED";
+export const setIsSearchTermLocked = (isSearchTermLocked) => ({
+  type: SET_IS_SEARCH_TERM_LOCKED,
+  isSearchTermLocked,
+});
+
 export const SET_SEARCH_RESULTS = "MUSA/SEARCH/SET_SEARCH_RESULTS";
 export const setSearchResults = (result) => ({
   type: SET_SEARCH_RESULTS,
@@ -37,6 +44,7 @@ const initialState = {
   query: "",
   filter: "",
   isRandom: false,
+  isSearchTermLocked: false,
   searchArtists: [],
   searchAlbums: [],
   searchAudios: [],
@@ -65,6 +73,12 @@ const search = (state = initialState, action) => {
       return {
         ...state,
         isRandom: action.isRandom,
+      };
+    }
+    case SET_IS_SEARCH_TERM_LOCKED: {
+      return {
+        ...state,
+        isSearchTermLocked: action.isSearchTermLocked,
       };
     }
     case SET_SEARCH_RESULTS: {

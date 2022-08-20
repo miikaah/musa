@@ -14,6 +14,8 @@ import {
   faAngleDown,
   faChevronLeft,
   faChevronRight,
+  faLock,
+  faLockOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components/macro";
 import config, { FALLBACK_THEME } from "config";
@@ -53,7 +55,9 @@ library.add(
   faTrash,
   faAngleDown,
   faChevronLeft,
-  faChevronRight
+  faChevronRight,
+  faLock,
+  faLockOpen
 );
 
 const App = ({ dispatch }) => {

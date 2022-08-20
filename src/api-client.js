@@ -108,6 +108,14 @@ const findRandom = async () => {
   }
 };
 
+const findRandomWithLockedSearchTerm = async (term) => {
+  if (isElectron) {
+    return ElectronApi.findRandomWithLockedSearchTerm(term);
+  } else {
+    console.error("Not implemented");
+  }
+};
+
 const writeTags = async (id, tags) => {
   if (isElectron) {
     return ElectronApi.writeTags(id, tags);
@@ -237,6 +245,7 @@ export default {
   removeTheme,
   find,
   findRandom,
+  findRandomWithLockedSearchTerm,
   writeTags,
   addMusicLibraryPath,
   getPlatform,
