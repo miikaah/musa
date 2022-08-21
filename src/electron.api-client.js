@@ -116,6 +116,10 @@ const addScanCompleteListener = (callback) => {
   window.electron.addScanCompleteListener(callback);
 };
 
+const getAudiosByFilepaths = async (paths) => {
+  return window.electron.getAudiosByFilepaths(paths);
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   getSettings,
@@ -147,4 +151,5 @@ export default {
   addScanUpdateListener,
   addScanEndListener,
   addScanCompleteListener,
+  getAudiosByFilepaths,
 };

@@ -238,6 +238,14 @@ const addScanCompleteListener = (callback) => {
   return ElectronApi.addScanCompleteListener(callback);
 };
 
+const getAudiosByFilepaths = (paths) => {
+  if (!isElectron) {
+    return;
+  }
+
+  return ElectronApi.getAudiosByFilepaths(paths);
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   getSettings,
@@ -269,4 +277,5 @@ export default {
   addScanUpdateListener,
   addScanEndListener,
   addScanCompleteListener,
+  getAudiosByFilepaths,
 };

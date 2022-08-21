@@ -27,6 +27,17 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
   const onDragOver = (event) => event.preventDefault();
 
   const onDrop = async (event) => {
+    if (event.dataTransfer.files.length > 0) {
+      const paths = Array.from(event.dataTransfer.files).map(
+        ({ path }) => path
+      );
+
+      const files = await Api.getAudiosByFilepaths(paths);
+
+      dispatch(pasteToPlaylist(files));
+
+      return;
+    }
     const data = JSON.parse(event.dataTransfer.getData("text"));
     const { isArtist, isAlbum, item } = data;
 

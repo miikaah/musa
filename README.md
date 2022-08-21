@@ -14,14 +14,15 @@ utilising Electron and React.
 
 ### V4
 
+- refactor: Map coverUrls to album files in backend
 - feat: Update flac tags
 - feat: Update ogg tags
 - feat: Write tags from sratch
 - feat: Bulk album tags editor
 - feat: Add ReplayGain scanning
 - feat: Add Dynamic Range scanning
+- feat: Drop files from outside of music library
 - feat: Open mp3, flac and ogg files from filesystem
-- feat: Drag & drop mp3, flac and ogg files from filesystem
 
 #### Cross platform
 
