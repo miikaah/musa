@@ -437,7 +437,7 @@ const Search = ({
 
   const setGenre = (event) => {
     dispatch(setIsSearchTermLocked(false));
-    dispatch(setQuery(`g:${event.target.innerHTML}`));
+    dispatch(setQuery(`g:${event.target.textContent}`));
     setShowGenreSelect(false);
   };
 
