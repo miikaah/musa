@@ -15,9 +15,12 @@ utilising Electron and React.
 ### V4
 
 - refactor: Map coverUrls to album files in backend
+- feat: Select theme colors manually from cover
+- feat: Improve portrait album cover handling
 - feat: Update flac tags
 - feat: Update ogg tags
-- feat: Write tags from sratch
+- feat: Write tags from sratch + deduce tags from filename
+- feat: Make library and tag updates work without refresh
 - feat: Bulk album tags editor
 - feat: Add ReplayGain scanning
 - feat: Add Dynamic Range scanning
