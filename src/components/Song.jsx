@@ -21,7 +21,7 @@ const SongContainer = styled.div`
     max-width: 80px;
     min-height: 80px;
     max-height: 80px;
-    background-color: #d7d7d7;
+    background-color: ${({ hasCover }) => !hasCover && "#d7d7d7"};
   }
 
   &:hover {
@@ -79,7 +79,7 @@ const Song = ({ item, dispatch }) => {
   const year = item?.metadata?.year || "";
 
   return (
-    <SongContainer onClick={addSongToPlaylist}>
+    <SongContainer onClick={addSongToPlaylist} hasCover={!!item.coverUrl}>
       <AlbumImage item={item} />
       <SongInfo>
         <p title={title}>{title}</p>

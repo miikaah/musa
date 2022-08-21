@@ -61,6 +61,7 @@ const CoverWrapper = styled.div`
 const CoverSmall = styled.img`
   width: 50px;
   height: 50px;
+  object-fit: scale-down;
 `;
 
 const PlaceholderImage = styled.div`

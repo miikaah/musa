@@ -29,7 +29,7 @@ const AlbumFullAdd = styled.div`
     max-width: 80px;
     min-height: 80px;
     max-height: 80px;
-    background-color: #d7d7d7;
+    background-color: ${({ hasCover }) => !hasCover && "#d7d7d7"};
   }
 
   :hover {
@@ -123,7 +123,10 @@ const Album = ({ item, filter, dispatch }) => {
 
   return (
     <AlbumContainer>
-      <AlbumFullAdd onClick={addAlbumSongsToPlaylist}>
+      <AlbumFullAdd
+        onClick={addAlbumSongsToPlaylist}
+        hasCover={!!item.coverUrl}
+      >
         <AlbumImage item={item} />
         <AlbumInfo>
           <p title={album}>{album}</p>
