@@ -16,6 +16,7 @@ utilising Electron and React.
 
 - refactor: Map coverUrls to album files in backend
 - refactor: Better paths for http server
+- refactor: Make tagging work with external files
 - feat: Select theme colors manually from cover
 - feat: Improve portrait album cover handling
 - feat: Update flac tags
@@ -25,7 +26,6 @@ utilising Electron and React.
 - feat: Bulk album tags editor
 - feat: Add ReplayGain scanning
 - feat: Add Dynamic Range scanning
-- feat: Drop files from outside of music library
 - feat: Open mp3, flac and ogg files from filesystem
 - feat: Add a bar graph
 
