@@ -43,21 +43,15 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
 
     if (isArtist) {
       const artist = await Api.getArtistAlbums(item.id);
-      const songs = artist.albums
-        .map((a) => a.files.map((f) => ({ ...f, coverUrl: a.coverUrl })))
-        .flat(Infinity);
+      const songs = artist.albums.map((a) => a.files).flat(Infinity);
 
       dispatch(pasteToPlaylist([...songs, ...artist.files]));
 
       return;
     } else if (isAlbum) {
       const album = await Api.getAlbumById(isElectron ? item.id : item.url);
-      const mappedFiles = album.files.map((f) => ({
-        ...f,
-        coverUrl: album.coverUrl,
-      }));
 
-      dispatch(pasteToPlaylist(mappedFiles));
+      dispatch(pasteToPlaylist(album.files));
 
       return;
     }
