@@ -55,7 +55,8 @@ const ContainerWrapper = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   > div:first-child {
     min-width: 150px;
