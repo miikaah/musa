@@ -30,11 +30,11 @@ const del = async (path) => {
 };
 
 const getSettings = async () => {
-  return get("/state");
+  return get("/settings");
 };
 
 const insertSettings = async (settings) => {
-  return put("/state", {
+  return put("/settings", {
     body: {
       settings: {
         ...settings,
@@ -57,7 +57,7 @@ const getArtistById = async (url) => {
 };
 
 const getArtistAlbums = async (id) => {
-  return get(`/artist-albums/${id}`);
+  return get(`/artists/${id}/albums`);
 };
 
 const getAlbumById = async (url) => {
@@ -69,15 +69,15 @@ const getThemes = async () => {
 };
 
 const getThemeById = async ({ id }) => {
-  return get(`/theme/${id.split("/").pop()}`);
+  return get(`/themes/${id.split("/").pop()}`);
 };
 
 const insertTheme = async ({ id, colors }) => {
-  return put(`/theme/${id.split("/").pop()}`, { body: { colors } });
+  return put(`/themes/${id.split("/").pop()}`, { body: { colors } });
 };
 
 const removeTheme = async ({ id }) => {
-  return del(`/theme/${id}`);
+  return del(`/themes/${id}`);
 };
 
 const getAllGenres = async () => {
