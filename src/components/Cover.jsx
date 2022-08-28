@@ -41,6 +41,8 @@ const Image = styled.img`
   height: 100%;
   max-height: ${({ maxHeight }) => maxHeight && `${maxHeight}px`};
   transition: ${({ isCoverLoaded }) => isCoverLoaded && "max-height 0.3s"};
+  object-fit: ${({ scaleDownImage }) =>
+    scaleDownImage ? "scale-down" : "cover"};
 `;
 
 const isVibrantCover = (mostPopularSwatch) => {
@@ -66,6 +68,7 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const [isCoverLoaded, setIsCoverLoaded] = useState(false);
   const [maxHeight, setMaxHeight] = useState();
+  const [scaleDownImage, setScaleDownImage] = useState();
   const containerRef = useRef();
   const coverRef = useRef();
 
@@ -249,6 +252,10 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
       setIsCoverLoaded(true);
       calcMaxHeight();
 
+      const { naturalWidth, naturalHeight } = coverTarget;
+      const aspectRatio = naturalWidth / naturalHeight;
+      setScaleDownImage(aspectRatio < 0.9);
+
       const theme = await Api.getThemeById({ id: coverTarget.src });
 
       if (theme?.colors) {
@@ -299,6 +306,7 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
         ref={coverRef}
         crossOrigin=""
         maxHeight={maxHeight}
+        scaleDownImage={scaleDownImage}
         isCoverLoaded={isCoverLoaded}
       />
       <CoverInfo item={currentItem} isSmall={isSmall} />

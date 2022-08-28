@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
+import { listImage, cardActionShadow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 
 const SongContainer = styled.div`
@@ -15,17 +16,10 @@ const SongContainer = styled.div`
   border-right-width: 0;
   border-left-width: 0;
 
-  > img {
-    flex: 50%;
-    min-width: 80px;
-    max-width: 80px;
-    min-height: 80px;
-    max-height: 80px;
-    background-color: ${({ hasCover }) => !hasCover && "#d7d7d7"};
-  }
+  ${listImage}
 
-  &:hover {
-    border-color: var(--color-primary-highlight);
+  :hover {
+    ${cardActionShadow}
   }
 `;
 
@@ -80,7 +74,9 @@ const Song = ({ item, dispatch }) => {
 
   return (
     <SongContainer onClick={addSongToPlaylist} hasCover={!!item.coverUrl}>
-      <AlbumImage item={item} />
+      <div>
+        <AlbumImage item={item} />
+      </div>
       <SongInfo>
         <p title={title}>{title}</p>
         {album && <p title={album}>{album}</p>}

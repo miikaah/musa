@@ -34,3 +34,31 @@ export const ArrowDown = styled.span`
   border-right: 10px solid transparent;
   border-top: 10px solid var(--color-typography-primary);
 `;
+
+export const listImage = css`
+  > div:first-of-type {
+    display: flex;
+    min-width: 80px;
+    min-height: 80px;
+    align-items: flex-start;
+    justify-content: center;
+
+    > img {
+      max-width: 80px;
+      max-height: 80px;
+      box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+
+      ${({ hasCover }) =>
+        !hasCover &&
+        `
+        min-width: 80px;
+        min-height: 80px;
+        background-color: #d7d7d7;
+      `}
+    }
+  }
+`;
+
+export const cardActionShadow = css`
+  box-shadow: 0 2px 9px -2px rgb(0 0 0 / 30%);
+`;

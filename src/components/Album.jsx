@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
 import { setFilter } from "reducers/search.reducer";
+import { listImage, cardActionShadow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 
 const AlbumContainer = styled.div`
@@ -22,18 +23,12 @@ const AlbumFullAdd = styled.div`
   display: flex;
   flex: 100%;
   max-height: 80px;
+  align-items: flex-start;
   ${bottomBorder}
-
-  > img {
-    min-width: 80px;
-    max-width: 80px;
-    min-height: 80px;
-    max-height: 80px;
-    background-color: ${({ hasCover }) => !hasCover && "#d7d7d7"};
-  }
+  ${listImage}
 
   :hover {
-    border-color: var(--color-primary-highlight);
+    ${cardActionShadow}
   }
 `;
 
@@ -72,7 +67,7 @@ const IconWrapper = styled.div`
 
   :hover {
     cursor: pointer;
-    color: var(--color-primary-highlight);
+    ${cardActionShadow}
   }
 `;
 
@@ -127,7 +122,9 @@ const Album = ({ item, filter, dispatch }) => {
         onClick={addAlbumSongsToPlaylist}
         hasCover={!!item.coverUrl}
       >
-        <AlbumImage item={item} />
+        <div>
+          <AlbumImage item={item} />
+        </div>
         <AlbumInfo>
           <p title={album}>{album}</p>
           <p>
