@@ -53,13 +53,25 @@ export const emptyPlaylist = () => ({
   type: EMPTY_PLAYLIST,
 });
 
+export const SET_COVER_DATA = "MUSA/PLAYER/SET_COVER_DATA";
+export const setCoverData = (coverData) => ({
+  type: SET_COVER_DATA,
+  coverData,
+});
+
 const initialState = {
   items: [],
   currentItem: {},
   currentIndex: -1,
   src: "",
   coverUrl: "",
+  previousCoverUrl: "",
   isPlaying: false,
+  coverData: {
+    isCoverLoaded: false,
+    scaleDownImage: false,
+    maxHeight: 394,
+  },
   replay: false,
 };
 
@@ -112,6 +124,13 @@ const player = (state = initialState, action) => {
         return {
           ...state,
           ...getPlayBase(newItem, newIndex),
+          previousCoverUrl: cleanUrl(state.currentItem.coverUrl),
+          coverData: {
+            ...state.coverData,
+            isCoverLoaded:
+              cleanUrl(state.currentItem.coverUrl) ===
+              cleanUrl(newItem.coverUrl),
+          },
         };
       }
       // We've reached end of playlist.
@@ -119,6 +138,10 @@ const player = (state = initialState, action) => {
       return {
         ...initialState,
         items: state.items,
+        coverData: {
+          ...state.coverData,
+          isCoverLoaded: false,
+        },
       };
     }
     case REPLAY:
@@ -184,6 +207,14 @@ const player = (state = initialState, action) => {
         ...state,
         items: [],
         currentIndex: -1,
+      };
+    }
+    case SET_COVER_DATA: {
+      return {
+        ...state,
+        coverData: {
+          ...action.coverData,
+        },
       };
     }
     default:

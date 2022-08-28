@@ -8,6 +8,7 @@ import styled from "styled-components/macro";
 import { updateCurrentTheme } from "../util";
 import { breakpoint } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
+import { setCoverData } from "reducers/player.reducer";
 import Api from "api-client";
 import CoverInfo from "./CoverInfo";
 
@@ -31,7 +32,6 @@ const Container = styled.div`
   max-width: ${({ isSmall }) => (isSmall ? 394 : 576)}px;
   max-height: ${({ isSmall }) => (isSmall ? 394 : 576)}px;
   margin-left: ${({ isSmall }) => (isSmall ? 0 : 500)}px;
-  visibility: ${({ isCoverLoaded }) => (isCoverLoaded ? "visible" : "hidden")};
 `;
 
 const Image = styled.img`
@@ -64,11 +64,8 @@ const contrast = (rgb1, rgb2) => {
   );
 };
 
-const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
+const Cover = ({ currentItem, coverData, dispatch }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
-  const [isCoverLoaded, setIsCoverLoaded] = useState(false);
-  const [maxHeight, setMaxHeight] = useState();
-  const [scaleDownImage, setScaleDownImage] = useState();
   const containerRef = useRef();
   const coverRef = useRef();
 
@@ -82,11 +79,9 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
       heightToWidthRatio = 1;
     }
 
-    setMaxHeight(
-      heightToWidthRatio
-        ? heightToWidthRatio * containerRef.current.offsetWidth
-        : containerRef.current.offsetWidth
-    );
+    return heightToWidthRatio
+      ? heightToWidthRatio * containerRef.current.offsetWidth
+      : containerRef.current.offsetWidth;
   };
 
   useEffect(() => {
@@ -248,13 +243,17 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
       // Save to variable here, because the target is set to null in the event
       // variable when it goes out of scope
       const coverTarget = event.target;
-
-      setIsCoverLoaded(true);
-      calcMaxHeight();
-
       const { naturalWidth, naturalHeight } = coverTarget;
       const aspectRatio = naturalWidth / naturalHeight;
-      setScaleDownImage(aspectRatio < 0.9);
+      const maxHeight = calcMaxHeight();
+
+      dispatch(
+        setCoverData({
+          isCoverLoaded: true,
+          scaleDownImage: aspectRatio < 0.9,
+          maxHeight,
+        })
+      );
 
       const theme = await Api.getThemeById({ id: coverTarget.src });
 
@@ -266,11 +265,6 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
 
       calculateTheme(coverTarget);
     };
-
-    if (!isCoverLoaded && !coverSrc) {
-      setIsCoverLoaded(true);
-      calcMaxHeight();
-    }
 
     const ref = coverRef.current;
 
@@ -285,7 +279,10 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
   useEffect(() => {
     const onResize = () => {
       setIsSmall(window.innerWidth < breakpoint.lg);
-      calcMaxHeight();
+      setCoverData({
+        ...coverData,
+        maxHeight: calcMaxHeight(),
+      });
     };
     window.addEventListener("resize", onResize);
 
@@ -295,29 +292,43 @@ const Cover = React.memo(({ coverSrc, currentItem, dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (
+    !coverData.isCoverLoaded &&
+    !currentItem.coverUrl &&
+    coverData.maxHeight !== 394
+  ) {
+    dispatch(
+      setCoverData({
+        isCoverLoaded: true,
+        scaleDownImage: false,
+        maxHeight: 394,
+      })
+    );
+  }
+
   return (
-    <Container
-      isSmall={isSmall}
-      ref={containerRef}
-      isCoverLoaded={isCoverLoaded}
-    >
-      <Image
-        src={coverSrc}
-        ref={coverRef}
-        crossOrigin=""
-        maxHeight={maxHeight}
-        scaleDownImage={scaleDownImage}
-        isCoverLoaded={isCoverLoaded}
-      />
+    <Container isSmall={isSmall} ref={containerRef}>
+      {React.useMemo(() => {
+        return (
+          <Image
+            src={currentItem.coverUrl}
+            ref={coverRef}
+            crossOrigin=""
+            maxHeight={coverData.maxHeight}
+            scaleDownImage={coverData.scaleDownImage}
+            isCoverLoaded={coverData.isCoverLoaded}
+          />
+        );
+      }, [currentItem.coverUrl, coverData])}
       <CoverInfo item={currentItem} isSmall={isSmall} />
     </Container>
   );
-});
+};
 
 export default connect(
   (state) => ({
-    coverSrc: state.player.coverUrl,
     currentItem: state.player.currentItem,
+    coverData: state.player.coverData,
   }),
   (dispatch) => ({ dispatch })
 )(Cover);
