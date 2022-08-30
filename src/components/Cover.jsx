@@ -326,6 +326,9 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   }
 
   const getColorFromImage = (event) => {
+    if (!isEditing) {
+      return;
+    }
     const img = document.getElementById("albumCover");
     const { width, height } = event.target;
 
