@@ -9,8 +9,12 @@ import { updateCurrentTheme } from "../util";
 import { breakpoint } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
 import { setCoverData } from "reducers/player.reducer";
-import Api from "api-client";
 import CoverInfo from "./CoverInfo";
+import ThemeBlock from "./ThemeBlock";
+import config from "config";
+import Api from "api-client";
+
+const { isElectron } = config;
 
 const Colors = {
   Bg: "#21252b",
@@ -45,6 +49,16 @@ const Image = styled.img`
     scaleDownImage ? "scale-down" : "cover"};
 `;
 
+const ImageContainer = styled.div`
+  position: relative;
+`;
+
+const Theme = styled(ThemeBlock)`
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+`;
+
 const isVibrantCover = (mostPopularSwatch) => {
   return mostPopularSwatch.rgb.some((value) => value > 125);
 };
@@ -64,8 +78,13 @@ const contrast = (rgb1, rgb2) => {
   );
 };
 
-const Cover = ({ currentItem, coverData, dispatch }) => {
+const canvas = document.createElement("canvas");
+const canvasCtx = canvas.getContext("2d");
+
+const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
+  const [editTarget, setEditTarget] = useState();
+  const [isEditing, setIsEditing] = useState();
   const containerRef = useRef();
   const coverRef = useRef();
 
@@ -84,161 +103,151 @@ const Cover = ({ currentItem, coverData, dispatch }) => {
       : containerRef.current.offsetWidth;
   };
 
-  useEffect(() => {
-    const calculateTheme = (coverTarget) => {
-      let palette = new Palette(coverTarget);
-      let mostPopularSwatch = palette.swatches.find(
+  const calculateTheme = (coverTarget) => {
+    let palette = new Palette(coverTarget);
+    let mostPopularSwatch = palette.swatches.find(
+      (s) => s.population === palette.highestPopulation
+    );
+
+    // If didn't get some swatches try again
+    if (!palette.vibrantSwatch || !palette.lightVibrantSwatch) {
+      palette = new Palette(coverTarget);
+      mostPopularSwatch = palette.swatches.find(
         (s) => s.population === palette.highestPopulation
       );
+    }
 
-      // If didn't get some swatches try again
-      if (!palette.vibrantSwatch || !palette.lightVibrantSwatch) {
-        palette = new Palette(coverTarget);
-        mostPopularSwatch = palette.swatches.find(
-          (s) => s.population === palette.highestPopulation
-        );
+    const swatchesByPopulationDesc = sortBy(
+      palette.swatches,
+      (s) => -s.population
+    );
+
+    // Defaults are for dark covers
+    let bg = mostPopularSwatch,
+      primary,
+      secondary,
+      color = Colors.Typography,
+      ghostColor = Colors.TypographyGhost,
+      primaryColor = Colors.Typography,
+      secondaryColor = Colors.Typography,
+      primarySwatches = [
+        defaultTo(palette.vibrantSwatch, {}),
+        defaultTo(palette.lightVibrantSwatch, {}),
+        defaultTo(palette.lightMutedSwatch, {}),
+      ],
+      secondarySwatches = [
+        defaultTo(palette.mutedSwatch, {}),
+        defaultTo(palette.darkMutedSwatch, {}),
+      ];
+
+    // Set different colors for a light cover
+    if (isVibrantCover(mostPopularSwatch)) {
+      if (contrast(Colors.WhiteRgb, bg.rgb) < 3.4) {
+        color = Colors.TypographyLight;
+        ghostColor = Colors.TypographyGhostLight;
       }
+      primarySwatches = [
+        defaultTo(palette.vibrantSwatch, {}),
+        defaultTo(palette.lightVibrantSwatch, {}),
+      ];
+      secondarySwatches = [
+        defaultTo(palette.lightVibrantSwatch, {}),
+        defaultTo(palette.lightMutedSwatch, {}),
+      ];
+    }
 
-      const swatchesByPopulationDesc = sortBy(
-        palette.swatches,
-        (s) => -s.population
-      );
+    // Make sure highlights are different than background
 
-      // Defaults are for dark covers
-      let bg = mostPopularSwatch,
-        primary,
-        secondary,
-        color = Colors.Typography,
-        ghostColor = Colors.TypographyGhost,
-        primaryColor = Colors.Typography,
-        secondaryColor = Colors.Typography,
-        primarySwatches = [
-          defaultTo(palette.vibrantSwatch, {}),
-          defaultTo(palette.lightVibrantSwatch, {}),
-          defaultTo(palette.lightMutedSwatch, {}),
-        ],
-        secondarySwatches = [
-          defaultTo(palette.mutedSwatch, {}),
-          defaultTo(palette.darkMutedSwatch, {}),
-        ];
+    const primaryPop = Math.max.apply(
+      Math,
+      primarySwatches.map((s) => defaultTo(s.population, 0))
+    );
+    primary = swatchesByPopulationDesc.find((s) => s.population === primaryPop);
 
-      // Set different colors for a light cover
-      if (isVibrantCover(mostPopularSwatch)) {
-        if (contrast(Colors.WhiteRgb, bg.rgb) < 3.4) {
-          color = Colors.TypographyLight;
-          ghostColor = Colors.TypographyGhostLight;
-        }
-        primarySwatches = [
-          defaultTo(palette.vibrantSwatch, {}),
-          defaultTo(palette.lightVibrantSwatch, {}),
-        ];
-        secondarySwatches = [
-          defaultTo(palette.lightVibrantSwatch, {}),
-          defaultTo(palette.lightMutedSwatch, {}),
-        ];
-      }
+    if (!primary || isEqual(primary.rgb, bg.rgb)) {
+      for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
+        primary = swatchesByPopulationDesc[i];
 
-      // Make sure highlights are different than background
-
-      const primaryPop = Math.max.apply(
-        Math,
-        primarySwatches.map((s) => defaultTo(s.population, 0))
-      );
-      primary = swatchesByPopulationDesc.find(
-        (s) => s.population === primaryPop
-      );
-
-      if (!primary || isEqual(primary.rgb, bg.rgb)) {
-        for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
-          primary = swatchesByPopulationDesc[i];
-
-          if (!isEqual(primary.rgb, bg.rgb)) {
-            break;
-          }
+        if (!isEqual(primary.rgb, bg.rgb)) {
+          break;
         }
       }
+    }
 
-      if (!primary || isEqual(primary.rgb, bg.rgb)) {
-        primary = { rgb: Colors.PrimaryRgb };
-      }
+    if (!primary || isEqual(primary.rgb, bg.rgb)) {
+      primary = { rgb: Colors.PrimaryRgb };
+    }
 
-      const contrastBgPr = contrast(bg.rgb, primary.rgb);
-      if (Math.abs(1 - contrastBgPr) < 0.05) {
-        primary = { rgb: Colors.PrimaryRgb };
-      }
-      secondary = swatchesByPopulationDesc.find(
-        (s) => s.population === secondaryPop
-      );
+    const contrastBgPr = contrast(bg.rgb, primary.rgb);
+    if (Math.abs(1 - contrastBgPr) < 0.05) {
+      primary = { rgb: Colors.PrimaryRgb };
+    }
+    secondary = swatchesByPopulationDesc.find(
+      (s) => s.population === secondaryPop
+    );
 
-      const secondaryPop = Math.max.apply(
-        Math,
-        secondarySwatches.map((s) => defaultTo(s.population, 0))
-      );
+    const secondaryPop = Math.max.apply(
+      Math,
+      secondarySwatches.map((s) => defaultTo(s.population, 0))
+    );
 
-      if (!secondary || isEqual(secondary.rgb, bg.rgb)) {
-        for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
-          secondary = swatchesByPopulationDesc[i];
+    if (!secondary || isEqual(secondary.rgb, bg.rgb)) {
+      for (let i = 1; i < swatchesByPopulationDesc.length; i++) {
+        secondary = swatchesByPopulationDesc[i];
 
-          if (
-            !isEqual(secondary.rgb, bg.rgb) &&
-            !isEqual(secondary.rgb, primary.rgb)
-          ) {
-            break;
-          }
+        if (
+          !isEqual(secondary.rgb, bg.rgb) &&
+          !isEqual(secondary.rgb, primary.rgb)
+        ) {
+          break;
         }
       }
+    }
 
-      if (!secondary || isEqual(secondary.rgb, bg.rgb)) {
-        secondary = { rgb: Colors.SecondaryRgb };
-      }
+    if (!secondary || isEqual(secondary.rgb, bg.rgb)) {
+      secondary = { rgb: Colors.SecondaryRgb };
+    }
 
-      const contrastBgSe = contrast(bg.rgb, secondary.rgb);
-      if (Math.abs(1 - contrastBgSe) < 0.1) {
-        secondary = { rgb: Colors.SecondaryRgb };
-      }
+    const contrastBgSe = contrast(bg.rgb, secondary.rgb);
+    if (Math.abs(1 - contrastBgSe) < 0.1) {
+      secondary = { rgb: Colors.SecondaryRgb };
+    }
 
-      // Set slider highlight to a different color if not enough contrast to slider track
-      // or background color
-      let slider = primary;
-      if (
-        contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2 ||
-        contrast(slider.rgb, bg.rgb) < 1.2
-      ) {
-        slider = secondary;
-      }
+    // Set slider highlight to a different color if not enough contrast to slider track
+    // or background color
+    let slider = primary;
+    if (
+      contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2 ||
+      contrast(slider.rgb, bg.rgb) < 1.2
+    ) {
+      slider = secondary;
+    }
 
-      // Switch to dark text for light covers
-      if (contrast(Colors.WhiteRgb, primary.rgb) < 2.6) {
-        primaryColor = Colors.TypographyLight;
-      }
-      if (contrast(Colors.WhiteRgb, secondary.rgb) < 2.6) {
-        secondaryColor = Colors.TypographyLight;
-      }
+    // Switch to dark text for light covers
+    if (contrast(Colors.WhiteRgb, primary.rgb) < 2.6) {
+      primaryColor = Colors.TypographyLight;
+    }
+    if (contrast(Colors.WhiteRgb, secondary.rgb) < 2.6) {
+      secondaryColor = Colors.TypographyLight;
+    }
 
-      const colors = {
-        bg: defaultTo(bg.rgb, Colors.Bg),
-        primary: defaultTo(primary.rgb, Colors.Primary),
-        secondary: defaultTo(secondary.rgb, Colors.Secondary),
-        typography: defaultTo(color, Colors.Typography),
-        typographyGhost: defaultTo(ghostColor, Colors.TypographyGhost),
-        typographyPrimary: defaultTo(primaryColor, Colors.Typography),
-        typographySecondary: defaultTo(secondaryColor, Colors.Typography),
-        slider: slider.rgb,
-      };
-
-      updateCurrentTheme(colors);
-
-      if (coverTarget.src && colors) {
-        Api.insertTheme({ id: coverTarget.src, colors }).then((theme) => {
-          dispatch(
-            updateSettings({
-              currentTheme: theme,
-            })
-          );
-        });
-      }
+    const colors = {
+      bg: defaultTo(bg.rgb, Colors.Bg),
+      primary: defaultTo(primary.rgb, Colors.PrimaryRgb),
+      secondary: defaultTo(secondary.rgb, Colors.SecondaryRgb),
+      typography: defaultTo(color, Colors.Typography),
+      typographyGhost: defaultTo(ghostColor, Colors.TypographyGhost),
+      typographyPrimary: defaultTo(primaryColor, Colors.Typography),
+      typographySecondary: defaultTo(secondaryColor, Colors.Typography),
+      slider: slider.rgb,
     };
 
+    updateCurrentTheme(colors);
+
+    return colors;
+  };
+
+  useEffect(() => {
     const onLoadCover = async (event) => {
       // Save to variable here, because the target is set to null in the event
       // variable when it goes out of scope
@@ -263,7 +272,17 @@ const Cover = ({ currentItem, coverData, dispatch }) => {
         return;
       }
 
-      calculateTheme(coverTarget);
+      const colors = calculateTheme(coverTarget);
+
+      if (coverTarget.src && colors) {
+        Api.insertTheme({ id: coverTarget.src, colors }).then((theme) => {
+          dispatch(
+            updateSettings({
+              currentTheme: theme,
+            })
+          );
+        });
+      }
     };
 
     const ref = coverRef.current;
@@ -306,21 +325,106 @@ const Cover = ({ currentItem, coverData, dispatch }) => {
     );
   }
 
+  const getColorFromImage = (event) => {
+    const img = document.getElementById("albumCover");
+    const { width, height } = event.target;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    canvasCtx.drawImage(img, 0, 0, width, height);
+
+    const [r, g, b] = canvasCtx.getImageData(
+      event.nativeEvent.offsetX,
+      event.nativeEvent.offsetY,
+      1,
+      1
+    ).data;
+    const rgb = [r, g, b];
+    const { colors: c } = currentTheme;
+
+    const colors = calculateTheme(img);
+
+    switch (editTarget) {
+      case "bg": {
+        colors.bg = rgb;
+        colors.primary = c.primary;
+        colors.secondary = c.secondary;
+        break;
+      }
+      case "primary": {
+        colors.bg = c.bg;
+        colors.primary = rgb;
+        colors.secondary = c.secondary;
+        break;
+      }
+      case "secondary": {
+        colors.bg = c.bg;
+        colors.primary = c.primary;
+        colors.secondary = rgb;
+        break;
+      }
+      default: {
+      }
+    }
+
+    updateCurrentTheme(colors);
+
+    Api.updateTheme({ id: img.src, colors }).then((theme) => {
+      dispatch(
+        updateSettings({
+          currentTheme: theme,
+        })
+      );
+    });
+  };
+
+  const setEditTargetOrHide = (target) => {
+    setEditTarget(target);
+
+    if (!target) {
+      setIsEditing(false);
+    }
+  };
+
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
   return (
     <Container isSmall={isSmall} ref={containerRef}>
       {React.useMemo(() => {
         return (
-          <Image
-            src={currentItem.coverUrl}
-            ref={coverRef}
-            crossOrigin=""
-            maxHeight={coverData.maxHeight}
-            scaleDownImage={coverData.scaleDownImage}
-            isCoverLoaded={coverData.isCoverLoaded}
-          />
+          <ImageContainer>
+            <Image
+              id="albumCover"
+              src={currentItem.coverUrl}
+              ref={coverRef}
+              crossOrigin=""
+              maxHeight={coverData.maxHeight}
+              scaleDownImage={coverData.scaleDownImage}
+              isCoverLoaded={coverData.isCoverLoaded}
+              onClick={getColorFromImage}
+            />
+            {isElectron && isEditing && (
+              <Theme
+                theme={currentTheme}
+                isThemeEditor
+                editTarget={editTarget}
+                setEditTarget={setEditTargetOrHide}
+              />
+            )}
+          </ImageContainer>
         );
-      }, [currentItem.coverUrl, coverData])}
-      <CoverInfo item={currentItem} isSmall={isSmall} />
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [
+        currentItem.coverUrl,
+        coverData,
+        currentTheme,
+        editTarget,
+        isEditing,
+      ])}
+      <CoverInfo item={currentItem} isSmall={isSmall} toggleEdit={toggleEdit} />
     </Container>
   );
 };
@@ -329,6 +433,7 @@ export default connect(
   (state) => ({
     currentItem: state.player.currentItem,
     coverData: state.player.coverData,
+    currentTheme: state.settings.currentTheme,
   }),
   (dispatch) => ({ dispatch })
 )(Cover);

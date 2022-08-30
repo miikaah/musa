@@ -12,6 +12,8 @@ const Container = styled.span.attrs(({ rgb }) => ({
   width: 80px;
   height: 80px;
   margin: ${({ hasMargin }) => hasMargin && `0 10px 10px 0`};
+  border: 1px solid transparent;
+  border-color: ${({ isEditing }) => isEditing && "#f00"};
 `;
 
 const Color = styled.span.attrs(({ rgb }) => ({
@@ -22,9 +24,19 @@ const Color = styled.span.attrs(({ rgb }) => ({
   display: inline-block;
   width: 30px;
   height: 30px;
+  border: 1px solid transparent;
+  border-color: ${({ isEditing }) => isEditing && "#f00"};
 `;
 
-const ThemeBlock = ({ theme, setCurrentTheme, hasMargin = true }) => {
+const ThemeBlock = ({
+  className,
+  theme,
+  setCurrentTheme,
+  hasMargin = true,
+  isThemeEditor = false,
+  editTarget,
+  setEditTarget,
+}) => {
   if (!theme) {
     return null;
   }
@@ -35,15 +47,38 @@ const ThemeBlock = ({ theme, setCurrentTheme, hasMargin = true }) => {
     return null;
   }
 
+  const setEditTargetToBg = (event) => {
+    event.preventDefault();
+
+    // This is parent click
+    if (event.target === event.currentTarget) {
+      setEditTarget(editTarget === "bg" ? "" : "bg");
+    }
+  };
+
   return (
     <Container
+      className={className}
       title={filename || ""}
       rgb={colors.bg}
-      onClick={() => setCurrentTheme(theme)}
-      hasMargin={hasMargin}
+      onClick={(event) =>
+        isThemeEditor ? setEditTargetToBg(event) : setCurrentTheme(theme)
+      }
+      hasMargin={isThemeEditor ? false : hasMargin}
+      isEditing={editTarget === "bg"}
     >
-      <Color rgb={colors.primary} />
-      <Color rgb={colors.secondary} />
+      <Color
+        rgb={colors.primary}
+        isEditing={editTarget === "primary"}
+        onClick={() => setEditTarget(editTarget === "primary" ? "" : "primary")}
+      />
+      <Color
+        rgb={colors.secondary}
+        isEditing={editTarget === "secondary"}
+        onClick={() =>
+          setEditTarget(editTarget === "secondary" ? "" : "secondary")
+        }
+      />
     </Container>
   );
 };

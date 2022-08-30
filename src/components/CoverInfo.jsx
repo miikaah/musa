@@ -1,28 +1,43 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import config from "config";
+
+const { isElectron } = config;
 
 const Container = styled.div`
   padding: ${({ isSmall }) =>
     isSmall ? "20px 20px 20px 10px" : "20px 20px 20px 10px"};
   min-width: ${({ isSmall }) => (isSmall ? 394 : 432)}px;
   max-width: 96%;
+  position: relative;
 
-  > div:nth-child(1) {
-    padding-bottom: 8px;
+  > button:nth-child(1) {
+    visibility: hidden;
   }
 
   > div:nth-child(2) {
+    padding-bottom: 8px;
+  }
+
+  > div:nth-child(3) {
     font-weight: bold;
     padding-bottom: 8px;
     font-size: 30px;
   }
 
-  > div:nth-child(3) {
+  > div:nth-child(4) {
     font-size: var(--font-size-xs);
 
     > span:nth-child(2) {
       margin: 0 4px;
+    }
+  }
+
+  :hover {
+    > button:nth-child(1) {
+      visibility: ${isElectron && "visible"};
     }
   }
 `;
@@ -56,6 +71,13 @@ const Metadata = styled.div`
   }
 `;
 
+const ToggleEditButton = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+`;
+
 const getBitrate = (bitrate) => {
   return isFinite(bitrate) ? `${Math.floor(bitrate / 1000)} kbps` : "";
 };
@@ -64,7 +86,7 @@ const getSampleRate = (sampleRate) => {
   return sampleRate ? `${sampleRate} Hz` : "";
 };
 
-const CoverInfo = ({ item, isSmall, dispatch }) => {
+const CoverInfo = ({ item, isSmall, toggleEdit, dispatch }) => {
   if (Object.keys(item) < 1) {
     return null;
   }
@@ -82,6 +104,9 @@ const CoverInfo = ({ item, isSmall, dispatch }) => {
 
   return (
     <Container isSmall={isSmall}>
+      <ToggleEditButton onClick={toggleEdit}>
+        <FontAwesomeIcon icon="pencil" />
+      </ToggleEditButton>
       <div>{title}</div>
       <div>{album}</div>
       <div>

@@ -38,6 +38,10 @@ const insertTheme = async ({ id, colors }) => {
   return window.electron.insertTheme(id, colors);
 };
 
+const updateTheme = async ({ id, colors }) => {
+  return window.electron.updateTheme(id, colors);
+};
+
 const removeTheme = async ({ id }) => {
   return window.electron.removeThemeById(id);
 };
@@ -132,6 +136,7 @@ export default {
   getThemes,
   getThemeById,
   insertTheme,
+  updateTheme,
   removeTheme,
   getAllGenres,
   find,

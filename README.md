@@ -14,7 +14,6 @@ utilising Electron and React.
 
 ### V4
 
-- feat: Select theme colors manually from cover
 - feat: Update flac tags
 - feat: Update ogg tags
 - feat: Write tags from sratch + deduce tags from filename

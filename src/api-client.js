@@ -76,6 +76,14 @@ const insertTheme = async ({ id, colors }) => {
   }
 };
 
+const updateTheme = async ({ id, colors }) => {
+  if (isElectron) {
+    return ElectronApi.updateTheme({ id, colors });
+  } else {
+    // return ServerApi.updateTheme({ id, colors });
+  }
+};
+
 const getThemeById = async ({ id }) => {
   if (isElectron) {
     return ElectronApi.getThemeById({ id });
@@ -258,6 +266,7 @@ export default {
   getThemes,
   getThemeById,
   insertTheme,
+  updateTheme,
   removeTheme,
   getAllGenres,
   find,
