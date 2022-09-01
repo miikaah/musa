@@ -32,6 +32,7 @@ const Colors = {
 };
 
 const Container = styled.div`
+  position: relative;
   flex: 46%;
   max-width: ${({ isSmall }) => (isSmall ? 394 : 576)}px;
   max-height: ${({ isSmall }) => (isSmall ? 394 : 576)}px;
@@ -49,14 +50,10 @@ const Image = styled.img`
     scaleDownImage ? "scale-down" : "cover"};
 `;
 
-const ImageContainer = styled.div`
-  position: relative;
-`;
-
 const Theme = styled(ThemeBlock)`
   position: absolute;
+  top: 10px;
   right: 10px;
-  bottom: 10px;
 `;
 
 const isVibrantCover = (mostPopularSwatch) => {
@@ -254,13 +251,12 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       const coverTarget = event.target;
       const { naturalWidth, naturalHeight } = coverTarget;
       const aspectRatio = naturalWidth / naturalHeight;
-      const maxHeight = calcMaxHeight();
 
       dispatch(
         setCoverData({
           isCoverLoaded: true,
           scaleDownImage: aspectRatio < 0.9,
-          maxHeight,
+          maxHeight: calcMaxHeight(),
         })
       );
 
@@ -298,10 +294,20 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   useEffect(() => {
     const onResize = () => {
       setIsSmall(window.innerWidth < breakpoint.lg);
-      setCoverData({
-        ...coverData,
-        maxHeight: calcMaxHeight(),
-      });
+
+      if (!coverRef.current) {
+        return;
+      }
+      const { naturalWidth, naturalHeight } = coverRef.current;
+      const aspectRatio = naturalWidth / naturalHeight;
+
+      dispatch(
+        setCoverData({
+          isCoverLoaded: true,
+          scaleDownImage: aspectRatio < 0.9,
+          maxHeight: calcMaxHeight(),
+        })
+      );
     };
     window.addEventListener("resize", onResize);
 
@@ -311,16 +317,12 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (
-    !coverData.isCoverLoaded &&
-    !currentItem.coverUrl &&
-    coverData.maxHeight !== 394
-  ) {
+  if (!coverData.isCoverLoaded && !currentItem.coverUrl && coverRef.current) {
     dispatch(
       setCoverData({
         isCoverLoaded: true,
         scaleDownImage: false,
-        maxHeight: 394,
+        maxHeight: calcMaxHeight(),
       })
     );
   }
@@ -392,13 +394,14 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
+    setEditTarget("");
   };
 
   return (
     <Container isSmall={isSmall} ref={containerRef}>
       {React.useMemo(() => {
         return (
-          <ImageContainer>
+          <>
             <Image
               id="albumCover"
               src={currentItem.coverUrl}
@@ -417,7 +420,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
                 setEditTarget={setEditTargetOrHide}
               />
             )}
-          </ImageContainer>
+          </>
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [
