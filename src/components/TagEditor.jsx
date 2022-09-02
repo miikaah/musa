@@ -12,6 +12,10 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
+const Filename = styled.div`
+  margin-bottom: 20px;
+`;
+
 const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto;
@@ -55,6 +59,7 @@ const TagEditor = ({ files = [], dispatch }) => {
   const [genre, setGenre] = useState();
   const [composer, setComposer] = useState();
   const [comment, setComment] = useState();
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const getCodecInfo = (file) => {
     const { codec, codecProfile, container } = file?.metadata || {};
@@ -118,10 +123,22 @@ const TagEditor = ({ files = [], dispatch }) => {
       };
     }
 
+    setIsUpdating(true);
     const err = await Api.writeTags(file.id, tags);
+    setIsUpdating(false);
 
     if (err) {
-      dispatchToast("Failed to update tags", "tag-update-failed", dispatch);
+      dispatchToast(
+        "Failed to update tags",
+        `tag-update-failure-${Date.now()}`,
+        dispatch
+      );
+    } else {
+      dispatchToast(
+        "Tags updated",
+        `tag-update-success-${Date.now()}`,
+        dispatch
+      );
     }
   };
 
@@ -135,6 +152,9 @@ const TagEditor = ({ files = [], dispatch }) => {
 
         return (
           <Container key={file.id}>
+            <Filename>
+              {file.fileUrl.replace("media:\\", "").replace("media:/")}
+            </Filename>
             <Wrapper>
               <span>Artist</span>
               <TagInput
@@ -208,7 +228,7 @@ const TagEditor = ({ files = [], dispatch }) => {
             <SaveButton
               onClick={(event) => saveTags(event, file)}
               isPrimary
-              disabled={isDisabled}
+              disabled={isUpdating}
             >
               Save
             </SaveButton>
