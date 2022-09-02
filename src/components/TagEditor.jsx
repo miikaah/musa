@@ -129,9 +129,9 @@ const TagEditor = ({ files = [], dispatch }) => {
     <>
       <h3>Tag editor</h3>
       {files.map((file) => {
-        const isDisabled = !(file?.metadata?.codec || "")
-          .toLowerCase()
-          .startsWith("mpeg");
+        const isDisabled =
+          !(file?.metadata?.codec || "").toLowerCase().startsWith("mpeg") &&
+          !(file?.metadata?.codec || "").toLowerCase().startsWith("flac");
 
         return (
           <Container key={file.id}>
@@ -205,7 +205,11 @@ const TagEditor = ({ files = [], dispatch }) => {
                 isDisabled={isDisabled}
               />
             </Wrapper>
-            <SaveButton onClick={(event) => saveTags(event, file)} isPrimary>
+            <SaveButton
+              onClick={(event) => saveTags(event, file)}
+              isPrimary
+              disabled={isDisabled}
+            >
               Save
             </SaveButton>
           </Container>

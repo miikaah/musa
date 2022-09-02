@@ -15,7 +15,6 @@ jpeg, png and webp images.
 
 ### V4
 
-- feat: Update flac tags
 - feat: Update ogg tags
 - feat: View for seeing files with missing tags / covers
 - feat: Write tags from sratch
