@@ -15,6 +15,7 @@ jpeg, png and webp images.
 
 ### V4
 
+- feat: Update slider rgb when choosing colors
 - feat: Update ogg tags
 - feat: View for seeing files with missing tags / covers
 - feat: Write tags from sratch
