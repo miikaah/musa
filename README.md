@@ -15,6 +15,7 @@ jpeg, png and webp images.
 
 ### V4
 
+- fix: genre find can have empty results
 - feat: Update slider rgb when choosing colors
 - feat: Update ogg tags
 - feat: View for seeing files with missing tags / covers
