@@ -34,7 +34,7 @@ const buttonCss = css`
   -webkit-app-region: no-drag;
   display: inline-block;
   position: relative;
-  cursor: ${({ isMacOs }) => (isMacOs ? "default" : "pointer")};
+  cursor: default;
 `;
 
 const MinButton = styled.div`
@@ -116,7 +116,7 @@ const buttonCss2 = css`
   -webkit-app-region: no-drag;
   width: 48px;
   height: 36px;
-  cursor: ${({ isMacOs }) => (isMacOs ? "default" : "pointer")};
+  cursor: default;
   color: ${({ isActive }) => (isActive ? "#fff" : "inherit")};
   background: ${({ isActive }) => (isActive ? "#9b9b9b" : "transparent")};
 
@@ -159,18 +159,11 @@ const locationToTitleMap = {
 
 const Titlebar = ({ currentLocation, dispatch }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
-  const [isMacOs, setIsMacOs] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [isLibraryVisible, setIsLibraryVisible] = useState(
     location.pathname === "/" || window.innerWidth > breakpoint.lg
   );
-
-  useEffect(() => {
-    if (isElectron) {
-      Api.getPlatform().then((platform) => setIsMacOs(platform === "darwin"));
-    }
-  });
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -275,12 +268,6 @@ const Titlebar = ({ currentLocation, dispatch }) => {
     event.stopPropagation();
   };
 
-  const goBackToRoot = (event) => {
-    if (event.target.id === "Titlebar" || event.target.id === "TitlebarTitle") {
-      navigate("/");
-    }
-  };
-
   const minimize = () => {
     Api.minimizeWindow();
   };
@@ -310,12 +297,11 @@ const Titlebar = ({ currentLocation, dispatch }) => {
   return (
     <>
       <Library ref={libraryRef} isVisible={isLibraryVisible} />
-      <Container id="Titlebar" onClick={goBackToRoot}>
+      <Container>
         <div>
           <LibraryButton
             onClick={toggleLibrary}
             ref={libraryButtonRef}
-            isMacOs={isMacOs}
             isActive={location.pathname === "/" && isLibraryVisible && isSmall}
             isSmall={isSmall}
           >
@@ -325,7 +311,6 @@ const Titlebar = ({ currentLocation, dispatch }) => {
           <SearchButton
             onClick={toggleSearch}
             ref={searchButtonRef}
-            isMacOs={isMacOs}
             isActive={location.pathname.startsWith("/search")}
           >
             <FontAwesomeIcon icon="search" />
@@ -334,23 +319,20 @@ const Titlebar = ({ currentLocation, dispatch }) => {
           <SettingsButton
             onClick={toggleSettings}
             ref={settingsButtonRef}
-            isMacOs={isMacOs}
             isActive={location.pathname.startsWith("/settings")}
           >
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
         </div>
-        <Title id="TitlebarTitle" onClick={goBackToRoot}>
-          {locationToTitleMap[location.pathname]}
-        </Title>
+        <Title>{locationToTitleMap[location.pathname]}</Title>
         <ActionsContainer isElectron={isElectron}>
-          <MinButton onClick={minimize} isMacOs={isMacOs}>
+          <MinButton onClick={minimize}>
             <div />
           </MinButton>
-          <MaxButton onClick={maxOrUnMax} isMacOs={isMacOs}>
+          <MaxButton onClick={maxOrUnMax}>
             <div />
           </MaxButton>
-          <CloseButton onClick={close} isMacOs={isMacOs}>
+          <CloseButton onClick={close}>
             <div />
             <div />
           </CloseButton>
