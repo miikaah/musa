@@ -1,3 +1,7 @@
+Run the Replit
+
+[![Run on Repl.it](https://replit.com/badge/github/luisenriquecorona/musa)](https://replit.com/new/github/luisenriquecorona/musa)
+
 # The app
 
 Musa is a user interface for musa-electron and musa-server made with Create React App.
