@@ -23,8 +23,8 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.2.0",
-    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "lodash.defaultto": "^4.14.0",
     "lodash.isempty": "^4.4.0",
@@ -33,9 +33,9 @@
     "quantize": "^1.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.0.4",
-    "react-router": "^6.4.1",
-    "react-router-dom": "^6.4.1",
+    "react-redux": "^8.0.5",
+    "react-router": "^6.4.3",
+    "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
     "redux": "^4.2.0",
     "styled-components": "^5.3.6"
@@ -44,7 +44,7 @@
     "babel-plugin-macros": "^3.1.0",
     "env-cmd": "^10.1.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "husky": "^8.0.1",
+    "husky": "^8.0.2",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1"
   }
