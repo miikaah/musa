@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
 import Library from "components/LibraryV2";
-import Visualizer from "components/Visualizer";
 import { breakpoint } from "../breakpoints";
 import config from "config";
 import Api from "api-client";
