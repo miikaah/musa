@@ -26,7 +26,7 @@ const Visualizer = ({ dispatch, forwardRef, update, dataArray }) => {
     ctx.fillStyle = document.body.style.getPropertyValue("--color-bg");
     ctx.fillRect(0, 0, width, height);
 
-    const bufferLength = dataArray.length;
+    const blen = dataArray.length;
 
     /*
      * The dataArray has 2048 entries which represent 0 - 20 kHz linearly.
@@ -36,15 +36,16 @@ const Visualizer = ({ dispatch, forwardRef, update, dataArray }) => {
     let x = 0;
     for (
       let i = 0;
-      i < bufferLength;
+      i < blen;
       /*
-       * First ~860 Hz = take all
-       * Above ~860 Hz = take 1 in 8
+       * First     ~860 Hz = take all
+       * ~860 Hz - ~10 kHz = take 1 in 7
+       * Above     ~10 kHz = take 1 in 8
        *
        * Why? The point is to skip redundant information in the higher registers
        * so that an estimation of it fits in the graph.
        */
-      i += i < 86 ? 1 : 8
+      i += i < 86 ? 1 : i < blen / 2 ? 7 : 8
     ) {
       /*
        *   First ~50  Hz           = 50px
@@ -61,7 +62,11 @@ const Visualizer = ({ dispatch, forwardRef, update, dataArray }) => {
        * without having to do interpolation.
        */
       const barWidth = i < 5 ? 10 : i < 15 ? 5 : i < 33 ? 3 : i < 86 ? 2 : 1;
-      const barHeight = dataArray[i] * 2.7;
+      /*
+       * Cheating here a bit by overemphasizing the highest of highs so that
+       * above 15 kHz gets above zero more.
+       */
+      const barHeight = dataArray[i] * (i > blen * 0.75 ? 2.85 : 2.666);
 
       ctx.fillStyle = document.body.style.getPropertyValue(
         "--color-primary-highlight"
