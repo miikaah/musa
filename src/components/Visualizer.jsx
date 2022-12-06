@@ -61,7 +61,7 @@ const Visualizer = ({ dispatch, forwardRef, update, dataArray }) => {
        * without having to do interpolation.
        */
       const barWidth = i < 5 ? 10 : i < 15 ? 5 : i < 33 ? 3 : i < 86 ? 2 : 1;
-      const barHeight = dataArray[i] * 2.75;
+      const barHeight = dataArray[i] * 2.7;
 
       ctx.fillStyle = document.body.style.getPropertyValue(
         "--color-primary-highlight"

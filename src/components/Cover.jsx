@@ -33,9 +33,10 @@ const Colors = {
 
 const Container = styled.div`
   position: relative;
-  flex: 46%;
-  max-width: ${({ isSmall }) => (isSmall ? 394 : 576)}px;
-  max-height: ${({ isSmall }) => (isSmall ? 394 : 576)}px;
+  min-width: 500px;
+  min-height: 500px;
+  max-width: ${({ isSmall }) => (isSmall ? 500 : 576)}px;
+  max-height: ${({ isSmall }) => (isSmall ? 500 : 576)}px;
   margin-left: ${({ isSmall }) => (isSmall ? 0 : 500)}px;
 `;
 

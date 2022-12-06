@@ -198,6 +198,10 @@ const Titlebar = ({ currentLocation, dispatch }) => {
         return;
       }
 
+      if (libraryMode === "visualizer") {
+        return;
+      }
+
       if (location.pathname === "/") {
         setLibraryMode("none");
       }
@@ -208,7 +212,7 @@ const Titlebar = ({ currentLocation, dispatch }) => {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [isSmall, location]);
+  }, [isSmall, location, libraryMode]);
 
   const goToSearchByKeyEvent = (event) => {
     if (!isCtrlDown(event) || !event.shiftKey) {

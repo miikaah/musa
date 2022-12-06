@@ -21,7 +21,6 @@ const commonCss = css`
   border-right-width: 3px;
   background-color: var(--color-bg);
   max-height: 89vh;
-  flex: 60%;
 `;
 
 const Container = styled.ul`
