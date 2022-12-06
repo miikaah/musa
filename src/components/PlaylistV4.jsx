@@ -40,8 +40,8 @@ const Instructions = styled.div`
   > div:first-of-type {
     text-align: center;
     font-weight: bold;
-    margin: 0 0 60px;
-    font-size: 18px;
+    margin: 0 0 20px;
+    padding: 0 40px 40px;
   }
 
   > div {
