@@ -4,9 +4,10 @@ import isEmpty from "lodash.isempty";
 import styled, { css } from "styled-components/macro";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
+import { setDataArray } from "reducers/visualizer.reducer";
 import { store } from "..";
 import { KEYS, getReplaygainDb, dispatchToast } from "../util";
-import { useKeyPress } from "../hooks";
+import { useKeyPress, useAnimationFrame } from "../hooks";
 import PlayerSeek from "./PlayerSeek";
 import PlayerVolume from "./PlayerVolume";
 import PlayerPlayPauseButton from "./PlayerPlayPauseButton";
@@ -65,6 +66,13 @@ const VOLUME_MUTED = 0;
 const audioContext = new AudioContext();
 const gainNode = audioContext.createGain();
 const convolver = audioContext.createConvolver();
+const analyzer = audioContext.createAnalyser();
+analyzer.fftSize = 4096;
+analyzer.minDecibels = -100;
+analyzer.maxDecibels = -1;
+
+const bufferLength = analyzer.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
 
 const audioEl = document.createElement("audio");
 audioEl.crossOrigin = "anonymous";
@@ -145,10 +153,14 @@ const Player = ({
         if (firFile) {
           track
             .connect(gainNode)
+            .connect(analyzer)
             .connect(convolver)
             .connect(audioContext.destination);
         } else {
-          track.connect(gainNode).connect(audioContext.destination);
+          track
+            .connect(gainNode)
+            .connect(analyzer)
+            .connect(audioContext.destination);
         }
       })
       .catch(console.error);
@@ -173,13 +185,13 @@ const Player = ({
       if (firFile) {
         fetchHeadphoneFir()
           .then(() => {
-            gainNode.disconnect(0);
-            gainNode.connect(convolver).connect(audioContext.destination);
+            analyzer.disconnect(0);
+            analyzer.connect(convolver).connect(audioContext.destination);
           })
           .catch(console.error);
       } else {
-        gainNode.disconnect(convolver);
-        gainNode.connect(audioContext.destination);
+        gainNode.disconnect(analyzer);
+        gainNode.connect(analyzer).connect(audioContext.destination);
       }
 
       setVolumeForPlayer();
@@ -188,6 +200,15 @@ const Player = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firFile]);
+
+  useAnimationFrame(() => {
+    if (!isPlaying) {
+      return;
+    }
+
+    analyzer.getByteFrequencyData(dataArray);
+    dispatch(setDataArray(dataArray));
+  });
 
   const setVolumeForPlayer = (v) => {
     const vol = typeof v === "number" ? v : volume;

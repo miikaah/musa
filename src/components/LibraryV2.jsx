@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import LibraryList from "./LibraryListV2";
+import Visualizer from "./Visualizer";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { listOverflow } from "../common.styles";
@@ -16,12 +17,16 @@ const Container = styled.div`
   position: absolute;
   min-width: 400px;
   z-index: 1;
-  width: ${({ isSmall }) => (isSmall ? "400px" : "var(--library-width)")};
+  width: var(--library-width);
   height: 100vh;
   margin-top: var(--titlebar-height);
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   padding-bottom: var(--toolbar-height);
   ${listOverflow}
+`;
+
+const Wrapper = styled.div`
+  visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
 `;
 
 const Label = styled.div`
@@ -37,7 +42,7 @@ const Label = styled.div`
   }
 `;
 
-const Library = ({ dispatch, forwardRef, isVisible, listingWithLabels }) => {
+const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
 
   useEffect(() => {
@@ -48,18 +53,28 @@ const Library = ({ dispatch, forwardRef, isVisible, listingWithLabels }) => {
   }, []);
 
   return (
-    <Container ref={forwardRef} isVisible={isVisible} isSmall={isSmall}>
-      {listingWithLabels &&
-        Object.entries(listingWithLabels).map(([key, artist]) => (
-          <div key={key}>
-            <Label>
-              <span>{key}</span>
-            </Label>
-            {artist.map((item, index) => (
-              <LibraryList key={item.id} item={item} isArtist />
-            ))}
-          </div>
-        ))}
+    <Container
+      ref={forwardRef}
+      isVisible={libraryMode !== "none"}
+      isSmall={isSmall}
+    >
+      <>
+        {listingWithLabels &&
+          libraryMode === "library" &&
+          Object.entries(listingWithLabels).map(([key, artist]) => (
+            <div key={key}>
+              <Label>
+                <span>{key}</span>
+              </Label>
+              {artist.map((item, index) => (
+                <LibraryList key={item.id} item={item} isArtist />
+              ))}
+            </div>
+          ))}
+        <Wrapper isVisible={libraryMode === "visualizer"}>
+          <Visualizer />
+        </Wrapper>
+      </>
     </Container>
   );
 };

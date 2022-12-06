@@ -16,13 +16,13 @@ jpeg, png and webp images.
 ### V4
 
 - fix: genre find can have empty results
+- fix: Prevent popping when changing FIR eq
 - feat: Update slider rgb when choosing colors
 - feat: Update ogg tags
 - feat: View for seeing files with missing tags / covers
 - feat: Write tags from sratch
 - feat: Make library and tag updates work without refresh
 - feat: Bulk album tags editor + deduce tags from filename
-- feat: Add a bar graph
 - feat: Add a spectrograph
 - feat: Add peak and rms indicators
 - feat: Add ReplayGain scanning

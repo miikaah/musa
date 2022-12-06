@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
 import Library from "components/LibraryV2";
+import Visualizer from "components/Visualizer";
 import { breakpoint } from "../breakpoints";
 import config from "config";
 import Api from "api-client";
@@ -161,22 +162,21 @@ const Titlebar = ({ currentLocation, dispatch }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const location = useLocation();
   const navigate = useNavigate();
-  const [isLibraryVisible, setIsLibraryVisible] = useState(
-    location.pathname === "/" || window.innerWidth > breakpoint.lg
-  );
+  // "none" | "library" | "visualizer"
+  const [libraryMode, setLibraryMode] = useState("none");
 
   useEffect(() => {
     window.addEventListener("resize", () => {
       const izSmall = window.innerWidth < breakpoint.lg;
 
       setIsSmall(izSmall);
-      setIsLibraryVisible(!izSmall);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const libraryRef = useRef();
   const libraryButtonRef = useRef();
+  const visualizerButtonRef = useRef();
   const settingsButtonRef = useRef();
   const searchButtonRef = useRef();
 
@@ -199,7 +199,7 @@ const Titlebar = ({ currentLocation, dispatch }) => {
       }
 
       if (location.pathname === "/") {
-        setIsLibraryVisible(false);
+        setLibraryMode("none");
       }
     };
 
@@ -229,18 +229,24 @@ const Titlebar = ({ currentLocation, dispatch }) => {
 
     if (location.pathname !== "/") {
       navigate("/");
-
-      if (!isSmall) {
-        setIsLibraryVisible(true);
-      }
+      setLibraryMode("library");
       return;
     }
 
-    if (!isSmall) {
+    setLibraryMode(libraryMode === "library" ? "none" : "library");
+    event.stopPropagation();
+  };
+
+  const toggleVisualizer = (event) => {
+    visualizerButtonRef.current.blur();
+
+    if (location.pathname !== "/") {
+      navigate("/");
+      setLibraryMode("visualizer");
       return;
     }
 
-    setIsLibraryVisible(!isLibraryVisible);
+    setLibraryMode(libraryMode === "visualizer" ? "none" : "visualizer");
     event.stopPropagation();
   };
 
@@ -296,16 +302,31 @@ const Titlebar = ({ currentLocation, dispatch }) => {
 
   return (
     <>
-      <Library ref={libraryRef} isVisible={isLibraryVisible} />
+      <Library ref={libraryRef} libraryMode={libraryMode} />
       <Container>
         <div>
           <LibraryButton
             onClick={toggleLibrary}
             ref={libraryButtonRef}
-            isActive={location.pathname === "/" && isLibraryVisible && isSmall}
+            isActive={
+              location.pathname === "/" && libraryMode === "library" && isSmall
+            }
             isSmall={isSmall}
           >
             <FontAwesomeIcon icon="bars" />
+          </LibraryButton>
+
+          <LibraryButton
+            onClick={toggleVisualizer}
+            ref={visualizerButtonRef}
+            isActive={
+              location.pathname === "/" &&
+              libraryMode === "visualizer" &&
+              isSmall
+            }
+            isSmall={isSmall}
+          >
+            <FontAwesomeIcon icon="chart-column" />
           </LibraryButton>
 
           <SearchButton
