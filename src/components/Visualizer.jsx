@@ -62,11 +62,7 @@ const Visualizer = ({ dispatch, forwardRef, update, dataArray }) => {
        * without having to do interpolation.
        */
       const barWidth = i < 5 ? 10 : i < 15 ? 5 : i < 33 ? 3 : i < 86 ? 2 : 1;
-      /*
-       * Cheating here a bit by overemphasizing the highest of highs so that
-       * above 15 kHz gets above zero more.
-       */
-      const barHeight = dataArray[i] * (i > blen * 0.75 ? 2.85 : 2.666);
+      const barHeight = dataArray[i] * 2.3;
 
       ctx.fillStyle = document.body.style.getPropertyValue(
         "--color-primary-highlight"
