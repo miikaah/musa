@@ -64,12 +64,15 @@ const FirEnabledIndicator = styled.div`
 const VOLUME_MUTED = 0;
 
 const audioContext = new AudioContext();
+const preGainNode = audioContext.createGain();
 const gainNode = audioContext.createGain();
 const convolver = audioContext.createConvolver();
 const analyzer = audioContext.createAnalyser();
 analyzer.fftSize = 4096;
 analyzer.minDecibels = -100;
 analyzer.maxDecibels = -1;
+
+preGainNode.connect(analyzer);
 
 const bufferLength = analyzer.frequencyBinCount;
 const dataArray = new Uint8Array(bufferLength);
@@ -152,14 +155,14 @@ const Player = ({
 
         if (firFile) {
           track
+            .connect(preGainNode)
             .connect(gainNode)
-            .connect(analyzer)
             .connect(convolver)
             .connect(audioContext.destination);
         } else {
           track
+            .connect(preGainNode)
             .connect(gainNode)
-            .connect(analyzer)
             .connect(audioContext.destination);
         }
       })
@@ -185,13 +188,13 @@ const Player = ({
       if (firFile) {
         fetchHeadphoneFir()
           .then(() => {
-            analyzer.disconnect(0);
-            analyzer.connect(convolver).connect(audioContext.destination);
+            gainNode.disconnect(0);
+            gainNode.connect(convolver).connect(audioContext.destination);
           })
           .catch(console.error);
       } else {
-        gainNode.disconnect(analyzer);
-        gainNode.connect(analyzer).connect(audioContext.destination);
+        gainNode.disconnect(convolver);
+        gainNode.connect(audioContext.destination);
       }
 
       setVolumeForPlayer();
