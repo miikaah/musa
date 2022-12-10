@@ -8,33 +8,69 @@ import styled from "styled-components/macro";
  * of different parts of the spectrum.
  */
 const width = 500;
+const spectroWidth = 500;
+const peakWidth = 45;
 const height = width;
+const spectroHeight = height - 100;
+const peakHeight = 300;
 
-let ctx;
+let spectroCanvas;
+let tempCanvas;
+let barCtx;
+let peakCtx;
+let spectroCtx;
+let tempCtx;
 
 const Container = styled.div`
   overflow: hidden;
+  max-height: 900px;
+`;
+
+const TopWrapper = styled.div`
+  position: relative;
+
+  > canvas:nth-of-type(2) {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 `;
 
 let lastDrawAt = Date.now();
 
-const Visualizer = ({ dispatch, forwardRef, isVisible, update, dataArray }) => {
+const Visualizer = ({
+  dispatch,
+  forwardRef,
+  isVisible,
+  update,
+  dataArray,
+  dataArrayL,
+  dataArrayR,
+  peakMeterBuffer,
+  peakMeterBufferL,
+  peakMeterBufferR,
+}) => {
   const location = useLocation();
+  const shouldDraw =
+    isVisible && location.pathname === "/" && Date.now() - lastDrawAt > 16;
 
   useEffect(() => {
-    const canvas = document.querySelector("canvas");
-    ctx = canvas.getContext("2d");
+    const barCanvas = document.getElementById("barCanvas");
+    barCtx = barCanvas.getContext("2d");
+    const peakCanvas = document.getElementById("peakCanvas");
+    peakCtx = peakCanvas.getContext("2d");
+    spectroCanvas = document.getElementById("spectroCanvas");
+    spectroCtx = spectroCanvas.getContext("2d");
+    tempCanvas = document.createElement("canvas");
+    tempCanvas.width = spectroWidth;
+    tempCanvas.height = spectroHeight;
+    tempCtx = tempCanvas.getContext("2d");
   }, []);
 
   // Bar Graph
-  if (
-    ctx &&
-    isVisible &&
-    location.pathname === "/" &&
-    Date.now() - lastDrawAt > 16
-  ) {
-    ctx.fillStyle = document.body.style.getPropertyValue("--color-bg");
-    ctx.fillRect(0, 0, width, height);
+  if (shouldDraw && barCtx) {
+    barCtx.fillStyle = document.body.style.getPropertyValue("--color-bg");
+    barCtx.fillRect(0, 0, width, height);
 
     const blen = dataArray.length;
 
@@ -73,10 +109,10 @@ const Visualizer = ({ dispatch, forwardRef, isVisible, update, dataArray }) => {
       const barWidth = i < 5 ? 10 : i < 15 ? 5 : i < 33 ? 3 : i < 120 ? 2 : 1;
       const barHeight = dataArray[i] * 2.3;
 
-      ctx.fillStyle = document.body.style.getPropertyValue(
+      barCtx.fillStyle = document.body.style.getPropertyValue(
         "--color-primary-highlight"
       );
-      ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+      barCtx.fillRect(x, height - barHeight, barWidth, barHeight);
 
       x += barWidth;
     }
@@ -85,9 +121,150 @@ const Visualizer = ({ dispatch, forwardRef, isVisible, update, dataArray }) => {
     lastDrawAt = Date.now();
   }
 
+  // Peak meter
+  if (shouldDraw && peakCtx) {
+    const barWidth = 10;
+    const barHeightMultiplier = 3;
+    peakCtx.fillStyle = document.body.style.getPropertyValue("--color-bg");
+    peakCtx.fillRect(0, 0, peakWidth, peakHeight);
+
+    // LEFT
+
+    // Compute average power over the interval.
+    let sumOfSquares = 0;
+    for (let i = 0; i < peakMeterBufferL.length; i++) {
+      sumOfSquares += peakMeterBufferL[i] ** 2;
+    }
+    let avgPowerDecibels =
+      10 * Math.log10(sumOfSquares / peakMeterBufferL.length);
+
+    // Compute peak instantaneous power over the interval.
+    let peakInstantaneousPower = 0;
+    for (let i = 0; i < peakMeterBufferL.length; i++) {
+      const power = peakMeterBufferL[i] ** 2;
+      peakInstantaneousPower = Math.max(power, peakInstantaneousPower);
+    }
+    let peakInstantaneousPowerDecibels =
+      10 * Math.log10(peakInstantaneousPower);
+
+    peakCtx.fillStyle = document.body.style.getPropertyValue(
+      "--color-secondary-highlight"
+    );
+
+    let barHeight = (100 + avgPowerDecibels) * barHeightMultiplier;
+    peakCtx.fillRect(
+      peakWidth - 5 - 4 * barWidth,
+      peakHeight - barHeight,
+      barWidth,
+      barHeight
+    );
+
+    peakCtx.fillStyle = document.body.style.getPropertyValue(
+      "--color-primary-highlight"
+    );
+
+    barHeight = (100 + peakInstantaneousPowerDecibels) * barHeightMultiplier;
+    peakCtx.fillRect(
+      peakWidth - 5 - 3 * barWidth,
+      peakHeight - barHeight,
+      barWidth,
+      barHeight
+    );
+
+    // RIGHT
+
+    // Compute average power over the interval.
+    sumOfSquares = 0;
+    for (let i = 0; i < peakMeterBufferR.length; i++) {
+      sumOfSquares += peakMeterBufferR[i] ** 2;
+    }
+    avgPowerDecibels = 10 * Math.log10(sumOfSquares / peakMeterBufferR.length);
+
+    // Compute peak instantaneous power over the interval.
+    peakInstantaneousPower = 0;
+    for (let i = 0; i < peakMeterBufferR.length; i++) {
+      const power = peakMeterBufferR[i] ** 2;
+      peakInstantaneousPower = Math.max(power, peakInstantaneousPower);
+    }
+    peakInstantaneousPowerDecibels = 10 * Math.log10(peakInstantaneousPower);
+
+    peakCtx.fillStyle = document.body.style.getPropertyValue(
+      "--color-secondary-highlight"
+    );
+
+    barHeight = (100 + avgPowerDecibels) * barHeightMultiplier;
+    peakCtx.fillRect(
+      peakWidth - 5 - 1 * barWidth,
+      peakHeight - barHeight,
+      barWidth,
+      barHeight
+    );
+
+    peakCtx.fillStyle = document.body.style.getPropertyValue(
+      "--color-primary-highlight"
+    );
+
+    barHeight = (100 + peakInstantaneousPowerDecibels) * barHeightMultiplier;
+    peakCtx.fillRect(
+      peakWidth - 5 - 2 * barWidth,
+      peakHeight - barHeight,
+      barWidth,
+      barHeight
+    );
+  }
+
+  // Spectrograph
+  if (shouldDraw && spectroCtx) {
+    // copy the current canvas onto the temp canvas
+    tempCtx.drawImage(spectroCanvas, 0, 0, spectroWidth, spectroHeight);
+
+    const getDv = (v, i) =>
+      (i < 70 ? v * 1.4 : i < 120 ? v * 1.6 : v * 1.8) * 1.1;
+
+    for (let i = 0; i < dataArrayR.length - 56; i++) {
+      const dv = getDv(dataArrayR[i], i);
+      const r = dv;
+      const g = dv;
+      const b = dv;
+      spectroCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+      spectroCtx.fillRect(spectroWidth - 1, spectroHeight - i, 1, 1);
+    }
+
+    for (let i = 0; i < dataArrayL.length - 56; i++) {
+      const dv = getDv(dataArrayL[i], i);
+      const r = dv;
+      const g = dv;
+      const b = dv;
+      spectroCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+      spectroCtx.fillRect(spectroWidth - 1, spectroHeight - 200 - i, 1, 1);
+    }
+
+    spectroCtx.translate(-1, 0);
+
+    // draw the copied image
+    spectroCtx.drawImage(
+      tempCanvas,
+      0,
+      0,
+      spectroWidth,
+      spectroHeight,
+      0,
+      0,
+      spectroWidth,
+      spectroHeight
+    );
+
+    // reset the transformation matrix
+    spectroCtx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
   return (
     <Container>
-      <canvas width={width} height={height} />
+      <TopWrapper>
+        <canvas id="barCanvas" width={width} height={height} />
+        <canvas id="peakCanvas" width={peakWidth} height={peakHeight} />
+      </TopWrapper>
+      <canvas id="spectroCanvas" width={spectroWidth} height={spectroHeight} />
     </Container>
   );
 };
@@ -97,6 +274,11 @@ export default connect(
     // Needed so that redux triggers an update and the updated dataArray can be read
     update: state.visualizer.update,
     dataArray: state.visualizer.dataArray,
+    dataArrayL: state.visualizer.dataArrayL,
+    dataArrayR: state.visualizer.dataArrayR,
+    peakMeterBuffer: state.visualizer.peakMeterBuffer,
+    peakMeterBufferL: state.visualizer.peakMeterBufferL,
+    peakMeterBufferR: state.visualizer.peakMeterBufferR,
   }),
   (dispatch) => ({ dispatch })
 )(Visualizer);

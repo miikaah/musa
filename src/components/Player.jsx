@@ -4,7 +4,7 @@ import isEmpty from "lodash.isempty";
 import styled, { css } from "styled-components/macro";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
-import { setDataArray } from "reducers/visualizer.reducer";
+import { setVisualizerData } from "reducers/visualizer.reducer";
 import { store } from "..";
 import { KEYS, getReplaygainDb, dispatchToast } from "../util";
 import { useKeyPress, useAnimationFrame } from "../hooks";
@@ -74,8 +74,23 @@ analyzer.maxDecibels = -1;
 
 preGainNode.connect(analyzer);
 
-const bufferLength = analyzer.frequencyBinCount;
-const dataArray = new Uint8Array(bufferLength);
+const dataArray = new Uint8Array(analyzer.frequencyBinCount);
+const peakMeterBuffer = new Float32Array(analyzer.fftSize);
+
+const splitter = audioContext.createChannelSplitter(2);
+const analyzerL = audioContext.createAnalyser();
+const analyzerR = audioContext.createAnalyser();
+analyzerL.fftSize = 512;
+analyzerL.minDecibels = -100;
+analyzerL.maxDecibels = -1;
+analyzerR.fftSize = 512;
+analyzerR.minDecibels = -100;
+analyzerR.maxDecibels = -1;
+
+const dataArrayL = new Uint8Array(analyzerL.frequencyBinCount);
+const dataArrayR = new Uint8Array(analyzerR.frequencyBinCount);
+const peakMeterBufferL = new Float32Array(analyzer.fftSize);
+const peakMeterBufferR = new Float32Array(analyzer.fftSize);
 
 const audioEl = document.createElement("audio");
 audioEl.crossOrigin = "anonymous";
@@ -165,6 +180,10 @@ const Player = ({
             .connect(gainNode)
             .connect(audioContext.destination);
         }
+
+        track.connect(splitter);
+        splitter.connect(analyzerL, 0);
+        splitter.connect(analyzerR, 1);
       })
       .catch(console.error);
 
@@ -210,7 +229,23 @@ const Player = ({
     }
 
     analyzer.getByteFrequencyData(dataArray);
-    dispatch(setDataArray(dataArray));
+    analyzerL.getByteFrequencyData(dataArrayL);
+    analyzerR.getByteFrequencyData(dataArrayR);
+
+    analyzer.getFloatTimeDomainData(peakMeterBuffer);
+    analyzerL.getFloatTimeDomainData(peakMeterBufferL);
+    analyzerR.getFloatTimeDomainData(peakMeterBufferR);
+
+    dispatch(
+      setVisualizerData({
+        dataArray,
+        dataArrayL,
+        dataArrayR,
+        peakMeterBuffer,
+        peakMeterBufferL,
+        peakMeterBufferR,
+      })
+    );
   });
 
   const setVolumeForPlayer = (v) => {

@@ -23,8 +23,6 @@ jpeg, png and webp images.
 - feat: Write tags from sratch
 - feat: Make library and tag updates work without refresh
 - feat: Bulk album tags editor + deduce tags from filename
-- feat: Add a spectrograph
-- feat: Add peak and rms indicators
 - feat: Add ReplayGain scanning
 - feat: Move items in playlist with pointer long click
 - feat: Make navigation work with keyboard

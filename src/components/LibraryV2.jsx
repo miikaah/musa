@@ -15,18 +15,20 @@ const Container = styled.div`
   box-shadow: ${({ isSmall }) =>
     isSmall && "25px 10px 31px -17px rgba(10, 10, 10, 0.75)"};
   position: absolute;
-  min-width: 400px;
   z-index: 1;
   width: var(--library-width);
+  min-width: var(--library-width);
   height: 100vh;
   margin-top: var(--titlebar-height);
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   padding-bottom: var(--toolbar-height);
   ${listOverflow}
+  overflow: ${({ isLibrary }) => (isLibrary ? "auto" : "hidden")};
 `;
 
 const Wrapper = styled.div`
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
+  min-width: var(--library-width);
 `;
 
 const Label = styled.div`
@@ -57,6 +59,7 @@ const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
       ref={forwardRef}
       isVisible={libraryMode !== "none"}
       isSmall={isSmall}
+      isLibrary={libraryMode === "library"}
     >
       <>
         {listingWithLabels &&
