@@ -215,33 +215,45 @@ const Visualizer = ({
 
   // Spectrograph
   if (shouldDraw && spectroCtx) {
-    // copy the current canvas onto the temp canvas
+    // Copy the current canvas onto the temp canvas
     tempCtx.drawImage(spectroCanvas, 0, 0, spectroWidth, spectroHeight);
 
-    const getDv = (v, i) =>
-      (i < 70 ? v * 1.4 : i < 120 ? v * 1.6 : v * 1.8) * 1.1;
+    const getBarHeight = (i) =>
+      i < 4 ? 5 : i < 8 ? 4 : i < 16 ? 3 : i < 64 ? 2 : 1;
 
-    for (let i = 0; i < dataArrayR.length - 56; i++) {
-      const dv = getDv(dataArrayR[i], i);
+    const getDv = (v) => v * 1.2;
+
+    let xOffset = spectroWidth - 1;
+    let yOffset = spectroHeight;
+
+    for (let i = 0; i < dataArrayR.length; i += i < 50 ? 1 : 2) {
+      const barHeight = getBarHeight(i);
+      const dv = getDv(dataArrayR[i]);
       const r = dv;
       const g = dv;
       const b = dv;
+      yOffset -= barHeight;
       spectroCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-      spectroCtx.fillRect(spectroWidth - 1, spectroHeight - i, 1, 1);
+      spectroCtx.fillRect(xOffset, yOffset, 1, barHeight);
     }
 
-    for (let i = 0; i < dataArrayL.length - 56; i++) {
-      const dv = getDv(dataArrayL[i], i);
+    yOffset = spectroHeight - 200;
+
+    for (let i = 0; i < dataArrayL.length; i += i < 50 ? 1 : 2) {
+      const barHeight = getBarHeight(i);
+      const dv = getDv(dataArrayL[i]);
       const r = dv;
       const g = dv;
       const b = dv;
+      yOffset -= barHeight;
       spectroCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-      spectroCtx.fillRect(spectroWidth - 1, spectroHeight - 200 - i, 1, 1);
+      spectroCtx.fillRect(xOffset, yOffset, 1, barHeight);
     }
 
+    // Move the data on the canvas 1 pixel left so that next array fits
     spectroCtx.translate(-1, 0);
 
-    // draw the copied image
+    // Draw the copied image
     spectroCtx.drawImage(
       tempCanvas,
       0,
@@ -254,7 +266,7 @@ const Visualizer = ({
       spectroHeight
     );
 
-    // reset the transformation matrix
+    // Reset the transformation matrix
     spectroCtx.setTransform(1, 0, 0, 1, 0, 0);
   }
 

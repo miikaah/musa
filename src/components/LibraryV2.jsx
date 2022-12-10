@@ -48,9 +48,14 @@ const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
+    const onResize = () => {
       setIsSmall(window.innerWidth < breakpoint.lg);
-    });
+    };
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
