@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 
 /*
- * A square is the best shape for seeing the relative power differences
+ * Square is a good shape for seeing the relative power differences
  * of different parts of the spectrum.
  */
 const width = 500;
@@ -15,14 +16,16 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
-const Visualizer = ({ dispatch, forwardRef, update, dataArray }) => {
+const Visualizer = ({ dispatch, forwardRef, isVisible, update, dataArray }) => {
+  const location = useLocation();
+
   useEffect(() => {
     const canvas = document.querySelector("canvas");
     ctx = canvas.getContext("2d");
   }, []);
 
   // Bar Graph
-  if (ctx) {
+  if (ctx && isVisible && location.pathname === "/") {
     ctx.fillStyle = document.body.style.getPropertyValue("--color-bg");
     ctx.fillRect(0, 0, width, height);
 

@@ -72,7 +72,7 @@ const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
             </div>
           ))}
         <Wrapper isVisible={libraryMode === "visualizer"}>
-          <Visualizer />
+          <Visualizer isVisible={libraryMode === "visualizer"} />
         </Wrapper>
       </>
     </Container>
