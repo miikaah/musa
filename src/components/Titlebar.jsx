@@ -166,9 +166,7 @@ const Titlebar = ({ currentLocation, dispatch }) => {
 
   useEffect(() => {
     window.addEventListener("resize", () => {
-      const izSmall = window.innerWidth < breakpoint.lg;
-
-      setIsSmall(izSmall);
+      setIsSmall(window.innerWidth < breakpoint.lg);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

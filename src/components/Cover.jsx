@@ -32,12 +32,20 @@ const Colors = {
 };
 
 const Container = styled.div`
+  width: 100%;
+  max-width: 1000px;
+  min-width: ${({ isSmall }) => (isSmall ? "500px" : "1000px")};
+  flex: 1 0 47vw;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const Wrapper = styled.div`
   position: relative;
   min-width: 500px;
   min-height: 500px;
-  max-width: ${({ isSmall }) => (isSmall ? 500 : 576)}px;
-  max-height: ${({ isSmall }) => (isSmall ? 500 : 576)}px;
-  margin-left: ${({ isSmall }) => (isSmall ? 0 : 500)}px;
+  max-width: 500px;
+  max-height: 500px;
 `;
 
 const Image = styled.img`
@@ -399,39 +407,45 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   };
 
   return (
-    <Container isSmall={isSmall} ref={containerRef}>
-      {React.useMemo(() => {
-        return (
-          <>
-            <Image
-              id="albumCover"
-              src={currentItem.coverUrl}
-              ref={coverRef}
-              crossOrigin=""
-              maxHeight={coverData.maxHeight}
-              scaleDownImage={coverData.scaleDownImage}
-              isCoverLoaded={coverData.isCoverLoaded}
-              onClick={getColorFromImage}
-            />
-            {isElectron && isEditing && (
-              <Theme
-                theme={currentTheme}
-                isThemeEditor
-                editTarget={editTarget}
-                setEditTarget={setEditTargetOrHide}
+    <Container ref={containerRef} isSmall={isSmall}>
+      <Wrapper>
+        {React.useMemo(() => {
+          return (
+            <>
+              <Image
+                id="albumCover"
+                src={currentItem.coverUrl}
+                ref={coverRef}
+                crossOrigin=""
+                maxHeight={coverData.maxHeight}
+                scaleDownImage={coverData.scaleDownImage}
+                isCoverLoaded={coverData.isCoverLoaded}
+                onClick={getColorFromImage}
               />
-            )}
-          </>
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [
-        currentItem.coverUrl,
-        coverData,
-        currentTheme,
-        editTarget,
-        isEditing,
-      ])}
-      <CoverInfo item={currentItem} isSmall={isSmall} toggleEdit={toggleEdit} />
+              {isElectron && isEditing && (
+                <Theme
+                  theme={currentTheme}
+                  isThemeEditor
+                  editTarget={editTarget}
+                  setEditTarget={setEditTargetOrHide}
+                />
+              )}
+            </>
+          );
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [
+          currentItem.coverUrl,
+          coverData,
+          currentTheme,
+          editTarget,
+          isEditing,
+        ])}
+        <CoverInfo
+          item={currentItem}
+          isSmall={isSmall}
+          toggleEdit={toggleEdit}
+        />
+      </Wrapper>
     </Container>
   );
 };

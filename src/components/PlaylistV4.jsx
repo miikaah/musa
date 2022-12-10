@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import styled, { css } from "styled-components/macro";
@@ -12,6 +12,7 @@ import { KEYS, isCtrlDown } from "../util";
 import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
 import { listOverflow } from "../common.styles";
+import { breakpoint } from "../breakpoints";
 
 const commonCss = css`
   padding: 14px 0;
@@ -21,6 +22,8 @@ const commonCss = css`
   border-right-width: 3px;
   background-color: var(--color-bg);
   max-height: 89vh;
+  max-width: ${({ isSmall }) => (isSmall ? "600px" : "10000px")};
+  width: ${({ isSmall }) => (isSmall ? "auto" : "100%")};
 `;
 
 const Container = styled.ul`
@@ -83,6 +86,7 @@ const Playlist = ({
   openModal,
   dispatch,
 }) => {
+  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [startIndex, setStartIndex] = useState(NaN);
@@ -92,6 +96,13 @@ const Playlist = ({
   const [hideOverflow, setHideOverflow] = useState(false);
 
   const ref = useRef(null);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      setIsSmall(window.innerWidth < breakpoint.lg);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isContinuousSelection = () => {
     return (
@@ -372,7 +383,7 @@ const Playlist = ({
 
   if (playlist.length < 1) {
     return (
-      <Instructions>
+      <Instructions isSmall={isSmall}>
         <div>Drag and drop Artists, Albums and Songs here</div>
         <ControlsInstructions>
           <ControlsHeader>Play controls</ControlsHeader>
@@ -438,6 +449,7 @@ const Playlist = ({
   return (
     <Container
       ref={ref}
+      isSmall={isSmall}
       className={PLAYLIST_CLASSNAME}
       onMouseDown={(event) => {
         onMouseDown({
