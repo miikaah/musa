@@ -16,6 +16,8 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
+let lastDrawAt = Date.now();
+
 const Visualizer = ({ dispatch, forwardRef, isVisible, update, dataArray }) => {
   const location = useLocation();
 
@@ -25,7 +27,12 @@ const Visualizer = ({ dispatch, forwardRef, isVisible, update, dataArray }) => {
   }, []);
 
   // Bar Graph
-  if (ctx && isVisible && location.pathname === "/") {
+  if (
+    ctx &&
+    isVisible &&
+    location.pathname === "/" &&
+    Date.now() - lastDrawAt > 16
+  ) {
     ctx.fillStyle = document.body.style.getPropertyValue("--color-bg");
     ctx.fillRect(0, 0, width, height);
 
@@ -41,30 +48,29 @@ const Visualizer = ({ dispatch, forwardRef, isVisible, update, dataArray }) => {
       let i = 0;
       i < blen;
       /*
-       * First     ~860 Hz = take all
-       * ~860 Hz - ~10 kHz = take 1 in 7
-       * Above     ~10 kHz = take 1 in 8
+       * First ~1200 Hz = take all
+       * Above ~1200 Hz = take 1 in 10
        *
        * Why? The point is to skip redundant information in the higher registers
        * so that an estimation of it fits in the graph.
        */
-      i += i < 86 ? 1 : i < blen / 2 ? 7 : 8
+      i += i < 120 ? 1 : 10
     ) {
       /*
-       *   First ~50  Hz           = 50px
-       * Between ~51  Hz - ~150 Hz = 50px
-       * Between ~151 Hz - ~330 Hz = 54px
-       * Between ~331 Hz - ~860 Hz = 106px
-       *                           = 260px
-       * Above ~861 Hz             = 240px
-       * Total                     = 500px
+       *   First ~50  Hz            = 50px
+       * Between ~51  Hz - ~150 Hz  = 50px
+       * Between ~151 Hz - ~330 Hz  = 54px
+       * Between ~331 Hz - ~1200 Hz = 106px
+       *                            = 260px
+       * Above ~1200 Hz             = 240px
+       * Total                      = 500px
        *
-       * Why? Most of the power in the signal is below 1 kHz.
+       * Why? Most of the power in the signal is below 1.2 kHz.
        * That is what is interesting to see so we give it more pixels.
        * This gives us a rough "squarish" estimation of the real shape
        * without having to do interpolation.
        */
-      const barWidth = i < 5 ? 10 : i < 15 ? 5 : i < 33 ? 3 : i < 86 ? 2 : 1;
+      const barWidth = i < 5 ? 10 : i < 15 ? 5 : i < 33 ? 3 : i < 120 ? 2 : 1;
       const barHeight = dataArray[i] * 2.3;
 
       ctx.fillStyle = document.body.style.getPropertyValue(
@@ -76,6 +82,7 @@ const Visualizer = ({ dispatch, forwardRef, isVisible, update, dataArray }) => {
     }
 
     x = 0;
+    lastDrawAt = Date.now();
   }
 
   return (
