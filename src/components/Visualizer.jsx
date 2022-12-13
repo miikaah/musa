@@ -26,15 +26,7 @@ const Container = styled.div`
   max-height: 900px;
 `;
 
-const BottomWrapper = styled.div`
-  position: relative;
-
-  > canvas:nth-of-type(2) {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-`;
+const BottomWrapper = styled.div``;
 
 let lastDrawAt = Date.now();
 

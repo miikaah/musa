@@ -23,7 +23,6 @@ const commonCss = css`
   background-color: var(--color-bg);
   max-height: 89vh;
   max-width: ${({ isSmall }) => (isSmall ? "600px" : "10000px")};
-  width: ${({ isSmall }) => (isSmall ? "auto" : "100%")};
 `;
 
 const Container = styled.ul`
@@ -31,11 +30,13 @@ const Container = styled.ul`
   ${listOverflow}
   overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
   overflow-x: hidden;
+  width: ${({ isSmall }) => (isSmall ? "auto" : "100%")};
 `;
 
 const Instructions = styled.div`
   ${commonCss}
   ${listOverflow}
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
