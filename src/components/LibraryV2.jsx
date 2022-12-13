@@ -16,7 +16,6 @@ const Container = styled.div`
     isSmall && "25px 10px 31px -17px rgba(10, 10, 10, 0.75)"};
   position: absolute;
   z-index: 1;
-  width: var(--library-width);
   min-width: var(--library-width);
   height: 100vh;
   margin-top: var(--titlebar-height);
@@ -24,11 +23,6 @@ const Container = styled.div`
   padding-bottom: var(--toolbar-height);
   ${listOverflow}
   overflow: ${({ isLibrary }) => (isLibrary ? "auto" : "hidden")};
-`;
-
-const Wrapper = styled.div`
-  visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
-  min-width: var(--library-width);
 `;
 
 const Label = styled.div`
@@ -79,9 +73,7 @@ const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
               ))}
             </div>
           ))}
-        <Wrapper isVisible={libraryMode === "visualizer"}>
-          <Visualizer isVisible={libraryMode === "visualizer"} />
-        </Wrapper>
+        <Visualizer isVisible={libraryMode === "visualizer"} />
       </>
     </Container>
   );

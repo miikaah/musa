@@ -8,11 +8,11 @@ import styled from "styled-components/macro";
  * of different parts of the spectrum.
  */
 const width = 500;
-const spectroWidth = 500;
+const spectroWidth = 455;
 const peakWidth = 45;
 const height = width;
 const spectroHeight = height - 100;
-const peakHeight = 300;
+const peakHeight = spectroHeight;
 
 let spectroCanvas;
 let tempCanvas;
@@ -26,7 +26,7 @@ const Container = styled.div`
   max-height: 900px;
 `;
 
-const TopWrapper = styled.div`
+const BottomWrapper = styled.div`
   position: relative;
 
   > canvas:nth-of-type(2) {
@@ -191,7 +191,7 @@ const Visualizer = ({
   // Peak meter
   if (shouldDraw && peakCtx) {
     const barWidth = 10;
-    const barHeightMultiplier = 3;
+    const barHeightMultiplier = Math.floor(peakHeight / 100);
     peakCtx.fillStyle = document.body.style.getPropertyValue("--color-bg");
     peakCtx.fillRect(0, 0, peakWidth, peakHeight);
 
@@ -342,11 +342,15 @@ const Visualizer = ({
 
   return (
     <Container>
-      <TopWrapper>
-        <canvas id="barCanvas" width={width} height={height} />
+      <canvas id="barCanvas" width={width} height={height} />
+      <BottomWrapper>
+        <canvas
+          id="spectroCanvas"
+          width={spectroWidth}
+          height={spectroHeight}
+        />
         <canvas id="peakCanvas" width={peakWidth} height={peakHeight} />
-      </TopWrapper>
-      <canvas id="spectroCanvas" width={spectroWidth} height={spectroHeight} />
+      </BottomWrapper>
     </Container>
   );
 };
