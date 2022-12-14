@@ -33,8 +33,8 @@ const Colors = {
 
 const Container = styled.div`
   width: 100%;
-  max-width: 1000px;
-  min-width: ${({ isSmall }) => (isSmall ? "500px" : "1000px")};
+  max-width: 1005px;
+  min-width: ${({ isSmall }) => (isSmall ? "500px" : "1005px")};
   flex: 1 0 47vw;
   display: flex;
   justify-content: flex-end;

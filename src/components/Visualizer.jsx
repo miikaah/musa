@@ -8,8 +8,8 @@ import styled from "styled-components/macro";
  * of different parts of the spectrum.
  */
 const width = 500;
-const spectroWidth = 455;
-const peakWidth = 45;
+const spectroWidth = 460;
+const peakWidth = 40;
 const height = width;
 const spectroHeight = height - 100;
 const peakHeight = spectroHeight;
@@ -24,6 +24,10 @@ let tempCtx;
 const Container = styled.div`
   overflow: hidden;
   max-height: 900px;
+
+  > canvas {
+    display: block;
+  }
 `;
 
 const BottomWrapper = styled.div``;
@@ -97,6 +101,8 @@ const hsl2rgb = (h, s, l) => {
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 };
 
+let lockSpectroGraph = false;
+
 const Visualizer = ({
   dispatch,
   forwardRef,
@@ -108,7 +114,9 @@ const Visualizer = ({
   peakMeterBuffer,
   peakMeterBufferL,
   peakMeterBufferR,
+  currentItem,
 }) => {
+  // const [lockSpectroGraph, setLockSpectroGraph] = useState(false);
   const location = useLocation();
   const shouldDraw =
     isVisible && location.pathname === "/" && Date.now() - lastDrawAt > 16;
@@ -125,6 +133,25 @@ const Visualizer = ({
     tempCanvas.height = spectroHeight;
     tempCtx = tempCanvas.getContext("2d");
   }, []);
+
+  useEffect(() => {
+    if (!spectroCtx) {
+      return;
+    }
+
+    // Wipe the spectrograph so that conflicting colors don't
+    // hang around too long
+    spectroCtx.fillStyle = "black";
+    spectroCtx.fillRect(0, 0, spectroWidth, spectroHeight);
+    lockSpectroGraph = true;
+
+    // There is a slight delay in switching to a new song
+    // so previous song's spectrum with previous colors keeps being drawn for that time.
+    // Lock the spectrograph for some time so that doesn't happen.
+    setTimeout(() => {
+      lockSpectroGraph = false;
+    }, 150);
+  }, [currentItem]);
 
   // Bar Graph
   if (shouldDraw && barCtx) {
@@ -212,7 +239,7 @@ const Visualizer = ({
 
     let barHeight = (100 + avgPowerDecibels) * barHeightMultiplier;
     peakCtx.fillRect(
-      peakWidth - 5 - 4 * barWidth,
+      peakWidth - 4 * barWidth,
       peakHeight - barHeight,
       barWidth,
       barHeight
@@ -224,7 +251,7 @@ const Visualizer = ({
 
     barHeight = (100 + peakInstantaneousPowerDecibels) * barHeightMultiplier;
     peakCtx.fillRect(
-      peakWidth - 5 - 3 * barWidth,
+      peakWidth - 3 * barWidth,
       peakHeight - barHeight,
       barWidth,
       barHeight
@@ -253,7 +280,7 @@ const Visualizer = ({
 
     barHeight = (100 + avgPowerDecibels) * barHeightMultiplier;
     peakCtx.fillRect(
-      peakWidth - 5 - 1 * barWidth,
+      peakWidth - 1 * barWidth,
       peakHeight - barHeight,
       barWidth,
       barHeight
@@ -265,7 +292,7 @@ const Visualizer = ({
 
     barHeight = (100 + peakInstantaneousPowerDecibels) * barHeightMultiplier;
     peakCtx.fillRect(
-      peakWidth - 5 - 2 * barWidth,
+      peakWidth - 2 * barWidth,
       peakHeight - barHeight,
       barWidth,
       barHeight
@@ -273,7 +300,7 @@ const Visualizer = ({
   }
 
   // Spectrograph
-  if (shouldDraw && spectroCtx) {
+  if (shouldDraw && spectroCtx && !lockSpectroGraph) {
     const rgb = parseRgb(
       document.body.style.getPropertyValue("--color-primary-highlight")
     );
@@ -357,6 +384,7 @@ export default connect(
     peakMeterBuffer: state.visualizer.peakMeterBuffer,
     peakMeterBufferL: state.visualizer.peakMeterBufferL,
     peakMeterBufferR: state.visualizer.peakMeterBufferR,
+    currentItem: state.player.currentItem,
   }),
   (dispatch) => ({ dispatch })
 )(Visualizer);

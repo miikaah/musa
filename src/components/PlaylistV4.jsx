@@ -36,19 +36,27 @@ const Container = styled.ul`
 const Instructions = styled.div`
   ${commonCss}
   ${listOverflow}
-  flex: 1 0 auto;
+  flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
+`;
 
-  > div:first-of-type {
+const InstructionsWrapper = styled.div`
+  margin: 0 auto;
+  max-width: 90%;
+
+  > p:first-of-type {
     text-align: center;
     font-weight: bold;
-    margin: 0 0 20px;
-    padding: 0 40px 40px;
+    margin: 0 auto;
+    padding: 0 20px 40px 20px;
+    max-width: 360px;
   }
 
-  > div {
+  > div,
+  p {
     opacity: 0.3666;
   }
 `;
@@ -390,64 +398,66 @@ const Playlist = ({
   if (playlist.length < 1) {
     return (
       <Instructions isSmall={isSmall}>
-        <div>Drag and drop Artists, Albums and Songs here</div>
-        <ControlsInstructions>
-          <ControlsHeader>Play controls</ControlsHeader>
-          <ControlsInstruction>
-            <div>Play / Pause</div>
-            <div>Spacebar</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Mute</div>
-            <div>M</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Toggle Search</div>
-            <div>Ctrl / Cmd + Shift + F</div>
-          </ControlsInstruction>
+        <InstructionsWrapper>
+          <p>Drag and drop Artists, Albums and Songs here</p>
+          <ControlsInstructions>
+            <ControlsHeader>Play controls</ControlsHeader>
+            <ControlsInstruction>
+              <div>Play / Pause</div>
+              <div>Spacebar</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Mute</div>
+              <div>M</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Toggle Search</div>
+              <div>Ctrl / Cmd + Shift + F</div>
+            </ControlsInstruction>
 
-          <ControlsHeader>Playlist controls</ControlsHeader>
-          <ControlsInstruction>
-            <div>Play / Replay</div>
-            <div>Enter</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Select</div>
-            <div>Click + Drag</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Select All</div>
-            <div>Ctrl / Cmd + A</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Cut</div>
-            <div>Ctrl / Cmd + X</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Copy</div>
-            <div>Ctrl / Cmd + C</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Paste</div>
-            <div>Ctrl / Cmd + V</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Remove</div>
-            <div>Backspace / Delete</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Duplicate selection</div>
-            <div>Ctrl / Cmd + Shift + D</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Move Up</div>
-            <div>Up Arrow</div>
-          </ControlsInstruction>
-          <ControlsInstruction>
-            <div>Move Down</div>
-            <div>Down Arrow</div>
-          </ControlsInstruction>
-        </ControlsInstructions>
+            <ControlsHeader>Playlist controls</ControlsHeader>
+            <ControlsInstruction>
+              <div>Play / Replay</div>
+              <div>Enter</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Select</div>
+              <div>Click + Drag</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Select All</div>
+              <div>Ctrl / Cmd + A</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Cut</div>
+              <div>Ctrl / Cmd + X</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Copy</div>
+              <div>Ctrl / Cmd + C</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Paste</div>
+              <div>Ctrl / Cmd + V</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Remove</div>
+              <div>Backspace / Delete</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Duplicate selection</div>
+              <div>Ctrl / Cmd + Shift + D</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Move Up</div>
+              <div>Up Arrow</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Move Down</div>
+              <div>Down Arrow</div>
+            </ControlsInstruction>
+          </ControlsInstructions>
+        </InstructionsWrapper>
       </Instructions>
     );
   }

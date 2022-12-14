@@ -19,8 +19,8 @@ export const setVisualizerData = ({
 const initialState = {
   update: 0,
   dataArray: new Uint8Array(128),
-  dataArrayL: new Uint8Array(128),
-  dataArrayR: new Uint8Array(128),
+  dataArrayL: new Uint8Array(0),
+  dataArrayR: new Uint8Array(0),
   peakMeterBuffer: new Float32Array(4096),
   peakMeterBufferL: new Float32Array(4096),
   peakMeterBufferR: new Float32Array(4096),
