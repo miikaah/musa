@@ -17,6 +17,7 @@ jpeg, png and webp images.
 
 - fix: genre find can have empty results
 - fix: Prevent popping when changing FIR eq
+- feat: Change slider track played to red if not enough contrast
 - feat: Update slider rgb when choosing colors
 - feat: Update ogg tags
 - feat: View for seeing files with missing tags / covers
@@ -56,8 +57,7 @@ Musa expects this folder structure
   |_...
 ```
 
-because reading metadata is an expensive operation especially on Windows
-before filesystem caches have been refreshed (read: after restart), while
+because reading metadata is an expensive operation, while
 reading the folder structure is very fast, so changes to the library folder files
 are faster to determine based on the structure and file stats than by updating metadata.
 
