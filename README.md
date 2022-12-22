@@ -15,6 +15,7 @@ jpeg, png and webp images.
 
 ### V4
 
+- fix; current year search hides albums that actually are named a year like Vangelis - 1492
 - fix: genre find can have empty results
 - fix: Prevent popping when changing FIR eq
 - feat: Change slider track played to red if not enough contrast
