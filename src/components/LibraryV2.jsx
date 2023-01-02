@@ -17,6 +17,7 @@ const Container = styled.div`
   position: absolute;
   z-index: 1;
   min-width: var(--library-width);
+  max-width: var(--library-width);
   height: 100vh;
   margin-top: var(--titlebar-height);
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
