@@ -10,7 +10,6 @@ const Container = styled.div`
   padding: ${({ isSmall }) =>
     isSmall ? "20px 20px 20px 10px" : "20px 20px 20px 10px"};
   min-width: ${({ isSmall }) => (isSmall ? 394 : 432)}px;
-  max-width: 96%;
   position: relative;
 
   > button:nth-child(1) {
