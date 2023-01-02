@@ -34,7 +34,7 @@ const Colors = {
 const Container = styled.div`
   width: 100%;
   max-width: 1005px;
-  min-width: ${({ isSmall }) => (isSmall ? "500px" : "1005px")};
+  min-width: ${({ isSmall }) => (isSmall ? "var(--library-width)" : "1005px")};
   flex: 1 0 47vw;
   display: flex;
   justify-content: flex-end;
@@ -42,21 +42,23 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   position: relative;
-  min-width: 500px;
-  min-height: 500px;
-  max-width: 500px;
-  max-height: 500px;
+  min-width: var(--library-width);
+  max-width: var(--library-width);
+  max-height: var(--library-width);
 `;
 
-const Image = styled.img`
-  visibility: ${({ isCoverLoaded, src }) =>
-    isCoverLoaded && src ? "visible" : "hidden"};
+const Image = styled.img.attrs(
+  ({ maxHeight, isCoverLoaded, src, scaleDownImage }) => ({
+    style: {
+      maxHeight: `${maxHeight}px`,
+      objectFit: scaleDownImage ? "scale-down" : "cover",
+      transition: isCoverLoaded && "max-height 0.3s",
+      visibility: isCoverLoaded && src ? "visible" : "hidden",
+    },
+  })
+)`
   width: 100%;
   height: 100%;
-  max-height: ${({ maxHeight }) => maxHeight && `${maxHeight}px`};
-  transition: ${({ isCoverLoaded }) => isCoverLoaded && "max-height 0.3s"};
-  object-fit: ${({ scaleDownImage }) =>
-    scaleDownImage ? "scale-down" : "cover"};
 `;
 
 const Theme = styled(ThemeBlock)`
@@ -95,18 +97,23 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   const coverRef = useRef();
 
   const calcMaxHeight = () => {
-    let heightToWidthRatio = Math.min(
-      1,
-      coverRef.current.naturalHeight / coverRef.current.naturalWidth
+    const libraryWidth = Number(
+      window
+        .getComputedStyle(document.documentElement)
+        .getPropertyValue("--library-width")
+        .replace("px", "")
     );
+
+    let heightToWidthRatio =
+      coverRef.current.naturalHeight / coverRef.current.naturalWidth;
 
     if (heightToWidthRatio > 0.949) {
       heightToWidthRatio = 1;
     }
 
-    return heightToWidthRatio
-      ? heightToWidthRatio * containerRef.current.offsetWidth
-      : containerRef.current.offsetWidth;
+    return heightToWidthRatio < 1
+      ? heightToWidthRatio * libraryWidth
+      : libraryWidth;
   };
 
   const calculateTheme = (coverTarget) => {
