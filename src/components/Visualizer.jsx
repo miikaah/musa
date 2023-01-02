@@ -23,7 +23,8 @@ let tempCtx;
 
 const Container = styled.div`
   overflow: hidden;
-  max-height: 900px;
+  max-height: ${({ isVisible }) => (isVisible ? "900px" : "0")};
+  visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
 
   > canvas {
     display: block;
@@ -116,7 +117,6 @@ const Visualizer = ({
   peakMeterBufferR,
   currentItem,
 }) => {
-  // const [lockSpectroGraph, setLockSpectroGraph] = useState(false);
   const location = useLocation();
   const shouldDraw =
     isVisible && location.pathname === "/" && Date.now() - lastDrawAt > 16;
@@ -360,7 +360,7 @@ const Visualizer = ({
   }
 
   return (
-    <Container>
+    <Container isVisible={isVisible}>
       <canvas id="barCanvas" width={width} height={height} />
       <BottomWrapper>
         <canvas
