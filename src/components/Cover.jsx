@@ -118,7 +118,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       : libraryWidth;
   };
 
-  const calculateTheme = (coverTarget) => {
+  const calculateTheme = (coverTarget, options) => {
     let palette = new Palette(coverTarget);
     let mostPopularSwatch = palette.swatches.find(
       (s) => s.population === palette.highestPopulation
@@ -138,7 +138,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     );
 
     // Defaults are for dark covers
-    let bg = mostPopularSwatch;
+    let bg = options?.bg || mostPopularSwatch;
     let primary;
     let secondary;
     let color = Colors.Typography;
@@ -156,7 +156,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     ];
 
     // Set different colors for a light cover
-    if (isVibrantCover(mostPopularSwatch)) {
+    if (isVibrantCover(bg)) {
       if (contrast(Colors.WhiteRgb, bg.rgb) < 3.4) {
         color = Colors.TypographyLight;
         ghostColor = Colors.TypographyGhostLight;
@@ -368,15 +368,20 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     const rgb = [r, g, b];
     const { colors: c } = currentTheme;
 
-    const colors = calculateTheme(img);
+    let colors;
     switch (editTarget) {
       case "bg": {
+        // Background color is used to calculate text colors
+        colors = calculateTheme(img, { bg: { rgb } });
         colors.bg = rgb;
         colors.primary = c.primary;
         colors.secondary = c.secondary;
+        colors.slider = c.primary;
         break;
       }
       case "primary": {
+        // Background color is used to calculate text colors
+        colors = calculateTheme(img, { bg: { rgb: c.bg } });
         colors.bg = c.bg;
         colors.primary = rgb;
         colors.secondary = c.secondary;
@@ -384,14 +389,32 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
         break;
       }
       case "secondary": {
+        // Background color is used to calculate text colors
+        colors = calculateTheme(img, { bg: { rgb: c.bg } });
         colors.bg = c.bg;
         colors.primary = c.primary;
         colors.secondary = rgb;
+        colors.slider = c.primary;
         break;
       }
       default: {
+        // Background color is used to calculate text colors
+        colors = calculateTheme(img, { bg: { rgb: c.bg } });
       }
     }
+
+    // Switch to dark text for light covers
+    let primaryColor;
+    if (contrast(Colors.WhiteRgb, colors.primary) < 2.6) {
+      primaryColor = Colors.TypographyLight;
+    }
+    let secondaryColor;
+    if (contrast(Colors.WhiteRgb, colors.secondary) < 2.6) {
+      secondaryColor = Colors.TypographyLight;
+    }
+
+    colors.typographyPrimary = defaultTo(primaryColor, Colors.Typography);
+    colors.typographySecondary = defaultTo(secondaryColor, Colors.Typography);
 
     updateCurrentTheme(colors);
 
