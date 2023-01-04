@@ -12,6 +12,7 @@ import { setCoverData } from "reducers/player.reducer";
 import CoverInfo from "./CoverInfo";
 import ThemeBlock from "./ThemeBlock";
 import config from "config";
+import { rgb2hsl, hsl2rgb } from "colors";
 import Api from "api-client";
 
 const { isElectron } = config;
@@ -29,6 +30,7 @@ const Colors = {
   SliderTrack: "#424a56",
   SliderTrackRgb: [66, 74, 86],
   WhiteRgb: [255, 255, 255],
+  RedRgb: [255, 0, 0],
 };
 
 const Container = styled.div`
@@ -80,10 +82,10 @@ const luminance = (r, g, b) => {
 };
 
 const contrast = (rgb1, rgb2) => {
-  return (
-    (luminance(rgb1[0], rgb1[1], rgb1[2]) + 0.05) /
-    (luminance(rgb2[0], rgb2[1], rgb2[2]) + 0.05)
-  );
+  const lum1 = luminance(...rgb1) + 0.05;
+  const lum2 = luminance(...rgb2) + 0.05;
+
+  return lum1 / lum2;
 };
 
 const canvas = document.createElement("canvas");
@@ -195,6 +197,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     if (Math.abs(1 - contrastBgPr) < 0.05) {
       primary = { rgb: Colors.PrimaryRgb };
     }
+
     secondary = swatchesByPopulationDesc.find(
       (s) => s.population === secondaryPop
     );
@@ -229,11 +232,12 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     // Set slider highlight to a different color if not enough contrast to slider track
     // or background color
     let slider = primary;
-    if (
-      contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2 ||
-      contrast(slider.rgb, bg.rgb) < 1.2
-    ) {
-      slider = secondary;
+    if (contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2) {
+      const [h, s] = rgb2hsl(...slider.rgb);
+      const [, , l] = rgb2hsl(...Colors.SliderTrackRgb);
+      const rgb = hsl2rgb(h / 360, s, l + 0.5);
+
+      slider = { rgb };
     }
 
     // Switch to dark text for light covers

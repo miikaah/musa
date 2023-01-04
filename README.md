@@ -18,8 +18,6 @@ jpeg, png and webp images.
 - fix; current year search hides albums that actually are named a year like Vangelis - 1492
 - fix: genre find can have empty results
 - fix: Prevent popping when changing FIR eq
-- feat: Change slider track played to red if not enough contrast
-- feat: Update slider rgb when choosing colors
 - feat: Update ogg tags
 - feat: View for seeing files with missing tags / covers
 - feat: Write tags from sratch
