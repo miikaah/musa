@@ -138,22 +138,22 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     );
 
     // Defaults are for dark covers
-    let bg = mostPopularSwatch,
-      primary,
-      secondary,
-      color = Colors.Typography,
-      ghostColor = Colors.TypographyGhost,
-      primaryColor = Colors.Typography,
-      secondaryColor = Colors.Typography,
-      primarySwatches = [
-        defaultTo(palette.vibrantSwatch, {}),
-        defaultTo(palette.lightVibrantSwatch, {}),
-        defaultTo(palette.lightMutedSwatch, {}),
-      ],
-      secondarySwatches = [
-        defaultTo(palette.mutedSwatch, {}),
-        defaultTo(palette.darkMutedSwatch, {}),
-      ];
+    let bg = mostPopularSwatch;
+    let primary;
+    let secondary;
+    let color = Colors.Typography;
+    let ghostColor = Colors.TypographyGhost;
+    let primaryColor = Colors.Typography;
+    let secondaryColor = Colors.Typography;
+    let primarySwatches = [
+      defaultTo(palette.vibrantSwatch, {}),
+      defaultTo(palette.lightVibrantSwatch, {}),
+      defaultTo(palette.lightMutedSwatch, {}),
+    ];
+    let secondarySwatches = [
+      defaultTo(palette.mutedSwatch, {}),
+      defaultTo(palette.darkMutedSwatch, {}),
+    ];
 
     // Set different colors for a light cover
     if (isVibrantCover(mostPopularSwatch)) {
@@ -232,7 +232,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     // Set slider highlight to a different color if not enough contrast to slider track
     // or background color
     let slider = primary;
-    if (contrast(slider.rgb, Colors.SliderTrackRgb) < 1.2) {
+    if (contrast(primary.rgb, Colors.SliderTrackRgb) < 1.2) {
       const [h, s] = rgb2hsl(...slider.rgb);
       const [, , l] = rgb2hsl(...Colors.SliderTrackRgb);
       const rgb = hsl2rgb(h / 360, s, l + 0.5);
@@ -369,7 +369,6 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     const { colors: c } = currentTheme;
 
     const colors = calculateTheme(img);
-
     switch (editTarget) {
       case "bg": {
         colors.bg = rgb;
@@ -381,6 +380,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
         colors.bg = c.bg;
         colors.primary = rgb;
         colors.secondary = c.secondary;
+        colors.slider = rgb;
         break;
       }
       case "secondary": {
