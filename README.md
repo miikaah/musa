@@ -28,7 +28,6 @@ jpeg, png and webp images.
 - feat: Make navigation work with keyboard
 - feat: Responsive mobile layout
 - feat: Language selector and i18n
-- feat: Placeholder images
 - feat: Create srcset of album covers
 - investigate: Script for downloading all impulse responses from AutoEQ repo?
 - investigate: How hard is it to write a rudimentary multiband compressor?

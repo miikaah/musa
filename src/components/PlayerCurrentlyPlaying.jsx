@@ -62,11 +62,12 @@ const PlaceholderLine = styled.div`
 const PlayerCurrentlyPlaying = React.memo(({ currentItem }) => {
   const { artist, title } = currentItem.metadata || {};
   const songTitle = title || currentItem?.name;
+  const hasCurrentItem = !!Object.keys(currentItem).length;
 
   return (
     <Container>
-      {currentItem.coverUrl ? (
-        <AlbumImageV2 item={currentItem} />
+      {hasCurrentItem ? (
+        <AlbumImageV2 item={currentItem} animate={false} />
       ) : (
         <PlaceholderImage />
       )}

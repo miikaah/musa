@@ -4,7 +4,8 @@ import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components/macro";
 import { playIndex, replay } from "reducers/player.reducer";
-import { formatDuration, cleanUrl } from "../util";
+import { formatDuration } from "../util";
+import AlbumImage from "./common/AlbumImageV2";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);
@@ -56,19 +57,12 @@ const CoverWrapper = styled.div`
   align-items: center;
   min-width: 50px;
   min-height: 50px;
-`;
 
-const CoverSmall = styled.img`
-  width: 50px;
-  height: 50px;
-  object-fit: scale-down;
-`;
-
-const PlaceholderImage = styled.div`
-  width: 50px;
-  height: 50px;
-  background: #d7d7d7;
-  opacity: 0.666;
+  > img {
+    width: 50px;
+    height: 50px;
+    object-fit: scale-down;
+  }
 `;
 
 const RowContainer = styled.div`
@@ -266,7 +260,6 @@ const PlaylistItem = ({
   const title = item?.metadata?.title || item.name || "";
   const track = item.track || "";
   const duration = formatDuration(item?.metadata?.duration || "0:00");
-  const coverSrc = item.coverUrl || "";
 
   return (
     <PlaylistItemContainer
@@ -279,11 +272,7 @@ const PlaylistItem = ({
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
       <CoverWrapper>
-        {coverSrc ? (
-          <CoverSmall src={cleanUrl(coverSrc)} alt="" />
-        ) : (
-          <PlaceholderImage />
-        )}
+        <AlbumImage item={item} animate={false} />
       </CoverWrapper>
       <RowContainer>
         <FirstRow>
