@@ -26,7 +26,7 @@ const Container = styled.div`
   overflow: auto;
   max-height: ${({ isVisible }) => (isVisible ? "900px" : "0")};
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
-  padding-bottom: 100px; /* TODO: Ought to be calculated by viewport height */
+  padding-bottom: 160px; /* TODO: Ought to be calculated by viewport height */
 
   ::-webkit-scrollbar {
     width: 0;
