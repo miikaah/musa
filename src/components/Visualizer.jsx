@@ -23,9 +23,14 @@ let spectroCtx;
 let tempCtx;
 
 const Container = styled.div`
-  overflow: hidden;
+  overflow: auto;
   max-height: ${({ isVisible }) => (isVisible ? "900px" : "0")};
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
+  padding-bottom: 100px; /* TODO: Ought to be calculated by viewport height */
+
+  ::-webkit-scrollbar {
+    width: 0;
+  }
 
   > canvas {
     display: block;
