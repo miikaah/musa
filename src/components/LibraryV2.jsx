@@ -55,15 +55,14 @@ const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
   }, []);
 
   return (
-    <Container
-      ref={forwardRef}
-      isVisible={libraryMode !== "none"}
-      isSmall={isSmall}
-      isLibrary={libraryMode === "library"}
-    >
-      <>
+    <>
+      <Container
+        ref={forwardRef}
+        isSmall={isSmall}
+        isVisible={libraryMode === "library"}
+        isLibrary={libraryMode === "library"}
+      >
         {listingWithLabels &&
-          libraryMode === "library" &&
           Object.entries(listingWithLabels).map(([key, artist]) => (
             <div key={key}>
               <Label>
@@ -74,9 +73,15 @@ const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
               ))}
             </div>
           ))}
+      </Container>
+      <Container
+        isSmall={isSmall}
+        isVisible={libraryMode === "visualizer"}
+        isLibrary={libraryMode === "library"}
+      >
         <Visualizer isVisible={libraryMode === "visualizer"} />
-      </>
-    </Container>
+      </Container>
+    </>
   );
 };
 

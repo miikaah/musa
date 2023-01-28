@@ -16,7 +16,6 @@ jpeg, png and webp images.
 ### V4
 
 - fix: Stop duplication key combination default action (Safari Shift + Cmd + D is Add to reading list action)
-- fix: library scroll state getting erased
 - fix: long name / url in tag editor is not wrapped correctly
 - fix; current year search hides albums that actually are named a year like Vangelis - 1492
 - fix: genre find can have empty results
