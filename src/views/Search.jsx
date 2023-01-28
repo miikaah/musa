@@ -12,7 +12,6 @@ import {
 import styled, { css } from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDebounce } from "hooks";
-import { KEYS } from "../util";
 import Song from "components/Song";
 import Album from "components/Album";
 import Artist from "components/Artist";
@@ -96,12 +95,11 @@ const InputContainer = styled.div`
   display: flex;
   margin-bottom: 20px;
 
-  > div:nth-of-type(1),
-  > div:nth-of-type(3) {
-    min-width: 345px;
-    max-width: 345px;
+  > div:nth-of-type(1) {
+    min-width: 420px;
     margin-right: 10px;
     position: relative;
+    flex-grow: 1;
   }
 
   > button:first-of-type {
@@ -155,7 +153,6 @@ const ClearButton = styled(Button)`
 
 const Search = ({
   query,
-  filter,
   artists,
   albums,
   audios,
@@ -165,166 +162,13 @@ const Search = ({
   listingWithLabels,
   dispatch,
 }) => {
-  const [previousFilter, setPreviousFilter] = useState("");
   const [isFetching, setIsFetching] = useState(false);
-  const [isDeletingFilter, setIsDeletingFilter] = useState(false);
   const [genres, setGenres] = useState([]);
   const [showGenreSelect, setShowGenreSelect] = useState(false);
   const queryToBackend = useDebounce(query, 300);
   const artistListRef = useRef();
   const albumListRef = useRef();
   const audioListRef = useRef();
-
-  useEffect(() => {
-    if (filter) {
-      const [artistFilter, albumFilter] = filter.split(",");
-      const firstChar = artistFilter.substring(0, 1).toUpperCase();
-      const strictArtists = (listingWithLabels[firstChar] || []).filter((a) =>
-        a.name.toLowerCase().includes(artistFilter.toLowerCase())
-      );
-
-      if (!albumFilter) {
-        if (strictArtists.length > 1 && filter.trim().endsWith(",")) {
-          Api.getArtistAlbums(strictArtists[0].id).then((artist) => {
-            const mappedFiles = artist.albums
-              .map((a) =>
-                a.files.map((f) => ({
-                  ...f,
-                  coverUrl: a.coverUrl,
-                }))
-              )
-              .flat(Infinity);
-
-            dispatch(
-              setSearchResults({
-                artists: strictArtists,
-                albums: artist.albums,
-                audios: [...mappedFiles, ...artist.files],
-              })
-            );
-          });
-        } else if (strictArtists.length > 1) {
-          dispatch(
-            setSearchResults({
-              artists: strictArtists,
-              albums: [],
-              audios: [],
-            })
-          );
-        } else if (strictArtists.length === 1) {
-          Api.getArtistAlbums(strictArtists[0].id).then((artist) => {
-            const mappedFiles = artist.albums
-              .map((a) =>
-                a.files.map((f) => ({
-                  ...f,
-                  coverUrl: a.coverUrl,
-                }))
-              )
-              .flat(Infinity);
-
-            dispatch(
-              setSearchResults({
-                artists: strictArtists,
-                albums: artist.albums,
-                audios: [...mappedFiles, ...artist.files],
-              })
-            );
-
-            if (
-              !isDeletingFilter &&
-              previousFilter !== `${filter},` &&
-              !filter.endsWith(",")
-            ) {
-              dispatch(setFilter(`${filter},`));
-            }
-          });
-        }
-      } else if (albumFilter && filter.length > previousFilter.length) {
-        const strictAlbums = albums.filter(
-          (a) =>
-            a?.name.toLowerCase().startsWith(albumFilter) ||
-            a?.metadata?.album.toLowerCase().startsWith(albumFilter)
-        );
-
-        if (strictAlbums.length > 1) {
-          const mappedFiles = strictAlbums
-            .map((a) =>
-              a.files.map((f) => ({
-                ...f,
-                coverUrl: a.coverUrl,
-              }))
-            )
-            .flat(Infinity);
-
-          dispatch(
-            setSearchResults({
-              artists: strictArtists,
-              albums: strictAlbums,
-              audios: mappedFiles,
-            })
-          );
-        } else if (strictAlbums.length === 1) {
-          const mappedFiles = strictAlbums[0].files.map((f) => ({
-            ...f,
-            coverUrl: strictAlbums[0].coverUrl,
-          }));
-
-          dispatch(
-            setSearchResults({
-              artists: strictArtists,
-              albums: strictAlbums,
-              audios: mappedFiles,
-            })
-          );
-        }
-      } else if (albumFilter) {
-        Api.getArtistAlbums(strictArtists[0].id).then((artist) => {
-          const strictAlbums = artist.albums.filter((a) =>
-            a.name.toLowerCase().startsWith(albumFilter)
-          );
-
-          const mappedFiles = strictAlbums
-            .map((a) =>
-              a.files.map((f) => ({
-                ...f,
-                coverUrl: a.coverUrl,
-              }))
-            )
-            .flat(Infinity);
-
-          dispatch(
-            setSearchResults({
-              artists: strictArtists,
-              albums: strictAlbums,
-              audios: mappedFiles,
-            })
-          );
-        });
-      }
-
-      dispatch(setQuery(""));
-    } else if (
-      !isSearchRandom &&
-      !isFetching &&
-      filter.length < 1 &&
-      query.length < 1
-    ) {
-      dispatch(
-        setSearchResults({
-          artists: [],
-          albums: [],
-          audios: [],
-        })
-      );
-    }
-
-    setPreviousFilter(filter);
-
-    if (filter) {
-      dispatch(setIsSearchRandom(false));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, listingWithLabels]);
 
   useEffect(() => {
     if (queryToBackend && !isSearchTermLocked) {
@@ -344,12 +188,7 @@ const Search = ({
       artistListRef.current.scrollTop = 0;
       albumListRef.current.scrollTop = 0;
       audioListRef.current.scrollTop = 0;
-    } else if (
-      !isSearchRandom &&
-      !isFetching &&
-      filter.length < 1 &&
-      query.length < 1
-    ) {
+    } else if (!isSearchRandom && !isFetching && query.length < 1) {
       dispatch(
         setSearchResults({
           artists: [],
@@ -360,21 +199,6 @@ const Search = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryToBackend]);
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      setIsDeletingFilter(
-        event?.target?.tagName === "INPUT" &&
-          (event.keyCode === KEYS.Backspace || event.keyCode === KEYS.Delete)
-      );
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
 
   useEffect(() => {
     artistListRef.current.scrollTop = scrollPos.artists;
@@ -450,15 +274,6 @@ const Search = ({
     <Container>
       <ContainerWrapper>
         <InputContainer>
-          <div>
-            <input
-              autoFocus
-              value={filter}
-              placeholder="Filter by artist,album"
-              onChange={(e) => dispatch(setFilter(e.target.value))}
-            />
-          </div>
-          <div />
           <SearchInputContainer query={query}>
             <input
               value={query}
@@ -466,7 +281,12 @@ const Search = ({
               onChange={updateQuery}
             />
             <ArrowDown onClick={toggleGenreSelect} />
-            <Select showSelect={showGenreSelect} top={45} maxWidth={345}>
+            <Select
+              showSelect={showGenreSelect}
+              top={45}
+              maxWidth={420}
+              dock="right"
+            >
               {genres.map((genre, i) => (
                 <div key={i} title={genre} onClick={setGenre}>
                   {genre}
@@ -520,7 +340,7 @@ const Search = ({
                     <div>...</div>
                   ) : (
                     albums.map((a, i) => {
-                      return <Album key={i} item={a} filter={filter} />;
+                      return <Album key={i} item={a} />;
                     })
                   ),
                 // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -561,7 +381,6 @@ const Search = ({
 export default connect(
   (state) => ({
     query: state.search.query,
-    filter: state.search.filter,
     artists: state.search.searchArtists,
     albums: state.search.searchAlbums,
     audios: state.search.searchAudios,

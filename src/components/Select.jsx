@@ -5,6 +5,7 @@ import { ellipsisTextOverflow } from "common.styles";
 const Container = styled.div`
   position: absolute;
   top: ${({ top }) => top}px;
+  ${({ dock }) => (dock === "left" ? "left: 0" : "right: 0")};
   padding: 5px 0 5px 10px;
   font-size: var(--font-size-sm);
   cursor: pointer;
@@ -28,9 +29,9 @@ const Container = styled.div`
   }
 `;
 
-const Select = ({ showSelect, top = 0, maxWidth, children }) => {
+const Select = ({ showSelect, top = 0, maxWidth, dock = "left", children }) => {
   return showSelect ? (
-    <Container top={top} maxWidth={maxWidth}>
+    <Container top={top} maxWidth={maxWidth} dock={dock}>
       {children}
     </Container>
   ) : null;

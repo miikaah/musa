@@ -23,7 +23,24 @@ const Container = styled.div`
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   padding-bottom: var(--toolbar-height);
   ${listOverflow}
-  overflow: ${({ isLibrary }) => (isLibrary ? "auto" : "hidden")};
+  ${({ isLibrary, filter }) =>
+    isLibrary
+      ? filter
+        ? `
+        overflow: auto; // Stop scrollbar from flickering during filtering
+
+        ::-webkit-scrollbar {
+          width: 0;
+        }`
+        : "overflow: auto;"
+      : "overflow: hidden;"}
+`;
+
+const FilterContainer = styled.div`
+  position: fixed;
+  top: 51px;
+  left: 12px;
+  z-index: 2;
 `;
 
 const Label = styled.div`
@@ -39,8 +56,40 @@ const Label = styled.div`
   }
 `;
 
-const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
+const Library = ({
+  dispatch,
+  forwardRef,
+  libraryMode,
+  listingWithLabels,
+  albums,
+}) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
+  const [filter, setFilter] = useState("");
+  const [filteredListing, setFilteredListing] = useState({});
+
+  useEffect(() => {
+    if (!filter) {
+      setFilteredListing({});
+
+      return;
+    }
+
+    const firstChar = filter.substring(0, 1).toUpperCase();
+    const strictArtists = (listingWithLabels[firstChar] || []).filter((a) =>
+      a.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    if (strictArtists.length < 1) {
+      setFilteredListing({});
+
+      return;
+    }
+
+    setFilteredListing({
+      [firstChar]: strictArtists,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter, listingWithLabels]);
 
   useEffect(() => {
     const onResize = () => {
@@ -61,18 +110,33 @@ const Library = ({ dispatch, forwardRef, libraryMode, listingWithLabels }) => {
         isSmall={isSmall}
         isVisible={libraryMode === "library"}
         isLibrary={libraryMode === "library"}
+        filter={filter}
       >
-        {listingWithLabels &&
-          Object.entries(listingWithLabels).map(([key, artist]) => (
-            <div key={key}>
-              <Label>
-                <span>{key}</span>
-              </Label>
-              {artist.map((item, index) => (
-                <LibraryList key={item.id} item={item} isArtist />
-              ))}
-            </div>
-          ))}
+        <>
+          <FilterContainer>
+            <input
+              autoFocus
+              value={filter}
+              placeholder="Filter by artist"
+              onChange={(e) => setFilter(e.target.value)}
+            />
+          </FilterContainer>
+          {listingWithLabels &&
+            Object.entries(
+              Object.keys(filteredListing).length && filter
+                ? filteredListing
+                : listingWithLabels
+            ).map(([key, artist]) => (
+              <div key={key}>
+                <Label>
+                  <span>{key}</span>
+                </Label>
+                {artist.map((item, index) => (
+                  <LibraryList key={item.id} item={item} isArtist />
+                ))}
+              </div>
+            ))}
+        </>
       </Container>
       <Container
         isSmall={isSmall}

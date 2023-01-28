@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
-import { setFilter } from "reducers/search.reducer";
+import { setQuery } from "reducers/search.reducer";
 import { ellipsisTextOverflow } from "common.styles";
 
 const bottomBorder = css`
@@ -35,7 +35,7 @@ const Artist = ({ item: artist, dispatch }) => {
 
   return (
     <ArtistContainer
-      onClick={() => dispatch(setFilter(`${title.toLowerCase()},`))}
+      onClick={() => dispatch(setQuery(`${title.toLowerCase()}`))}
     >
       <ArtistName title={title}>{title}</ArtistName>
     </ArtistContainer>
