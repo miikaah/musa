@@ -4,6 +4,7 @@ import styled from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
 import { listImage, cardActionShadow } from "common.styles";
+import { ellipsisTextOverflow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 
 const SongContainer = styled.div`
@@ -30,9 +31,7 @@ const SongInfo = styled.div`
 
   > p {
     margin: 0 0 6px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
+    ${ellipsisTextOverflow}
   }
 
   > p:nth-child(1) {

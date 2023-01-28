@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
 import { setFilter } from "reducers/search.reducer";
+import { ellipsisTextOverflow } from "common.styles";
 
 const bottomBorder = css`
   cursor: pointer;
@@ -21,10 +22,8 @@ const ArtistContainer = styled.div`
 const ArtistName = styled.div`
   font-size: var(--font-size-xs);
   margin-bottom: 6px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
   max-width: 96%;
+  ${ellipsisTextOverflow}
 `;
 
 const Artist = ({ item: artist, dispatch }) => {

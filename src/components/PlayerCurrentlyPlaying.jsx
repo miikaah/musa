@@ -1,6 +1,7 @@
 import React from "react";
 import AlbumImageV2 from "./common/AlbumImageV2";
 import styled, { css } from "styled-components/macro";
+import { ellipsisTextOverflow } from "common.styles";
 import { fadeIn } from "animations";
 
 const commonImageCss = css`
@@ -26,9 +27,7 @@ const Info = styled.div`
   padding: 12px;
 
   > div {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    ${ellipsisTextOverflow}
     animation: ${fadeIn} 0.2s;
   }
 

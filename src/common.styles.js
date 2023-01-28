@@ -1,5 +1,11 @@
 import styled, { css } from "styled-components/macro";
 
+export const ellipsisTextOverflow = css`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 export const listOverflow = css`
   min-height: 89vh;
   max-height: 89vh;

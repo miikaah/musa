@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
+import { ellipsisTextOverflow } from "common.styles";
 
 const Container = styled.div`
   position: absolute;
@@ -18,9 +19,7 @@ const Container = styled.div`
   > * {
     min-height: 20px;
     max-height: 20px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    ${ellipsisTextOverflow}
 
     :hover {
       background: var(--color-primary-highlight);

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components/macro";
 import { playIndex, replay } from "reducers/player.reducer";
 import { formatDuration } from "../util";
+import { ellipsisTextOverflow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 
 const colorCss = css`
@@ -87,9 +88,7 @@ const Icon = styled.span`
 const Title = styled.span`
   font-size: var(--font-size-sm);
   font-weight: normal;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  ${ellipsisTextOverflow}
 `;
 
 const EditButton = styled.button`

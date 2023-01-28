@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ellipsisTextOverflow } from "common.styles";
 import config from "config";
 
 const { isElectron } = config;
@@ -56,9 +57,7 @@ const Metadata = styled.div`
     display: flex;
 
     > span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      ${ellipsisTextOverflow}
     }
     > span:first-of-type {
       padding-right: 20px;

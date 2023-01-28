@@ -6,6 +6,7 @@ import TagTextarea from "./TagTextarea";
 import Button from "./Button";
 import Api from "api-client";
 import { dispatchToast } from "../util";
+import { ellipsisTextOverflow } from "common.styles";
 
 const Container = styled.div`
   display: flex;
@@ -14,6 +15,7 @@ const Container = styled.div`
 
 const Filename = styled.div`
   margin-bottom: 20px;
+  ${ellipsisTextOverflow}
 `;
 
 const Wrapper = styled.div`
