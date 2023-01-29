@@ -103,7 +103,7 @@ const Album = ({ item, dispatch }) => {
 
   const setYearToSearchQuery = (e) => {
     e.stopPropagation();
-    dispatch(setQuery(year));
+    dispatch(setQuery(`year:${year}`));
   };
 
   const artist =

@@ -16,9 +16,7 @@ jpeg, png and webp images.
 ### V4
 
 - fix: Stop duplication key combination default action (Safari Shift + Cmd + D is Add to reading list action)
-- fix; current year search hides albums that actually are named a year like Vangelis - 1492
 - fix: genre find can have empty results
-- fix: genres can have duplicates
 - fix: Prevent popping when changing FIR eq
 - feat: replace fuzzysort with db search for artist find
 - feat: in year search take only a random subset of album songs
