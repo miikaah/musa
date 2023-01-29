@@ -61,6 +61,8 @@ const search = (state = initialState, action) => {
       return {
         ...state,
         query: `${action.query}`,
+        isRandom: false,
+        isSearchTermLocked: false,
       };
     }
     case SET_FILTER: {

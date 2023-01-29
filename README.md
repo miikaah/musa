@@ -17,7 +17,6 @@ jpeg, png and webp images.
 
 - fix: Stop duplication key combination default action (Safari Shift + Cmd + D is Add to reading list action)
 - fix: Prevent popping when changing FIR eq
-- fix: Lock not cleared when updating query
 - feat: search for songs by artist name
 - feat: in year search take only a random subset of album songs
 - feat: in year search only return artists who have albums or songs in that year
