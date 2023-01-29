@@ -16,9 +16,9 @@ jpeg, png and webp images.
 ### V4
 
 - fix: Stop duplication key combination default action (Safari Shift + Cmd + D is Add to reading list action)
-- fix: genre find can have empty results
 - fix: Prevent popping when changing FIR eq
-- feat: replace fuzzysort with db search for artist find
+- fix: Lock not cleared when updating query
+- feat: search for songs by artist name
 - feat: in year search take only a random subset of album songs
 - feat: in year search only return artists who have albums or songs in that year
 - feat: year dropdown in search bar
