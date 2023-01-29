@@ -5,6 +5,7 @@ import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
 import { listImage, cardActionShadow } from "common.styles";
 import { ellipsisTextOverflow } from "common.styles";
+import { setQuery } from "reducers/search.reducer";
 import AlbumImage from "./common/AlbumImageV2";
 
 const SongContainer = styled.div`
@@ -40,6 +41,13 @@ const SongInfo = styled.div`
     letter-spacing: -0.5px;
   }
 
+  > p:nth-child(1) > span,
+  > p:nth-child(2) > span {
+    :hover {
+      text-decoration: underline;
+    }
+  }
+
   > p:nth-child(2),
   > p:nth-child(3) {
     font-size: var(--font-size-xxs);
@@ -50,6 +58,13 @@ const SongInfo = styled.div`
 
   > p > span:nth-child(2) {
     margin: 0 4px;
+  }
+
+  > p:nth-child(3) > span:nth-child(1),
+  > p:nth-child(3) > span:nth-child(3) {
+    :hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -66,6 +81,26 @@ const Song = ({ item, dispatch }) => {
     dispatchToast(msg, key, dispatch);
   };
 
+  const setSongToSearchQuery = (e) => {
+    e.stopPropagation();
+    dispatch(setQuery(title));
+  };
+
+  const setAlbumToSearchQuery = (e) => {
+    e.stopPropagation();
+    dispatch(setQuery(album));
+  };
+
+  const setArtistToSearchQuery = (e) => {
+    e.stopPropagation();
+    dispatch(setQuery(artist));
+  };
+
+  const setYearToSearchQuery = (e) => {
+    e.stopPropagation();
+    dispatch(setQuery(year));
+  };
+
   const artist = item?.metadata?.artist || item?.artistName || "";
   const album = item?.metadata?.album || item?.albumName || "";
   const title = item?.metadata?.title || item?.name || "";
@@ -77,12 +112,22 @@ const Song = ({ item, dispatch }) => {
         <AlbumImage item={item} />
       </div>
       <SongInfo>
-        <p title={title}>{title}</p>
-        {album && <p title={album}>{album}</p>}
         <p>
-          <span>{artist}</span>
+          <span title={title} onClick={setSongToSearchQuery}>
+            {title}
+          </span>
+        </p>
+        {album && (
+          <p>
+            <span title={album} onClick={setAlbumToSearchQuery}>
+              {album}
+            </span>
+          </p>
+        )}
+        <p>
+          <span onClick={setArtistToSearchQuery}>{artist}</span>
           <span>{artist && year ? "\u00B7" : ""}</span>
-          {year && <span>{year}</span>}
+          {year && <span onClick={setYearToSearchQuery}>{year}</span>}
         </p>
       </SongInfo>
     </SongContainer>

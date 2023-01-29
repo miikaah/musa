@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import styled, { css } from "styled-components/macro";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
+import { setQuery } from "reducers/search.reducer";
 import { listImage, cardActionShadow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 
@@ -31,7 +32,7 @@ const AlbumFullAdd = styled.div`
 `;
 
 const AlbumInfo = styled.div`
-  padding: 0 10px 4px 14px;
+  padding: 0 10px 0 14px;
 
   > p {
     margin: 0 0 10px;
@@ -48,8 +49,25 @@ const AlbumInfo = styled.div`
     letter-spacing: -0.5px;
   }
 
+  > p:nth-child(1) > span {
+    :hover {
+      text-decoration: underline;
+    }
+  }
+
   > p > span:nth-child(2) {
     margin: 0 4px;
+  }
+
+  > p:nth-child(2) {
+    margin: 0 0 2px;
+  }
+
+  > p:nth-child(2) > span:nth-child(1),
+  > p:nth-child(2) > span:nth-child(3) {
+    :hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -73,6 +91,21 @@ const Album = ({ item, dispatch }) => {
     dispatchToast(msg, key, dispatch);
   };
 
+  const setAlbumToSearchQuery = (e) => {
+    e.stopPropagation();
+    dispatch(setQuery(album));
+  };
+
+  const setArtistToSearchQuery = (e) => {
+    e.stopPropagation();
+    dispatch(setQuery(artist));
+  };
+
+  const setYearToSearchQuery = (e) => {
+    e.stopPropagation();
+    dispatch(setQuery(year));
+  };
+
   const artist =
     item?.metadata?.artist ||
     item.artistName ||
@@ -91,11 +124,15 @@ const Album = ({ item, dispatch }) => {
           <AlbumImage item={item} />
         </div>
         <AlbumInfo>
-          <p title={album}>{album}</p>
           <p>
-            <span>{artist}</span>
+            <span title={album} onClick={setAlbumToSearchQuery}>
+              {album}
+            </span>
+          </p>
+          <p>
+            <span onClick={setArtistToSearchQuery}>{artist}</span>
             <span>{artist && year ? "\u00B7" : ""}</span>
-            {year && <span>{year}</span>}
+            {year && <span onClick={setYearToSearchQuery}>{year}</span>}
           </p>
         </AlbumInfo>
       </AlbumFullAdd>

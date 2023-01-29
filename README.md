@@ -18,7 +18,14 @@ jpeg, png and webp images.
 - fix: Stop duplication key combination default action (Safari Shift + Cmd + D is Add to reading list action)
 - fix; current year search hides albums that actually are named a year like Vangelis - 1492
 - fix: genre find can have empty results
+- fix: genres can have duplicates
 - fix: Prevent popping when changing FIR eq
+- feat: replace fuzzysort with db search for artist find
+- feat: in year search take only a random subset of album songs
+- feat: in year search only return artists who have albums or songs in that year
+- feat: year dropdown in search bar
+- feat: prev - next in search bar
+- feat: artist-album-song tree filtering via backend
 - feat: Update ogg tags
 - feat: View for seeing files with missing tags / covers
 - feat: Write tags from sratch

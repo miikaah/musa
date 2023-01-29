@@ -60,7 +60,7 @@ const search = (state = initialState, action) => {
     case SET_QUERY: {
       return {
         ...state,
-        query: action.query,
+        query: `${action.query}`,
       };
     }
     case SET_FILTER: {
