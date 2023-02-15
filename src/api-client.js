@@ -80,7 +80,7 @@ const updateTheme = async ({ id, colors }) => {
   if (isElectron) {
     return ElectronApi.updateTheme({ id, colors });
   } else {
-    // return ServerApi.updateTheme({ id, colors });
+    return ServerApi.updateTheme({ id, colors });
   }
 };
 

@@ -3,9 +3,6 @@ import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ellipsisTextOverflow } from "common.styles";
-import config from "config";
-
-const { isElectron } = config;
 
 const Container = styled.div`
   padding: ${({ isSmall }) =>
@@ -37,7 +34,7 @@ const Container = styled.div`
 
   :hover {
     > button:nth-child(1) {
-      visibility: ${isElectron && "visible"};
+      visibility: visible;
     }
   }
 `;
@@ -84,7 +81,7 @@ const getSampleRate = (sampleRate) => {
   return sampleRate ? `${sampleRate} Hz` : "";
 };
 
-const CoverInfo = ({ item, isSmall, toggleEdit, dispatch }) => {
+const CoverInfo = ({ item, isSmall, toggleEdit }) => {
   if (Object.keys(item) < 1) {
     return null;
   }

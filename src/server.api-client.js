@@ -23,6 +23,17 @@ const put = async (path, { body, headers = {} }) => {
   }).then((response) => response.json());
 };
 
+const patch = async (path, { body, headers = {} }) => {
+  return fetch(`${baseUrl}${path}`, {
+    method: "PATCH",
+    headers: {
+      ...defaultHeaders,
+      ...headers,
+    },
+    body: JSON.stringify(body),
+  }).then((response) => response.json());
+};
+
 const del = async (path) => {
   return fetch(`${baseUrl}${path}`, {
     method: "DELETE",
@@ -74,6 +85,10 @@ const getThemeById = async ({ id }) => {
 
 const insertTheme = async ({ id, colors }) => {
   return put(`/themes/${id.split("/").pop()}`, { body: { colors } });
+};
+
+const updateTheme = async ({ id, colors }) => {
+  return patch(`/themes/${id.split("/").pop()}`, { body: { colors } });
 };
 
 const removeTheme = async ({ id }) => {
@@ -132,6 +147,7 @@ export default {
   getThemes,
   getThemeById,
   insertTheme,
+  updateTheme,
   removeTheme,
   getAllGenres,
   find,
