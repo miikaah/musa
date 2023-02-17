@@ -327,10 +327,12 @@ const Playlist = ({
     if (!isCtrlDown(event) || !event.shiftKey) return;
     if (isContinuousSelection()) {
       handleContinuousSelection({ type: "duplicate" });
+      event.preventDefault();
       return;
     }
     if (isIndexesSelection()) {
       handleIndexesSelection({ type: "duplicate" });
+      event.preventDefault();
       return;
     }
   };
