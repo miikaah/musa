@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import isEqual from "lodash.isequal";
 import rootReducer from "./reducers";
+import ErrorBoundary from "./ErrorBoundary";
 import App from "./App.jsx";
 import Api from "api-client";
 
@@ -29,6 +30,8 @@ const root = createRoot(container);
 
 root.render(
   <Provider store={store}>
-    <App />
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </Provider>
 );

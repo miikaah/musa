@@ -68,7 +68,7 @@ export function cleanUrl(url) {
   if (!url) {
     return url;
   }
-  return url.replaceAll("#", "%23");
+  return url.replace(/#/g, "%23");
 }
 
 export function updateCurrentTheme(colors) {
