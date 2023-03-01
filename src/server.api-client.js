@@ -41,11 +41,11 @@ const del = async (path) => {
 };
 
 const getSettings = async () => {
-  return get("/settings");
+  return get("/app-settings");
 };
 
 const insertSettings = async (settings) => {
-  return put("/settings", {
+  return put("/app-settings", {
     body: {
       settings: {
         ...settings,
