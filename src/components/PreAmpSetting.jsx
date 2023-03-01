@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import styled from "styled-components/macro";
 import { updateSettings } from "reducers/settings.reducer";
+
+const Input = styled.input`
+  max-width: 104px;
+`;
 
 const PreAmpSetting = ({ isInit, preAmpDb, dispatch }) => {
   const [value, setValue] = useState(preAmpDb || 0);
@@ -17,7 +22,7 @@ const PreAmpSetting = ({ isInit, preAmpDb, dispatch }) => {
   return (
     <>
       <h5>Pre-amp dB</h5>
-      <input
+      <Input
         placeholder="db"
         step="1"
         min="0"
