@@ -498,6 +498,7 @@ const Playlist = ({
               onMouseUpItem={onMouseUp}
               onScrollPlaylist={scroll}
               openModal={openModal}
+              removeItems={removeItems}
             />
           )
       )}

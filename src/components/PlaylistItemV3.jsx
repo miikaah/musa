@@ -22,6 +22,13 @@ const colorCss = css`
         > span {
           background-color: var(--color-typography-primary);
         }
+
+        > svg > path {
+          fill: var(--color-typography-primary);
+          background-color: rgb(255, 255, 255, 0.333);
+          border-radius: 50%;
+          box-shadow: 0 0 0 5px rgb(255, 255, 255, 0.333);
+        }
       }
     }
   }
@@ -37,6 +44,10 @@ const PlaylistItemContainer = styled.li`
       > button {
         > span {
           background-color: var(--color-bg);
+        }
+
+        > svg > path {
+          fill: var(--color-bg);
         }
       }
     }
@@ -75,7 +86,7 @@ const RowContainer = styled.div`
 
 const FirstRow = styled.div`
   display: grid;
-  grid-template-columns: 85fr 3fr 12fr;
+  grid-template-columns: 81fr 3fr 1fr 3fr 12fr;
 `;
 
 const Icon = styled.span`
@@ -91,20 +102,26 @@ const Title = styled.span`
   ${ellipsisTextOverflow}
 `;
 
-const EditButton = styled.button`
+const shadow = css`
+  background-color: rgb(255, 255, 255, 0.333);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px rgb(255, 255, 255, 0.333);
+`;
+
+const ActionButton = styled.button`
   display: inline-block;
   border: 1px solid transparent;
   position: relative;
   height: 100%;
-  min-width: 21px;
 
   :hover {
     > div {
       width: 100%;
       height: 100%;
-      background-color: rgb(255, 255, 255, 0.333);
-      border-radius: 50%;
-      box-shadow: 0 0 0 5px rgb(255, 255, 255, 0.333);
+      ${shadow}
+    }
+    svg {
+      ${shadow}
     }
   }
 
@@ -127,6 +144,14 @@ const EditButton = styled.button`
   > span:nth-of-type(3) {
     left: 14px;
   }
+`;
+
+const DeleteButton = styled(ActionButton)`
+  min-width: 34px;
+`;
+
+const EditButton = styled(ActionButton)`
+  min-width: 21px;
 `;
 
 const Duration = styled.span`
@@ -163,6 +188,7 @@ const PlaylistItem = ({
   onMouseUpItem,
   onScrollPlaylist,
   openModal,
+  removeItems,
 }) => {
   const elRef = useRef(null);
 
@@ -276,6 +302,10 @@ const PlaylistItem = ({
       <RowContainer>
         <FirstRow>
           <Title>{title}</Title>
+          <DeleteButton onClick={removeItems}>
+            <FontAwesomeIcon icon="trash" />
+          </DeleteButton>
+          <div />
           <EditButton onClick={() => openModal([item])}>
             <div />
             <span />
