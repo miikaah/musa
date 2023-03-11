@@ -18,6 +18,7 @@ import {
   faLockOpen,
   faPencil,
   faChartColumn,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components/macro";
 import config, { FALLBACK_THEME } from "config";
@@ -61,7 +62,8 @@ library.add(
   faLock,
   faLockOpen,
   faPencil,
-  faChartColumn
+  faChartColumn,
+  faXmark
 );
 
 const App = ({ dispatch }) => {

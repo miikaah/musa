@@ -115,14 +115,7 @@ const ActionButton = styled.button`
   height: 100%;
 
   :hover {
-    > div {
-      width: 100%;
-      height: 100%;
-      ${shadow}
-    }
-    svg {
-      ${shadow}
-    }
+    ${shadow}
   }
 
   > span {
@@ -147,7 +140,8 @@ const ActionButton = styled.button`
 `;
 
 const DeleteButton = styled(ActionButton)`
-  min-width: 34px;
+  min-width: 20px;
+  margin-left: 4px;
 `;
 
 const EditButton = styled(ActionButton)`
@@ -302,16 +296,16 @@ const PlaylistItem = ({
       <RowContainer>
         <FirstRow>
           <Title>{title}</Title>
-          <DeleteButton onClick={removeItems}>
-            <FontAwesomeIcon icon="trash" />
-          </DeleteButton>
-          <div />
           <EditButton onClick={() => openModal([item])}>
             <div />
             <span />
             <span />
             <span />
           </EditButton>
+          <div />
+          <DeleteButton onClick={removeItems}>
+            <FontAwesomeIcon icon="xmark" />
+          </DeleteButton>
           <Duration>{duration}</Duration>
         </FirstRow>
         <SecondRow>
