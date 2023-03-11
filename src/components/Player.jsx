@@ -80,10 +80,10 @@ const peakMeterBuffer = new Float32Array(analyzer.fftSize);
 const splitter = audioContext.createChannelSplitter(2);
 const analyzerL = audioContext.createAnalyser();
 const analyzerR = audioContext.createAnalyser();
-analyzerL.fftSize = 512;
+analyzerL.fftSize = 4096;
 analyzerL.minDecibels = -100;
 analyzerL.maxDecibels = -1;
-analyzerR.fftSize = 512;
+analyzerR.fftSize = 4096;
 analyzerR.minDecibels = -100;
 analyzerR.maxDecibels = -1;
 

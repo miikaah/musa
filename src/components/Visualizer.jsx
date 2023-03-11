@@ -251,15 +251,15 @@ const Visualizer = ({
     // Copy the current canvas onto the temp canvas
     tempCtx.drawImage(spectroCanvas, 0, 0, spectroWidth, spectroHeight);
 
-    const getBarHeight = (i) =>
-      i < 4 ? 5 : i < 8 ? 4 : i < 16 ? 3 : i < 64 ? 2 : 1;
+    const getBarHeight = (i) => (i < 8 ? 4 : i < 32 ? 2 : 1);
 
-    const getDv = (v) => v * 1.2;
+    // The multiplier sets the overall brightness. Minus increases contrast.
+    const getDv = (v) => (v < 70 ? v - 10 : v * 1.2);
 
     let xOffset = spectroWidth - 1;
     let yOffset = spectroHeight;
 
-    for (let i = 0; i < dataArrayR.length; i += i < 50 ? 1 : 2) {
+    for (let i = 0; i < dataArrayR.length; i += i < 87 ? 1 : 24) {
       const barHeight = getBarHeight(i);
       const dv = getDv(dataArrayR[i]);
       const [, , l] = rgb2hsl(dv, dv, dv);
@@ -271,7 +271,7 @@ const Visualizer = ({
 
     yOffset = spectroHeight - 200;
 
-    for (let i = 0; i < dataArrayL.length; i += i < 50 ? 1 : 2) {
+    for (let i = 0; i < dataArrayL.length; i += i < 87 ? 1 : 24) {
       const barHeight = getBarHeight(i);
       const dv = getDv(dataArrayL[i]);
       const [, , l] = rgb2hsl(dv, dv, dv);
