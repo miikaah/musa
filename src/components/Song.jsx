@@ -88,12 +88,12 @@ const Song = ({ item, dispatch }) => {
 
   const setAlbumToSearchQuery = (e) => {
     e.stopPropagation();
-    dispatch(setQuery(album));
+    dispatch(setQuery(`album:${album}`));
   };
 
   const setArtistToSearchQuery = (e) => {
     e.stopPropagation();
-    dispatch(setQuery(artist));
+    dispatch(setQuery(`artist:${artist}`));
   };
 
   const setYearToSearchQuery = (e) => {
