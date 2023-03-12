@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { listOverflow } from "../common.styles";
 import { breakpoint } from "../breakpoints";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Container = styled.div`
   text-align: left;
@@ -41,6 +42,17 @@ const FilterContainer = styled.div`
   top: 51px;
   left: 12px;
   z-index: 2;
+
+  > svg {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 16px;
+
+    :hover {
+      cursor: pointer;
+    }
+  }
 `;
 
 const Label = styled.div`
@@ -103,6 +115,12 @@ const Library = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const clearArtistFilter = () => {
+    const filterEl = document.getElementById("artistFilter");
+    filterEl.value = "";
+    setFilter("");
+  };
+
   return (
     <>
       <Container
@@ -115,11 +133,13 @@ const Library = ({
         <>
           <FilterContainer>
             <input
+              id="artistFilter"
               autoFocus
               value={filter}
               placeholder="Filter by artist"
               onChange={(e) => setFilter(e.target.value)}
             />
+            <FontAwesomeIcon onClick={clearArtistFilter} icon="xmark" />
           </FilterContainer>
           {listingWithLabels &&
             Object.entries(
