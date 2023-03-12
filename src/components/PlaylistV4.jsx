@@ -476,6 +476,10 @@ const Playlist = ({
               <div>Ctrl / Cmd + Shift + D</div>
             </ControlsInstruction>
             <ControlsInstruction>
+              <div>Move item with pointer</div>
+              <div>Long press</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
               <div>Move Up</div>
               <div>Up Arrow</div>
             </ControlsInstruction>
