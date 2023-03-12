@@ -15,6 +15,7 @@ jpeg, png and webp images.
 
 ### V4
 
+- feat: Improve colors for blue slider track and red border on playlist
 - fix: Prevent popping when changing FIR eq
 - feat: search for songs by artist name
 - feat: in year search take only a random subset of album songs
