@@ -181,7 +181,7 @@ const PlaylistItem = ({
   onMouseDownItem,
   onMouseUpItem,
   onScrollPlaylist,
-  openModal,
+  toggleModal,
   removeItems,
 }) => {
   const elRef = useRef(null);
@@ -296,7 +296,7 @@ const PlaylistItem = ({
       <RowContainer>
         <FirstRow>
           <Title>{title}</Title>
-          <EditButton onClick={() => openModal([item])}>
+          <EditButton onClick={() => toggleModal([item])}>
             <div />
             <span />
             <span />

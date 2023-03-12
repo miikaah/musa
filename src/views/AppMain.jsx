@@ -70,12 +70,29 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
     setShowModal(true);
   };
 
+  const closeModal = () => {
+    setFilesToBeEdited([]);
+    setShowModal(false);
+  };
+
+  const toggleModal = (items) => {
+    const itemsIds = items.map(({ id }) => id);
+    const currentFilesIds = filesToEdit.map(({ id }) => id);
+    const hasSameFiles = itemsIds.every((id) => currentFilesIds.includes(id));
+
+    if (hasSameFiles) {
+      closeModal(items);
+    } else {
+      openModal(items);
+    }
+  };
+
   return (
     <Container onDragOver={onDragOver} onDrop={onDrop}>
       <Cover />
-      <Playlist openModal={openModal} />
+      <Playlist toggleModal={toggleModal} />
       {showModal && (
-        <Modal maxWidth={960} closeModal={() => setShowModal(false)}>
+        <Modal maxWidth={960} closeModal={closeModal}>
           <TagEditor files={filesToEdit} />
         </Modal>
       )}

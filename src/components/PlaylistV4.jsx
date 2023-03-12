@@ -92,7 +92,7 @@ const Playlist = ({
   playlist,
   currentItem,
   currentIndex,
-  openModal,
+  toggleModal,
   dispatch,
 }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
@@ -497,7 +497,7 @@ const Playlist = ({
               onMouseDownItem={onMouseDown}
               onMouseUpItem={onMouseUp}
               onScrollPlaylist={scroll}
-              openModal={openModal}
+              toggleModal={toggleModal}
               removeItems={removeItems}
             />
           )
