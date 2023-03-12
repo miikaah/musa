@@ -88,7 +88,6 @@ const ControlsInstruction = styled.div`
 const PLAYLIST_CLASSNAME = "playlist";
 
 const Playlist = ({
-  onScrollPlaylist,
   playlist,
   currentItem,
   currentIndex,
@@ -97,6 +96,8 @@ const Playlist = ({
 }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isMovingItems, setIsMovingItems] = useState(false);
+  const [pressStartedAt, setPressStartedAt] = useState(0);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [startIndex, setStartIndex] = useState(NaN);
   const [endIndex, setEndIndex] = useState(NaN);
@@ -356,14 +357,38 @@ const Playlist = ({
 
   const onMouseDown = (options) => {
     if (options.isShiftDown || options.isCtrlDown) return;
+
+    if (isMovingItems) {
+      setIsMouseDown(false);
+      setIsMovingItems(false);
+      setStartIndex(NaN);
+      setEndIndex(NaN);
+      setActiveIndex(options.index);
+      setSelectedIndexes(new Set());
+
+      const selectedItem = playlist[startIndex];
+      dispatch(removeIndexesFromPlaylist([startIndex]));
+      dispatch(pasteToPlaylist([selectedItem], options.index - 1));
+      return;
+    }
+
     setIsMouseDown(true);
     setStartIndex(options.index);
     setEndIndex(options.index);
     setActiveIndex(options.index);
     setSelectedIndexes(new Set([options.index]));
+    setPressStartedAt(Date.now());
   };
 
   const onMouseUp = (options) => {
+    const isLongPressOnItem =
+      Date.now() - pressStartedAt > 500 && startIndex === options.index;
+    setPressStartedAt(0);
+    if (isLongPressOnItem) {
+      setIsMovingItems(true);
+      setIsMouseDown(false);
+      return;
+    }
     if (options.isCtrlDown) {
       setIsMouseDown(false);
       setActiveIndex(-1);
@@ -499,6 +524,7 @@ const Playlist = ({
               onScrollPlaylist={scroll}
               toggleModal={toggleModal}
               removeItems={removeItems}
+              isMovingItems={isMovingItems}
             />
           )
       )}

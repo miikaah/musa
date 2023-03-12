@@ -38,6 +38,12 @@ const PlaylistItemContainer = styled.li`
   cursor: pointer;
   display: flex;
   max-height: 60px;
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-top-color: transparent;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
 
   > div {
     > div {
@@ -54,6 +60,16 @@ const PlaylistItemContainer = styled.li`
   }
 
   :hover {
+    ${({ isMovingItems }) =>
+      isMovingItems
+        ? `
+      border-top-color: #f00;
+      border-bottom-color: #f00;
+      `
+        : `
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+      `};
     ${colorCss}
   }
 
@@ -183,6 +199,7 @@ const PlaylistItem = ({
   onScrollPlaylist,
   toggleModal,
   removeItems,
+  isMovingItems,
 }) => {
   const elRef = useRef(null);
 
@@ -193,6 +210,8 @@ const PlaylistItem = ({
     endIndex,
     isSelected,
   }) => {
+    if (isMovingItems) return;
+
     const start = Math.min(startIndex, endIndex);
     const end = Math.max(startIndex, endIndex);
     if (index === activeIndex) return true;
@@ -284,6 +303,7 @@ const PlaylistItem = ({
     <PlaylistItemContainer
       ref={elRef}
       isActiveOrSelected={isActiveOrSelected()}
+      isMovingItems={isMovingItems}
       onDoubleClick={handleDoubleClick}
       onMouseOver={() => onMouseOverItem(index)}
       onMouseDown={handleMouseDown}

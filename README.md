@@ -15,7 +15,6 @@ jpeg, png and webp images.
 
 ### V4
 
-- fix: Stop duplication key combination default action (Safari Shift + Cmd + D is Add to reading list action)
 - fix: Prevent popping when changing FIR eq
 - feat: search for songs by artist name
 - feat: in year search take only a random subset of album songs
@@ -29,7 +28,6 @@ jpeg, png and webp images.
 - feat: Make library and tag updates work without refresh
 - feat: Bulk album tags editor + deduce tags from filename
 - feat: Add ReplayGain scanning
-- feat: Move items in playlist with pointer long click
 - feat: Make navigation work with keyboard
 - feat: Responsive mobile layout
 - feat: Language selector and i18n
