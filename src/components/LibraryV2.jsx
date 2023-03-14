@@ -48,6 +48,7 @@ const FilterContainer = styled.div`
     top: 50%;
     transform: translateY(-50%);
     right: 16px;
+    color: var(--color-black);
 
     :hover {
       cursor: pointer;
