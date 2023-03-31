@@ -15,6 +15,7 @@ jpeg, png and webp images.
 
 ### V4
 
+- fix: Number as album name fetches songs from the year
 - feat: Improve colors for blue slider track and red border on playlist
 - fix: Prevent popping when changing FIR eq
 - feat: search for songs by artist name
