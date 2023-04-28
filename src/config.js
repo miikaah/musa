@@ -16,6 +16,8 @@ export const firFileMap = {
   "Audio-Technica ATH-M50x 48 kHz": "audio-technica_ath-m50x_48000Hz.wav",
   "Bose QuietComfort 35 II 44.1 kHz": "bose_quietcomfort_35_ii_44100Hz.wav",
   "Bose QuietComfort 35 II 48 kHz": "bose_quietcomfort_35_ii_48000Hz.wav",
+  "Bose QuietComfort 45 44.1 kHz": "bose_quietcomfort_45_44100Hz.wav",
+  "Bose QuietComfort 45 48 kHz": "bose_quietcomfort_45_48000Hz.wav",
 };
 
 const config = {
