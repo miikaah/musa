@@ -4,19 +4,19 @@ import config from "config";
 
 const { isElectron } = config;
 
-const getSettings = async () => {
+const getSettings = async (currentProfile) => {
   if (isElectron) {
     return ElectronApi.getSettings();
   } else {
-    return ServerApi.getSettings();
+    return ServerApi.getSettings(currentProfile);
   }
 };
 
-const insertSettings = (settings) => {
+const insertSettings = (settings, currentProfile) => {
   if (isElectron) {
     return ElectronApi.insertSettings(settings);
   } else {
-    return ServerApi.insertSettings(settings);
+    return ServerApi.insertSettings(settings, currentProfile);
   }
 };
 

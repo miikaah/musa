@@ -24,6 +24,7 @@ import styled from "styled-components/macro";
 import config, { FALLBACK_THEME } from "config";
 import { updateSettings } from "reducers/settings.reducer";
 import { setScanProps, setListingWithLabels } from "reducers/library.reducer";
+import { updateCurrentProfile } from "reducers/profile.reducer";
 import { updateCurrentTheme, dispatchToast } from "./util";
 import Api from "api-client";
 import AppMain from "views/AppMain";
@@ -33,6 +34,8 @@ import Titlebar from "components/Titlebar";
 import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
 import ProgressBar from "components/ProgressBar";
+import Modal from "components/Modal";
+import Button from "components/Button";
 
 const { isElectron } = config;
 
@@ -66,7 +69,28 @@ library.add(
   faXmark
 );
 
+const WhosListening = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(6, 6, 6, 0.666);
+  z-index: 10000;
+`;
+
+const WhosListeningWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const App = ({ dispatch }) => {
+  const [showProfileModal, setShowProfileModal] = useState(
+    !isElectron && !localStorage.getItem("MUSA_currentProfile")
+  );
+  const [currentProfile, setCurrentProfile] = useState(
+    localStorage.getItem("MUSA_currentProfile")
+  );
   const [isReady, setIsReady] = useState();
 
   useEffect(() => {
@@ -104,7 +128,13 @@ const App = ({ dispatch }) => {
       setIsReady(true);
     };
 
-    Api.getSettings()
+    if (currentProfile) {
+      dispatch(updateCurrentProfile(currentProfile));
+    } else {
+      return;
+    }
+
+    Api.getSettings(currentProfile)
       .then(update)
       .then(() => Api.onInit())
       .then(() => {
@@ -121,12 +151,39 @@ const App = ({ dispatch }) => {
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentProfile]);
 
   useEffect(() => {
     Api.getArtists().then((artists) => dispatch(setListingWithLabels(artists)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const updateProfile = (profile) => {
+    setCurrentProfile(profile);
+    dispatch(updateCurrentProfile(profile));
+    localStorage.setItem("MUSA_currentProfile", profile);
+    setShowProfileModal(false);
+  };
+
+  if (!currentProfile) {
+    return (
+      showProfileModal && (
+        <WhosListening>
+          <Modal maxWidth={2048} top={0}>
+            <WhosListeningWrapper>
+              <h2>Who's listening?</h2>
+              <p>
+                <Button onClick={() => updateProfile("spitaali")}>
+                  Spitaali
+                </Button>
+                <Button onClick={() => updateProfile("turms")}>Turms</Button>
+              </p>
+            </WhosListeningWrapper>
+          </Modal>
+        </WhosListening>
+      )
+    );
+  }
 
   if (!isReady) {
     return null;
@@ -138,11 +195,13 @@ const App = ({ dispatch }) => {
       <Titlebar />
       <ProgressBar />
       <Toolbar />
-      <Routes>
-        <Route exact path="/" element={<AppMain />} />
-        <Route exact path="/settings" element={<Settings />} />
-        <Route exact path="/search" element={<Search />} />
-      </Routes>
+      {!showProfileModal && (
+        <Routes>
+          <Route exact path="/" element={<AppMain />} />
+          <Route exact path="/settings" element={<Settings />} />
+          <Route exact path="/search" element={<Search />} />
+        </Routes>
+      )}
     </AppContainer>
   );
 

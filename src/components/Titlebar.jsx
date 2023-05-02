@@ -149,6 +149,15 @@ const ActionsContainer = styled.div`
   visibility: ${({ isElectron }) => (isElectron ? "visible" : "hidden")};
 `;
 
+const ProfileName = styled.div`
+  font-size: var(--font-size-xs);
+  margin-left: 4px;
+
+  :hover {
+    cursor: default;
+  }
+`;
+
 const locationToTitleMap = {
   "/": "Musa",
   "/search": "Search",
@@ -157,7 +166,7 @@ const locationToTitleMap = {
   "/settings/": "Settings",
 };
 
-const Titlebar = ({ currentLocation, dispatch }) => {
+const Titlebar = ({ currentProfile }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
   const location = useLocation();
   const navigate = useNavigate();
@@ -350,6 +359,10 @@ const Titlebar = ({ currentLocation, dispatch }) => {
           >
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
+
+          <button>
+            <ProfileName>{currentProfile}</ProfileName>
+          </button>
         </div>
         <Title>{locationToTitleMap[location.pathname]}</Title>
         <ActionsContainer isElectron={isElectron}>
@@ -373,6 +386,7 @@ export default connect(
   (state) => ({
     musicLibraryPath: state.settings.musicLibraryPath,
     currentLocation: state.settings.currentLocation,
+    currentProfile: state.profile.currentProfile,
   }),
   (dispatch) => ({ dispatch })
 )(Titlebar);

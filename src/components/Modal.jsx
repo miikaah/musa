@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components/macro";
+import styled, { css } from "styled-components/macro";
 
 const Container = styled.div`
   width: 100%;
@@ -7,7 +7,12 @@ const Container = styled.div`
   min-height: 90vh;
   background: var(--color-bg);
   position: fixed;
-  top: var(--titlebar-height);
+  top: ${({ top }) =>
+    isFinite(top)
+      ? css`
+          ${top}px
+        `
+      : "var(--titlebar-height)"};
   left: 0;
   padding: 40px;
   z-index: 2;
@@ -21,10 +26,10 @@ const CloseButton = styled.button`
   color: var(--color-typography);
 `;
 
-const Modal = ({ filesToEdit, closeModal, children, maxWidth }) => {
+const Modal = ({ filesToEdit, closeModal, children, maxWidth, top }) => {
   return (
-    <Container maxWidth={maxWidth}>
-      <CloseButton onClick={closeModal}>Close</CloseButton>
+    <Container maxWidth={maxWidth} top={top}>
+      {closeModal && <CloseButton onClick={closeModal}>Close</CloseButton>}
       {children}
     </Container>
   );
