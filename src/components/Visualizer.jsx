@@ -31,6 +31,7 @@ const Container = styled.div`
   ::-webkit-scrollbar {
     width: 0;
   }
+  scrollbar-width: none; /* Firefox */
 
   > canvas {
     display: block;
