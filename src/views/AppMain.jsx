@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import { Navigate } from "react-router-dom";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import Playlist from "components/PlaylistV4";
@@ -18,6 +19,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: var(--titlebar-height);
+
+  ${down("lg")} {
+    flex-direction: column;
+  }
 `;
 
 const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {

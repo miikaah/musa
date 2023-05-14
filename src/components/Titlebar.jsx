@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown } from "../util";
 import Library from "components/LibraryV2";
-import { breakpoint } from "../breakpoints";
+import { breakpoints } from "../breakpoints";
 import config from "config";
 import Api from "api-client";
 
@@ -167,7 +167,7 @@ const locationToTitleMap = {
 };
 
 const Titlebar = ({ currentProfile }) => {
-  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
+  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const location = useLocation();
   const navigate = useNavigate();
   // "none" | "library" | "visualizer"
@@ -175,7 +175,7 @@ const Titlebar = ({ currentProfile }) => {
 
   useEffect(() => {
     const onResize = () => {
-      setIsSmall(window.innerWidth < breakpoint.lg);
+      setIsSmall(window.innerWidth < breakpoints.lg);
     };
     window.addEventListener("resize", onResize);
 

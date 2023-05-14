@@ -20,12 +20,14 @@ import {
   faChartColumn,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components/macro";
+import styled, { ThemeProvider } from "styled-components/macro";
+import { createTheme, down } from "styled-breakpoints";
 import config, { FALLBACK_THEME } from "config";
 import { updateSettings } from "reducers/settings.reducer";
 import { setScanProps, setListingWithLabels } from "reducers/library.reducer";
 import { updateCurrentProfile } from "reducers/profile.reducer";
 import { updateCurrentTheme, dispatchToast } from "./util";
+import { breakpointsAsPixels } from "breakpoints";
 import Api from "api-client";
 import AppMain from "views/AppMain";
 import Settings from "views/Settings";
@@ -37,6 +39,8 @@ import ProgressBar from "components/ProgressBar";
 
 const { isElectron } = config;
 
+const theme = createTheme(breakpointsAsPixels);
+
 const AppContainer = styled.div`
   text-align: left;
   background-color: var(--color-bg);
@@ -46,6 +50,10 @@ const AppContainer = styled.div`
   overflow: hidden;
   color: var(--color-typography);
   user-select: none;
+
+  ${down("lg")} {
+    overflow: scroll;
+  }
 `;
 
 library.add(
@@ -138,17 +146,19 @@ const App = ({ dispatch }) => {
   }
 
   const Main = () => (
-    <AppContainer>
-      <Toaster />
-      <Titlebar />
-      <ProgressBar />
-      <Toolbar />
-      <Routes>
-        <Route exact path="/" element={<AppMain />} />
-        <Route exact path="/settings" element={<Settings />} />
-        <Route exact path="/search" element={<Search />} />
-      </Routes>
-    </AppContainer>
+    <ThemeProvider theme={theme}>
+      <AppContainer>
+        <Toaster />
+        <Titlebar />
+        <ProgressBar />
+        <Toolbar />
+        <Routes>
+          <Route exact path="/" element={<AppMain />} />
+          <Route exact path="/settings" element={<Settings />} />
+          <Route exact path="/search" element={<Search />} />
+        </Routes>
+      </AppContainer>
+    </ThemeProvider>
   );
 
   return isElectron ? (

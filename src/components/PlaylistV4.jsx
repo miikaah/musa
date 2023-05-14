@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import styled, { css } from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import {
   pasteToPlaylist,
   removeIndexesFromPlaylist,
@@ -12,7 +13,7 @@ import { KEYS, isCtrlDown } from "../util";
 import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
 import { listOverflow } from "../common.styles";
-import { breakpoint } from "../breakpoints";
+import { breakpoints } from "../breakpoints";
 
 const commonCss = css`
   padding: 14px 0;
@@ -31,6 +32,14 @@ const Container = styled.ul`
   overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
   overflow-x: hidden;
   width: ${({ isSmall }) => (isSmall ? "auto" : "100%")};
+
+  ${down("lg")} {
+    margin: 60px auto;
+    max-width: 95vw;
+    max-height: unset;
+    overflow: unset;
+    padding-bottom: 200px;
+  }
 `;
 
 const Instructions = styled.div`
@@ -94,7 +103,7 @@ const Playlist = ({
   toggleModal,
   dispatch,
 }) => {
-  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
+  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMovingItems, setIsMovingItems] = useState(false);
   const [pressStartedAt, setPressStartedAt] = useState(0);
@@ -109,7 +118,7 @@ const Playlist = ({
 
   useEffect(() => {
     const onResize = () => {
-      setIsSmall(window.innerWidth < breakpoint.lg);
+      setIsSmall(window.innerWidth < breakpoints.lg);
     };
     window.addEventListener("resize", onResize);
 

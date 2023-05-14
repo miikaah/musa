@@ -4,7 +4,7 @@ import Visualizer from "./Visualizer";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
 import { listOverflow } from "../common.styles";
-import { breakpoint } from "../breakpoints";
+import { breakpoints } from "../breakpoints";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Container = styled.div`
@@ -76,7 +76,7 @@ const Library = ({
   listingWithLabels,
   albums,
 }) => {
-  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
+  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [filter, setFilter] = useState("");
   const [filteredListing, setFilteredListing] = useState({});
 
@@ -106,7 +106,7 @@ const Library = ({
 
   useEffect(() => {
     const onResize = () => {
-      setIsSmall(window.innerWidth < breakpoint.lg);
+      setIsSmall(window.innerWidth < breakpoints.lg);
     };
     window.addEventListener("resize", onResize);
 

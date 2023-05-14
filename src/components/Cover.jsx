@@ -5,8 +5,9 @@ import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import Palette from "../img-palette/img-palette";
 import styled from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import { updateCurrentTheme } from "../util";
-import { breakpoint } from "../breakpoints";
+import { breakpoints } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
 import { setCoverData } from "reducers/player.reducer";
 import CoverInfo from "./CoverInfo";
@@ -37,6 +38,12 @@ const Container = styled.div`
   flex: 1 0 47vw;
   display: flex;
   justify-content: flex-end;
+
+  ${down("lg")} {
+    min-width: unset;
+    flex: 1 0 60vw;
+    justify-content: flex-start;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -44,6 +51,20 @@ const Wrapper = styled.div`
   min-width: var(--library-width);
   max-width: var(--library-width);
   max-height: var(--library-width);
+
+  ${down("lg")} {
+    min-width: 98vw;
+    max-width: 98vw;
+    max-height: unset;
+    margin: 0 auto;
+
+    img {
+      max-width: 400px !important;
+      max-height: 400px !important;
+      object-fit: unset !important;
+      transition: unset !important;
+    }
+  }
 `;
 
 const Image = styled.img.attrs(
@@ -89,7 +110,7 @@ const canvas = document.createElement("canvas");
 const canvasCtx = canvas.getContext("2d");
 
 const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
-  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoint.lg);
+  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [editTarget, setEditTarget] = useState();
   const [isEditing, setIsEditing] = useState();
   const containerRef = useRef();
@@ -310,7 +331,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
 
   useEffect(() => {
     const onResize = () => {
-      setIsSmall(window.innerWidth < breakpoint.lg);
+      setIsSmall(window.innerWidth < breakpoints.lg);
 
       if (!coverRef.current) {
         return;

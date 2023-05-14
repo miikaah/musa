@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ellipsisTextOverflow } from "common.styles";
 
@@ -35,6 +36,16 @@ const Container = styled.div`
   :hover {
     > button:nth-child(1) {
       visibility: visible;
+    }
+  }
+
+  ${down("lg")} {
+    > div:nth-child(2) {
+      padding-bottom: 0;
+    }
+
+    > div:nth-child(3) {
+      padding-bottom: 0;
     }
   }
 `;

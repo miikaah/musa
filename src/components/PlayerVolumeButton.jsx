@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
+import { down } from "styled-breakpoints";
 
 const VolumeButtonContainer = styled.span`
   min-width: 42px;
@@ -13,6 +14,16 @@ const VolumeButtonContainer = styled.span`
     padding: 0 6px;
     margin: 0 0 0 10px;
     font-size: 1rem;
+  }
+
+  ${down("lg")} {
+    min-width: 29px;
+    max-width: 29px;
+
+    > button {
+      padding: 0 6px 0 0;
+      margin: 0;
+    }
   }
 `;
 
