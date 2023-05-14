@@ -15,6 +15,7 @@ jpeg, png and webp images.
 
 ### V4
 
+- feat: Debounce settings updates
 - fix: artist:Om doesn't work
 - fix: Number as album name fetches songs from the year
 - feat: Improve colors for blue slider track and red border on playlist
