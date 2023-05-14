@@ -53,10 +53,10 @@ const Wrapper = styled.div`
   max-height: var(--library-width);
 
   ${down("lg")} {
-    min-width: 98vw;
-    max-width: 98vw;
+    min-width: 96vw;
+    max-width: 96vw;
     max-height: unset;
-    margin: 0 auto;
+    margin: 1.3vw auto;
 
     img {
       max-width: 400px !important;

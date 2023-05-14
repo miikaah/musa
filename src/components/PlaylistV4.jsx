@@ -35,7 +35,7 @@ const Container = styled.ul`
 
   ${down("lg")} {
     margin: 60px auto;
-    max-width: 95vw;
+    max-width: 96vw;
     max-height: unset;
     overflow: unset;
     padding-bottom: 200px;
