@@ -15,16 +15,12 @@ export const store = createStore(rootReducer);
 let previousSettings;
 store.subscribe(() => {
   const settings = store.getState().settings;
-  const profile = store.getState().profile;
 
   if (settings.isInit && !isEqual(previousSettings, settings)) {
-    Api.insertSettings(
-      {
-        ...settings,
-        isInit: null,
-      },
-      profile.currentProfile
-    );
+    Api.insertSettings({
+      ...settings,
+      isInit: null,
+    });
     previousSettings = settings;
   }
 });

@@ -40,12 +40,12 @@ const del = async (path) => {
   });
 };
 
-const getSettings = async (currentProfile) => {
-  return get(`/app-settings?currentProfile=${currentProfile}`);
+const getSettings = async () => {
+  return get(`/app-settings`);
 };
 
-const insertSettings = async (settings, currentProfile) => {
-  return put(`/app-settings?currentProfile=${currentProfile}`, {
+const insertSettings = async (settings) => {
+  return put(`/app-settings`, {
     body: {
       settings: {
         ...settings,
