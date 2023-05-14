@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import Player from "components/Player";
 
 const ToolbarContainer = styled.div`
@@ -15,6 +16,14 @@ const ToolbarContainer = styled.div`
   left: 0;
   background: var(--color-bg);
   box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 16px;
+
+  ${down("md")} {
+    padding: 4px 4px 0;
+    min-height: 120px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: hidden;
+  }
 `;
 
 const Toolbar = () => {

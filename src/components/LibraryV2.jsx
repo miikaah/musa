@@ -3,6 +3,7 @@ import LibraryList from "./LibraryListV2";
 import Visualizer from "./Visualizer";
 import { connect } from "react-redux";
 import styled from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,6 +36,12 @@ const Container = styled.div`
         }`
         : "overflow: auto;"
       : "overflow: hidden;"}
+
+  ${down("md")} {
+    min-width: unset;
+    max-width: unset;
+    width: 100vw;
+  }
 `;
 
 const FilterContainer = styled.div`

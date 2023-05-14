@@ -50,6 +50,12 @@ const Instructions = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 100%;
+
+  ${down("md")} {
+    margin: 0 auto;
+    max-width: 96vw;
+    overflow: hidden;
+  }
 `;
 
 const InstructionsWrapper = styled.div`
@@ -91,6 +97,10 @@ const ControlsInstruction = styled.div`
   > div:first-of-type {
     width: 60%;
     text-align: left;
+  }
+
+  ${down("md")} {
+    font-size: 10px;
   }
 `;
 

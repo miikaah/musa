@@ -52,7 +52,8 @@ const AppContainer = styled.div`
   user-select: none;
 
   ${down("md")} {
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 `;
 

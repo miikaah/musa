@@ -1,12 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import { playIndex, replay } from "reducers/player.reducer";
 import { formatDuration } from "../util";
 import { ellipsisTextOverflow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
+import { breakpoints } from "breakpoints";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);
@@ -103,6 +105,10 @@ const RowContainer = styled.div`
 const FirstRow = styled.div`
   display: grid;
   grid-template-columns: 81fr 3fr 1fr 3fr 12fr;
+
+  ${down("md")} {
+    grid-template-columns: 84fr 1fr 3fr 12fr;
+  }
 `;
 
 const Icon = styled.span`
@@ -181,6 +187,8 @@ const SecondRowItem = styled.span`
   ${({ hasMargins }) => hasMargins && `margin: 0 2px;`}
 `;
 
+let touchTimeout;
+
 const PlaylistItem = ({
   item,
   currentItem,
@@ -201,6 +209,8 @@ const PlaylistItem = ({
   removeItems,
   isMovingItems,
 }) => {
+  const [lastTouchTime, setLastTouchTime] = useState(0);
+
   const elRef = useRef(null);
 
   const getIsActiveOrSelected = ({
@@ -293,6 +303,17 @@ const PlaylistItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
+  const handleTouchEnd = () => {
+    const now = Date.now();
+    if (now - lastTouchTime < 500) {
+      clearTimeout(touchTimeout);
+      handleDoubleClick();
+    } else {
+      touchTimeout = setTimeout(() => {}, 500);
+    }
+    setLastTouchTime(now);
+  };
+
   const artist = item?.metadata?.artist || item.artistName || "";
   const album = item?.metadata?.album || item.albumName || "";
   const title = item?.metadata?.title || item.name || "";
@@ -305,6 +326,7 @@ const PlaylistItem = ({
       isActiveOrSelected={isActiveOrSelected()}
       isMovingItems={isMovingItems}
       onDoubleClick={handleDoubleClick}
+      onTouchEnd={handleTouchEnd}
       onMouseOver={() => onMouseOverItem(index)}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
@@ -316,12 +338,14 @@ const PlaylistItem = ({
       <RowContainer>
         <FirstRow>
           <Title>{title}</Title>
-          <EditButton onClick={() => toggleModal([item])}>
-            <div />
-            <span />
-            <span />
-            <span />
-          </EditButton>
+          {window.innerWidth >= breakpoints.md && (
+            <EditButton onClick={() => toggleModal([item])}>
+              <div />
+              <span />
+              <span />
+              <span />
+            </EditButton>
+          )}
           <div />
           <DeleteButton onClick={removeItems}>
             <FontAwesomeIcon icon="xmark" />

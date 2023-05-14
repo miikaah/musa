@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
 import ProgressInput from "./ProgressInput";
 import { useInterval } from "../hooks";
+import { breakpoints } from "../breakpoints";
 
 const MAIN_BUTTON_DOWN = 1;
 
@@ -57,7 +58,7 @@ const PlayerSeek = ({
       handleMouseMove={handleSeek}
       ref={playerSeek}
       progress={convertCurrentTimeToPercentage()}
-      width={240}
+      width={window.innerWidth < breakpoints.md ? 120 : 240}
     />
   );
 };

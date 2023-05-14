@@ -10,6 +10,7 @@ import {
   updateScrollPosition,
 } from "reducers/search.reducer";
 import styled, { css } from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDebounce } from "hooks";
 import Song from "components/Song";
@@ -39,6 +40,14 @@ const Container = styled.div`
       font-size: 0.9em;
     }
   }
+
+  ${down("md")} {
+    position: static;
+    margin: 60px auto;
+    max-width: 96vw;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 `;
 
 const ContainerWrapper = styled.div`
@@ -49,6 +58,12 @@ const ContainerWrapper = styled.div`
 
   @media (min-width: 960px) {
     max-width: 960px;
+  }
+
+  ${down("md")} {
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 `;
 
@@ -70,6 +85,23 @@ const Wrapper = styled.div`
   > div:not(:last-child) {
     margin-right: 10px;
   }
+
+  ${down("md")} {
+    flex-direction: column;
+    padding-bottom: 60px;
+
+    > div {
+      min-width: unset !important;
+      max-width: 90vw !important;
+    }
+
+    > div:first-of-type {
+      > div:first-of-type {
+        min-height: 8vh;
+        max-height: 8vh;
+      }
+    }
+  }
 `;
 
 const SearchBlock = styled.div`
@@ -89,6 +121,11 @@ const SearchBlockWrapper = styled.div`
   background: #fff;
   padding: 10px 0 0 10px;
   overflow-y: scroll;
+
+  ${down("md")} {
+    min-height: 20vh;
+    max-height: 20vh;
+  }
 `;
 
 const InputContainer = styled.div`
@@ -104,6 +141,15 @@ const InputContainer = styled.div`
 
   > button:first-of-type {
     margin-right: 10px;
+  }
+
+  ${down("md")} {
+    flex-direction: column;
+
+    > div:nth-of-type(1) {
+      min-width: unset;
+      max-width: 90vw;
+    }
   }
 `;
 
@@ -141,6 +187,11 @@ const buttonStyles = css`
   max-height: 40px;
   justify-self: end;
   align-self: center;
+
+  ${down("md")} {
+    max-width: 90vw;
+    align-self: flex-start;
+  }
 `;
 
 const RandomButton = styled(Button)`

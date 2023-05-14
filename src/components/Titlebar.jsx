@@ -320,29 +320,35 @@ const Titlebar = ({ currentProfile }) => {
       <Library ref={libraryRef} libraryMode={libraryMode} />
       <Container>
         <div>
-          <LibraryButton
-            onClick={toggleLibrary}
-            ref={libraryButtonRef}
-            isActive={
-              location.pathname === "/" && libraryMode === "library" && isSmall
-            }
-            isSmall={isSmall}
-          >
-            <FontAwesomeIcon icon="bars" />
-          </LibraryButton>
+          {window.innerWidth >= breakpoints.md && (
+            <LibraryButton
+              onClick={toggleLibrary}
+              ref={libraryButtonRef}
+              isActive={
+                location.pathname === "/" &&
+                libraryMode === "library" &&
+                isSmall
+              }
+              isSmall={isSmall}
+            >
+              <FontAwesomeIcon icon="bars" />
+            </LibraryButton>
+          )}
 
-          <LibraryButton
-            onClick={toggleVisualizer}
-            ref={visualizerButtonRef}
-            isActive={
-              location.pathname === "/" &&
-              libraryMode === "visualizer" &&
-              isSmall
-            }
-            isSmall={isSmall}
-          >
-            <FontAwesomeIcon icon="chart-column" />
-          </LibraryButton>
+          {window.innerWidth >= breakpoints.md && (
+            <LibraryButton
+              onClick={toggleVisualizer}
+              ref={visualizerButtonRef}
+              isActive={
+                location.pathname === "/" &&
+                libraryMode === "visualizer" &&
+                isSmall
+              }
+              isSmall={isSmall}
+            >
+              <FontAwesomeIcon icon="chart-column" />
+            </LibraryButton>
+          )}
 
           <SearchButton
             onClick={toggleSearch}

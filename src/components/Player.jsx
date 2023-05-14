@@ -51,6 +51,10 @@ const PlayerMiddleContainer = styled.div`
   display: flex;
   align-items: center;
   min-width: 378px;
+
+  ${down("md")} {
+    min-width: unset;
+  }
 `;
 
 const PlayerRightContainer = styled.div`
