@@ -39,7 +39,7 @@ const Container = styled.div`
   display: flex;
   justify-content: flex-end;
 
-  ${down("lg")} {
+  ${down("md")} {
     min-width: unset;
     flex: 1 0 60vw;
     justify-content: flex-start;
@@ -52,7 +52,7 @@ const Wrapper = styled.div`
   max-width: var(--library-width);
   max-height: var(--library-width);
 
-  ${down("lg")} {
+  ${down("md")} {
     min-width: 96vw;
     max-width: 96vw;
     max-height: unset;

@@ -51,7 +51,7 @@ const AppContainer = styled.div`
   color: var(--color-typography);
   user-select: none;
 
-  ${down("lg")} {
+  ${down("md")} {
     overflow: scroll;
   }
 `;

@@ -20,7 +20,7 @@ const Container = styled.div`
   flex-direction: row;
   margin-top: var(--titlebar-height);
 
-  ${down("lg")} {
+  ${down("md")} {
     flex-direction: column;
   }
 `;

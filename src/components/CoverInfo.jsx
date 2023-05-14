@@ -39,7 +39,7 @@ const Container = styled.div`
     }
   }
 
-  ${down("lg")} {
+  ${down("md")} {
     > div:nth-child(2) {
       padding-bottom: 0;
     }

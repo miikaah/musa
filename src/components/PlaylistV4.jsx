@@ -33,7 +33,7 @@ const Container = styled.ul`
   overflow-x: hidden;
   width: ${({ isSmall }) => (isSmall ? "auto" : "100%")};
 
-  ${down("lg")} {
+  ${down("md")} {
     margin: 60px auto;
     max-width: 96vw;
     max-height: unset;

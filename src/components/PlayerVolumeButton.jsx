@@ -16,7 +16,7 @@ const VolumeButtonContainer = styled.span`
     font-size: 1rem;
   }
 
-  ${down("lg")} {
+  ${down("md")} {
     min-width: 29px;
     max-width: 29px;
 

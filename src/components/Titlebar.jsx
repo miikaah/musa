@@ -360,11 +360,17 @@ const Titlebar = ({ currentProfile }) => {
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
 
-          <button>
-            <ProfileName>{currentProfile}</ProfileName>
-          </button>
+          {window.innerWidth >= breakpoints.md && (
+            <button>
+              <ProfileName>{currentProfile}</ProfileName>
+            </button>
+          )}
         </div>
-        <Title>{locationToTitleMap[location.pathname]}</Title>
+
+        {window.innerWidth >= breakpoints.md && (
+          <Title>{locationToTitleMap[location.pathname]}</Title>
+        )}
+
         <ActionsContainer isElectron={isElectron}>
           <MinButton onClick={minimize}>
             <div />

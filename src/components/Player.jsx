@@ -33,7 +33,7 @@ const PlayerContainer = styled.div`
     display: none;
   }
 
-  ${down("lg")} {
+  ${down("md")} {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
