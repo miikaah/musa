@@ -11,7 +11,7 @@ const ToolbarContainer = styled.div`
   width: 100%;
   min-height: var(--toolbar-height);
   z-index: 10;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   background: var(--color-bg);
