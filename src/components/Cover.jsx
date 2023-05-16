@@ -47,6 +47,8 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   position: relative;
   min-width: var(--library-width);
   max-width: var(--library-width);
@@ -57,21 +59,14 @@ const Wrapper = styled.div`
     max-width: 96vw;
     max-height: unset;
     margin: 1.3vw auto;
-
-    img {
-      max-width: 400px !important;
-      max-height: 400px !important;
-      object-fit: unset !important;
-      transition: unset !important;
-    }
   }
 `;
 
 const Image = styled.img.attrs(
-  ({ maxHeight, isCoverLoaded, src, scaleDownImage }) => ({
+  ({ maxHeight, isCoverLoaded, src, scaleDownImage, isMobile }) => ({
     style: {
       maxHeight: `${maxHeight}px`,
-      objectFit: scaleDownImage ? "scale-down" : "cover",
+      objectFit: isMobile || scaleDownImage ? "scale-down" : "cover",
       transition: isCoverLoaded && "max-height 0.3s",
       visibility: isCoverLoaded && src ? "visible" : "hidden",
     },
@@ -110,7 +105,10 @@ const canvas = document.createElement("canvas");
 const canvasCtx = canvas.getContext("2d");
 
 const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
-  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
+  const [isSmall, setIsSmall] = useState(
+    window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md
+  );
   const [editTarget, setEditTarget] = useState();
   const [isEditing, setIsEditing] = useState();
   const containerRef = useRef();
@@ -331,7 +329,19 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
 
   useEffect(() => {
     const onResize = () => {
-      setIsSmall(window.innerWidth < breakpoints.lg);
+      if (
+        window.innerWidth < breakpoints.lg &&
+        window.innerWidth >= breakpoints.md
+      ) {
+        setIsSmall(true);
+        setIsMobile(false);
+      } else if (window.innerWidth < breakpoints.md) {
+        setIsSmall(false);
+        setIsMobile(true);
+      } else {
+        setIsSmall(false);
+        setIsMobile(false);
+      }
 
       if (!coverRef.current) {
         return;
@@ -472,6 +482,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
                 maxHeight={coverData.maxHeight}
                 scaleDownImage={coverData.scaleDownImage}
                 isCoverLoaded={coverData.isCoverLoaded}
+                isMobile={isMobile}
                 onClick={getColorFromImage}
               />
               {isEditing && (
@@ -491,6 +502,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
           currentTheme,
           editTarget,
           isEditing,
+          isMobile,
         ])}
         <CoverInfo
           item={currentItem}

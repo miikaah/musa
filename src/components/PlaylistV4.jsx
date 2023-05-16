@@ -32,9 +32,11 @@ const Container = styled.ul`
   overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
   overflow-x: hidden;
   width: ${({ isSmall }) => (isSmall ? "auto" : "100%")};
+  display: flex;
+  flex-direction: column;
 
   ${down("md")} {
-    margin: 60px auto;
+    margin: 0 auto;
     max-width: 96vw;
     max-height: unset;
     overflow: unset;
