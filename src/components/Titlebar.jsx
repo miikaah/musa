@@ -167,7 +167,10 @@ const locationToTitleMap = {
 };
 
 const Titlebar = ({ currentProfile }) => {
-  const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
+  const [isSmall, setIsSmall] = useState(
+    window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md
+  );
   const location = useLocation();
   const navigate = useNavigate();
   // "none" | "library" | "visualizer"
@@ -175,7 +178,19 @@ const Titlebar = ({ currentProfile }) => {
 
   useEffect(() => {
     const onResize = () => {
-      setIsSmall(window.innerWidth < breakpoints.lg);
+      if (
+        window.innerWidth < breakpoints.lg &&
+        window.innerWidth >= breakpoints.md
+      ) {
+        setIsSmall(true);
+        setIsMobile(false);
+      } else if (window.innerWidth < breakpoints.md) {
+        setIsSmall(false);
+        setIsMobile(true);
+      } else {
+        setIsSmall(false);
+        setIsMobile(false);
+      }
     };
     window.addEventListener("resize", onResize);
 
@@ -320,7 +335,7 @@ const Titlebar = ({ currentProfile }) => {
       <Library ref={libraryRef} libraryMode={libraryMode} />
       <Container>
         <div>
-          {window.innerWidth >= breakpoints.md && (
+          {!isMobile && (
             <LibraryButton
               onClick={toggleLibrary}
               ref={libraryButtonRef}
@@ -335,7 +350,7 @@ const Titlebar = ({ currentProfile }) => {
             </LibraryButton>
           )}
 
-          {window.innerWidth >= breakpoints.md && (
+          {!isMobile && (
             <LibraryButton
               onClick={toggleVisualizer}
               ref={visualizerButtonRef}
@@ -366,16 +381,14 @@ const Titlebar = ({ currentProfile }) => {
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
 
-          {window.innerWidth >= breakpoints.md && (
+          {!isMobile && (
             <button>
               <ProfileName>{currentProfile}</ProfileName>
             </button>
           )}
         </div>
 
-        {window.innerWidth >= breakpoints.md && (
-          <Title>{locationToTitleMap[location.pathname]}</Title>
-        )}
+        {!isMobile && <Title>{locationToTitleMap[location.pathname]}</Title>}
 
         <ActionsContainer isElectron={isElectron}>
           <MinButton onClick={minimize}>

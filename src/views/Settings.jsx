@@ -36,7 +36,7 @@ const ActionButton = styled(Button)`
   max-width: 200px;
 `;
 
-const Settings = ({ musicLibraryPath }) => {
+const Settings = ({ musicLibraryPath, currentProfile }) => {
   const [themes, setThemes] = useState([]);
   const [hasFetchedThemes, setHasFetchedThemes] = useState(false);
 
@@ -57,10 +57,18 @@ const Settings = ({ musicLibraryPath }) => {
   }
 
   const getThemesBlock = () => (
-    <SettingsBlock>
-      <h3>Theme</h3>
-      <ThemeLibrary themes={themes} setThemes={setThemes} />
-    </SettingsBlock>
+    <>
+      {!isElectron && currentProfile && (
+        <SettingsBlock>
+          <h3>Profile</h3>
+          <p>{currentProfile}</p>
+        </SettingsBlock>
+      )}
+      <SettingsBlock>
+        <h3>Theme</h3>
+        <ThemeLibrary themes={themes} setThemes={setThemes} />
+      </SettingsBlock>
+    </>
   );
 
   return (
@@ -117,6 +125,7 @@ const Settings = ({ musicLibraryPath }) => {
 export default connect(
   (state) => ({
     musicLibraryPath: state.settings.musicLibraryPath,
+    currentProfile: state.profile.currentProfile,
   }),
   (dispatch) => ({ dispatch })
 )(Settings);
