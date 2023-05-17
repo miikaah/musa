@@ -74,6 +74,7 @@ const Image = styled.img.attrs(
 )`
   width: 100%;
   height: 100%;
+  flex: 1 0 auto;
 `;
 
 const Theme = styled(ThemeBlock)`
