@@ -210,8 +210,21 @@ const PlaylistItem = ({
   isMovingItems,
 }) => {
   const [lastTouchTime, setLastTouchTime] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
 
   const elRef = useRef(null);
+
+  useEffect(() => {
+    const onResize = () => {
+      setIsMobile(window.innerWidth < breakpoints.md);
+    };
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getIsActiveOrSelected = ({
     index,
@@ -338,7 +351,7 @@ const PlaylistItem = ({
       <RowContainer>
         <FirstRow>
           <Title>{title}</Title>
-          {window.innerWidth >= breakpoints.md && (
+          {!isMobile && (
             <EditButton onClick={() => toggleModal([item])}>
               <div />
               <span />
