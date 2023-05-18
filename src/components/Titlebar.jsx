@@ -283,6 +283,10 @@ const Titlebar = ({ currentProfile }) => {
       navigate("/");
     } else {
       navigate("/settings");
+
+      if (window.innerWidth < breakpoints.md) {
+        setLibraryMode("none");
+      }
     }
 
     event.stopPropagation();
@@ -295,6 +299,10 @@ const Titlebar = ({ currentProfile }) => {
       navigate("/");
     } else {
       navigate("/search");
+
+      if (window.innerWidth < breakpoints.md) {
+        setLibraryMode("none");
+      }
     }
 
     event.stopPropagation();

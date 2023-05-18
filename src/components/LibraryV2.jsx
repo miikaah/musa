@@ -42,7 +42,7 @@ const Container = styled.div`
     max-width: 100vw;
   }
 
-  ${down("sm")} {
+  ${down("md")} {
     min-height: 50vh;
     max-height: 50vh;
   }
