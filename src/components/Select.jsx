@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components/macro";
+import { down } from "styled-breakpoints";
 import { ellipsisTextOverflow } from "common.styles";
 
 const Container = styled.div`
@@ -26,6 +27,11 @@ const Container = styled.div`
       background: var(--color-primary-highlight);
       color: var(--color-typography-primary);
     }
+  }
+
+  ${down("md")} {
+    max-width: 100%;
+    max-height: 25vh;
   }
 `;
 
