@@ -24,7 +24,7 @@ const BasePageContainer = styled.div`
 `;
 
 const BasePageWrapper = styled.div`
-  padding: 20px;
+  padding: 20px 20px 160px;
   max-width: ${({ setMaxWidth }) => setMaxWidth && "960px"};
   min-width: 344px;
   margin: 0 auto 50px;
