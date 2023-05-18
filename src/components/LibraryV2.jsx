@@ -38,9 +38,13 @@ const Container = styled.div`
       : "overflow: hidden;"}
 
   ${down("md")} {
-    min-width: unset;
-    max-width: unset;
-    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+  }
+
+  ${down("sm")} {
+    min-height: 50vh;
+    max-height: 50vh;
   }
 `;
 
@@ -132,6 +136,7 @@ const Library = ({
   return (
     <>
       <Container
+        id="LibraryContainer"
         ref={forwardRef}
         isSmall={isSmall}
         isVisible={libraryMode === "library"}

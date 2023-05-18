@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled, { css } from "styled-components/macro";
+import { connect, useDispatch } from "react-redux";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
 import config from "config";
@@ -11,6 +12,8 @@ import {
   expandHeightAlbum,
   contractHeightAlbum,
 } from "animations";
+import { pasteToPlaylist } from "reducers/player.reducer";
+import { breakpoints } from "../breakpoints";
 
 const { isElectron } = config;
 
@@ -112,7 +115,16 @@ const Folder = styled.li`
     border: 0;
     margin: 5px 0;
   }
+
+  > p {
+    margin: 0;
+  }
 `;
+
+let startX = 0;
+let hasDragged = false;
+let startScrollPos = 0;
+let scrollPos = 0;
 
 const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
   const [albums, setAlbums] = useState([]);
@@ -121,6 +133,12 @@ const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
   const [showAlbums, setShowAlbums] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
   const [showSongs, setShowSongs] = useState(false);
+  const [isLongTouch, setIsLongTouch] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const timerRef = useRef(null);
+  const containerRef = useRef(null);
 
   const toggleAlbum = async () => {
     if (albums.length < 1 && !showAlbums) {
@@ -169,11 +187,81 @@ const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
     event.stopPropagation();
   };
 
+  const onTouchStart = (event) => {
+    hasDragged = false;
+    startX = event.touches[0].clientX;
+
+    if (window.innerWidth < breakpoints.sm) {
+      timerRef.current = setTimeout(() => {
+        setIsLongTouch(true);
+      }, 500);
+
+      const { scrollTop } = document.getElementById("LibraryContainer");
+      startScrollPos = scrollTop;
+      scrollPos = scrollTop;
+    }
+  };
+
+  const onTouchMove = (event) => {
+    const deltaX = event.touches[0].clientX - startX;
+
+    if (Math.abs(deltaX) > 100) {
+      hasDragged = true;
+    }
+  };
+
+  const onTouchEnd = async (event) => {
+    if ((!hasDragged && !isLongTouch) || startScrollPos !== scrollPos) {
+      startX = 0;
+      clearTimeout(timerRef.current);
+      setIsLongTouch(false);
+      return;
+    }
+    event.preventDefault();
+
+    if (isArtist) {
+      const artist = await Api.getArtistAlbums(item.id);
+      const songs = artist.albums.map((a) => a.files).flat(Infinity);
+
+      dispatch(pasteToPlaylist([...songs, ...artist.files]));
+    } else if (isAlbum) {
+      const album = await Api.getAlbumById(isElectron ? item.id : item.url);
+
+      dispatch(pasteToPlaylist(album.files));
+    }
+
+    startX = 0;
+    clearTimeout(timerRef.current);
+    setIsLongTouch(false);
+  };
+
   const renderFolderName = () =>
-    isAlbum ? <AlbumCover item={item} /> : <>{item.name || "Unknown title"}</>;
+    isAlbum ? (
+      <AlbumCover item={item} />
+    ) : (
+      <p>{item.name || "Unknown title"}</p>
+    );
+
+  const handleScroll = () => {
+    const { scrollTop } = document.getElementById("LibraryContainer");
+    scrollPos = scrollTop;
+  };
+
+  useEffect(() => {
+    const element = document.getElementById("LibraryContainer");
+
+    if (element) {
+      element.addEventListener("scroll", handleScroll);
+
+      return () => {
+        element.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
 
   const renderArtistsAndAlbums = () => (
     <Container
+      ref={containerRef}
       isRoot={isArtist}
       draggable
       onDragStart={onDragStart}
@@ -182,7 +270,13 @@ const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
       songsLen={songs.length}
       filesLen={files.length}
     >
-      <Folder key={item.id} onClick={isArtist ? toggleAlbum : toggleSongs}>
+      <Folder
+        key={item.id}
+        onClick={isArtist ? toggleAlbum : toggleSongs}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         {renderFolderName()}
       </Folder>
       {showAlbums &&
@@ -214,9 +308,13 @@ const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
   if (isArtist || isAlbum) {
     return renderArtistsAndAlbums();
   }
+
   return (
     <LibraryItem item={item} hasAlbum hasMultipleDisks={hasMultipleDisks} />
   );
 };
 
-export default LibraryList;
+export default connect(
+  () => ({}),
+  (dispatch) => ({ dispatch })
+)(LibraryList);

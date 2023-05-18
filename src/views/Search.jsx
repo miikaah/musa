@@ -92,7 +92,7 @@ const Wrapper = styled.div`
 
     > div {
       min-width: unset !important;
-      max-width: 90vw !important;
+      max-width: unset !important;
     }
 
     > div:first-of-type {
@@ -100,6 +100,10 @@ const Wrapper = styled.div`
         min-height: 8vh;
         max-height: 8vh;
       }
+    }
+
+    > div:not(:last-child) {
+      margin-right: 0;
     }
   }
 `;
@@ -147,8 +151,12 @@ const InputContainer = styled.div`
     flex-direction: column;
 
     > div:nth-of-type(1) {
+      margin-right: 0;
       min-width: unset;
-      max-width: 90vw;
+    }
+
+    > button:first-of-type {
+      margin-right: 0;
     }
   }
 `;
@@ -189,7 +197,7 @@ const buttonStyles = css`
   align-self: center;
 
   ${down("md")} {
-    max-width: 90vw;
+    max-width: unset;
     align-self: flex-start;
   }
 `;

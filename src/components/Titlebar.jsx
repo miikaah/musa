@@ -209,10 +209,6 @@ const Titlebar = ({ currentProfile }) => {
   useEffect(() => {
     // Close library when clicking outside it like the playlist
     const handleClick = (e) => {
-      if (!isSmall) {
-        return;
-      }
-
       if (
         libraryButtonRef.current &&
         libraryButtonRef.current.contains(e.target)
@@ -335,20 +331,16 @@ const Titlebar = ({ currentProfile }) => {
       <Library ref={libraryRef} libraryMode={libraryMode} />
       <Container>
         <div>
-          {!isMobile && (
-            <LibraryButton
-              onClick={toggleLibrary}
-              ref={libraryButtonRef}
-              isActive={
-                location.pathname === "/" &&
-                libraryMode === "library" &&
-                isSmall
-              }
-              isSmall={isSmall}
-            >
-              <FontAwesomeIcon icon="bars" />
-            </LibraryButton>
-          )}
+          <LibraryButton
+            onClick={toggleLibrary}
+            ref={libraryButtonRef}
+            isActive={
+              location.pathname === "/" && libraryMode === "library" && isSmall
+            }
+            isSmall={isSmall}
+          >
+            <FontAwesomeIcon icon="bars" />
+          </LibraryButton>
 
           {!isMobile && (
             <LibraryButton

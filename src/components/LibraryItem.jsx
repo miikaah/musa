@@ -1,7 +1,12 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useState, useRef, useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
 import styled from "styled-components/macro";
 import { addToPlaylist } from "reducers/player.reducer";
+import config from "config";
+import Api from "api-client";
+import { breakpoints } from "../breakpoints";
+
+const { isElectron } = config;
 
 const Container = styled.li`
   position: relative;
@@ -24,11 +29,80 @@ const DiskNumber = styled.div`
   font-size: 11px;
 `;
 
-const LibraryItem = ({ item, hasAlbum, hasMultipleDisks, dispatch }) => {
+let startX = 0;
+let hasDragged = false;
+let startScrollPos = 0;
+let scrollPos = 0;
+
+const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
+  const [isLongTouch, setIsLongTouch] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const timerRef = useRef(null);
+
   const onDragStart = (event) => {
     event.dataTransfer.setData("text/plain", JSON.stringify({ item }));
     event.stopPropagation();
   };
+
+  const onTouchStart = (event) => {
+    hasDragged = false;
+    startX = event.touches[0].clientX;
+
+    if (window.innerWidth < breakpoints.sm) {
+      timerRef.current = setTimeout(() => {
+        setIsLongTouch(true);
+      }, 500);
+
+      const { scrollTop } = document.getElementById("LibraryContainer");
+      startScrollPos = scrollTop;
+      scrollPos = scrollTop;
+    }
+  };
+
+  const onTouchMove = (event) => {
+    const deltaX = event.touches[0].clientX - startX;
+
+    if (Math.abs(deltaX) > 100) {
+      hasDragged = true;
+    }
+  };
+
+  const onTouchEnd = async (event) => {
+    if ((!hasDragged && !isLongTouch) || startScrollPos !== scrollPos) {
+      startX = 0;
+      clearTimeout(timerRef.current);
+      setIsLongTouch(false);
+      return;
+    }
+    event.preventDefault();
+
+    const audio = await Api.getAudioById(isElectron ? item.id : item.url);
+
+    dispatch(addToPlaylist(audio));
+
+    startX = 0;
+    clearTimeout(timerRef.current);
+    setIsLongTouch(false);
+  };
+
+  const handleScroll = () => {
+    const { scrollTop } = document.getElementById("LibraryContainer");
+    scrollPos = scrollTop;
+  };
+
+  useEffect(() => {
+    const element = document.getElementById("LibraryContainer");
+
+    if (element) {
+      element.addEventListener("scroll", handleScroll);
+
+      return () => {
+        element.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
 
   const isFirstOfDisk = new RegExp(/^\d\.01|^\d\.001|^\d\.0001/).test(
     item?.track
@@ -40,7 +114,11 @@ const LibraryItem = ({ item, hasAlbum, hasMultipleDisks, dispatch }) => {
   const diskNo = item?.metadata?.disk?.no || "";
 
   return (
-    <Container>
+    <Container
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       {hasMultipleDisks && isFirstOfDisk && (
         <DiskNumber isFirstOfFirstDisk={isFirstOfFirstDisk}>
           {`${diskNo}.`}

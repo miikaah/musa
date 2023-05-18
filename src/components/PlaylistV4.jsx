@@ -57,6 +57,7 @@ const Instructions = styled.div`
     margin: 0 auto;
     max-width: 96vw;
     overflow: hidden;
+    padding-bottom: 200px;
   }
 `;
 
@@ -75,6 +76,16 @@ const InstructionsWrapper = styled.div`
   > div,
   p {
     opacity: 0.3666;
+  }
+
+  ${down("md")} {
+    > p:first-of-type {
+      text-align: center;
+      font-weight: bold;
+      margin: 0;
+      padding: 0;
+      max-width: unset;
+    }
   }
 `;
 
@@ -507,6 +518,16 @@ const Playlist = ({
             <ControlsInstruction>
               <div>Move Down</div>
               <div>Down Arrow</div>
+            </ControlsInstruction>
+
+            <ControlsHeader>Touch controls</ControlsHeader>
+            <ControlsInstruction>
+              <div>Play / Replay</div>
+              <div>Double tap</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Add from library</div>
+              <div>Long touch</div>
             </ControlsInstruction>
           </ControlsInstructions>
         </InstructionsWrapper>
