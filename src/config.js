@@ -18,6 +18,8 @@ export const firFileMap = {
   "Bose QuietComfort 35 II 48 kHz": "bose_quietcomfort_35_ii_48000Hz.wav",
   "Bose QuietComfort 45 44.1 kHz": "bose_quietcomfort_45_44100Hz.wav",
   "Bose QuietComfort 45 48 kHz": "bose_quietcomfort_45_48000Hz.wav",
+  "Sony MDR-V6 44.1 kHz": "sony_mdr_v6_44100Hz.wav",
+  "Sony MDR-V6 48 kHz": "sony_mdr_v6_48000Hz.wav",
 };
 
 const config = {
