@@ -12,6 +12,17 @@ const getByUrl = async (url) => {
   return fetch(url).then((response) => response.json());
 };
 
+const post = async (path, { body, headers = {} }) => {
+  return fetch(`${baseUrl}${path}`, {
+    method: "POST",
+    headers: {
+      ...defaultHeaders,
+      ...headers,
+    },
+    body: JSON.stringify(body),
+  }).then((response) => response.json());
+};
+
 const put = async (path, { body, headers = {} }) => {
   return fetch(`${baseUrl}${path}`, {
     method: "PUT",
@@ -107,6 +118,20 @@ const findRandom = async (query) => {
   return query ? get(`/find-random/${query}`) : get("/find-random");
 };
 
+// Server specific Apis
+
+const insertPlaylist = async ({ pathIds }) => {
+  return post(`/playlists`, { body: { pathIds } });
+};
+
+const getPlaylist = async ({ id }) => {
+  return get(`/playlists/${id}`);
+};
+
+const getPlaylistAudios = async ({ id }) => {
+  return get(`/playlists/${id}/audios`);
+};
+
 // Electron specific Apis
 
 const addMusicLibraryPath = async () => {};
@@ -152,6 +177,9 @@ export default {
   getAllGenres,
   find,
   findRandom,
+  insertPlaylist,
+  getPlaylist,
+  getPlaylistAudios,
   addMusicLibraryPath,
   getPlatform,
   minimizeWindow,

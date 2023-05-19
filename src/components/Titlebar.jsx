@@ -4,7 +4,7 @@ import styled, { css } from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useKeyPress } from "../hooks";
-import { KEYS, isCtrlDown } from "../util";
+import { KEYS, isCtrlDown, dispatchToast } from "../util";
 import Library from "components/LibraryV2";
 import { breakpoints } from "../breakpoints";
 import config from "config";
@@ -141,6 +141,10 @@ const SettingsButton = styled.button`
   ${buttonCss2}
 `;
 
+const ShareButton = styled.button`
+  ${buttonCss2}
+`;
+
 const Title = styled.div`
   font-size: 0.9rem;
 `;
@@ -166,7 +170,7 @@ const locationToTitleMap = {
   "/settings/": "Settings",
 };
 
-const Titlebar = ({ currentProfile }) => {
+const Titlebar = ({ currentProfile, playlist, dispatch }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
     window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md
@@ -205,6 +209,7 @@ const Titlebar = ({ currentProfile }) => {
   const visualizerButtonRef = useRef();
   const settingsButtonRef = useRef();
   const searchButtonRef = useRef();
+  const shareButtonRef = useRef();
 
   useEffect(() => {
     // Close library when clicking outside it like the playlist
@@ -292,6 +297,30 @@ const Titlebar = ({ currentProfile }) => {
     event.stopPropagation();
   };
 
+  const createPlaylist = (event) => {
+    shareButtonRef.current.blur();
+
+    if (Array.isArray(playlist) && playlist.length) {
+      const pathIds = playlist.map(({ id }) => id);
+
+      Api.insertPlaylist(pathIds).then((playlist) => {
+        const text = `${window.location.href}?pl=${playlist.id}`;
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            dispatchToast(
+              `Copied ${text} to clipboard`,
+              "share-playlist",
+              dispatch
+            );
+          })
+          .catch(console.error);
+      });
+    }
+
+    event.stopPropagation();
+  };
+
   const toggleSearch = (event) => {
     searchButtonRef.current.blur();
 
@@ -373,6 +402,10 @@ const Titlebar = ({ currentProfile }) => {
             <FontAwesomeIcon icon="search" />
           </SearchButton>
 
+          <ShareButton onClick={createPlaylist} ref={shareButtonRef}>
+            <FontAwesomeIcon icon="share" />
+          </ShareButton>
+
           <SettingsButton
             onClick={toggleSettings}
             ref={settingsButtonRef}
@@ -412,6 +445,7 @@ export default connect(
     musicLibraryPath: state.settings.musicLibraryPath,
     currentLocation: state.settings.currentLocation,
     currentProfile: state.profile.currentProfile,
+    playlist: state.player.items,
   }),
   (dispatch) => ({ dispatch })
 )(Titlebar);

@@ -103,3 +103,17 @@ export function dispatchToast(msg, key, dispatch) {
 }
 
 export const isCtrlDown = (event) => event.ctrlKey || event.metaKey;
+
+export const getQueryStringAsObject = (url) => {
+  const query = url.split("?").pop();
+  const parts = query.split("&");
+
+  return parts.reduce((acc, v) => {
+    const [key, value] = v.split("=");
+
+    return {
+      ...acc,
+      [key]: value,
+    };
+  }, {});
+};

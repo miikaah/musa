@@ -140,6 +140,29 @@ const writeTags = async (id, tags) => {
   }
 };
 
+// Server specific APIs
+
+const insertPlaylist = async (pathIds) => {
+  if (isElectron) {
+  } else {
+    return ServerApi.insertPlaylist({ pathIds });
+  }
+};
+
+const getPlaylist = async (id) => {
+  if (isElectron) {
+  } else {
+    return ServerApi.getPlaylist({ id });
+  }
+};
+
+const getPlaylistAudios = async (id) => {
+  if (isElectron) {
+  } else {
+    return ServerApi.getPlaylistAudios({ id });
+  }
+};
+
 // Electron specific APIs
 
 const addMusicLibraryPath = async () => {
@@ -273,6 +296,9 @@ export default {
   findRandom,
   findRandomWithLockedSearchTerm,
   writeTags,
+  insertPlaylist,
+  getPlaylist,
+  getPlaylistAudios,
   addMusicLibraryPath,
   getPlatform,
   minimizeWindow,

@@ -19,6 +19,7 @@ import {
   faPencil,
   faChartColumn,
   faXmark,
+  faShare,
 } from "@fortawesome/free-solid-svg-icons";
 import styled, { ThemeProvider } from "styled-components/macro";
 import { createTheme, down } from "styled-breakpoints";
@@ -26,7 +27,11 @@ import config, { FALLBACK_THEME } from "config";
 import { updateSettings } from "reducers/settings.reducer";
 import { setScanProps, setListingWithLabels } from "reducers/library.reducer";
 import { updateCurrentProfile } from "reducers/profile.reducer";
-import { updateCurrentTheme, dispatchToast } from "./util";
+import {
+  updateCurrentTheme,
+  dispatchToast,
+  getQueryStringAsObject,
+} from "./util";
 import { breakpointsAsPixels } from "breakpoints";
 import Api from "api-client";
 import AppMain from "views/AppMain";
@@ -36,6 +41,7 @@ import Titlebar from "components/Titlebar";
 import Toolbar from "components/Toolbar";
 import Toaster from "components/Toaster";
 import ProgressBar from "components/ProgressBar";
+import { pasteToPlaylist } from "reducers/player.reducer";
 
 const { isElectron } = config;
 
@@ -73,7 +79,8 @@ library.add(
   faLockOpen,
   faPencil,
   faChartColumn,
-  faXmark
+  faXmark,
+  faShare
 );
 
 const App = ({ dispatch }) => {
@@ -139,6 +146,22 @@ const App = ({ dispatch }) => {
 
   useEffect(() => {
     Api.getArtists().then((artists) => dispatch(setListingWithLabels(artists)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const query = getQueryStringAsObject(window.location.href);
+
+    if (query?.pl) {
+      Api.getPlaylistAudios(query.pl).then((audios) => {
+        dispatch(pasteToPlaylist(audios));
+        window.history.pushState(
+          null,
+          "Musa",
+          window.location.href.split("?")[0]
+        );
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
