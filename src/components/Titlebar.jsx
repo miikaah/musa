@@ -297,6 +297,25 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
     event.stopPropagation();
   };
 
+  // NOTE: The modern way of doing this with Navigator
+  //       doesn't work with http only https. It does work
+  //       with http in localhost though.
+  const copyToClipboard = (text) => {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+
+    // Set the position to be off-screen
+    textarea.style.position = "fixed";
+    textarea.style.top = "100%";
+
+    document.body.appendChild(textarea);
+
+    textarea.select();
+    document.execCommand("copy");
+
+    document.body.removeChild(textarea);
+  };
+
   const createPlaylist = (event) => {
     shareButtonRef.current.blur();
 
@@ -305,16 +324,14 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
 
       Api.insertPlaylist(pathIds).then((playlist) => {
         const text = `${window.location.href}?pl=${playlist.id}`;
-        navigator.clipboard
-          .writeText(text)
-          .then(() => {
-            dispatchToast(
-              `Copied ${text} to clipboard`,
-              "share-playlist",
-              dispatch
-            );
-          })
-          .catch(console.error);
+
+        copyToClipboard(text);
+
+        dispatchToast(
+          `Copied ${text} to clipboard`,
+          "share-playlist",
+          dispatch
+        );
       });
     }
 
