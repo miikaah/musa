@@ -419,9 +419,11 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
             <FontAwesomeIcon icon="search" />
           </SearchButton>
 
-          <ShareButton onClick={createPlaylist} ref={shareButtonRef}>
-            <FontAwesomeIcon icon="share" />
-          </ShareButton>
+          {!isElectron && (
+            <ShareButton onClick={createPlaylist} ref={shareButtonRef}>
+              <FontAwesomeIcon icon="share" />
+            </ShareButton>
+          )}
 
           <SettingsButton
             onClick={toggleSettings}
