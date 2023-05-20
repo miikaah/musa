@@ -435,7 +435,7 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
 
           {!isMobile && (
             <button>
-              <ProfileName>{currentProfile}</ProfileName>
+              <ProfileName>{currentProfile.split("@")[0]}</ProfileName>
             </button>
           )}
         </div>
