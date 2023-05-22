@@ -433,7 +433,7 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
 
-          {!isMobile && (
+          {!isMobile && currentProfile && (
             <button>
               <ProfileName>{currentProfile.split("@")[0]}</ProfileName>
             </button>
