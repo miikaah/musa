@@ -16,7 +16,6 @@ jpeg, png and webp images.
 ### V4
 
 - feat: Debounce settings updates
-- fix: artist:Om doesn't work
 - fix: Number as album name fetches songs from the year
 - feat: Improve colors for blue slider track and red border on playlist
 - fix: Prevent popping when changing FIR eq
@@ -33,7 +32,6 @@ jpeg, png and webp images.
 - feat: Bulk album tags editor + deduce tags from filename
 - feat: Add ReplayGain scanning
 - feat: Make navigation work with keyboard
-- feat: Responsive mobile layout
 - feat: Language selector and i18n
 - feat: Create srcset of album covers
 - investigate: Script for downloading all impulse responses from AutoEQ repo?
