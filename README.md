@@ -16,14 +16,10 @@ jpeg, png and webp images.
 ### V4
 
 - feat: Debounce settings updates
-- fix: Number as album name fetches songs from the year
 - feat: Improve colors for blue slider track and red border on playlist
 - fix: Prevent popping when changing FIR eq
-- feat: search for songs by artist name
-- feat: in year search take only a random subset of album songs
 - feat: in year search only return artists who have albums or songs in that year
 - feat: year dropdown in search bar
-- feat: prev - next in search bar
 - feat: artist-album-song tree filtering via backend
 - feat: Update ogg tags
 - feat: View for seeing files with missing tags / covers
