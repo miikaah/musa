@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import styled, { css, StyleSheetManager } from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useKeyPress } from "../hooks";
@@ -9,7 +8,7 @@ import Library from "components/LibraryV2";
 import { breakpoints } from "../breakpoints";
 import config from "config";
 import Api from "api-client";
-import isPropValid from "@emotion/is-prop-valid";
+import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
 
 const { isElectron } = config;
 
@@ -127,22 +126,22 @@ const buttonCss2 = css`
   }
 `;
 
-const LibraryButton = styled.button`
+const LibraryButton = styledWithPropFilter("button")`
   ${buttonCss2}
 
   background: ${({ isActive, isSmall }) =>
     isActive && isSmall ? "#9b9b9b" : "transparent"};
 `;
 
-const SearchButton = styled.button`
+const SearchButton = styledWithPropFilter("button")`
   ${buttonCss2}
 `;
 
-const SettingsButton = styled.button`
+const SettingsButton = styledWithPropFilter("button")`
   ${buttonCss2}
 `;
 
-const ShareButton = styled.button`
+const ShareButton = styledWithPropFilter("button")`
   ${buttonCss2}
 `;
 
@@ -150,7 +149,7 @@ const Title = styled.div`
   font-size: 0.9rem;
 `;
 
-const ActionsContainer = styled.div`
+const ActionsContainer = styledWithPropFilter("div")`
   visibility: ${({ isElectron }) => (isElectron ? "visible" : "hidden")};
 `;
 
@@ -385,82 +384,78 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
     <>
       <Library ref={libraryRef} libraryMode={libraryMode} />
 
-      <StyleSheetManager shouldForwardProp={isPropValid}>
-        <Container>
-          <div>
+      <Container>
+        <div>
+          <LibraryButton
+            onClick={toggleLibrary}
+            ref={libraryButtonRef}
+            isActive={
+              location.pathname === "/" && libraryMode === "library" && isSmall
+            }
+            isSmall={isSmall}
+          >
+            <FontAwesomeIcon icon="bars" />
+          </LibraryButton>
+
+          {!isMobile && (
             <LibraryButton
-              onClick={toggleLibrary}
-              ref={libraryButtonRef}
+              onClick={toggleVisualizer}
+              ref={visualizerButtonRef}
               isActive={
                 location.pathname === "/" &&
-                libraryMode === "library" &&
+                libraryMode === "visualizer" &&
                 isSmall
               }
               isSmall={isSmall}
             >
-              <FontAwesomeIcon icon="bars" />
+              <FontAwesomeIcon icon="chart-column" />
             </LibraryButton>
+          )}
 
-            {!isMobile && (
-              <LibraryButton
-                onClick={toggleVisualizer}
-                ref={visualizerButtonRef}
-                isActive={
-                  location.pathname === "/" &&
-                  libraryMode === "visualizer" &&
-                  isSmall
-                }
-                isSmall={isSmall}
-              >
-                <FontAwesomeIcon icon="chart-column" />
-              </LibraryButton>
-            )}
+          <SearchButton
+            onClick={toggleSearch}
+            ref={searchButtonRef}
+            isActive={location.pathname.startsWith("/search")}
+          >
+            <FontAwesomeIcon icon="search" />
+          </SearchButton>
 
-            <SearchButton
-              onClick={toggleSearch}
-              ref={searchButtonRef}
-              isActive={location.pathname.startsWith("/search")}
-            >
-              <FontAwesomeIcon icon="search" />
-            </SearchButton>
+          {!isElectron && (
+            <ShareButton onClick={createPlaylist} ref={shareButtonRef}>
+              <FontAwesomeIcon icon="share" />
+            </ShareButton>
+          )}
 
-            {!isElectron && (
-              <ShareButton onClick={createPlaylist} ref={shareButtonRef}>
-                <FontAwesomeIcon icon="share" />
-              </ShareButton>
-            )}
+          <SettingsButton
+            onClick={toggleSettings}
+            ref={settingsButtonRef}
+            isActive={location.pathname.startsWith("/settings")}
+          >
+            <FontAwesomeIcon icon="cog" />
+          </SettingsButton>
 
-            <SettingsButton
-              onClick={toggleSettings}
-              ref={settingsButtonRef}
-              isActive={location.pathname.startsWith("/settings")}
-            >
-              <FontAwesomeIcon icon="cog" />
-            </SettingsButton>
+          {!isMobile && currentProfile && (
+            <button>
+              <ProfileName>{currentProfile.split("@")[0]}</ProfileName>
+            </button>
+          )}
+        </div>
 
-            {!isMobile && currentProfile && (
-              <button>
-                <ProfileName>{currentProfile.split("@")[0]}</ProfileName>
-              </button>
-            )}
-          </div>
+        {!isMobile && <Title>{locationToTitleMap[location.pathname]}</Title>}
 
-          {!isMobile && <Title>{locationToTitleMap[location.pathname]}</Title>}
-
-          <ActionsContainer isElectron={isElectron}>
-            <MinButton onClick={minimize}>
-              <div />
-            </MinButton>
-            <MaxButton onClick={maxOrUnMax}>
-              <div />
-            </MaxButton>
-            <CloseButton onClick={close}>
-              <div />
-              <div />
-            </CloseButton>
-          </ActionsContainer>
-        </Container>
-      </StyleSheetManager>
+        <ActionsContainer isElectron={isElectron}>
+          <MinButton onClick={minimize}>
+            <div />
+          </MinButton>
+          <MaxButton onClick={maxOrUnMax}>
+            <div />
+          </MaxButton>
+          <CloseButton onClick={close}>
+            <div />
+            <div />
+          </CloseButton>
+        </ActionsContainer>
+      </Container>
     </>
   );
 };

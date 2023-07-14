@@ -1,8 +1,7 @@
 import React from "react";
-import styled, { css, StyleSheetManager } from "styled-components/macro";
-import isPropValid from "@emotion/is-prop-valid";
+import { styledWithPropFilter, css } from "styledWithPropFilter";
 
-const Container = styled.div`
+const Container = styledWithPropFilter("div")`
   display: flex;
   align-items: center;
   min-width: ${({ width }) => `${width}px`};
@@ -28,7 +27,7 @@ const sharedCss = css`
   width: 100%;
 `;
 
-const Background = styled.div`
+const Background = styledWithPropFilter("div")`
   ${sharedCss}
   max-width: ${({ width }) => `${width}px`};
   min-width: ${({ width }) => `${width}px`};
@@ -37,12 +36,12 @@ const Background = styled.div`
   margin: 0 auto;
 `;
 
-const ForegroundWrapper = styled.div`
+const ForegroundWrapper = styledWithPropFilter("div")`
   ${sharedCss}
   overflow: hidden;
 `;
 
-const Foreground = styled.div.attrs(({ progress }) => ({
+const Foreground = styledWithPropFilter("div").attrs(({ progress }) => ({
   style: {
     transform: `translateX(-${progress}%)`,
   },
@@ -54,21 +53,19 @@ const Foreground = styled.div.attrs(({ progress }) => ({
 const ProgressInput = React.forwardRef(
   ({ progress, handleMouseDown, handleMouseMove, width }, ref) => {
     return (
-      <StyleSheetManager shouldForwardProp={isPropValid}>
-        <Container
-          ref={ref}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onFocus={() => ref.current.blur()}
-          width={width + 20}
-        >
-          <Background width={width}>
-            <ForegroundWrapper>
-              <Foreground progress={progress} />
-            </ForegroundWrapper>
-          </Background>
-        </Container>
-      </StyleSheetManager>
+      <Container
+        ref={ref}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onFocus={() => ref.current.blur()}
+        width={width + 20}
+      >
+        <Background width={width}>
+          <ForegroundWrapper>
+            <Foreground progress={progress} />
+          </ForegroundWrapper>
+        </Background>
+      </Container>
     );
   },
 );

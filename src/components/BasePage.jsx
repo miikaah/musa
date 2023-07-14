@@ -1,7 +1,10 @@
 import React from "react";
-import styled, { StyleSheetManager } from "styled-components/macro";
+import { styledWithPropFilter } from "styledWithPropFilter";
 
-const BasePageContainer = styled.div`
+const BasePageContainer = styledWithPropFilter(
+  "div",
+  (prop) => prop !== "setMaxWidth",
+)`
   h1 {
     margin-bottom: 40px;
   }
@@ -22,7 +25,7 @@ const BasePageContainer = styled.div`
   }
 `;
 
-const BasePageWrapper = styled.div`
+const BasePageWrapper = styledWithPropFilter("div")`
   padding: 20px 20px 160px;
   max-width: ${({ setMaxWidth }) => setMaxWidth && "960px"};
   min-width: 344px;
@@ -39,11 +42,9 @@ const BasePageWrapper = styled.div`
 
 const BasePage = ({ children, setMaxWidth = true }) => {
   return (
-    <StyleSheetManager shouldForwardProp={(prop) => prop !== "setMaxWidth"}>
-      <BasePageContainer>
-        <BasePageWrapper setMaxWidth={setMaxWidth}>{children}</BasePageWrapper>
-      </BasePageContainer>
-    </StyleSheetManager>
+    <BasePageContainer>
+      <BasePageWrapper setMaxWidth={setMaxWidth}>{children}</BasePageWrapper>
+    </BasePageContainer>
   );
 };
 

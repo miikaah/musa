@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
 import { rgb2hsl, hsl2rgb } from "colors";
+import styled, { styledWithPropFilter } from "styledWithPropFilter";
 
 /*
  * Square is a good shape for seeing the relative power differences
@@ -22,7 +22,7 @@ let peakCtx;
 let spectroCtx;
 let tempCtx;
 
-const Container = styled.div`
+const Container = styledWithPropFilter("div")`
   overflow: auto;
   max-height: ${({ isVisible }) => (isVisible ? "900px" : "0")};
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
@@ -139,7 +139,7 @@ const Visualizer = ({
       const barHeight = dataArray[i] * 2.3;
 
       barCtx.fillStyle = document.body.style.getPropertyValue(
-        "--color-primary-highlight"
+        "--color-primary-highlight",
       );
       barCtx.fillRect(x, height - barHeight, barWidth, barHeight);
 
@@ -177,7 +177,7 @@ const Visualizer = ({
       10 * Math.log10(peakInstantaneousPower);
 
     peakCtx.fillStyle = document.body.style.getPropertyValue(
-      "--color-secondary-highlight"
+      "--color-secondary-highlight",
     );
 
     let barHeight = (100 + avgPowerDecibels) * barHeightMultiplier;
@@ -185,11 +185,11 @@ const Visualizer = ({
       peakWidth - 4 * barWidth,
       peakHeight - barHeight,
       barWidth,
-      barHeight
+      barHeight,
     );
 
     peakCtx.fillStyle = document.body.style.getPropertyValue(
-      "--color-primary-highlight"
+      "--color-primary-highlight",
     );
 
     barHeight = (100 + peakInstantaneousPowerDecibels) * barHeightMultiplier;
@@ -197,7 +197,7 @@ const Visualizer = ({
       peakWidth - 3 * barWidth,
       peakHeight - barHeight,
       barWidth,
-      barHeight
+      barHeight,
     );
 
     // RIGHT
@@ -218,7 +218,7 @@ const Visualizer = ({
     peakInstantaneousPowerDecibels = 10 * Math.log10(peakInstantaneousPower);
 
     peakCtx.fillStyle = document.body.style.getPropertyValue(
-      "--color-secondary-highlight"
+      "--color-secondary-highlight",
     );
 
     barHeight = (100 + avgPowerDecibels) * barHeightMultiplier;
@@ -226,11 +226,11 @@ const Visualizer = ({
       peakWidth - 1 * barWidth,
       peakHeight - barHeight,
       barWidth,
-      barHeight
+      barHeight,
     );
 
     peakCtx.fillStyle = document.body.style.getPropertyValue(
-      "--color-primary-highlight"
+      "--color-primary-highlight",
     );
 
     barHeight = (100 + peakInstantaneousPowerDecibels) * barHeightMultiplier;
@@ -238,14 +238,14 @@ const Visualizer = ({
       peakWidth - 2 * barWidth,
       peakHeight - barHeight,
       barWidth,
-      barHeight
+      barHeight,
     );
   }
 
   // Spectrograph
   if (shouldDraw && spectroCtx && !lockSpectroGraph) {
     const rgb = parseRgb(
-      document.body.style.getPropertyValue("--color-primary-highlight")
+      document.body.style.getPropertyValue("--color-primary-highlight"),
     );
     const [h, s] = rgb2hsl(...rgb);
 
@@ -295,7 +295,7 @@ const Visualizer = ({
       0,
       0,
       spectroWidth,
-      spectroHeight
+      spectroHeight,
     );
 
     // Reset the transformation matrix
@@ -329,5 +329,5 @@ export default connect(
     peakMeterBufferR: state.visualizer.peakMeterBufferR,
     currentItem: state.player.currentItem,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Visualizer);

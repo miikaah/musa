@@ -27,14 +27,12 @@ const UseFirFile = ({
   isInit,
   name,
   filename,
-  useFir,
-  firMakeUpGainDb,
   firFile,
   firFiles,
   dispatch,
 }) => {
   const [firMakeUpGainValue, setFirMakeUpGainValue] = useState(
-    firFiles[filename]?.makeUpGain || 0
+    firFiles[filename]?.makeUpGain || 0,
   );
   const checkboxId = `${filename}-toggle`;
 
@@ -53,7 +51,7 @@ const UseFirFile = ({
           : filename !== firFile
           ? filename
           : "",
-      })
+      }),
     );
   };
 
@@ -76,7 +74,7 @@ const UseFirFile = ({
             makeUpGain: integer,
           },
         },
-      })
+      }),
     );
   };
 
@@ -109,5 +107,5 @@ export default connect(
     firFile: state.settings.firFile,
     firFiles: state.settings.firFiles,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(UseFirFile);

@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
-import styled from "styled-components/macro";
 import { addToPlaylist } from "reducers/player.reducer";
 import config from "config";
 import Api from "api-client";
 import { breakpoints } from "../breakpoints";
+import styled, { styledWithPropFilter } from "styledWithPropFilter";
 
 const { isElectron } = config;
 
@@ -12,7 +12,7 @@ const Container = styled.li`
   position: relative;
 `;
 
-const Title = styled.p`
+const Title = styledWithPropFilter("p")`
   cursor: pointer;
   padding-top: ${({ isFirstOfDisk }) => isFirstOfDisk && "12px"};
   padding-left: ${({ hasAlbum }) => (hasAlbum ? 90 : 24)}px;
@@ -21,7 +21,7 @@ const Title = styled.p`
   margin: 0;
 `;
 
-const DiskNumber = styled.div`
+const DiskNumber = styledWithPropFilter("div")`
   position: absolute;
   top: ${({ isFirstOfFirstDisk }) => (isFirstOfFirstDisk ? 10 : 6)}px;
   left: 26px;
@@ -105,10 +105,10 @@ const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
   }, []);
 
   const isFirstOfDisk = new RegExp(/^\d\.01|^\d\.001|^\d\.0001/).test(
-    item?.track
+    item?.track,
   );
   const isFirstOfFirstDisk = new RegExp(/^1\.01|^1\.001|^1\.0001/).test(
-    item?.track
+    item?.track,
   );
   const title = item?.metadata?.title || item.name || "Unnamed file";
   const diskNo = item?.metadata?.disk?.no || "";
@@ -139,5 +139,5 @@ const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
 
 export default connect(
   () => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(LibraryItem);

@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import styled, { css } from "styled-components/macro";
 import { connect, useDispatch } from "react-redux";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
@@ -14,6 +13,7 @@ import {
 } from "animations";
 import { pasteToPlaylist } from "reducers/player.reducer";
 import { breakpoints } from "../breakpoints";
+import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
 
 const { isElectron } = config;
 
@@ -45,7 +45,7 @@ const getContractTiming = (len) => {
   }
 };
 
-const Container = styled.ul`
+const Container = styledWithPropFilter("ul")`
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -156,7 +156,7 @@ const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
       setShowAnimation(false);
       setTimeout(
         () => setShowAlbums(false),
-        Number(getContractTiming(albums.length).replace("s", "")) * 1000 - 100
+        Number(getContractTiming(albums.length).replace("s", "")) * 1000 - 100,
       );
     }
   };
@@ -181,7 +181,7 @@ const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
   const onDragStart = (event) => {
     event.dataTransfer.setData(
       "text/plain",
-      JSON.stringify({ isArtist, isAlbum, item })
+      JSON.stringify({ isArtist, isAlbum, item }),
     );
 
     event.stopPropagation();
@@ -316,5 +316,5 @@ const LibraryList = ({ item, isArtist, isAlbum, hasMultipleDisks }) => {
 
 export default connect(
   () => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(LibraryList);

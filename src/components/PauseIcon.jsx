@@ -1,8 +1,7 @@
 import React from "react";
-import styled, { StyleSheetManager } from "styled-components/macro";
-import isPropValid from "@emotion/is-prop-valid";
+import { styledWithPropFilter } from "styledWithPropFilter";
 
-const Icon = styled.div`
+const Icon = styledWithPropFilter("div")`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,12 +16,10 @@ const Icon = styled.div`
 `;
 
 const PauseIcon = (props) => (
-  <StyleSheetManager shouldForwardProp={isPropValid}>
-    <Icon {...props}>
-      <div />
-      <div />
-    </Icon>
-  </StyleSheetManager>
+  <Icon {...props}>
+    <div />
+    <div />
+  </Icon>
 );
 
 export default PauseIcon;

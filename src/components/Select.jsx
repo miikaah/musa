@@ -1,8 +1,8 @@
 import React from "react";
-import styled from "styled-components/macro";
 import { ellipsisTextOverflow } from "common.styles";
+import { styledWithPropFilter } from "styledWithPropFilter";
 
-const Container = styled.div`
+const Container = styledWithPropFilter("div")`
   position: absolute;
   top: ${({ top }) => top}px;
   ${({ dock }) => (dock === "left" ? "left: 0" : "right: 0")};
@@ -28,7 +28,7 @@ const Container = styled.div`
     }
   }
 
-  ${({ theme }) => theme.breakpoints.down('md')} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     max-width: 100%;
     max-height: 25vh;
   }

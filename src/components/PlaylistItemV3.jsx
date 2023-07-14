@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled, { css } from "styled-components/macro";
 import { playIndex, replay } from "reducers/player.reducer";
 import { formatDuration } from "../util";
 import { ellipsisTextOverflow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 import { breakpoints } from "breakpoints";
+import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);
@@ -35,7 +35,7 @@ const colorCss = css`
   }
 `;
 
-const PlaylistItemContainer = styled.li`
+const PlaylistItemContainer = styledWithPropFilter("li")`
   cursor: pointer;
   display: flex;
   max-height: 60px;
@@ -105,7 +105,7 @@ const FirstRow = styled.div`
   display: grid;
   grid-template-columns: 81fr 3fr 1fr 3fr 12fr;
 
-  ${({ theme }) => theme.breakpoints.down('md')} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     grid-template-columns: 84fr 1fr 3fr 12fr;
   }
 `;
@@ -182,7 +182,7 @@ const SecondRow = styled.div`
   min-height: 15px;
 `;
 
-const SecondRowItem = styled.span`
+const SecondRowItem = styledWithPropFilter("span")`
   ${({ hasMargins }) => hasMargins && `margin: 0 2px;`}
 `;
 
@@ -386,5 +386,5 @@ export default connect(
     currentIndex: state.player.currentIndex,
     isPlaying: state.player.isPlaying,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(PlaylistItem);

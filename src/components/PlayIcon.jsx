@@ -1,8 +1,7 @@
 import React from "react";
-import styled, { StyleSheetManager } from "styled-components/macro";
-import isPropValid from "@emotion/is-prop-valid";
+import { styledWithPropFilter } from "styledWithPropFilter";
 
-const Icon = styled.div`
+const Icon = styledWithPropFilter("div")`
   ${({ isSmall }) =>
     isSmall &&
     `
@@ -22,11 +21,9 @@ const Icon = styled.div`
 `;
 
 const PlayIcon = (props) => (
-  <StyleSheetManager shouldForwardProp={isPropValid}>
-    <Icon {...props}>
-      <div />
-    </Icon>
-  </StyleSheetManager>
+  <Icon {...props}>
+    <div />
+  </Icon>
 );
 
 export default PlayIcon;

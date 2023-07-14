@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import LibraryList from "./LibraryListV2";
 import Visualizer from "./Visualizer";
 import { connect } from "react-redux";
-import styled, { StyleSheetManager } from "styled-components/macro";
 import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import isPropValid from "@emotion/is-prop-valid";
+import styled, { styledWithPropFilter } from "styledWithPropFilter";
 
-const Container = styled.div`
+const Container = styledWithPropFilter("div")`
   text-align: left;
   border: 0 solid var(--color-secondary-highlight);
   border-left-width: 4px;
@@ -77,13 +76,7 @@ const Label = styled.div`
   }
 `;
 
-const Library = ({
-  dispatch,
-  forwardRef,
-  libraryMode,
-  listingWithLabels,
-  albums,
-}) => {
+const Library = ({ forwardRef, libraryMode, listingWithLabels }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [filter, setFilter] = useState("");
   const [filteredListing, setFilteredListing] = useState({});
@@ -131,7 +124,7 @@ const Library = ({
   };
 
   return (
-    <StyleSheetManager shouldForwardProp={isPropValid}>
+    <>
       <Container
         id="LibraryContainer"
         ref={forwardRef}
@@ -175,7 +168,7 @@ const Library = ({
       >
         <Visualizer isVisible={libraryMode === "visualizer"} />
       </Container>
-    </StyleSheetManager>
+    </>
   );
 };
 

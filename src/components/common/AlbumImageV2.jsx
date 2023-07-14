@@ -1,9 +1,10 @@
 import React from "react";
-import styled, { css } from "styled-components/macro";
+import { css } from "styled-components/macro";
 import { cleanUrl } from "../../util";
 import { fadeIn } from "animations";
+import { styledWithPropFilter } from "styledWithPropFilter";
 
-const Image = styled.img`
+const Image = styledWithPropFilter("img")`
   animation: ${({ animate }) =>
     animate
       ? css`

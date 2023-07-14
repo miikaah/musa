@@ -1,7 +1,7 @@
 import React from "react";
-import styled, { css } from "styled-components/macro";
+import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
 
-const Container = styled.div`
+const Container = styledWithPropFilter("div")`
   width: 100%;
   height: 100%;
   min-height: 90vh;
@@ -26,7 +26,7 @@ const CloseButton = styled.button`
   color: var(--color-typography);
 `;
 
-const Modal = ({ filesToEdit, closeModal, children, maxWidth, top }) => {
+const Modal = ({ closeModal, children, maxWidth, top }) => {
   return (
     <Container maxWidth={maxWidth} top={top}>
       {closeModal && <CloseButton onClick={closeModal}>Close</CloseButton>}

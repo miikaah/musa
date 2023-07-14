@@ -4,8 +4,6 @@ import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import Palette from "../img-palette/img-palette";
-import styled, { StyleSheetManager } from "styled-components/macro";
-import isPropValid from "@emotion/is-prop-valid";
 import { updateCurrentTheme } from "../util";
 import { breakpoints } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
@@ -14,6 +12,7 @@ import CoverInfo from "./CoverInfo";
 import ThemeBlock from "./ThemeBlock";
 import { rgb2hsl, hsl2rgb } from "colors";
 import Api from "api-client";
+import styled, { styledWithPropFilter } from "styledWithPropFilter";
 
 const Colors = {
   Bg: "#21252b",
@@ -31,7 +30,7 @@ const Colors = {
   RedRgb: [255, 0, 0],
 };
 
-const Container = styled.div`
+const Container = styledWithPropFilter("div", (prop) => prop !== "isSmall")`
   width: 100%;
   max-width: 1010px;
   min-width: ${({ isSmall }) => (isSmall ? "var(--library-width)" : "1010px")};
@@ -62,7 +61,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Image = styled.img.attrs(
+const Image = styledWithPropFilter("img").attrs(
   ({ maxHeight, isCoverLoaded, src, scaleDownImage, isMobile }) => ({
     style: {
       maxHeight: `${maxHeight}px`,
@@ -475,50 +474,48 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   };
 
   return (
-    <StyleSheetManager shouldForwardProp={isPropValid}>
-      <Container ref={containerRef} isSmall={isSmall}>
-        <Wrapper>
-          {React.useMemo(() => {
-            return (
-              <>
-                <Image
-                  id="albumCover"
-                  src={currentItem.coverUrl}
-                  ref={coverRef}
-                  crossOrigin=""
-                  maxHeight={coverData.maxHeight}
-                  scaleDownImage={coverData.scaleDownImage}
-                  isCoverLoaded={coverData.isCoverLoaded}
-                  isMobile={isMobile}
-                  onClick={getColorFromImage}
+    <Container ref={containerRef} isSmall={isSmall}>
+      <Wrapper>
+        {React.useMemo(() => {
+          return (
+            <>
+              <Image
+                id="albumCover"
+                src={currentItem.coverUrl}
+                ref={coverRef}
+                crossOrigin=""
+                maxHeight={coverData.maxHeight}
+                scaleDownImage={coverData.scaleDownImage}
+                isCoverLoaded={coverData.isCoverLoaded}
+                isMobile={isMobile}
+                onClick={getColorFromImage}
+              />
+              {isEditing && (
+                <Theme
+                  currentTheme={currentTheme}
+                  isThemeEditor
+                  editTarget={editTarget}
+                  setEditTarget={setEditTargetOrHide}
                 />
-                {isEditing && (
-                  <Theme
-                    theme={currentTheme}
-                    isThemeEditor
-                    editTarget={editTarget}
-                    setEditTarget={setEditTargetOrHide}
-                  />
-                )}
-              </>
-            );
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-          }, [
-            currentItem.coverUrl,
-            coverData,
-            currentTheme,
-            editTarget,
-            isEditing,
-            isMobile,
-          ])}
-          <CoverInfo
-            item={currentItem}
-            isSmall={isSmall}
-            toggleEdit={toggleEdit}
-          />
-        </Wrapper>
-      </Container>
-    </StyleSheetManager>
+              )}
+            </>
+          );
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [
+          currentItem.coverUrl,
+          coverData,
+          currentTheme,
+          editTarget,
+          isEditing,
+          isMobile,
+        ])}
+        <CoverInfo
+          item={currentItem}
+          isSmall={isSmall}
+          toggleEdit={toggleEdit}
+        />
+      </Wrapper>
+    </Container>
   );
 };
 

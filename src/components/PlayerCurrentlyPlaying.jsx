@@ -1,9 +1,8 @@
 import React from "react";
 import AlbumImageV2 from "./common/AlbumImageV2";
-import styled, { css, StyleSheetManager } from "styled-components/macro";
 import { ellipsisTextOverflow } from "common.styles";
 import { fadeIn } from "animations";
-import isPropValid from "@emotion/is-prop-valid";
+import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
 
 const commonImageCss = css`
   width: 50px;
@@ -21,7 +20,7 @@ const Container = styled.div`
   }
 `;
 
-const Info = styled.div`
+const Info = styledWithPropFilter("div")`
   display: flex;
   flex-direction: column;
   max-width: 290px;
@@ -49,7 +48,7 @@ const PlaceholderImage = styled.div`
   opacity: 0.666;
 `;
 
-const PlaceholderLine = styled.div`
+const PlaceholderLine = styledWithPropFilter("div")`
   background: #d7d7d7;
   border-radius: 50px;
   animation: ${fadeIn} 0.2s;
@@ -65,23 +64,21 @@ const PlayerCurrentlyPlaying = React.memo(({ currentItem }) => {
   const hasCurrentItem = !!Object.keys(currentItem).length;
 
   return (
-    <StyleSheetManager shouldForwardProp={isPropValid}>
-      <Container>
-        {hasCurrentItem ? (
-          <AlbumImageV2 item={currentItem} animate={false} />
+    <Container>
+      {hasCurrentItem ? (
+        <AlbumImageV2 item={currentItem} animate={false} />
+      ) : (
+        <PlaceholderImage />
+      )}
+      <Info>
+        {songTitle ? (
+          <div title={songTitle}>{songTitle}</div>
         ) : (
-          <PlaceholderImage />
+          <PlaceholderLine isFirst />
         )}
-        <Info>
-          {songTitle ? (
-            <div title={songTitle}>{songTitle}</div>
-          ) : (
-            <PlaceholderLine isFirst />
-          )}
-          {songTitle || artist ? <div>{artist}</div> : <PlaceholderLine />}
-        </Info>
-      </Container>
-    </StyleSheetManager>
+        {songTitle || artist ? <div>{artist}</div> : <PlaceholderLine />}
+      </Info>
+    </Container>
   );
 });
 

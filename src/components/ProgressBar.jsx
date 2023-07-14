@@ -1,9 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled, { StyleSheetManager } from "styled-components/macro";
-import isPropValid from "@emotion/is-prop-valid";
+import styled, { styledWithPropFilter } from "styledWithPropFilter";
 
-const ProgressBarContainer = styled.div`
+const ProgressBarContainer = styled("div")`
   position: fixed;
   top: 0;
   text-align: center;
@@ -13,7 +12,7 @@ const ProgressBarContainer = styled.div`
   background-color: var(--color-slider-track);
 `;
 
-const ProgressBarValue = styled.div.attrs(({ width, scanColor }) => ({
+const ProgressBarValue = styledWithPropFilter("div").attrs(({ width }) => ({
   style: {
     width: `${width}%`,
   },
@@ -28,11 +27,9 @@ const ProgressBar = ({ scanLength, scannedLength, scanColor }) => {
   if (width < 1) return null;
 
   return (
-    <StyleSheetManager shouldForwardProp={isPropValid}>
-      <ProgressBarContainer>
-        <ProgressBarValue width={width} scanColor={scanColor} />
-      </ProgressBarContainer>
-    </StyleSheetManager>
+    <ProgressBarContainer>
+      <ProgressBarValue width={width} scanColor={scanColor} />
+    </ProgressBarContainer>
   );
 };
 

@@ -9,8 +9,6 @@ import {
   clearSearch,
   updateScrollPosition,
 } from "reducers/search.reducer";
-import styled, { css, StyleSheetManager } from "styled-components/macro";
-import isPropValid from "@emotion/is-prop-valid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDebounce } from "hooks";
 import Song from "components/Song";
@@ -21,6 +19,7 @@ import Select from "components/Select";
 import config from "config";
 import Api from "api-client";
 import { ArrowDown as ArrowDownStyled } from "common.styles";
+import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
 
 const { isElectron } = config;
 
@@ -161,7 +160,7 @@ const InputContainer = styled.div`
   }
 `;
 
-const SearchInputContainer = styled.div`
+const SearchInputContainer = styledWithPropFilter("div")`
   > input {
     padding-right: 80px;
   }
@@ -333,33 +332,31 @@ const Search = ({
     <Container>
       <ContainerWrapper>
         <InputContainer>
-          <StyleSheetManager shouldForwardProp={isPropValid}>
-            <SearchInputContainer query={query}>
-              <input
-                value={query}
-                placeholder="Search by term or year"
-                onChange={updateQuery}
-              />
-              <ArrowDown onClick={toggleGenreSelect} />
-              <Select
-                showSelect={showGenreSelect}
-                top={45}
-                maxWidth={420}
-                dock="right"
-              >
-                {genres.map((genre, i) => (
-                  <div key={i} title={genre} onClick={setGenre}>
-                    {genre}
-                  </div>
-                ))}
-              </Select>
-              {isSearchTermLocked ? (
-                <FontAwesomeIcon onClick={toggleSearchLock} icon="lock" />
-              ) : (
-                <FontAwesomeIcon onClick={toggleSearchLock} icon="lock-open" />
-              )}
-            </SearchInputContainer>
-          </StyleSheetManager>
+          <SearchInputContainer query={query}>
+            <input
+              value={query}
+              placeholder="Search by term or year"
+              onChange={updateQuery}
+            />
+            <ArrowDown onClick={toggleGenreSelect} />
+            <Select
+              showSelect={showGenreSelect}
+              top={45}
+              maxWidth={420}
+              dock="right"
+            >
+              {genres.map((genre, i) => (
+                <div key={i} title={genre} onClick={setGenre}>
+                  {genre}
+                </div>
+              ))}
+            </Select>
+            {isSearchTermLocked ? (
+              <FontAwesomeIcon onClick={toggleSearchLock} icon="lock" />
+            ) : (
+              <FontAwesomeIcon onClick={toggleSearchLock} icon="lock-open" />
+            )}
+          </SearchInputContainer>
 
           <RandomButton isPrimary isSmall onClick={findRandom}>
             Random

@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
-import styled, { css, StyleSheetManager } from "styled-components/macro";
-import isPropValid from "@emotion/is-prop-valid";
 import {
   pasteToPlaylist,
   removeIndexesFromPlaylist,
@@ -14,6 +12,7 @@ import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
 import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
+import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
 
 const commonCss = css`
   padding: 14px 0;
@@ -26,7 +25,7 @@ const commonCss = css`
   max-width: ${({ isSmall }) => (isSmall ? "600px" : "10000px")};
 `;
 
-const Container = styled.ul`
+const Container = styledWithPropFilter("ul")`
   ${commonCss}
   ${listOverflow}
   overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
@@ -44,7 +43,7 @@ const Container = styled.ul`
   }
 `;
 
-const Instructions = styled.div`
+const Instructions = styledWithPropFilter("div")`
   ${commonCss}
   ${listOverflow}
   flex: 0 1 auto;
@@ -456,128 +455,124 @@ const Playlist = ({
 
   if (playlist.length < 1) {
     return (
-      <StyleSheetManager shouldForwardProp={isPropValid}>
-        <Instructions isSmall={isSmall}>
-          <InstructionsWrapper>
-            <p>Drag and drop Artists, Albums and Songs here</p>
-            <ControlsInstructions>
-              <ControlsHeader>Play controls</ControlsHeader>
-              <ControlsInstruction>
-                <div>Play / Pause</div>
-                <div>Spacebar</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Mute</div>
-                <div>M</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Toggle Search</div>
-                <div>Ctrl / Cmd + Shift + F</div>
-              </ControlsInstruction>
+      <Instructions isSmall={isSmall}>
+        <InstructionsWrapper>
+          <p>Drag and drop Artists, Albums and Songs here</p>
+          <ControlsInstructions>
+            <ControlsHeader>Play controls</ControlsHeader>
+            <ControlsInstruction>
+              <div>Play / Pause</div>
+              <div>Spacebar</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Mute</div>
+              <div>M</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Toggle Search</div>
+              <div>Ctrl / Cmd + Shift + F</div>
+            </ControlsInstruction>
 
-              <ControlsHeader>Playlist controls</ControlsHeader>
-              <ControlsInstruction>
-                <div>Play / Replay</div>
-                <div>Enter</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Select</div>
-                <div>Click + Drag</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Select All</div>
-                <div>Ctrl / Cmd + A</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Cut</div>
-                <div>Ctrl / Cmd + X</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Copy</div>
-                <div>Ctrl / Cmd + C</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Paste</div>
-                <div>Ctrl / Cmd + V</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Remove</div>
-                <div>Backspace / Delete</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Duplicate selection</div>
-                <div>Ctrl / Cmd + Shift + D</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Move item with pointer</div>
-                <div>Long press</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Move Up</div>
-                <div>Up Arrow</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Move Down</div>
-                <div>Down Arrow</div>
-              </ControlsInstruction>
+            <ControlsHeader>Playlist controls</ControlsHeader>
+            <ControlsInstruction>
+              <div>Play / Replay</div>
+              <div>Enter</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Select</div>
+              <div>Click + Drag</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Select All</div>
+              <div>Ctrl / Cmd + A</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Cut</div>
+              <div>Ctrl / Cmd + X</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Copy</div>
+              <div>Ctrl / Cmd + C</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Paste</div>
+              <div>Ctrl / Cmd + V</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Remove</div>
+              <div>Backspace / Delete</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Duplicate selection</div>
+              <div>Ctrl / Cmd + Shift + D</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Move item with pointer</div>
+              <div>Long press</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Move Up</div>
+              <div>Up Arrow</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Move Down</div>
+              <div>Down Arrow</div>
+            </ControlsInstruction>
 
-              <ControlsHeader>Touch controls</ControlsHeader>
-              <ControlsInstruction>
-                <div>Play / Replay</div>
-                <div>Double tap</div>
-              </ControlsInstruction>
-              <ControlsInstruction>
-                <div>Add from library</div>
-                <div>Long touch</div>
-              </ControlsInstruction>
-            </ControlsInstructions>
-          </InstructionsWrapper>
-        </Instructions>
-      </StyleSheetManager>
+            <ControlsHeader>Touch controls</ControlsHeader>
+            <ControlsInstruction>
+              <div>Play / Replay</div>
+              <div>Double tap</div>
+            </ControlsInstruction>
+            <ControlsInstruction>
+              <div>Add from library</div>
+              <div>Long touch</div>
+            </ControlsInstruction>
+          </ControlsInstructions>
+        </InstructionsWrapper>
+      </Instructions>
     );
   }
 
   return (
-    <StyleSheetManager shouldForwardProp={isPropValid}>
-      <Container
-        ref={ref}
-        className={PLAYLIST_CLASSNAME}
-        onMouseDown={(event) => {
-          onMouseDown({
-            index:
-              event.target.className === PLAYLIST_CLASSNAME
-                ? playlist.length - 1
-                : 0,
-            isShiftDown: event.shiftKey,
-          });
-        }}
-        onMouseUp={clearSelection}
-        hideOverflow={hideOverflow}
-      >
-        {playlist.map(
-          (item, index) =>
-            item && (
-              <PlaylistItem
-                key={`${item.name}-${index}`}
-                item={item}
-                index={index}
-                activeIndex={activeIndex}
-                startIndex={startIndex}
-                endIndex={endIndex}
-                onSetActiveIndex={setActiveIndex}
-                isSelected={selectedIndexes.has(index)}
-                onMouseOverItem={updateEndIndex}
-                onMouseDownItem={onMouseDown}
-                onMouseUpItem={onMouseUp}
-                onScrollPlaylist={scroll}
-                toggleModal={toggleModal}
-                removeItems={removeItems}
-                isMovingItems={isMovingItems}
-              />
-            ),
-        )}
-      </Container>
-    </StyleSheetManager>
+    <Container
+      ref={ref}
+      className={PLAYLIST_CLASSNAME}
+      onMouseDown={(event) => {
+        onMouseDown({
+          index:
+            event.target.className === PLAYLIST_CLASSNAME
+              ? playlist.length - 1
+              : 0,
+          isShiftDown: event.shiftKey,
+        });
+      }}
+      onMouseUp={clearSelection}
+      hideOverflow={hideOverflow}
+    >
+      {playlist.map(
+        (item, index) =>
+          item && (
+            <PlaylistItem
+              key={`${item.name}-${index}`}
+              item={item}
+              index={index}
+              activeIndex={activeIndex}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              onSetActiveIndex={setActiveIndex}
+              isSelected={selectedIndexes.has(index)}
+              onMouseOverItem={updateEndIndex}
+              onMouseDownItem={onMouseDown}
+              onMouseUpItem={onMouseUp}
+              onScrollPlaylist={scroll}
+              toggleModal={toggleModal}
+              removeItems={removeItems}
+              isMovingItems={isMovingItems}
+            />
+          ),
+      )}
+    </Container>
   );
 };
 

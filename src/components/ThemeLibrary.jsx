@@ -79,7 +79,7 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
         currentTheme: {
           colors: FALLBACK_THEME,
         },
-      })
+      }),
     );
   };
 
@@ -92,7 +92,7 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
             themes.map((theme) => (
               <ThemeBlock
                 key={theme.id}
-                theme={theme}
+                currentTheme={theme}
                 setCurrentTheme={changeCurrentTheme}
               />
             ))}
@@ -105,7 +105,7 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
           <ThemeWrapper>
             <ThemeList2>
               <ThemeBlock
-                theme={currentTheme}
+                currentTheme={currentTheme}
                 hasMargin={false}
                 setCurrentTheme={() => {}}
               />
@@ -126,5 +126,5 @@ export default connect(
   (state) => ({
     currentTheme: state.settings.currentTheme,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(ThemeLibrary);

@@ -1,15 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled, { StyleSheetManager } from "styled-components/macro";
-import isPropValid from "@emotion/is-prop-valid";
 import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
 import { listImage, cardActionShadow } from "common.styles";
 import { ellipsisTextOverflow } from "common.styles";
 import { setQuery } from "reducers/search.reducer";
 import AlbumImage from "./common/AlbumImageV2";
+import styled, { styledWithPropFilter } from "styledWithPropFilter";
 
-const SongContainer = styled.div`
+const SongContainer = styledWithPropFilter("div")`
   display: flex;
   max-height: 80px;
   margin: 0 8px 10px 0;
@@ -108,32 +107,30 @@ const Song = ({ item, dispatch }) => {
   const year = item?.metadata?.year || "";
 
   return (
-    <StyleSheetManager shouldForwardProp={isPropValid}>
-      <SongContainer onClick={addSongToPlaylist} hasCover={!!item.coverUrl}>
-        <div>
-          <AlbumImage item={item} />
-        </div>
-        <SongInfo>
+    <SongContainer onClick={addSongToPlaylist} hasCover={!!item.coverUrl}>
+      <div>
+        <AlbumImage item={item} />
+      </div>
+      <SongInfo>
+        <p>
+          <span title={title} onClick={setSongToSearchQuery}>
+            {title}
+          </span>
+        </p>
+        {album && (
           <p>
-            <span title={title} onClick={setSongToSearchQuery}>
-              {title}
+            <span title={album} onClick={setAlbumToSearchQuery}>
+              {album}
             </span>
           </p>
-          {album && (
-            <p>
-              <span title={album} onClick={setAlbumToSearchQuery}>
-                {album}
-              </span>
-            </p>
-          )}
-          <p>
-            <span onClick={setArtistToSearchQuery}>{artist}</span>
-            <span>{artist && year ? "\u00B7" : ""}</span>
-            {year && <span onClick={setYearToSearchQuery}>{year}</span>}
-          </p>
-        </SongInfo>
-      </SongContainer>
-    </StyleSheetManager>
+        )}
+        <p>
+          <span onClick={setArtistToSearchQuery}>{artist}</span>
+          <span>{artist && year ? "\u00B7" : ""}</span>
+          {year && <span onClick={setYearToSearchQuery}>{year}</span>}
+        </p>
+      </SongInfo>
+    </SongContainer>
   );
 };
 
