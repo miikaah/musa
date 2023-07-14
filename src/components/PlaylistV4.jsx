@@ -537,6 +537,7 @@ const Playlist = ({
   return (
     <Container
       ref={ref}
+      isSmall={isSmall}
       className={PLAYLIST_CLASSNAME}
       onMouseDown={(event) => {
         onMouseDown({

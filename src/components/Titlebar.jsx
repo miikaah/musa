@@ -383,7 +383,6 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
   return (
     <>
       <Library ref={libraryRef} libraryMode={libraryMode} />
-
       <Container>
         <div>
           <LibraryButton
