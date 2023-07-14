@@ -78,6 +78,7 @@ const Image = styled.img.attrs(
 
   ${({ theme }) => theme.breakpoints.down("md")} {
     flex: unset; // Needed by Chrome
+    min-height: 384px;
   }
 `;
 

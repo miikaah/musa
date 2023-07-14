@@ -18,6 +18,11 @@ const FirstRow = styled.div`
   grid-template-columns: 7fr 3fr;
   grid-column-gap: 40px;
   margin-bottom: 20px;
+
+  ${({ theme }) => theme.breakpoints.down("md")} {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
 `;
 
 const SettingsBlock = styled.div`
@@ -127,5 +132,5 @@ export default connect(
     musicLibraryPath: state.settings.musicLibraryPath,
     currentProfile: state.profile.currentProfile,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Settings);
