@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
-import { down } from "styled-breakpoints";
+import styled, { StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ellipsisTextOverflow } from "common.styles";
 
@@ -33,13 +33,13 @@ const Container = styled.div`
     }
   }
 
-  :hover {
+  &:hover {
     > button:nth-child(1) {
       visibility: visible;
     }
   }
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     > div:nth-child(2) {
       padding-bottom: 0;
     }
@@ -109,54 +109,56 @@ const CoverInfo = ({ item, isSmall, toggleEdit }) => {
   const sampleRate = getSampleRate(item?.metadata?.sampleRate);
 
   return (
-    <Container isSmall={isSmall}>
-      <ToggleEditButton onClick={toggleEdit}>
-        <FontAwesomeIcon icon="pencil" />
-      </ToggleEditButton>
-      <div>{title}</div>
-      <div>{album}</div>
-      <div>
-        <span>{artist}</span>
-        {item && item?.metadata && <span>{year ? "\u00B7" : ""}</span>}
-        <span>{year}</span>
-      </div>
-      <MetadataContainer>
-        <Metadata>
-          <div>
-            <span>Genre</span>
-            <span title={genre}>{genre}</span>
-          </div>
-          <div>
-            <span>Replaygain track</span>
-            <span>{item?.metadata?.replayGainTrackGain?.dB}</span>
-          </div>
-          <div>
-            <span>Replaygain album</span>
-            <span>{item?.metadata?.replayGainAlbumGain?.dB}</span>
-          </div>
-          <div>
-            <span>Dynamic range track</span>
-            <span>{item?.metadata?.dynamicRange}</span>
-          </div>
-          <div>
-            <span>Dynamic range album</span>
-            <span>{item?.metadata?.dynamicRangeAlbum}</span>
-          </div>
-          <div>
-            <span>Bitrate</span>
-            <span>{bitrate}</span>
-          </div>
-          <div>
-            <span>Sample rate</span>
-            <span>{sampleRate}</span>
-          </div>
-        </Metadata>
-      </MetadataContainer>
-    </Container>
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <Container isSmall={isSmall}>
+        <ToggleEditButton onClick={toggleEdit}>
+          <FontAwesomeIcon icon="pencil" />
+        </ToggleEditButton>
+        <div>{title}</div>
+        <div>{album}</div>
+        <div>
+          <span>{artist}</span>
+          {item && item?.metadata && <span>{year ? "\u00B7" : ""}</span>}
+          <span>{year}</span>
+        </div>
+        <MetadataContainer>
+          <Metadata>
+            <div>
+              <span>Genre</span>
+              <span title={genre}>{genre}</span>
+            </div>
+            <div>
+              <span>Replaygain track</span>
+              <span>{item?.metadata?.replayGainTrackGain?.dB}</span>
+            </div>
+            <div>
+              <span>Replaygain album</span>
+              <span>{item?.metadata?.replayGainAlbumGain?.dB}</span>
+            </div>
+            <div>
+              <span>Dynamic range track</span>
+              <span>{item?.metadata?.dynamicRange}</span>
+            </div>
+            <div>
+              <span>Dynamic range album</span>
+              <span>{item?.metadata?.dynamicRangeAlbum}</span>
+            </div>
+            <div>
+              <span>Bitrate</span>
+              <span>{bitrate}</span>
+            </div>
+            <div>
+              <span>Sample rate</span>
+              <span>{sampleRate}</span>
+            </div>
+          </Metadata>
+        </MetadataContainer>
+      </Container>
+    </StyleSheetManager>
   );
 };
 
 export default connect(
   (state) => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(CoverInfo);

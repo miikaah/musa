@@ -9,8 +9,8 @@ import {
   clearSearch,
   updateScrollPosition,
 } from "reducers/search.reducer";
-import styled, { css } from "styled-components/macro";
-import { down } from "styled-breakpoints";
+import styled, { css, StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDebounce } from "hooks";
 import Song from "components/Song";
@@ -35,13 +35,13 @@ const Container = styled.div`
   input {
     width: 100%;
 
-    ::placeholder {
+    &::placeholder {
       color: #919191;
       font-size: 0.9em;
     }
   }
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     position: static;
     margin: 60px auto;
     max-width: 96vw;
@@ -60,7 +60,7 @@ const ContainerWrapper = styled.div`
     max-width: 960px;
   }
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     padding: 0;
     overflow-x: hidden;
     overflow-y: auto;
@@ -86,7 +86,7 @@ const Wrapper = styled.div`
     margin-right: 10px;
   }
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     flex-direction: column;
     padding-bottom: 60px;
 
@@ -126,7 +126,7 @@ const SearchBlockWrapper = styled.div`
   padding: 10px 0 0 10px;
   overflow-y: scroll;
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-height: 20vh;
     max-height: 20vh;
   }
@@ -147,7 +147,7 @@ const InputContainer = styled.div`
     margin-right: 10px;
   }
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     flex-direction: column;
 
     > div:nth-of-type(1) {
@@ -176,7 +176,7 @@ const SearchInputContainer = styled.div`
       fill: ${({ query }) => (query ? "#000" : "#ccc")};
     }
 
-    :hover {
+    &:hover {
       cursor: pointer;
     }
   }
@@ -196,7 +196,7 @@ const buttonStyles = css`
   justify-self: end;
   align-self: center;
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     max-width: unset;
     align-self: flex-start;
   }
@@ -237,7 +237,7 @@ const Search = ({
             artists: result.artists,
             albums: result.albums,
             audios: result.audios,
-          })
+          }),
         );
         dispatch(setFilter(""));
       });
@@ -253,7 +253,7 @@ const Search = ({
           artists: [],
           albums: [],
           audios: [],
-        })
+        }),
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -333,31 +333,34 @@ const Search = ({
     <Container>
       <ContainerWrapper>
         <InputContainer>
-          <SearchInputContainer query={query}>
-            <input
-              value={query}
-              placeholder="Search by term or year"
-              onChange={updateQuery}
-            />
-            <ArrowDown onClick={toggleGenreSelect} />
-            <Select
-              showSelect={showGenreSelect}
-              top={45}
-              maxWidth={420}
-              dock="right"
-            >
-              {genres.map((genre, i) => (
-                <div key={i} title={genre} onClick={setGenre}>
-                  {genre}
-                </div>
-              ))}
-            </Select>
-            {isSearchTermLocked ? (
-              <FontAwesomeIcon onClick={toggleSearchLock} icon="lock" />
-            ) : (
-              <FontAwesomeIcon onClick={toggleSearchLock} icon="lock-open" />
-            )}
-          </SearchInputContainer>
+          <StyleSheetManager shouldForwardProp={isPropValid}>
+            <SearchInputContainer query={query}>
+              <input
+                value={query}
+                placeholder="Search by term or year"
+                onChange={updateQuery}
+              />
+              <ArrowDown onClick={toggleGenreSelect} />
+              <Select
+                showSelect={showGenreSelect}
+                top={45}
+                maxWidth={420}
+                dock="right"
+              >
+                {genres.map((genre, i) => (
+                  <div key={i} title={genre} onClick={setGenre}>
+                    {genre}
+                  </div>
+                ))}
+              </Select>
+              {isSearchTermLocked ? (
+                <FontAwesomeIcon onClick={toggleSearchLock} icon="lock" />
+              ) : (
+                <FontAwesomeIcon onClick={toggleSearchLock} icon="lock-open" />
+              )}
+            </SearchInputContainer>
+          </StyleSheetManager>
+
           <RandomButton isPrimary isSmall onClick={findRandom}>
             Random
           </RandomButton>
@@ -372,7 +375,7 @@ const Search = ({
               ref={artistListRef}
               onScroll={(event) => {
                 dispatch(
-                  updateScrollPosition({ artists: event.target.scrollTop })
+                  updateScrollPosition({ artists: event.target.scrollTop }),
                 );
               }}
             >
@@ -389,7 +392,7 @@ const Search = ({
               ref={albumListRef}
               onScroll={(event) => {
                 dispatch(
-                  updateScrollPosition({ albums: event.target.scrollTop })
+                  updateScrollPosition({ albums: event.target.scrollTop }),
                 );
               }}
             >
@@ -403,7 +406,7 @@ const Search = ({
                     })
                   ),
                 // eslint-disable-next-line react-hooks/exhaustive-deps
-                [albums, isFetchingRandomFirstTime]
+                [albums, isFetchingRandomFirstTime],
               )}
             </SearchBlockWrapper>
           </SearchBlock>
@@ -413,7 +416,7 @@ const Search = ({
               ref={audioListRef}
               onScroll={(event) => {
                 dispatch(
-                  updateScrollPosition({ audios: event.target.scrollTop })
+                  updateScrollPosition({ audios: event.target.scrollTop }),
                 );
               }}
             >
@@ -427,7 +430,7 @@ const Search = ({
                     })
                   ),
                 // eslint-disable-next-line react-hooks/exhaustive-deps
-                [audios, isFetchingRandomFirstTime]
+                [audios, isFetchingRandomFirstTime],
               )}
             </SearchBlockWrapper>
           </SearchBlock>
@@ -448,5 +451,5 @@ export default connect(
     scrollPos: state.search.scrollPos,
     listingWithLabels: state.library.listingWithLabels,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Search);

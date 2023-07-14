@@ -14,7 +14,7 @@ const ArtistContainer = styled.div`
   display: flex;
   ${bottomBorder}
 
-  :hover {
+  &:hover {
     border-color: var(--color-primary-highlight);
   }
 `;

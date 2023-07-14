@@ -1,5 +1,6 @@
 import React from "react";
-import styled from "styled-components/macro";
+import styled, { StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 
 const Icon = styled.div`
   display: flex;
@@ -16,10 +17,12 @@ const Icon = styled.div`
 `;
 
 const PauseIcon = (props) => (
-  <Icon {...props}>
-    <div />
-    <div />
-  </Icon>
+  <StyleSheetManager shouldForwardProp={isPropValid}>
+    <Icon {...props}>
+      <div />
+      <div />
+    </Icon>
+  </StyleSheetManager>
 );
 
 export default PauseIcon;

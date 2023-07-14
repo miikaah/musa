@@ -28,7 +28,7 @@ const Container = styled.div`
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   padding-bottom: 160px; /* TODO: Ought to be calculated by viewport height */
 
-  ::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 0;
   }
   scrollbar-width: none; /* Firefox */

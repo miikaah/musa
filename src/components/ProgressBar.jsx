@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
+import styled, { StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 
 const ProgressBarContainer = styled.div`
   position: fixed;
@@ -27,9 +28,11 @@ const ProgressBar = ({ scanLength, scannedLength, scanColor }) => {
   if (width < 1) return null;
 
   return (
-    <ProgressBarContainer>
-      <ProgressBarValue width={width} scanColor={scanColor} />
-    </ProgressBarContainer>
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <ProgressBarContainer>
+        <ProgressBarValue width={width} scanColor={scanColor} />
+      </ProgressBarContainer>
+    </StyleSheetManager>
   );
 };
 

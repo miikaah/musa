@@ -1,8 +1,9 @@
 import React from "react";
 import AlbumImageV2 from "./common/AlbumImageV2";
-import styled, { css } from "styled-components/macro";
+import styled, { css, StyleSheetManager } from "styled-components/macro";
 import { ellipsisTextOverflow } from "common.styles";
 import { fadeIn } from "animations";
+import isPropValid from "@emotion/is-prop-valid";
 
 const commonImageCss = css`
   width: 50px;
@@ -64,21 +65,23 @@ const PlayerCurrentlyPlaying = React.memo(({ currentItem }) => {
   const hasCurrentItem = !!Object.keys(currentItem).length;
 
   return (
-    <Container>
-      {hasCurrentItem ? (
-        <AlbumImageV2 item={currentItem} animate={false} />
-      ) : (
-        <PlaceholderImage />
-      )}
-      <Info>
-        {songTitle ? (
-          <div title={songTitle}>{songTitle}</div>
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <Container>
+        {hasCurrentItem ? (
+          <AlbumImageV2 item={currentItem} animate={false} />
         ) : (
-          <PlaceholderLine isFirst />
+          <PlaceholderImage />
         )}
-        {songTitle || artist ? <div>{artist}</div> : <PlaceholderLine />}
-      </Info>
-    </Container>
+        <Info>
+          {songTitle ? (
+            <div title={songTitle}>{songTitle}</div>
+          ) : (
+            <PlaceholderLine isFirst />
+          )}
+          {songTitle || artist ? <div>{artist}</div> : <PlaceholderLine />}
+        </Info>
+      </Container>
+    </StyleSheetManager>
   );
 });
 

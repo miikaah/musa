@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash.isempty";
 import styled, { css } from "styled-components/macro";
-import { down } from "styled-breakpoints";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
 import { setVisualizerData } from "reducers/visualizer.reducer";
@@ -33,7 +32,7 @@ const PlayerContainer = styled.div`
     display: none;
   }
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -52,7 +51,7 @@ const PlayerMiddleContainer = styled.div`
   align-items: center;
   min-width: 378px;
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     min-width: unset;
   }
 `;

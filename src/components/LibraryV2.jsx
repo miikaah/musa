@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import LibraryList from "./LibraryListV2";
 import Visualizer from "./Visualizer";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
-import { down } from "styled-breakpoints";
+import styled, { StyleSheetManager } from "styled-components/macro";
 import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import isPropValid from "@emotion/is-prop-valid";
 
 const Container = styled.div`
   text-align: left;
@@ -31,18 +31,15 @@ const Container = styled.div`
         ? `
         overflow: auto; // Stop scrollbar from flickering during filtering
 
-        ::-webkit-scrollbar {
+        &::-webkit-scrollbar {
           width: 0;
         }`
         : "overflow: auto;"
       : "overflow: hidden;"}
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-width: 100vw;
     max-width: 100vw;
-  }
-
-  ${down("md")} {
     min-height: 50vh;
     max-height: 50vh;
   }
@@ -61,7 +58,7 @@ const FilterContainer = styled.div`
     right: 16px;
     color: var(--color-black);
 
-    :hover {
+    &:hover {
       cursor: pointer;
     }
   }
@@ -100,7 +97,7 @@ const Library = ({
 
     const firstChar = filter.substring(0, 1).toUpperCase();
     const strictArtists = (listingWithLabels[firstChar] || []).filter((a) =>
-      a.name.toLowerCase().includes(filter.toLowerCase())
+      a.name.toLowerCase().includes(filter.toLowerCase()),
     );
 
     if (strictArtists.length < 1) {
@@ -134,7 +131,7 @@ const Library = ({
   };
 
   return (
-    <>
+    <StyleSheetManager shouldForwardProp={isPropValid}>
       <Container
         id="LibraryContainer"
         ref={forwardRef}
@@ -158,7 +155,7 @@ const Library = ({
             Object.entries(
               Object.keys(filteredListing).length && filter
                 ? filteredListing
-                : listingWithLabels
+                : listingWithLabels,
             ).map(([key, artist]) => (
               <div key={key}>
                 <Label>
@@ -178,7 +175,7 @@ const Library = ({
       >
         <Visualizer isVisible={libraryMode === "visualizer"} />
       </Container>
-    </>
+    </StyleSheetManager>
   );
 };
 
@@ -186,7 +183,7 @@ const ConnectedLibrary = connect(
   (state) => ({
     listingWithLabels: state.library.listingWithLabels,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Library);
 
 export default React.forwardRef((props, ref) => (

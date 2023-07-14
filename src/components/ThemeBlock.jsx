@@ -1,5 +1,6 @@
 import React from "react";
-import styled from "styled-components/macro";
+import styled, { StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 
 const Container = styled.span.attrs(({ rgb }) => ({
   style: {
@@ -57,29 +58,33 @@ const ThemeBlock = ({
   };
 
   return (
-    <Container
-      className={className}
-      title={filename || ""}
-      rgb={colors.bg}
-      onClick={(event) =>
-        isThemeEditor ? setEditTargetToBg(event) : setCurrentTheme(theme)
-      }
-      hasMargin={isThemeEditor ? false : hasMargin}
-      isEditing={editTarget === "bg"}
-    >
-      <Color
-        rgb={colors.primary}
-        isEditing={editTarget === "primary"}
-        onClick={() => setEditTarget(editTarget === "primary" ? "" : "primary")}
-      />
-      <Color
-        rgb={colors.secondary}
-        isEditing={editTarget === "secondary"}
-        onClick={() =>
-          setEditTarget(editTarget === "secondary" ? "" : "secondary")
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <Container
+        className={className}
+        title={filename || ""}
+        rgb={colors.bg}
+        onClick={(event) =>
+          isThemeEditor ? setEditTargetToBg(event) : setCurrentTheme(theme)
         }
-      />
-    </Container>
+        hasMargin={isThemeEditor ? false : hasMargin}
+        isEditing={editTarget === "bg"}
+      >
+        <Color
+          rgb={colors.primary}
+          isEditing={editTarget === "primary"}
+          onClick={() =>
+            setEditTarget(editTarget === "primary" ? "" : "primary")
+          }
+        />
+        <Color
+          rgb={colors.secondary}
+          isEditing={editTarget === "secondary"}
+          onClick={() =>
+            setEditTarget(editTarget === "secondary" ? "" : "secondary")
+          }
+        />
+      </Container>
+    </StyleSheetManager>
   );
 };
 

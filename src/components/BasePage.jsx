@@ -1,6 +1,5 @@
 import React from "react";
-import styled from "styled-components/macro";
-import { down } from "styled-breakpoints";
+import styled, { StyleSheetManager } from "styled-components/macro";
 
 const BasePageContainer = styled.div`
   h1 {
@@ -15,7 +14,7 @@ const BasePageContainer = styled.div`
   margin-top: var(--titlebar-height);
   overflow-y: auto;
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     width: 100vw;
     max-width: 100vw;
     overflow-y: auto;
@@ -29,7 +28,7 @@ const BasePageWrapper = styled.div`
   min-width: 344px;
   margin: 0 auto 50px;
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-width: unset;
     max-width: 100vw;
     padding: 10px 10px 160px;
@@ -40,9 +39,11 @@ const BasePageWrapper = styled.div`
 
 const BasePage = ({ children, setMaxWidth = true }) => {
   return (
-    <BasePageContainer>
-      <BasePageWrapper setMaxWidth={setMaxWidth}>{children}</BasePageWrapper>
-    </BasePageContainer>
+    <StyleSheetManager shouldForwardProp={(prop) => prop !== "setMaxWidth"}>
+      <BasePageContainer>
+        <BasePageWrapper setMaxWidth={setMaxWidth}>{children}</BasePageWrapper>
+      </BasePageContainer>
+    </StyleSheetManager>
   );
 };
 

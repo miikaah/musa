@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import styled, { css } from "styled-components/macro";
+import styled, { css, StyleSheetManager } from "styled-components/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useKeyPress } from "../hooks";
@@ -9,6 +9,7 @@ import Library from "components/LibraryV2";
 import { breakpoints } from "../breakpoints";
 import config from "config";
 import Api from "api-client";
+import isPropValid from "@emotion/is-prop-valid";
 
 const { isElectron } = config;
 
@@ -40,7 +41,7 @@ const buttonCss = css`
 const MinButton = styled.div`
   ${buttonCss}
 
-  :hover {
+  &:hover {
     background: #9b9b9b;
 
     > div {
@@ -61,7 +62,7 @@ const MinButton = styled.div`
 const MaxButton = styled.div`
   ${buttonCss}
 
-  :hover {
+  &:hover {
     background: #9b9b9b;
 
     > div {
@@ -84,7 +85,7 @@ const MaxButton = styled.div`
 const CloseButton = styled.div`
   ${buttonCss}
 
-  :hover {
+  &:hover {
     background: #f11818;
 
     > div {
@@ -120,7 +121,7 @@ const buttonCss2 = css`
   color: ${({ isActive }) => (isActive ? "#fff" : "inherit")};
   background: ${({ isActive }) => (isActive ? "#9b9b9b" : "transparent")};
 
-  :hover {
+  &:hover {
     color: #fff;
     background: #9b9b9b;
   }
@@ -157,7 +158,7 @@ const ProfileName = styled.div`
   font-size: var(--font-size-xs);
   margin-left: 4px;
 
-  :hover {
+  &:hover {
     cursor: default;
   }
 `;
@@ -173,7 +174,7 @@ const locationToTitleMap = {
 const Titlebar = ({ currentProfile, playlist, dispatch }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
-    window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md
+    window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
   );
   const location = useLocation();
   const navigate = useNavigate();
@@ -330,7 +331,7 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
         dispatchToast(
           `Copied ${text} to clipboard`,
           "share-playlist",
-          dispatch
+          dispatch,
         );
       });
     }
@@ -383,78 +384,83 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
   return (
     <>
       <Library ref={libraryRef} libraryMode={libraryMode} />
-      <Container>
-        <div>
-          <LibraryButton
-            onClick={toggleLibrary}
-            ref={libraryButtonRef}
-            isActive={
-              location.pathname === "/" && libraryMode === "library" && isSmall
-            }
-            isSmall={isSmall}
-          >
-            <FontAwesomeIcon icon="bars" />
-          </LibraryButton>
 
-          {!isMobile && (
+      <StyleSheetManager shouldForwardProp={isPropValid}>
+        <Container>
+          <div>
             <LibraryButton
-              onClick={toggleVisualizer}
-              ref={visualizerButtonRef}
+              onClick={toggleLibrary}
+              ref={libraryButtonRef}
               isActive={
                 location.pathname === "/" &&
-                libraryMode === "visualizer" &&
+                libraryMode === "library" &&
                 isSmall
               }
               isSmall={isSmall}
             >
-              <FontAwesomeIcon icon="chart-column" />
+              <FontAwesomeIcon icon="bars" />
             </LibraryButton>
-          )}
 
-          <SearchButton
-            onClick={toggleSearch}
-            ref={searchButtonRef}
-            isActive={location.pathname.startsWith("/search")}
-          >
-            <FontAwesomeIcon icon="search" />
-          </SearchButton>
+            {!isMobile && (
+              <LibraryButton
+                onClick={toggleVisualizer}
+                ref={visualizerButtonRef}
+                isActive={
+                  location.pathname === "/" &&
+                  libraryMode === "visualizer" &&
+                  isSmall
+                }
+                isSmall={isSmall}
+              >
+                <FontAwesomeIcon icon="chart-column" />
+              </LibraryButton>
+            )}
 
-          {!isElectron && (
-            <ShareButton onClick={createPlaylist} ref={shareButtonRef}>
-              <FontAwesomeIcon icon="share" />
-            </ShareButton>
-          )}
+            <SearchButton
+              onClick={toggleSearch}
+              ref={searchButtonRef}
+              isActive={location.pathname.startsWith("/search")}
+            >
+              <FontAwesomeIcon icon="search" />
+            </SearchButton>
 
-          <SettingsButton
-            onClick={toggleSettings}
-            ref={settingsButtonRef}
-            isActive={location.pathname.startsWith("/settings")}
-          >
-            <FontAwesomeIcon icon="cog" />
-          </SettingsButton>
+            {!isElectron && (
+              <ShareButton onClick={createPlaylist} ref={shareButtonRef}>
+                <FontAwesomeIcon icon="share" />
+              </ShareButton>
+            )}
 
-          {!isMobile && currentProfile && (
-            <button>
-              <ProfileName>{currentProfile.split("@")[0]}</ProfileName>
-            </button>
-          )}
-        </div>
+            <SettingsButton
+              onClick={toggleSettings}
+              ref={settingsButtonRef}
+              isActive={location.pathname.startsWith("/settings")}
+            >
+              <FontAwesomeIcon icon="cog" />
+            </SettingsButton>
 
-        {!isMobile && <Title>{locationToTitleMap[location.pathname]}</Title>}
+            {!isMobile && currentProfile && (
+              <button>
+                <ProfileName>{currentProfile.split("@")[0]}</ProfileName>
+              </button>
+            )}
+          </div>
 
-        <ActionsContainer isElectron={isElectron}>
-          <MinButton onClick={minimize}>
-            <div />
-          </MinButton>
-          <MaxButton onClick={maxOrUnMax}>
-            <div />
-          </MaxButton>
-          <CloseButton onClick={close}>
-            <div />
-            <div />
-          </CloseButton>
-        </ActionsContainer>
-      </Container>
+          {!isMobile && <Title>{locationToTitleMap[location.pathname]}</Title>}
+
+          <ActionsContainer isElectron={isElectron}>
+            <MinButton onClick={minimize}>
+              <div />
+            </MinButton>
+            <MaxButton onClick={maxOrUnMax}>
+              <div />
+            </MaxButton>
+            <CloseButton onClick={close}>
+              <div />
+              <div />
+            </CloseButton>
+          </ActionsContainer>
+        </Container>
+      </StyleSheetManager>
     </>
   );
 };
@@ -466,5 +472,5 @@ export default connect(
     currentProfile: state.profile.currentProfile,
     playlist: state.player.items,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Titlebar);

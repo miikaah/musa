@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components/macro";
-import { down } from "styled-breakpoints";
 
 const VolumeButtonContainer = styled.span`
   min-width: 42px;
@@ -16,7 +15,7 @@ const VolumeButtonContainer = styled.span`
     font-size: 1rem;
   }
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     min-width: 29px;
     max-width: 29px;
 

@@ -1,5 +1,6 @@
 import React from "react";
-import styled, { css } from "styled-components/macro";
+import styled, { css, StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 
 const Container = styled.div`
   display: flex;
@@ -8,7 +9,7 @@ const Container = styled.div`
   height: 20px;
   cursor: pointer;
 
-  :hover {
+  &:hover {
     > div {
       background-color: #777;
 
@@ -53,21 +54,23 @@ const Foreground = styled.div.attrs(({ progress }) => ({
 const ProgressInput = React.forwardRef(
   ({ progress, handleMouseDown, handleMouseMove, width }, ref) => {
     return (
-      <Container
-        ref={ref}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onFocus={() => ref.current.blur()}
-        width={width + 20}
-      >
-        <Background width={width}>
-          <ForegroundWrapper>
-            <Foreground progress={progress} />
-          </ForegroundWrapper>
-        </Background>
-      </Container>
+      <StyleSheetManager shouldForwardProp={isPropValid}>
+        <Container
+          ref={ref}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onFocus={() => ref.current.blur()}
+          width={width + 20}
+        >
+          <Background width={width}>
+            <ForegroundWrapper>
+              <Foreground progress={progress} />
+            </ForegroundWrapper>
+          </Background>
+        </Container>
+      </StyleSheetManager>
     );
-  }
+  },
 );
 
 export default ProgressInput;

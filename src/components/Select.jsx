@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { down } from "styled-breakpoints";
 import { ellipsisTextOverflow } from "common.styles";
 
 const Container = styled.div`
@@ -23,13 +22,13 @@ const Container = styled.div`
     max-height: 20px;
     ${ellipsisTextOverflow}
 
-    :hover {
+    &:hover {
       background: var(--color-primary-highlight);
       color: var(--color-typography-primary);
     }
   }
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     max-width: 100%;
     max-height: 25vh;
   }

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components/macro";
-import { down } from "styled-breakpoints";
 import { playIndex, replay } from "reducers/player.reducer";
 import { formatDuration } from "../util";
 import { ellipsisTextOverflow } from "common.styles";
@@ -61,7 +60,7 @@ const PlaylistItemContainer = styled.li`
     }
   }
 
-  :hover {
+  &:hover {
     ${({ isMovingItems }) =>
       isMovingItems
         ? `
@@ -106,7 +105,7 @@ const FirstRow = styled.div`
   display: grid;
   grid-template-columns: 81fr 3fr 1fr 3fr 12fr;
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down('md')} {
     grid-template-columns: 84fr 1fr 3fr 12fr;
   }
 `;
@@ -136,7 +135,7 @@ const ActionButton = styled.button`
   position: relative;
   height: 100%;
 
-  :hover {
+  &:hover {
     ${shadow}
   }
 

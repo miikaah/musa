@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
+import styled, { StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
 import { listImage, cardActionShadow } from "common.styles";
@@ -20,7 +21,7 @@ const SongContainer = styled.div`
 
   ${listImage}
 
-  :hover {
+  &:hover {
     ${cardActionShadow}
   }
 `;
@@ -43,7 +44,7 @@ const SongInfo = styled.div`
 
   > p:nth-child(1) > span,
   > p:nth-child(2) > span {
-    :hover {
+    &:hover {
       text-decoration: underline;
     }
   }
@@ -62,7 +63,7 @@ const SongInfo = styled.div`
 
   > p:nth-child(3) > span:nth-child(1),
   > p:nth-child(3) > span:nth-child(3) {
-    :hover {
+    &:hover {
       text-decoration: underline;
     }
   }
@@ -107,34 +108,36 @@ const Song = ({ item, dispatch }) => {
   const year = item?.metadata?.year || "";
 
   return (
-    <SongContainer onClick={addSongToPlaylist} hasCover={!!item.coverUrl}>
-      <div>
-        <AlbumImage item={item} />
-      </div>
-      <SongInfo>
-        <p>
-          <span title={title} onClick={setSongToSearchQuery}>
-            {title}
-          </span>
-        </p>
-        {album && (
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <SongContainer onClick={addSongToPlaylist} hasCover={!!item.coverUrl}>
+        <div>
+          <AlbumImage item={item} />
+        </div>
+        <SongInfo>
           <p>
-            <span title={album} onClick={setAlbumToSearchQuery}>
-              {album}
+            <span title={title} onClick={setSongToSearchQuery}>
+              {title}
             </span>
           </p>
-        )}
-        <p>
-          <span onClick={setArtistToSearchQuery}>{artist}</span>
-          <span>{artist && year ? "\u00B7" : ""}</span>
-          {year && <span onClick={setYearToSearchQuery}>{year}</span>}
-        </p>
-      </SongInfo>
-    </SongContainer>
+          {album && (
+            <p>
+              <span title={album} onClick={setAlbumToSearchQuery}>
+                {album}
+              </span>
+            </p>
+          )}
+          <p>
+            <span onClick={setArtistToSearchQuery}>{artist}</span>
+            <span>{artist && year ? "\u00B7" : ""}</span>
+            {year && <span onClick={setYearToSearchQuery}>{year}</span>}
+          </p>
+        </SongInfo>
+      </SongContainer>
+    </StyleSheetManager>
   );
 };
 
 export default connect(
   (state) => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Song);

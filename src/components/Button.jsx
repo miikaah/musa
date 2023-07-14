@@ -1,5 +1,6 @@
 import React from "react";
-import styled from "styled-components/macro";
+import styled, { StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 
 const ButtonContainer = styled.button`
   width: 100%;
@@ -30,15 +31,19 @@ const ButtonContainer = styled.button`
   `}
 `;
 
-const Button = ({ className, children, onClick, ...rest }) => (
-  <ButtonContainer
-    className={className}
-    type="button"
-    onClick={onClick}
-    {...rest}
-  >
-    {children}
-  </ButtonContainer>
-);
+const Button = ({ className, children, onClick, ...rest }) => {
+  return (
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <ButtonContainer
+        className={className}
+        type="button"
+        onClick={onClick}
+        {...rest}
+      >
+        {children}
+      </ButtonContainer>
+    </StyleSheetManager>
+  );
+};
 
 export default Button;

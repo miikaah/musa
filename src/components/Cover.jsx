@@ -4,8 +4,8 @@ import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import Palette from "../img-palette/img-palette";
-import styled from "styled-components/macro";
-import { down } from "styled-breakpoints";
+import styled, { StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 import { updateCurrentTheme } from "../util";
 import { breakpoints } from "../breakpoints";
 import { updateSettings } from "reducers/settings.reducer";
@@ -39,7 +39,7 @@ const Container = styled.div`
   display: flex;
   justify-content: flex-end;
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-width: unset;
     flex: 1 0 60vw;
     justify-content: flex-start;
@@ -54,7 +54,7 @@ const Wrapper = styled.div`
   max-width: var(--library-width);
   max-height: var(--library-width);
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-width: 96vw;
     max-width: 96vw;
     max-height: unset;
@@ -70,13 +70,13 @@ const Image = styled.img.attrs(
       transition: isCoverLoaded && "max-height 0.3s",
       visibility: isCoverLoaded && src ? "visible" : "hidden",
     },
-  })
+  }),
 )`
   width: 100%;
   height: 100%;
   flex: 1 0 auto; // Needed by Firefox
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     flex: unset; // Needed by Chrome
   }
 `;
@@ -112,7 +112,7 @@ const canvasCtx = canvas.getContext("2d");
 const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
-    window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md
+    window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
   );
   const [editTarget, setEditTarget] = useState();
   const [isEditing, setIsEditing] = useState();
@@ -124,7 +124,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       window
         .getComputedStyle(document.documentElement)
         .getPropertyValue("--library-width")
-        .replace("px", "")
+        .replace("px", ""),
     );
 
     let heightToWidthRatio =
@@ -142,20 +142,20 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   const calculateTheme = (coverTarget, options) => {
     let palette = new Palette(coverTarget);
     let mostPopularSwatch = palette.swatches.find(
-      (s) => s.population === palette.highestPopulation
+      (s) => s.population === palette.highestPopulation,
     );
 
     // If didn't get some swatches try again
     if (!palette.vibrantSwatch || !palette.lightVibrantSwatch) {
       palette = new Palette(coverTarget);
       mostPopularSwatch = palette.swatches.find(
-        (s) => s.population === palette.highestPopulation
+        (s) => s.population === palette.highestPopulation,
       );
     }
 
     const swatchesByPopulationDesc = sortBy(
       palette.swatches,
-      (s) => -s.population
+      (s) => -s.population,
     );
 
     // Defaults are for dark covers
@@ -196,7 +196,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
 
     const primaryPop = Math.max.apply(
       Math,
-      primarySwatches.map((s) => defaultTo(s.population, 0))
+      primarySwatches.map((s) => defaultTo(s.population, 0)),
     );
     primary = swatchesByPopulationDesc.find((s) => s.population === primaryPop);
 
@@ -220,12 +220,12 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     }
 
     secondary = swatchesByPopulationDesc.find(
-      (s) => s.population === secondaryPop
+      (s) => s.population === secondaryPop,
     );
 
     const secondaryPop = Math.max.apply(
       Math,
-      secondarySwatches.map((s) => defaultTo(s.population, 0))
+      secondarySwatches.map((s) => defaultTo(s.population, 0)),
     );
 
     if (!secondary || isEqual(secondary.rgb, bg.rgb)) {
@@ -298,7 +298,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
           isCoverLoaded: true,
           scaleDownImage: aspectRatio < 0.9,
           maxHeight: calcMaxHeight(),
-        })
+        }),
       );
 
       const theme = await Api.getThemeById({ id: coverTarget.src });
@@ -316,7 +316,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
           dispatch(
             updateSettings({
               currentTheme: theme,
-            })
+            }),
           );
         });
       }
@@ -359,7 +359,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
           isCoverLoaded: true,
           scaleDownImage: aspectRatio < 0.9,
           maxHeight: calcMaxHeight(),
-        })
+        }),
       );
     };
     window.addEventListener("resize", onResize);
@@ -376,7 +376,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
         isCoverLoaded: true,
         scaleDownImage: false,
         maxHeight: calcMaxHeight(),
-      })
+      }),
     );
   }
 
@@ -396,7 +396,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       event.nativeEvent.offsetX,
       event.nativeEvent.offsetY,
       1,
-      1
+      1,
     ).data;
     const rgb = [r, g, b];
     const { colors: c } = currentTheme;
@@ -455,7 +455,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       dispatch(
         updateSettings({
           currentTheme: theme,
-        })
+        }),
       );
     });
   };
@@ -474,48 +474,50 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   };
 
   return (
-    <Container ref={containerRef} isSmall={isSmall}>
-      <Wrapper>
-        {React.useMemo(() => {
-          return (
-            <>
-              <Image
-                id="albumCover"
-                src={currentItem.coverUrl}
-                ref={coverRef}
-                crossOrigin=""
-                maxHeight={coverData.maxHeight}
-                scaleDownImage={coverData.scaleDownImage}
-                isCoverLoaded={coverData.isCoverLoaded}
-                isMobile={isMobile}
-                onClick={getColorFromImage}
-              />
-              {isEditing && (
-                <Theme
-                  theme={currentTheme}
-                  isThemeEditor
-                  editTarget={editTarget}
-                  setEditTarget={setEditTargetOrHide}
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <Container ref={containerRef} isSmall={isSmall}>
+        <Wrapper>
+          {React.useMemo(() => {
+            return (
+              <>
+                <Image
+                  id="albumCover"
+                  src={currentItem.coverUrl}
+                  ref={coverRef}
+                  crossOrigin=""
+                  maxHeight={coverData.maxHeight}
+                  scaleDownImage={coverData.scaleDownImage}
+                  isCoverLoaded={coverData.isCoverLoaded}
+                  isMobile={isMobile}
+                  onClick={getColorFromImage}
                 />
-              )}
-            </>
-          );
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [
-          currentItem.coverUrl,
-          coverData,
-          currentTheme,
-          editTarget,
-          isEditing,
-          isMobile,
-        ])}
-        <CoverInfo
-          item={currentItem}
-          isSmall={isSmall}
-          toggleEdit={toggleEdit}
-        />
-      </Wrapper>
-    </Container>
+                {isEditing && (
+                  <Theme
+                    theme={currentTheme}
+                    isThemeEditor
+                    editTarget={editTarget}
+                    setEditTarget={setEditTargetOrHide}
+                  />
+                )}
+              </>
+            );
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+          }, [
+            currentItem.coverUrl,
+            coverData,
+            currentTheme,
+            editTarget,
+            isEditing,
+            isMobile,
+          ])}
+          <CoverInfo
+            item={currentItem}
+            isSmall={isSmall}
+            toggleEdit={toggleEdit}
+          />
+        </Wrapper>
+      </Container>
+    </StyleSheetManager>
   );
 };
 
@@ -525,5 +527,5 @@ export default connect(
     coverData: state.player.coverData,
     currentTheme: state.settings.currentTheme,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Cover);

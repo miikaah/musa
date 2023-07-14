@@ -22,7 +22,7 @@ import {
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
 import styled, { ThemeProvider } from "styled-components/macro";
-import { createTheme, down } from "styled-breakpoints";
+import { createStyledBreakpointsTheme } from "styled-breakpoints";
 import config, { FALLBACK_THEME } from "config";
 import { updateSettings } from "reducers/settings.reducer";
 import { setScanProps, setListingWithLabels } from "reducers/library.reducer";
@@ -45,7 +45,9 @@ import { pasteToPlaylist } from "reducers/player.reducer";
 
 const { isElectron } = config;
 
-const theme = createTheme(breakpointsAsPixels);
+const theme = createStyledBreakpointsTheme({
+  breakpoints: breakpointsAsPixels,
+});
 
 const AppContainer = styled.div`
   text-align: left;
@@ -57,7 +59,7 @@ const AppContainer = styled.div`
   color: var(--color-typography);
   user-select: none;
 
-  ${down("md")} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     overflow-x: hidden;
     overflow-y: auto;
   }
@@ -80,7 +82,7 @@ library.add(
   faPencil,
   faChartColumn,
   faXmark,
-  faShare
+  faShare,
 );
 
 const App = ({ dispatch }) => {
@@ -116,7 +118,7 @@ const App = ({ dispatch }) => {
           ...settings,
           isInit: true,
           currentTheme,
-        })
+        }),
       );
 
       const profile = settings.currentProfile;
@@ -133,11 +135,11 @@ const App = ({ dispatch }) => {
           dispatchToast(
             "Updating library",
             `library-update-${Date.now()}`,
-            dispatch
+            dispatch,
           );
 
           Api.getArtists().then((artists) =>
-            dispatch(setListingWithLabels(artists))
+            dispatch(setListingWithLabels(artists)),
           );
         }
       });
@@ -158,7 +160,7 @@ const App = ({ dispatch }) => {
         window.history.pushState(
           null,
           "Musa",
-          window.location.href.split("?")[0]
+          window.location.href.split("?")[0],
         );
       });
     }
@@ -198,5 +200,5 @@ const App = ({ dispatch }) => {
 
 export default connect(
   (state) => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(App);

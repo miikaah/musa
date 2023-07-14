@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled, { css } from "styled-components/macro";
+import styled, { css, StyleSheetManager } from "styled-components/macro";
+import isPropValid from "@emotion/is-prop-valid";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
 import { setQuery } from "reducers/search.reducer";
@@ -26,7 +27,7 @@ const AlbumFullAdd = styled.div`
   ${bottomBorder}
   ${listImage}
 
-  :hover {
+  &:hover {
     ${cardActionShadow}
   }
 `;
@@ -50,7 +51,7 @@ const AlbumInfo = styled.div`
   }
 
   > p:nth-child(1) > span {
-    :hover {
+    &:hover {
       text-decoration: underline;
     }
   }
@@ -65,7 +66,7 @@ const AlbumInfo = styled.div`
 
   > p:nth-child(2) > span:nth-child(1),
   > p:nth-child(2) > span:nth-child(3) {
-    :hover {
+    &:hover {
       text-decoration: underline;
     }
   }
@@ -85,8 +86,8 @@ const Album = ({ item, dispatch }) => {
         item.files.map((s) => ({
           ...s,
           coverUrl: item.coverUrl,
-        }))
-      )
+        })),
+      ),
     );
     dispatchToast(msg, key, dispatch);
   };
@@ -115,32 +116,34 @@ const Album = ({ item, dispatch }) => {
   const year = item?.metadata?.year || item?.year || "";
 
   return (
-    <AlbumContainer>
-      <AlbumFullAdd
-        onClick={addAlbumSongsToPlaylist}
-        hasCover={!!item.coverUrl}
-      >
-        <div>
-          <AlbumImage item={item} />
-        </div>
-        <AlbumInfo>
-          <p>
-            <span title={album} onClick={setAlbumToSearchQuery}>
-              {album}
-            </span>
-          </p>
-          <p>
-            <span onClick={setArtistToSearchQuery}>{artist}</span>
-            <span>{artist && year ? "\u00B7" : ""}</span>
-            {year && <span onClick={setYearToSearchQuery}>{year}</span>}
-          </p>
-        </AlbumInfo>
-      </AlbumFullAdd>
-    </AlbumContainer>
+    <StyleSheetManager shouldForwardProp={isPropValid}>
+      <AlbumContainer>
+        <AlbumFullAdd
+          onClick={addAlbumSongsToPlaylist}
+          hasCover={!!item.coverUrl}
+        >
+          <div>
+            <AlbumImage item={item} />
+          </div>
+          <AlbumInfo>
+            <p>
+              <span title={album} onClick={setAlbumToSearchQuery}>
+                {album}
+              </span>
+            </p>
+            <p>
+              <span onClick={setArtistToSearchQuery}>{artist}</span>
+              <span>{artist && year ? "\u00B7" : ""}</span>
+              {year && <span onClick={setYearToSearchQuery}>{year}</span>}
+            </p>
+          </AlbumInfo>
+        </AlbumFullAdd>
+      </AlbumContainer>
+    </StyleSheetManager>
   );
 };
 
 export default connect(
   (state) => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Album);
