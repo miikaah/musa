@@ -6,7 +6,7 @@ import { listImage, cardActionShadow } from "common.styles";
 import { ellipsisTextOverflow } from "common.styles";
 import { setQuery } from "reducers/search.reducer";
 import AlbumImage from "./common/AlbumImageV2";
-import styled, { styledWithPropFilter } from "styledWithPropFilter";
+import styled, { styledWithPropFilter } from "styled";
 
 const SongContainer = styledWithPropFilter("div")`
   display: flex;

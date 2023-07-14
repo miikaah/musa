@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
 import TagInput from "./TagInput";
 import TagTextarea from "./TagTextarea";
 import Button from "./Button";
 import Api from "api-client";
 import { dispatchToast } from "../util";
 import { ellipsisTextOverflow } from "common.styles";
+import styled from "styled";
 
 const Container = styled.div`
   display: flex;
@@ -133,13 +133,13 @@ const TagEditor = ({ files = [], dispatch }) => {
       dispatchToast(
         "Failed to update tags",
         `tag-update-failure-${Date.now()}`,
-        dispatch
+        dispatch,
       );
     } else {
       dispatchToast(
         "Tags updated",
         `tag-update-success-${Date.now()}`,
-        dispatch
+        dispatch,
       );
     }
   };
@@ -243,5 +243,5 @@ const TagEditor = ({ files = [], dispatch }) => {
 
 export default connect(
   (state) => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(TagEditor);

@@ -12,7 +12,7 @@ import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
 import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
-import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
+import styled, { styledWithPropFilter, css } from "styled";
 
 const commonCss = css`
   padding: 14px 0;

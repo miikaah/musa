@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled, { styledWithPropFilter } from "styledWithPropFilter";
+import styled, { styledWithPropFilter } from "styled";
 
 const Container = styledWithPropFilter("div")`
   text-align: left;

@@ -12,7 +12,7 @@ import CoverInfo from "./CoverInfo";
 import ThemeBlock from "./ThemeBlock";
 import { rgb2hsl, hsl2rgb } from "colors";
 import Api from "api-client";
-import styled, { styledWithPropFilter } from "styledWithPropFilter";
+import styled, { styledWithPropFilter } from "styled";
 
 const Colors = {
   Bg: "#21252b",

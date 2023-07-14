@@ -1,4 +1,8 @@
-import styled, { css as cssImport } from "styled-components/macro";
+import styled, {
+  css as cssImport,
+  keyframes as keyframesImport,
+  ThemeProvider as ThemeProviderImport,
+} from "styled-components/macro";
 import isValidProp from "@emotion/is-prop-valid";
 
 // Use this for most use cases so that props don't passthru to React in which case it logs a warning in the console.
@@ -7,6 +11,8 @@ export const styledWithPropFilter = (tagName, filterFn) =>
   styled(tagName).withConfig({ shouldForwardProp: filterFn || isValidProp });
 
 export const css = cssImport;
+export const keyframes = keyframesImport;
+export const ThemeProvider = ThemeProviderImport;
 
 // Use this for HOCs that need to pass props through
 export default styled;

@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components/macro";
 import Player from "components/Player";
+import styled from "styled";
 
 const ToolbarContainer = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ const ToolbarContainer = styled.div`
   background: var(--color-bg);
   box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 16px;
 
-  ${({ theme }) => theme.breakpoints.down('md')} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     padding: 4px 4px 0;
     min-height: 120px;
     justify-content: flex-start;

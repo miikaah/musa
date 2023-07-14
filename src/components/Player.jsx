@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash.isempty";
-import styled, { css } from "styled-components/macro";
+import styled, { css } from "styled";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
 import { setVisualizerData } from "reducers/visualizer.reducer";
@@ -32,7 +32,7 @@ const PlayerContainer = styled.div`
     display: none;
   }
 
-  ${({ theme }) => theme.breakpoints.down('md')} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -51,7 +51,7 @@ const PlayerMiddleContainer = styled.div`
   align-items: center;
   min-width: 378px;
 
-  ${({ theme }) => theme.breakpoints.down('md')} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-width: unset;
   }
 `;
@@ -166,7 +166,7 @@ const Player = ({
       dispatchToast(
         "Disabled Impulse response EQ because IR file failed to load",
         `fir-toast-${Date.now()}`,
-        dispatch
+        dispatch,
       );
 
       throw e;
@@ -254,7 +254,7 @@ const Player = ({
         peakMeterBuffer,
         peakMeterBufferL,
         peakMeterBufferR,
-      })
+      }),
     );
   });
 
@@ -266,7 +266,7 @@ const Player = ({
         Math.min(
           3,
           // Clamp the max reduction so that badly compressed music doesn't have too little amplitude
-          Math.max(0.25, Math.pow(10, replaygainDb / 20))
+          Math.max(0.25, Math.pow(10, replaygainDb / 20)),
         )
       : 1;
     const preAmpPercentage = preAmpDb ? Math.pow(10, preAmpDb / 20) : 1;
@@ -403,5 +403,5 @@ export default connect(
     firMakeUpGainDb: state.settings.firMakeUpGainDb,
     firFile: state.settings.firFile,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Player);

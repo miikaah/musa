@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
+import styled, { styledWithPropFilter, css } from "styled";
 
 const Container = styledWithPropFilter("div")`
   width: 100%;

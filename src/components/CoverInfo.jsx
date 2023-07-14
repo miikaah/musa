@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ellipsisTextOverflow } from "common.styles";
-import styled, { styledWithPropFilter } from "styledWithPropFilter";
+import styled, { styledWithPropFilter } from "styled";
 
 const Container = styledWithPropFilter("div")`
   padding: ${({ isSmall }) =>

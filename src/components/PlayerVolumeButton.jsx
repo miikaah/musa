@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components/macro";
+import styled from "styled";
 
 const VolumeButtonContainer = styled.span`
   min-width: 42px;
@@ -15,7 +15,7 @@ const VolumeButtonContainer = styled.span`
     font-size: 1rem;
   }
 
-  ${({ theme }) => theme.breakpoints.down('md')} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     min-width: 29px;
     max-width: 29px;
 
@@ -48,5 +48,5 @@ const PlayerVolumeButton = ({ volume, muteOrUnmute }) => {
 
 export default connect(
   (state) => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(PlayerVolumeButton);

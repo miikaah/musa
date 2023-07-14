@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
 import { Navigate } from "react-router-dom";
 import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
 import Playlist from "components/PlaylistV4";
@@ -9,6 +8,7 @@ import Modal from "components/Modal";
 import TagEditor from "components/TagEditor";
 import config from "config";
 import Api from "api-client";
+import styled from "styled";
 
 const { isElectron } = config;
 
@@ -19,7 +19,7 @@ const Container = styled.div`
   flex-direction: row;
   margin-top: var(--titlebar-height);
 
-  ${({ theme }) => theme.breakpoints.down('md')} {
+  ${({ theme }) => theme.breakpoints.down("md")} {
     flex-direction: column;
   }
 `;
@@ -33,7 +33,7 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
   const onDrop = async (event) => {
     if (event.dataTransfer.files.length > 0) {
       const paths = Array.from(event.dataTransfer.files).map(
-        ({ path }) => path
+        ({ path }) => path,
       );
 
       const files = await Api.getAudiosByFilepaths(paths);
@@ -109,5 +109,5 @@ export default connect(
     isInit: state.settings.isInit,
     musicLibraryPath: state.settings.musicLibraryPath,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(AppMain);

@@ -21,7 +21,7 @@ import {
   faXmark,
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
-import styled, { ThemeProvider } from "styled-components/macro";
+import styled, { ThemeProvider } from "styled";
 import { createStyledBreakpointsTheme } from "styled-breakpoints";
 import config, { FALLBACK_THEME } from "config";
 import { updateSettings } from "reducers/settings.reducer";

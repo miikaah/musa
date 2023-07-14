@@ -1,8 +1,7 @@
 import React from "react";
-import { css } from "styled-components/macro";
 import { cleanUrl } from "../../util";
 import { fadeIn } from "animations";
-import { styledWithPropFilter } from "styledWithPropFilter";
+import { styledWithPropFilter, css } from "styled";
 
 const Image = styledWithPropFilter("img")`
   animation: ${({ animate }) =>

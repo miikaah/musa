@@ -1,5 +1,5 @@
 import React from "react";
-import { styledWithPropFilter } from "styledWithPropFilter";
+import { styledWithPropFilter } from "styled";
 
 const BasePageContainer = styledWithPropFilter(
   "div",

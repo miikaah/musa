@@ -1,5 +1,5 @@
 import React from "react";
-import { styledWithPropFilter, css } from "styledWithPropFilter";
+import { styledWithPropFilter, css } from "styled";
 
 const Container = styledWithPropFilter("div")`
   display: flex;

@@ -4,7 +4,7 @@ import { addToPlaylist } from "reducers/player.reducer";
 import config from "config";
 import Api from "api-client";
 import { breakpoints } from "../breakpoints";
-import styled, { styledWithPropFilter } from "styledWithPropFilter";
+import styled, { styledWithPropFilter } from "styled";
 
 const { isElectron } = config;
 

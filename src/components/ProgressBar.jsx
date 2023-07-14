@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled, { styledWithPropFilter } from "styledWithPropFilter";
+import styled, { styledWithPropFilter } from "styled";
 
 const ProgressBarContainer = styled("div")`
   position: fixed;

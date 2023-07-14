@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
 import { updateSettings } from "reducers/settings.reducer";
+import styled from "styled";
 
 const Input = styled.input`
   max-width: 104px;
@@ -40,5 +40,5 @@ export default connect(
     isInit: state.settings.isInit,
     preAmpDb: state.settings.preAmpDb,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(PreAmpSetting);

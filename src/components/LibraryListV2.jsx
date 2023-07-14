@@ -13,7 +13,7 @@ import {
 } from "animations";
 import { pasteToPlaylist } from "reducers/player.reducer";
 import { breakpoints } from "../breakpoints";
-import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
+import styled, { styledWithPropFilter, css } from "styled";
 
 const { isElectron } = config;
 

@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components/macro";
+import styled from "styled";
 
 const ButtonContainer = styled.span`
   margin-right: 8px;
@@ -33,5 +33,5 @@ export default connect(
   (state) => ({
     isPlaying: state.player.isPlaying,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(PlayerPlayPauseButton);

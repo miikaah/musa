@@ -2,9 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { updateSettings } from "reducers/settings.reducer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components/macro";
 import Button from "./Button";
 import Api from "api-client";
+import styled from "styled";
 
 const Container = styled.div``;
 
@@ -28,7 +28,7 @@ const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
     dispatch(
       updateSettings({
         musicLibraryPath: "",
-      })
+      }),
     );
   };
 
@@ -37,7 +37,7 @@ const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
       dispatch(
         updateSettings({
           musicLibraryPath: path,
-        })
+        }),
       );
     });
   };
@@ -65,5 +65,5 @@ export default connect(
   (state) => ({
     musicLibraryPath: state.settings.musicLibraryPath,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(MusicLibrarySetting);

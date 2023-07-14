@@ -5,7 +5,7 @@ import { pasteToPlaylist } from "reducers/player.reducer";
 import { setQuery } from "reducers/search.reducer";
 import { listImage, cardActionShadow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
-import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
+import styled, { styledWithPropFilter, css } from "styled";
 
 const AlbumContainer = styled.div`
   display: flex;

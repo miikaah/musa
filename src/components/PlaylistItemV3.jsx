@@ -7,7 +7,7 @@ import { formatDuration } from "../util";
 import { ellipsisTextOverflow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 import { breakpoints } from "breakpoints";
-import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
+import styled, { styledWithPropFilter, css } from "styled";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);

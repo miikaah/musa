@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components/macro";
 import AlbumImage from "./AlbumImageV2";
+import styled from "styled";
 
 const AlbumCoverContainer = styled.div`
   display: flex;

@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
 import { firFileMap } from "config";
 import UseFirFile from "./UseFirFile";
+import styled from "styled";
 
 const FirFilesContainer = styled.div`
   display: flex;
@@ -31,5 +31,5 @@ export default connect(
   (state) => ({
     isInit: state.settings.isInit,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(UseFirSetting);

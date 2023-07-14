@@ -1,6 +1,6 @@
 import React from "react";
 import { ellipsisTextOverflow } from "common.styles";
-import { styledWithPropFilter } from "styledWithPropFilter";
+import { styledWithPropFilter } from "styled";
 
 const Container = styledWithPropFilter("div")`
   position: absolute;

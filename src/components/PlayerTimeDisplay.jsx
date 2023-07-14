@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
 import { formatDuration } from "../util";
+import styled from "styled";
 
 const TimeDisplay = styled.span`
   min-width: 86px;
@@ -26,5 +26,5 @@ const PlayerTimeDisplay = ({ currentTime, currentItem }) => {
 
 export default connect(
   (state) => ({}),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(PlayerTimeDisplay);

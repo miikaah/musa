@@ -19,7 +19,7 @@ import Select from "components/Select";
 import config from "config";
 import Api from "api-client";
 import { ArrowDown as ArrowDownStyled } from "common.styles";
-import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
+import styled, { styledWithPropFilter, css } from "styled";
 
 const { isElectron } = config;
 

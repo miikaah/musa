@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled, { keyframes } from "styled-components/macro";
+import styled, { keyframes } from "styled";
 
 const fade = keyframes`
   from {
@@ -56,5 +56,5 @@ export default connect(
   (state) => ({
     messages: state.toaster.messages,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(Toaster);

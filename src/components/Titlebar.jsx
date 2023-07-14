@@ -8,7 +8,7 @@ import Library from "components/LibraryV2";
 import { breakpoints } from "../breakpoints";
 import config from "config";
 import Api from "api-client";
-import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
+import styled, { styledWithPropFilter, css } from "styled";
 
 const { isElectron } = config;
 

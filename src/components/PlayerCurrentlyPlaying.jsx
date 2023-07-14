@@ -2,7 +2,7 @@ import React from "react";
 import AlbumImageV2 from "./common/AlbumImageV2";
 import { ellipsisTextOverflow } from "common.styles";
 import { fadeIn } from "animations";
-import styled, { styledWithPropFilter, css } from "styledWithPropFilter";
+import styled, { styledWithPropFilter, css } from "styled";
 
 const commonImageCss = css`
   width: 50px;

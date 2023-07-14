@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components/macro";
 import { updateSettings } from "reducers/settings.reducer";
+import styled from "styled";
 
 const Container = styled.div`
   display: grid;
