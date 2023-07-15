@@ -2,13 +2,11 @@ import * as esbuild from "esbuild";
 import inlineImage from "esbuild-plugin-inline-image";
 import { buildIndex } from "./buildIndex.mjs";
 
-const define = {};
-
-for (const k in process.env) {
-  define[`process.env.${k}`] = JSON.stringify(process.env[k]);
-}
-
-const { OUTDIR = "" } = process.env;
+const {
+  OUTDIR = "",
+  REACT_APP_ENV = "",
+  REACT_APP_API_BASE_URL = "",
+} = process.env;
 
 if (!OUTDIR) {
   throw new Error("process.env.OUTDIR must be set");
@@ -28,7 +26,12 @@ await esbuild
       ".js": "jsx",
     },
     plugins: [inlineImage()],
-    define,
+    define: {
+      "process.env.REACT_APP_ENV": JSON.stringify(REACT_APP_ENV),
+      "process.env.REACT_APP_API_BASE_URL": JSON.stringify(
+        REACT_APP_API_BASE_URL,
+      ),
+    },
   })
   .catch((error) => {
     console.log(error);
