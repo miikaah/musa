@@ -1,5 +1,4 @@
-const { REACT_APP_API_BASE_URL } = process.env;
-const baseUrl = REACT_APP_API_BASE_URL || window.location.origin;
+const baseUrl = process.env.REACT_APP_API_BASE_URL || window.location.origin;
 const defaultHeaders = {
   "Content-Type": "application/json",
 };

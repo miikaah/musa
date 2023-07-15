@@ -1,5 +1,4 @@
-const { REACT_APP_ENV } = process.env;
-const isElectron = REACT_APP_ENV === "electron";
+const isElectron = process.env.REACT_APP_ENV === "electron";
 
 export const FALLBACK_THEME = {
   bg: [33, 37, 43],

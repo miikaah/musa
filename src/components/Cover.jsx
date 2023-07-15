@@ -219,13 +219,12 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       primary = { rgb: Colors.PrimaryRgb };
     }
 
-    secondary = swatchesByPopulationDesc.find(
-      (s) => s.population === secondaryPop,
-    );
-
     const secondaryPop = Math.max.apply(
       Math,
       secondarySwatches.map((s) => defaultTo(s.population, 0)),
+    );
+    secondary = swatchesByPopulationDesc.find(
+      (s) => s.population === secondaryPop,
     );
 
     if (!secondary || isEqual(secondary.rgb, bg.rgb)) {

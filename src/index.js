@@ -33,5 +33,8 @@ root.render(
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
-  </Provider>
+  </Provider>,
 );
+
+// Live reload for esbuild
+new EventSource("/esbuild").addEventListener("change", () => location.reload());
