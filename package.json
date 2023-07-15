@@ -4,11 +4,12 @@
   "private": true,
   "homepage": "./",
   "scripts": {
-    "start": "env-cmd -f .env.server.local react-scripts start",
-    "start:electron": "env-cmd -f .env.electron.local react-scripts start",
+    "start": "env-cmd -f .env.server.local craco start",
+    "start:electron": "env-cmd -f .env.electron.local craco start",
     "build": "env-cmd -f .env.server.prod react-scripts build",
-    "build:electron": "env-cmd -f .env.electron.prod react-scripts build && git rev-parse HEAD > version",
+    "build:electron": "env-cmd -f .env.electron.prod craco build && git rev-parse HEAD > version",
     "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -44,7 +45,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "babel-plugin-macros": "^3.1.0",
+    "@craco/craco": "^7.1.0",
+    "babel-plugin-styled-components": "^2.1.4",
+    "craco-esbuild": "^0.5.2",
     "env-cmd": "^10.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
