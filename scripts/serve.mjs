@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild";
 import http from "node:http";
 import inlineImage from "esbuild-plugin-inline-image";
+import { buildIndex } from "./buildIndex.mjs";
 
 const define = {};
 
@@ -8,9 +9,20 @@ for (const k in process.env) {
   define[`process.env.${k}`] = JSON.stringify(process.env[k]);
 }
 
+const { OUTDIR = "" } = process.env;
+
+if (!OUTDIR) {
+  throw new Error("process.env.OUTDIR must be set");
+}
+
+buildIndex(OUTDIR);
+
+const servedir = `./${OUTDIR}`;
+const outfile = `./${servedir}/app.js`;
+
 let ctx = await esbuild.context({
   entryPoints: ["./src/index.js"],
-  outfile: "./build/app.js",
+  outfile,
   minify: false,
   bundle: true,
   loader: {
@@ -24,8 +36,7 @@ const host = "localhost";
 const port = Number(process.env.PORT || 3666);
 
 await ctx.watch();
-
-await ctx.serve({ servedir: "./build", host, port });
+await ctx.serve({ servedir, host, port });
 
 http
   .createServer((req, res) => {

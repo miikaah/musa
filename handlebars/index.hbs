@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -10,12 +9,12 @@
     <meta name="theme-color" content="#000000" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self' %REACT_APP_API_BASE_URL% 'unsafe-inline' filesystem:"
+      content="default-src 'self' {{apiBaseUrl}} 'unsafe-inline' filesystem:"
     />
     <link rel="manifest" href="./manifest.json" />
     <title>Musa</title>
-    <script defer="defer" src="./static/app.js"></script>
-    <link href="./static/app.css" rel="stylesheet" />
+    <script defer="defer" src="./app.js"></script>
+    <link href="./app.css" rel="stylesheet" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
