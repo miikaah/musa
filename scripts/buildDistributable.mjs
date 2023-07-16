@@ -1,8 +1,26 @@
 import { readFile } from "fs/promises";
 import { execSync } from "child_process";
 
+const [, , environment] = process.argv;
+
+const npmScriptByEnvironment = {
+  server: "npm run build",
+  electron: "npm run build:electron",
+};
+
 const build = () => {
-  const output = execSync("npm run build:electron", {
+  if (!environment) {
+    throw new Error(
+      "Build environment must be set. Options [server, electron].",
+    );
+  }
+  if (environment !== "server" && environment !== "electron") {
+    throw new Error(
+      `Build environment "${environment}" is not valid. Valid options [server, electron].`,
+    );
+  }
+
+  const output = execSync(npmScriptByEnvironment[environment], {
     encoding: "utf-8",
   });
 

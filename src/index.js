@@ -36,5 +36,9 @@ root.render(
   </Provider>,
 );
 
-// Live reload for esbuild
-new EventSource("/esbuild").addEventListener("change", () => location.reload());
+if (process.env.NODE_ENV === "development") {
+  // Live reload for esbuild
+  new EventSource("/esbuild").addEventListener("change", () =>
+    location.reload(),
+  );
+}

@@ -7,7 +7,7 @@
     "setup": "shx mkdir build && shx mkdir build-server",
     "start": "shx rm -rf build-server && shx mkdir build-server && shx cp -R public/* build-server && env-cmd -f .env.server.local node scripts/serve.mjs",
     "start:electron": "shx rm -rf build && shx mkdir build && shx cp -R public/* build && env-cmd -f .env.electron.local node scripts/serve.mjs",
-    "build": "shx rm -rf build-server && shx mkdir build-server && shx cp -R public/* build-server && env-cmd -f .env.server.prod node scripts/build.mjs",
+    "build": "shx rm -rf build-server && shx mkdir build-server && shx cp -R public/* build-server && env-cmd -f .env.server.prod node scripts/build.mjs && git rev-parse HEAD > version",
     "build:electron": "shx rm -rf build && shx mkdir build && shx cp -R public/* build && env-cmd -f .env.electron.prod node scripts/build.mjs && git rev-parse HEAD > version"
   },
   "dependencies": {
