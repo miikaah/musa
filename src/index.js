@@ -13,14 +13,20 @@ import "./index.css";
 export const store = createStore(rootReducer);
 
 let previousSettings;
+let timerId;
 store.subscribe(() => {
   const settings = store.getState().settings;
 
   if (settings.isInit && !isEqual(previousSettings, settings)) {
-    Api.insertSettings({
-      ...settings,
-      isInit: null,
-    });
+    clearTimeout(timerId);
+
+    timerId = setTimeout(() => {
+      Api.insertSettings({
+        ...settings,
+        isInit: null,
+      });
+    }, 2000);
+
     previousSettings = settings;
   }
 });

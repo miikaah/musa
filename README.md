@@ -15,7 +15,6 @@ jpeg, png and webp images.
 
 ### V4
 
-- feat: Debounce settings updates
 - feat: Improve colors for blue slider track and red border on playlist
 - fix: Prevent popping when changing FIR eq
 - feat: in year search only return artists who have albums or songs in that year
