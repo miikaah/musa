@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.2.1",
-    "@fortawesome/fontawesome-svg-core": "^6.4.0",
-    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "lodash.defaultto": "^4.14.0",
     "lodash.isempty": "^4.4.0",
@@ -22,22 +22,22 @@
     "quantize": "^1.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.1.1",
-    "react-router": "^6.14.1",
-    "react-router-dom": "^6.14.1",
+    "react-redux": "^8.1.2",
+    "react-router": "^6.15.0",
+    "react-router-dom": "^6.15.0",
     "redux": "^4.2.1",
-    "styled-breakpoints": "^12.1.2",
-    "styled-components": "^6.0.4"
+    "styled-breakpoints": "^12.1.5",
+    "styled-components": "^6.0.7"
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
-    "esbuild": "^0.18.13",
+    "esbuild": "^0.19.2",
     "esbuild-plugin-inline-image": "^0.0.9",
-    "eslint": "^8.3.0",
+    "eslint": "^8.48.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^5.0.0",
-    "handlebars": "^4.7.7",
-    "prettier": "^3.0.0",
+    "handlebars": "^4.7.8",
+    "prettier": "^3.0.3",
     "shx": "^0.3.4"
   }
 }
