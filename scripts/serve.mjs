@@ -3,6 +3,8 @@ import http from "node:http";
 import inlineImage from "esbuild-plugin-inline-image";
 import { buildIndex } from "./buildIndex.mjs";
 
+const isWindows = process.platform === "win32";
+
 const {
   OUTDIR = "",
   REACT_APP_ENV = "",
@@ -37,15 +39,19 @@ let ctx = await esbuild.context({
 
 const host = "localhost";
 const port = Number(process.env.PORT || 3666);
+// NOTE: Windows fails with ENOBUFS when using the same port for esbuild and
+//       the http proxy at the same time. This breaks hot reload but
+//       at least it works.
+const esbuildPort = isWindows ? 3665 : port;
 
 await ctx.watch();
-await ctx.serve({ servedir, host, port });
+await ctx.serve({ servedir, host, port: esbuildPort });
 
 http
   .createServer((req, res) => {
     const options = {
       hostname: host,
-      port: port,
+      port: esbuildPort,
       path: req.url,
       method: req.method,
       headers: req.headers,
