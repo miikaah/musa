@@ -359,7 +359,7 @@ const Player = ({
 
   useEffect(() => {
     // HACK: To fix Electron mangling the beginning of the request url
-    audioEl.src = src ? src.replace("media:/", "media://abcd/") : "";
+    audioEl.src = src ? src.replace("media:/", "media:///") : "";
   }, [src]);
 
   return (

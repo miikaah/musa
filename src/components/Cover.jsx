@@ -482,8 +482,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
                 id="albumCover"
                 src={
                   // HACK: To fix Electron mangling the beginning of the request url
-                  currentItem?.coverUrl?.replace("media:/", "media://abcd/") ||
-                  ""
+                  currentItem?.coverUrl?.replace("media:/", "media:///") || ""
                 }
                 ref={coverRef}
                 crossOrigin=""
