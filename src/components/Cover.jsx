@@ -480,7 +480,11 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
             <>
               <Image
                 id="albumCover"
-                src={currentItem.coverUrl}
+                src={
+                  // HACK: To fix Electron mangling the beginning of the request url
+                  currentItem?.coverUrl?.replace("media:/", "media://abcd/") ||
+                  ""
+                }
                 ref={coverRef}
                 crossOrigin=""
                 maxHeight={coverData.maxHeight}

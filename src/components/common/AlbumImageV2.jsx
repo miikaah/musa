@@ -26,7 +26,8 @@ const AlbumImage = ({ item, animate = true }) => {
   const isMp3 = type.toLowerCase().startsWith("mpeg");
   const isFlac = type.toLowerCase().startsWith("flac");
   const src = item.coverUrl
-    ? cleanUrl(item.coverUrl)
+    ? // HACK: To fix Electron mangling the beginning of the request url
+      cleanUrl(item.coverUrl.replace("media:/", "media://abcd/"))
     : isMp3
     ? "musa-placeholder-icon-mp3.png"
     : isFlac
