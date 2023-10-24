@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styled, { css } from "styled-components";
 import { playIndex, replay } from "reducers/player.reducer";
 import { formatDuration } from "../util";
 import { ellipsisTextOverflow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 import { breakpoints } from "breakpoints";
-import styled, { styledWithPropFilter, css } from "styled";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);
@@ -35,7 +35,7 @@ const colorCss = css`
   }
 `;
 
-const PlaylistItemContainer = styledWithPropFilter("li")`
+const PlaylistItemContainer = styled.li`
   cursor: pointer;
   display: flex;
   max-height: 60px;
@@ -182,7 +182,7 @@ const SecondRow = styled.div`
   min-height: 15px;
 `;
 
-const SecondRowItem = styledWithPropFilter("span")`
+const SecondRowItem = styled.span`
   ${({ hasMargins }) => hasMargins && `margin: 0 2px;`}
 `;
 

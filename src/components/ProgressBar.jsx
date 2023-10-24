@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled, { styledWithPropFilter } from "styled";
+import styled from "styled-components";
 
 const ProgressBarContainer = styled("div")`
   position: fixed;
@@ -12,7 +12,7 @@ const ProgressBarContainer = styled("div")`
   background-color: var(--color-slider-track);
 `;
 
-const ProgressBarValue = styledWithPropFilter("div").attrs(({ width }) => ({
+const ProgressBarValue = styled.div.attrs(({ width }) => ({
   style: {
     width: `${width}%`,
   },

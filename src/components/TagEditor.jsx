@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 import TagInput from "./TagInput";
 import TagTextarea from "./TagTextarea";
 import Button from "./Button";
 import Api from "api-client";
 import { dispatchToast } from "../util";
 import { ellipsisTextOverflow } from "common.styles";
-import styled from "styled";
 
 const Container = styled.div`
   display: flex;
@@ -155,7 +155,7 @@ const TagEditor = ({ files = [], dispatch }) => {
         return (
           <Container key={file.id}>
             <Filename>
-              {file.fileUrl.replace("media:\\", "").replace("media:/")}
+              {file.fileUrl.replace("media:\\", "").replace("media:/", "")}
             </Filename>
             <Wrapper>
               <span>Artist</span>

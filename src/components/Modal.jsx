@@ -1,7 +1,7 @@
 import React from "react";
-import styled, { styledWithPropFilter, css } from "styled";
+import styled, { css } from "styled-components";
 
-const Container = styledWithPropFilter("div")`
+const Container = styled.div`
   width: 100%;
   height: 100%;
   min-height: 90vh;

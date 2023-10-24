@@ -1,14 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 import { dispatchToast } from "../util";
 import { addToPlaylist } from "reducers/player.reducer";
 import { listImage, cardActionShadow } from "common.styles";
 import { ellipsisTextOverflow } from "common.styles";
 import { setQuery } from "reducers/search.reducer";
 import AlbumImage from "./common/AlbumImageV2";
-import styled, { styledWithPropFilter } from "styled";
 
-const SongContainer = styledWithPropFilter("div")`
+const SongContainer = styled.div`
   display: flex;
   max-height: 80px;
   margin: 0 8px 10px 0;

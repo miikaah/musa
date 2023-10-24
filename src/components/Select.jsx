@@ -1,8 +1,8 @@
 import React from "react";
+import styled from "styled-components";
 import { ellipsisTextOverflow } from "common.styles";
-import { styledWithPropFilter } from "styled";
 
-const Container = styledWithPropFilter("div")`
+const Container = styled.div`
   position: absolute;
   top: ${({ top }) => top}px;
   ${({ dock }) => (dock === "left" ? "left: 0" : "right: 0")};

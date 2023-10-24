@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled";
+import styled from "styled-components";
 
 const VolumeButtonContainer = styled.span`
   min-width: 42px;

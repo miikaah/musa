@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 import { formatDuration } from "../util";
-import styled from "styled";
 
 const TimeDisplay = styled.span`
   min-width: 86px;

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styled, { css } from "styled-components";
 import {
   setQuery,
   setFilter,
@@ -9,7 +11,6 @@ import {
   clearSearch,
   updateScrollPosition,
 } from "reducers/search.reducer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDebounce } from "hooks";
 import Song from "components/Song";
 import Album from "components/Album";
@@ -19,7 +20,6 @@ import Select from "components/Select";
 import config from "config";
 import Api from "api-client";
 import { ArrowDown as ArrowDownStyled } from "common.styles";
-import styled, { styledWithPropFilter, css } from "styled";
 
 const { isElectron } = config;
 
@@ -160,7 +160,7 @@ const InputContainer = styled.div`
   }
 `;
 
-const SearchInputContainer = styledWithPropFilter("div")`
+const SearchInputContainer = styled.div`
   > input {
     padding-right: 80px;
   }

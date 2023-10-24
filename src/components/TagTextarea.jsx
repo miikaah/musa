@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled";
+import styled from "styled-components";
 
 const Textarea = styled.textarea`
   resize: none;

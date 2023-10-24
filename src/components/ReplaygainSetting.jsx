@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 import { REPLAYGAIN_TYPE } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 import { ArrowDown as ArrowDownStyled } from "common.styles";
-import styled from "styled";
 
 const ReplaygainSettingSelect = styled.div`
   position: relative;

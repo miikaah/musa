@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled, { keyframes } from "styled";
+import styled, { keyframes } from "styled-components";
 
 const fade = keyframes`
   from {

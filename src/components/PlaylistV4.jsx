@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
+import styled, { css } from "styled-components";
 import {
   pasteToPlaylist,
   removeIndexesFromPlaylist,
@@ -12,7 +13,6 @@ import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";
 import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
-import styled, { styledWithPropFilter, css } from "styled";
 
 const commonCss = css`
   padding: 14px 0;
@@ -25,7 +25,7 @@ const commonCss = css`
   max-width: ${({ isSmall }) => (isSmall ? "600px" : "10000px")};
 `;
 
-const Container = styledWithPropFilter("ul")`
+const Container = styled.ul`
   ${commonCss}
   ${listOverflow}
   overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
@@ -43,7 +43,7 @@ const Container = styledWithPropFilter("ul")`
   }
 `;
 
-const Instructions = styledWithPropFilter("div")`
+const Instructions = styled.div`
   ${commonCss}
   ${listOverflow}
   flex: 0 1 auto;

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { rgb2hsl, hsl2rgb } from "colors";
-import styled, { styledWithPropFilter } from "styled";
+import styled from "styled-components";
 
 /*
  * Square is a good shape for seeing the relative power differences
@@ -22,7 +22,7 @@ let peakCtx;
 let spectroCtx;
 let tempCtx;
 
-const Container = styledWithPropFilter("div")`
+const Container = styled.div`
   overflow: auto;
   max-height: ${({ isVisible }) => (isVisible ? "900px" : "0")};
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};

@@ -1,10 +1,7 @@
 import React from "react";
-import { styledWithPropFilter } from "styled";
+import styled from "styled-components";
 
-const BasePageContainer = styledWithPropFilter(
-  "div",
-  (prop) => prop !== "setMaxWidth",
-)`
+const BasePageContainer = styled.div`
   h1 {
     margin-bottom: 40px;
   }
@@ -25,7 +22,7 @@ const BasePageContainer = styledWithPropFilter(
   }
 `;
 
-const BasePageWrapper = styledWithPropFilter("div")`
+const BasePageWrapper = styled.div`
   padding: 20px 20px 160px;
   max-width: ${({ setMaxWidth }) => setMaxWidth && "960px"};
   min-width: 344px;

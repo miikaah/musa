@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
+import styled from "styled-components";
 import { addToPlaylist } from "reducers/player.reducer";
 import config from "config";
 import Api from "api-client";
 import { breakpoints } from "../breakpoints";
-import styled, { styledWithPropFilter } from "styled";
 
 const { isElectron } = config;
 
@@ -12,7 +12,7 @@ const Container = styled.li`
   position: relative;
 `;
 
-const Title = styledWithPropFilter("p")`
+const Title = styled.p`
   cursor: pointer;
   padding-top: ${({ isFirstOfDisk }) => isFirstOfDisk && "12px"};
   padding-left: ${({ hasAlbum }) => (hasAlbum ? 90 : 24)}px;
@@ -21,7 +21,7 @@ const Title = styledWithPropFilter("p")`
   margin: 0;
 `;
 
-const DiskNumber = styledWithPropFilter("div")`
+const DiskNumber = styled.div`
   position: absolute;
   top: ${({ isFirstOfFirstDisk }) => (isFirstOfFirstDisk ? 10 : 6)}px;
   left: 26px;

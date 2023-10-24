@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash.isempty";
-import styled, { css } from "styled";
+import styled, { css } from "styled-components";
 import { play, replay, pause, playNext } from "reducers/player.reducer";
 import { VOLUME_DEFAULT, updateSettings } from "reducers/settings.reducer";
 import { setVisualizerData } from "reducers/visualizer.reducer";

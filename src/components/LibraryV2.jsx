@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import LibraryList from "./LibraryListV2";
-import Visualizer from "./Visualizer";
 import { connect } from "react-redux";
+import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled, { styledWithPropFilter } from "styled";
+import LibraryList from "./LibraryListV2";
+import Visualizer from "./Visualizer";
 
-const Container = styledWithPropFilter("div")`
+const Container = styled.div`
   text-align: left;
   border: 0 solid var(--color-secondary-highlight);
   border-left-width: 4px;

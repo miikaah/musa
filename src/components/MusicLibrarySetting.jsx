@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { updateSettings } from "reducers/settings.reducer";
+import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { updateSettings } from "reducers/settings.reducer";
 import Button from "./Button";
 import Api from "api-client";
-import styled from "styled";
 
 const Container = styled.div``;
 

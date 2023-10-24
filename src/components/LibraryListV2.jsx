@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
+import styled, { css } from "styled-components";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
 import config from "config";
@@ -13,7 +14,6 @@ import {
 } from "animations";
 import { pasteToPlaylist } from "reducers/player.reducer";
 import { breakpoints } from "../breakpoints";
-import styled, { styledWithPropFilter, css } from "styled";
 
 const { isElectron } = config;
 
@@ -45,7 +45,7 @@ const getContractTiming = (len) => {
   }
 };
 
-const Container = styledWithPropFilter("ul")`
+const Container = styled.ul`
   margin: 0;
   padding: 0;
   list-style-type: none;

@@ -1,7 +1,7 @@
 import React from "react";
-import { styledWithPropFilter } from "styled";
+import styled from "styled-components";
 
-const Container = styledWithPropFilter("span").attrs(({ rgb }) => ({
+const Container = styled.span.attrs(({ rgb }) => ({
   style: {
     backgroundColor: rgb && `rgb(${rgb})`,
   },
@@ -16,7 +16,7 @@ const Container = styledWithPropFilter("span").attrs(({ rgb }) => ({
   border-color: ${({ isEditing }) => isEditing && "#f00"};
 `;
 
-const Color = styledWithPropFilter("span").attrs(({ rgb }) => ({
+const Color = styled.span.attrs(({ rgb }) => ({
   style: {
     backgroundColor: rgb && `rgb(${rgb})`,
   },

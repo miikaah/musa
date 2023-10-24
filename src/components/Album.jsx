@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import styled, { css } from "styled-components";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "reducers/player.reducer";
 import { setQuery } from "reducers/search.reducer";
 import { listImage, cardActionShadow } from "common.styles";
 import AlbumImage from "./common/AlbumImageV2";
-import styled, { styledWithPropFilter, css } from "styled";
 
 const AlbumContainer = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ const bottomBorder = css`
   border-bottom-width: 2px;
 `;
 
-const AlbumFullAdd = styledWithPropFilter("div")`
+const AlbumFullAdd = styled.div`
   display: flex;
   flex: 100%;
   max-height: 80px;

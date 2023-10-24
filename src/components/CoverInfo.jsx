@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styled from "styled-components";
 import { ellipsisTextOverflow } from "common.styles";
-import styled, { styledWithPropFilter } from "styled";
 
-const Container = styledWithPropFilter("div")`
+const Container = styled.div`
   padding: ${({ isSmall }) =>
     isSmall ? "20px 20px 20px 10px" : "20px 20px 20px 10px"};
   min-width: ${({ isSmall }) => (isSmall ? 394 : 432)}px;

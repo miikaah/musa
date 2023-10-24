@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
+import styled, { css } from "styled-components";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown, dispatchToast } from "../util";
 import Library from "components/LibraryV2";
 import { breakpoints } from "../breakpoints";
 import config from "config";
 import Api from "api-client";
-import styled, { styledWithPropFilter, css } from "styled";
 
 const { isElectron } = config;
 
@@ -126,22 +126,22 @@ const buttonCss2 = css`
   }
 `;
 
-const LibraryButton = styledWithPropFilter("button")`
+const LibraryButton = styled.button`
   ${buttonCss2}
 
   background: ${({ isActive, isSmall }) =>
     isActive && isSmall ? "#9b9b9b" : "transparent"};
 `;
 
-const SearchButton = styledWithPropFilter("button")`
+const SearchButton = styled.button`
   ${buttonCss2}
 `;
 
-const SettingsButton = styledWithPropFilter("button")`
+const SettingsButton = styled.button`
   ${buttonCss2}
 `;
 
-const ShareButton = styledWithPropFilter("button")`
+const ShareButton = styled.button`
   ${buttonCss2}
 `;
 
@@ -149,17 +149,8 @@ const Title = styled.div`
   font-size: 0.9rem;
 `;
 
-const ActionsContainer = styledWithPropFilter("div")`
+const ActionsContainer = styled.div`
   visibility: ${({ isElectron }) => (isElectron ? "visible" : "hidden")};
-`;
-
-const ProfileName = styled.div`
-  font-size: var(--font-size-xs);
-  margin-left: 4px;
-
-  &:hover {
-    cursor: default;
-  }
 `;
 
 const locationToTitleMap = {

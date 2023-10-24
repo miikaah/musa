@@ -21,7 +21,8 @@ import {
   faXmark,
   faShare,
 } from "@fortawesome/free-solid-svg-icons";
-import styled, { ThemeProvider } from "styled";
+import styled, { StyleSheetManager, ThemeProvider } from "styled-components";
+import isValidProp from "@emotion/is-prop-valid";
 import { createStyledBreakpointsTheme } from "styled-breakpoints";
 import config, { FALLBACK_THEME } from "config";
 import { updateSettings } from "reducers/settings.reducer";
@@ -172,19 +173,27 @@ const App = ({ dispatch }) => {
   }
 
   const Main = () => (
-    <ThemeProvider theme={theme}>
-      <AppContainer>
-        <Toaster />
-        <Titlebar />
-        <ProgressBar />
-        <Toolbar />
-        <Routes>
-          <Route exact path="/" element={<AppMain />} />
-          <Route exact path="/settings" element={<Settings />} />
-          <Route exact path="/search" element={<Search />} />
-        </Routes>
-      </AppContainer>
-    </ThemeProvider>
+    <StyleSheetManager
+      shouldForwardProp={(propName, elementToBeRendered) => {
+        return typeof elementToBeRendered === "string"
+          ? isValidProp(propName)
+          : true;
+      }}
+    >
+      <ThemeProvider theme={theme}>
+        <AppContainer>
+          <Toaster />
+          <Titlebar />
+          <ProgressBar />
+          <Toolbar />
+          <Routes>
+            <Route exact path="/" element={<AppMain />} />
+            <Route exact path="/settings" element={<Settings />} />
+            <Route exact path="/search" element={<Search />} />
+          </Routes>
+        </AppContainer>
+      </ThemeProvider>
+    </StyleSheetManager>
   );
 
   return isElectron ? (

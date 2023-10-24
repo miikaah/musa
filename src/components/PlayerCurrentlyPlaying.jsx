@@ -1,8 +1,8 @@
 import React from "react";
+import styled, { css } from "styled-components";
 import AlbumImageV2 from "./common/AlbumImageV2";
 import { ellipsisTextOverflow } from "common.styles";
 import { fadeIn } from "animations";
-import styled, { styledWithPropFilter, css } from "styled";
 
 const commonImageCss = css`
   width: 50px;
@@ -20,7 +20,7 @@ const Container = styled.div`
   }
 `;
 
-const Info = styledWithPropFilter("div")`
+const Info = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 290px;
@@ -48,7 +48,7 @@ const PlaceholderImage = styled.div`
   opacity: 0.666;
 `;
 
-const PlaceholderLine = styledWithPropFilter("div")`
+const PlaceholderLine = styled.div`
   background: #d7d7d7;
   border-radius: 50px;
   animation: ${fadeIn} 0.2s;

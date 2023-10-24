@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
+import styled from "styled-components";
 import Palette from "../img-palette/img-palette";
 import { updateCurrentTheme } from "../util";
 import { breakpoints } from "../breakpoints";
@@ -12,7 +13,6 @@ import CoverInfo from "./CoverInfo";
 import ThemeBlock from "./ThemeBlock";
 import { rgb2hsl, hsl2rgb } from "colors";
 import Api from "api-client";
-import styled, { styledWithPropFilter } from "styled";
 
 const Colors = {
   Bg: "#21252b",
@@ -30,7 +30,7 @@ const Colors = {
   RedRgb: [255, 0, 0],
 };
 
-const Container = styledWithPropFilter("div", (prop) => prop !== "isSmall")`
+const Container = styled.div`
   width: 100%;
   max-width: 1010px;
   min-width: ${({ isSmall }) => (isSmall ? "var(--library-width)" : "1010px")};
@@ -61,7 +61,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Image = styledWithPropFilter("img").attrs(
+const Image = styled.img.attrs(
   ({ maxHeight, isCoverLoaded, src, scaleDownImage, isMobile }) => ({
     style: {
       maxHeight: `${maxHeight}px`,

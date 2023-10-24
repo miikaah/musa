@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 import ThemeLibrary from "components/ThemeLibrary";
 import ReplaygainSetting from "components/ReplaygainSetting";
 import PreAmpSetting from "components/PreAmpSetting";
@@ -9,7 +10,6 @@ import Button from "components/Button";
 import BasePage from "components/BasePage";
 import config from "config";
 import Api from "api-client";
-import styled from "styled";
 
 const { isElectron } = config;
 

@@ -1,7 +1,7 @@
 import React from "react";
-import { styledWithPropFilter, css } from "styled";
+import styled, { css } from "styled-components";
 
-const Container = styledWithPropFilter("div")`
+const Container = styled.div`
   display: flex;
   align-items: center;
   min-width: ${({ width }) => `${width}px`};
@@ -27,7 +27,7 @@ const sharedCss = css`
   width: 100%;
 `;
 
-const Background = styledWithPropFilter("div")`
+const Background = styled.div`
   ${sharedCss}
   max-width: ${({ width }) => `${width}px`};
   min-width: ${({ width }) => `${width}px`};
@@ -36,12 +36,12 @@ const Background = styledWithPropFilter("div")`
   margin: 0 auto;
 `;
 
-const ForegroundWrapper = styledWithPropFilter("div")`
+const ForegroundWrapper = styled.div`
   ${sharedCss}
   overflow: hidden;
 `;
 
-const Foreground = styledWithPropFilter("div").attrs(({ progress }) => ({
+const Foreground = styled.div.attrs(({ progress }) => ({
   style: {
     transform: `translateX(-${progress}%)`,
   },

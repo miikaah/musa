@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
+import styled, { css } from "styled-components";
 import { setQuery } from "reducers/search.reducer";
 import { ellipsisTextOverflow } from "common.styles";
-import styled, { css } from "styled";
 
 const bottomBorder = css`
   cursor: pointer;

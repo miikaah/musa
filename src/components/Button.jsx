@@ -1,7 +1,7 @@
 import React from "react";
-import { styledWithPropFilter } from "styled";
+import styled from "styled-components";
 
-const ButtonContainer = styledWithPropFilter("button")`
+const ButtonContainer = styled.button`
   width: 100%;
   font-size: 1rem;
   padding: 12px;

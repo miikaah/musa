@@ -1,7 +1,7 @@
 import React from "react";
-import { styledWithPropFilter } from "styled";
+import styled from "styled-components";
 
-const Icon = styledWithPropFilter("div")`
+const Icon = styled.div`
   ${({ isSmall }) =>
     isSmall &&
     `
