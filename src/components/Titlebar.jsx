@@ -170,7 +170,7 @@ const locationToTitleMap = {
   "/settings/": "Settings",
 };
 
-const Titlebar = ({ currentProfile, playlist, dispatch }) => {
+const Titlebar = ({ playlist, dispatch }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
     window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
@@ -432,12 +432,6 @@ const Titlebar = ({ currentProfile, playlist, dispatch }) => {
           >
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
-
-          {!isMobile && currentProfile && (
-            <button>
-              <ProfileName>{currentProfile.split("@")[0]}</ProfileName>
-            </button>
-          )}
         </div>
 
         {!isMobile && <Title>{locationToTitleMap[location.pathname]}</Title>}
@@ -463,7 +457,6 @@ export default connect(
   (state) => ({
     musicLibraryPath: state.settings.musicLibraryPath,
     currentLocation: state.settings.currentLocation,
-    currentProfile: state.profile.currentProfile,
     playlist: state.player.items,
   }),
   (dispatch) => ({ dispatch }),
