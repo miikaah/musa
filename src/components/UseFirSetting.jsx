@@ -10,14 +10,14 @@ const FirFilesContainer = styled.div`
   max-width: 486px;
 `;
 
-const UseFirSetting = ({ isInit }) => {
+const UseFirSetting = ({ isInit, t }) => {
   if (!isInit) {
     return null;
   }
 
   return (
     <>
-      <h5>Impulse response EQ</h5>
+      <h5>{t("settings.experimental.impulseResponseEq")}</h5>
       <FirFilesContainer>
         {Object.entries(firFileMap).map(([name, filename]) => (
           <UseFirFile key={filename} name={name} filename={filename} />
@@ -30,6 +30,7 @@ const UseFirSetting = ({ isInit }) => {
 export default connect(
   (state) => ({
     isInit: state.settings.isInit,
+    t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),
 )(UseFirSetting);

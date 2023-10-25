@@ -1,5 +1,6 @@
 import { FALLBACK_THEME, firFileMap } from "config";
 import { REPLAYGAIN_TYPE } from "../util";
+import { translate } from "i18n/i18n";
 
 export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS";
 export const updateSettings = (props) => ({
@@ -27,15 +28,25 @@ const initialState = {
         makeUpGain: 0,
       },
     }),
-    {}
+    {},
   ),
   volume: VOLUME_DEFAULT,
   musicLibraryPath: "",
+  language: "en",
+  t: translate("en"),
 };
 
 const settings = (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_SETTINGS: {
+      if (action.props.language) {
+        return {
+          ...state,
+          ...action.props,
+          t: translate(action.props.language),
+        };
+      }
+
       return {
         ...state,
         ...action.props,

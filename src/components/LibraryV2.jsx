@@ -76,7 +76,7 @@ const Label = styled.div`
   }
 `;
 
-const Library = ({ forwardRef, libraryMode, listingWithLabels }) => {
+const Library = ({ forwardRef, libraryMode, listingWithLabels, t }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [filter, setFilter] = useState("");
   const [filteredListing, setFilteredListing] = useState({});
@@ -139,7 +139,7 @@ const Library = ({ forwardRef, libraryMode, listingWithLabels }) => {
               id="artistFilter"
               autoFocus
               value={filter}
-              placeholder="Filter by artist"
+              placeholder={t("library.filter.placeholder")}
               onChange={(e) => setFilter(e.target.value)}
             />
             <FontAwesomeIcon onClick={clearArtistFilter} icon="xmark" />
@@ -175,6 +175,7 @@ const Library = ({ forwardRef, libraryMode, listingWithLabels }) => {
 const ConnectedLibrary = connect(
   (state) => ({
     listingWithLabels: state.library.listingWithLabels,
+    t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),
 )(Library);

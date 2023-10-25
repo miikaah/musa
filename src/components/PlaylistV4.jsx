@@ -123,6 +123,7 @@ const Playlist = ({
   currentItem,
   currentIndex,
   toggleModal,
+  t,
   dispatch,
 }) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
@@ -457,76 +458,82 @@ const Playlist = ({
     return (
       <Instructions isSmall={isSmall}>
         <InstructionsWrapper>
-          <p>Drag and drop Artists, Albums and Songs here</p>
+          <p>{t("playlist.instructions.title")}</p>
           <ControlsInstructions>
-            <ControlsHeader>Play controls</ControlsHeader>
+            <ControlsHeader>
+              {t("playlist.instructions.playControls")}
+            </ControlsHeader>
             <ControlsInstruction>
-              <div>Play / Pause</div>
-              <div>Spacebar</div>
+              <div>{t("playlist.instructions.playPause")}</div>
+              <div>{t("playlist.instructions.spacebar")}</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Mute</div>
+              <div>{t("playlist.instructions.mute")}</div>
               <div>M</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Toggle Search</div>
+              <div>{t("playlist.instructions.toggleSearch")}</div>
               <div>Ctrl / Cmd + Shift + F</div>
             </ControlsInstruction>
 
-            <ControlsHeader>Playlist controls</ControlsHeader>
+            <ControlsHeader>
+              {t("playlist.instructions.playlistControls")}
+            </ControlsHeader>
             <ControlsInstruction>
-              <div>Play / Replay</div>
+              <div>{t("playlist.instructions.playReplay")}</div>
               <div>Enter</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Select</div>
-              <div>Click + Drag</div>
+              <div>{t("playlist.instructions.select")}</div>
+              <div>{t("playlist.instructions.clickAndDrag")}</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Select All</div>
+              <div>{t("playlist.instructions.selectAll")}</div>
               <div>Ctrl / Cmd + A</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Cut</div>
+              <div>{t("playlist.instructions.cut")}</div>
               <div>Ctrl / Cmd + X</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Copy</div>
+              <div>{t("playlist.instructions.copy")}</div>
               <div>Ctrl / Cmd + C</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Paste</div>
+              <div>{t("playlist.instructions.paste")}</div>
               <div>Ctrl / Cmd + V</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Remove</div>
-              <div>Backspace / Delete</div>
+              <div>{t("playlist.instructions.remove")}</div>
+              <div>{t("playlist.instructions.backspaceOrDelete")}</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Duplicate selection</div>
+              <div>{t("playlist.instructions.duplicateSelection")}</div>
               <div>Ctrl / Cmd + Shift + D</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Move item with pointer</div>
-              <div>Long press</div>
+              <div>{t("playlist.instructions.moveItemWithPointer")}</div>
+              <div>{t("playlist.instructions.longPress")}</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Move Up</div>
-              <div>Up Arrow</div>
+              <div>{t("playlist.instructions.moveUp")}</div>
+              <div>{t("playlist.instructions.upArrow")}</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Move Down</div>
-              <div>Down Arrow</div>
+              <div>{t("playlist.instructions.moveDown")}</div>
+              <div>{t("playlist.instructions.downArrow")}</div>
             </ControlsInstruction>
 
-            <ControlsHeader>Touch controls</ControlsHeader>
+            <ControlsHeader>
+              {t("playlist.instructions.touchControls")}
+            </ControlsHeader>
             <ControlsInstruction>
-              <div>Play / Replay</div>
-              <div>Double tap</div>
+              <div>{t("playlist.instructions.playReplay")}</div>
+              <div>{t("playlist.instructions.doubleTap")}</div>
             </ControlsInstruction>
             <ControlsInstruction>
-              <div>Add from library</div>
-              <div>Long touch</div>
+              <div>{t("playlist.instructions.addFromLibrary")}</div>
+              <div>{t("playlist.instructions.longPress")}</div>
             </ControlsInstruction>
           </ControlsInstructions>
         </InstructionsWrapper>
@@ -582,6 +589,7 @@ export default connect(
     playlist: state.player.items,
     currentItem: state.player.currentItem,
     currentIndex: state.player.currentIndex,
+    t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),
 )(Playlist);

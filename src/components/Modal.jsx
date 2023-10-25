@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import styled, { css } from "styled-components";
 
 const Container = styled.div`
@@ -26,13 +27,20 @@ const CloseButton = styled.button`
   color: var(--color-typography);
 `;
 
-const Modal = ({ closeModal, children, maxWidth, top }) => {
+const Modal = ({ closeModal, children, maxWidth, top, t }) => {
   return (
     <Container maxWidth={maxWidth} top={top}>
-      {closeModal && <CloseButton onClick={closeModal}>Close</CloseButton>}
+      {closeModal && (
+        <CloseButton onClick={closeModal}>{t("modal.closeButton")}</CloseButton>
+      )}
       {children}
     </Container>
   );
 };
 
-export default Modal;
+export default connect(
+  (state) => ({
+    t: state.settings.t,
+  }),
+  (dispatch) => ({ dispatch }),
+)(Modal);

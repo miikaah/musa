@@ -86,7 +86,7 @@ library.add(
   faShare,
 );
 
-const App = ({ dispatch }) => {
+const App = ({ isInit, t, dispatch }) => {
   const [isReady, setIsReady] = useState();
 
   useEffect(() => {
@@ -99,11 +99,28 @@ const App = ({ dispatch }) => {
     Api.addScanEndListener(() => {
       dispatch(setScanProps({ reset: true }));
     });
-    Api.addScanCompleteListener(() => {
-      dispatchToast("Update complete", "update-complete", dispatch);
-    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    // This block has to run after settings have been fetched
+    // so that the correct language has been loaded
+    if (isReady || !isInit) {
+      return;
+    }
+
+    if (isElectron) {
+      dispatchToast(
+        t("toast.updatingLibrary"),
+        `library-update-${Date.now()}`,
+        dispatch,
+      );
+    }
+
+    Api.addScanCompleteListener(() => {
+      dispatchToast(t("toast.updateComplete"), "update-complete", dispatch);
+    });
+  }, [isInit]);
 
   useEffect(() => {
     const update = (settings) => {
@@ -133,12 +150,6 @@ const App = ({ dispatch }) => {
       .then(() => Api.onInit())
       .then(() => {
         if (isElectron) {
-          dispatchToast(
-            "Updating library",
-            `library-update-${Date.now()}`,
-            dispatch,
-          );
-
           Api.getArtists().then((artists) =>
             dispatch(setListingWithLabels(artists)),
           );
@@ -208,6 +219,9 @@ const App = ({ dispatch }) => {
 };
 
 export default connect(
-  (state) => ({}),
+  (state) => ({
+    isInit: state.settings.isInit,
+    t: state.settings.t,
+  }),
   (dispatch) => ({ dispatch }),
 )(App);

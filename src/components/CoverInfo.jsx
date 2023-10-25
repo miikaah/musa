@@ -91,7 +91,7 @@ const getSampleRate = (sampleRate) => {
   return sampleRate ? `${sampleRate} Hz` : "";
 };
 
-const CoverInfo = ({ item, isSmall, toggleEdit }) => {
+const CoverInfo = ({ item, isSmall, toggleEdit, t }) => {
   if (Object.keys(item) < 1) {
     return null;
   }
@@ -122,31 +122,31 @@ const CoverInfo = ({ item, isSmall, toggleEdit }) => {
       <MetadataContainer>
         <Metadata>
           <div>
-            <span>Genre</span>
+            <span>{t("coverInfo.metadata.genre")}</span>
             <span title={genre}>{genre}</span>
           </div>
           <div>
-            <span>Replaygain track</span>
+            <span>{t("coverInfo.metadata.normalization.track")}</span>
             <span>{item?.metadata?.replayGainTrackGain?.dB}</span>
           </div>
           <div>
-            <span>Replaygain album</span>
+            <span>{t("coverInfo.metadata.normalization.album")}</span>
             <span>{item?.metadata?.replayGainAlbumGain?.dB}</span>
           </div>
           <div>
-            <span>Dynamic range track</span>
+            <span>{t("coverInfo.metadata.dr.track")}</span>
             <span>{item?.metadata?.dynamicRange}</span>
           </div>
           <div>
-            <span>Dynamic range album</span>
+            <span>{t("coverInfo.metadata.dr.album")}</span>
             <span>{item?.metadata?.dynamicRangeAlbum}</span>
           </div>
           <div>
-            <span>Bitrate</span>
+            <span>{t("coverInfo.metadata.bitrate")}</span>
             <span>{bitrate}</span>
           </div>
           <div>
-            <span>Sample rate</span>
+            <span>{t("coverInfo.metadata.sampleRate")}</span>
             <span>{sampleRate}</span>
           </div>
         </Metadata>
@@ -156,6 +156,8 @@ const CoverInfo = ({ item, isSmall, toggleEdit }) => {
 };
 
 export default connect(
-  (state) => ({}),
+  (state) => ({
+    t: state.settings.t,
+  }),
   (dispatch) => ({ dispatch }),
 )(CoverInfo);

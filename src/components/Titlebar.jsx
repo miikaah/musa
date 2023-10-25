@@ -153,15 +153,15 @@ const ActionsContainer = styled.div`
   visibility: ${({ isElectron }) => (isElectron ? "visible" : "hidden")};
 `;
 
-const locationToTitleMap = {
+const locationToTitleMap = (t) => ({
   "/": "Musa",
-  "/search": "Search",
-  "/search/": "Search",
-  "/settings": "Settings",
-  "/settings/": "Settings",
-};
+  "/search": t("titlebar.location.search"),
+  "/search/": t("titlebar.location.search"),
+  "/settings": t("titlebar.location.settings"),
+  "/settings/": t("titlebar.location.settings"),
+});
 
-const Titlebar = ({ playlist, dispatch }) => {
+const Titlebar = ({ playlist, t, dispatch }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
     window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
@@ -319,7 +319,7 @@ const Titlebar = ({ playlist, dispatch }) => {
         copyToClipboard(text);
 
         dispatchToast(
-          `Copied ${text} to clipboard`,
+          t("toast.createPlaylist")(text),
           "share-playlist",
           dispatch,
         );
@@ -425,7 +425,7 @@ const Titlebar = ({ playlist, dispatch }) => {
           </SettingsButton>
         </div>
 
-        {!isMobile && <Title>{locationToTitleMap[location.pathname]}</Title>}
+        {!isMobile && <Title>{locationToTitleMap(t)[location.pathname]}</Title>}
 
         <ActionsContainer isElectron={isElectron}>
           <MinButton onClick={minimize}>
@@ -446,8 +446,7 @@ const Titlebar = ({ playlist, dispatch }) => {
 
 export default connect(
   (state) => ({
-    musicLibraryPath: state.settings.musicLibraryPath,
-    currentLocation: state.settings.currentLocation,
+    t: state.settings.t,
     playlist: state.player.items,
   }),
   (dispatch) => ({ dispatch }),

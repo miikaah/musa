@@ -49,7 +49,7 @@ const SaveButton = styled(Button)`
   margin-top: 10px;
 `;
 
-const TagEditor = ({ files = [], dispatch }) => {
+const TagEditor = ({ files = [], t, dispatch }) => {
   const [artist, setArtist] = useState();
   const [title, setTitle] = useState();
   const [album, setAlbum] = useState();
@@ -131,13 +131,13 @@ const TagEditor = ({ files = [], dispatch }) => {
 
     if (err) {
       dispatchToast(
-        "Failed to update tags",
+        t("toast.failedToUpdateTags"),
         `tag-update-failure-${Date.now()}`,
         dispatch,
       );
     } else {
       dispatchToast(
-        "Tags updated",
+        t("toast.succeededToUpdateTags"),
         `tag-update-success-${Date.now()}`,
         dispatch,
       );
@@ -146,7 +146,7 @@ const TagEditor = ({ files = [], dispatch }) => {
 
   return (
     <>
-      <h3>Tag editor</h3>
+      <h3>{t("tagEditor.title")}</h3>
       {files.map((file) => {
         const isDisabled =
           !(file?.metadata?.codec || "").toLowerCase().startsWith("mpeg") &&
@@ -158,69 +158,69 @@ const TagEditor = ({ files = [], dispatch }) => {
               {file.fileUrl.replace("media:\\", "").replace("media:/", "")}
             </Filename>
             <Wrapper>
-              <span>Artist</span>
+              <span>{t("tagEditor.tag.artist")}</span>
               <TagInput
                 field={file?.metadata?.artist || ""}
                 updateValue={setArtist}
                 isDisabled={isDisabled}
               />
-              <span>Title</span>
+              <span>{t("tagEditor.tag.title")}</span>
               <TagInput
                 field={file?.metadata?.title || ""}
                 updateValue={setTitle}
                 isDisabled={isDisabled}
               />
-              <span>Album</span>
+              <span>{t("tagEditor.tag.album")}</span>
               <TagInput
                 field={file?.metadata?.album || ""}
                 updateValue={setAlbum}
                 isDisabled={isDisabled}
               />
-              <span>Year</span>
+              <span>{t("tagEditor.tag.year")}</span>
               <TagInput
                 field={file?.metadata?.year || ""}
                 updateValue={setYear}
                 isDisabled={isDisabled}
               />
-              <span>Track</span>
+              <span>{t("tagEditor.tag.track")}</span>
               <TagInput
                 field={file?.metadata?.track?.no || ""}
                 updateValue={setTrack}
                 isDisabled={isDisabled}
               />
-              <span>Tracks</span>
+              <span>{t("tagEditor.tag.tracks")}</span>
               <TagInput
                 field={file?.metadata?.track?.of || ""}
                 updateValue={setTracks}
                 isDisabled={isDisabled}
               />
-              <span>Disk</span>
+              <span>{t("tagEditor.tag.disk")}</span>
               <TagInput
                 field={file?.metadata?.disk?.no || ""}
                 updateValue={setDisk}
                 isDisabled={isDisabled}
               />
-              <span>Disks</span>
+              <span>{t("tagEditor.tag.disks")}</span>
               <TagInput
                 field={file?.metadata?.disk?.of || ""}
                 updateValue={setDisks}
                 isDisabled={isDisabled}
               />
-              <span>Genre</span>
+              <span>{t("tagEditor.tag.genre")}</span>
               <TagInput
                 field={(file?.metadata?.genre || []).join(", ")}
                 updateValue={setGenre}
                 isDisabled={isDisabled}
               />
-              <span>Composer</span>
+              <span>{t("tagEditor.tag.composer")}</span>
               <TagInput
                 field={(file?.metadata?.composer || []).join(", ")}
                 updateValue={setComposer}
                 isDisabled={isDisabled}
               />
-              <span>Codec</span>
+              <span>{t("tagEditor.tag.codec")}</span>
               <TagInput field={getCodecInfo(file)} isDisabled />
-              <span>Comment</span>
+              <span>{t("tagEditor.tag.comment")}</span>
               <TagTextarea
                 field={(file?.metadata?.comment || []).join(" ")}
                 updateValue={setComment}
@@ -232,7 +232,7 @@ const TagEditor = ({ files = [], dispatch }) => {
               isPrimary
               disabled={isUpdating}
             >
-              Save
+              {t("tagEditor.saveButton")}
             </SaveButton>
           </Container>
         );
@@ -242,6 +242,8 @@ const TagEditor = ({ files = [], dispatch }) => {
 };
 
 export default connect(
-  (state) => ({}),
+  (state) => ({
+    t: state.settings.t,
+  }),
   (dispatch) => ({ dispatch }),
 )(TagEditor);

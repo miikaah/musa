@@ -8,6 +8,7 @@ import UseFirSetting from "components/UseFirSetting";
 import MusicLibrarySetting from "components/MusicLibrarySetting";
 import Button from "components/Button";
 import BasePage from "components/BasePage";
+import LanguageSetting from "components/LanguageSetting";
 import config from "config";
 import Api from "apiClient";
 
@@ -41,7 +42,7 @@ const ActionButton = styled(Button)`
   max-width: 200px;
 `;
 
-const Settings = ({ musicLibraryPath, currentProfile }) => {
+const Settings = ({ musicLibraryPath, currentProfile, t }) => {
   const [themes, setThemes] = useState([]);
   const [hasFetchedThemes, setHasFetchedThemes] = useState(false);
 
@@ -65,12 +66,12 @@ const Settings = ({ musicLibraryPath, currentProfile }) => {
     <>
       {!isElectron && currentProfile && (
         <SettingsBlock>
-          <h3>Profile</h3>
+          <h3>{t("settings.profile.title")}</h3>
           <p>{currentProfile}</p>
         </SettingsBlock>
       )}
       <SettingsBlock>
-        <h3>Theme</h3>
+        <h3>{t("settings.theme.title")}</h3>
         <ThemeLibrary themes={themes} setThemes={setThemes} />
       </SettingsBlock>
     </>
@@ -83,20 +84,20 @@ const Settings = ({ musicLibraryPath, currentProfile }) => {
           {
             <FirstRow>
               <SettingsBlock>
-                <h3>Library</h3>
-                <h5>Path</h5>
+                <h3>{t("settings.library.title")}</h3>
+                <h5>{t("settings.library.path")}</h5>
                 <MusicLibrarySetting />
               </SettingsBlock>
               <div>
                 <SettingsBlock>
-                  <h3>Advanced</h3>
-                  <h5>Replaygain</h5>
+                  <h3>{t("settings.advanced.title")}</h3>
+                  <h5>{t("settings.advanced.normalization")}</h5>
                   <ReplaygainSetting />
                 </SettingsBlock>
                 <SettingsBlock>
-                  <h5>Actions</h5>
+                  <h5>{t("settings.advanced.actions")}</h5>
                   <ActionButton onClick={runInitialScan} isPrimary>
-                    Update library
+                    {t("settings.advanced.updateLibrary")}
                   </ActionButton>
                 </SettingsBlock>
               </div>
@@ -109,12 +110,12 @@ const Settings = ({ musicLibraryPath, currentProfile }) => {
         <>
           {getThemesBlock()}
           <SettingsBlock>
-            <h3>Replaygain</h3>
+            <h3>{t("settings.advanced.normalization")}</h3>
             <ReplaygainSetting />
           </SettingsBlock>
         </>
       )}
-      <h3>Experimental</h3>
+      <h3>{t("settings.experimental.title")}</h3>
       <ExperimentalContainer>
         <SettingsBlock>
           <PreAmpSetting />
@@ -123,6 +124,10 @@ const Settings = ({ musicLibraryPath, currentProfile }) => {
           <UseFirSetting />
         </SettingsBlock>
       </ExperimentalContainer>
+      <h3>{t("settings.language.title")}</h3>
+      <SettingsBlock>
+        <LanguageSetting />
+      </SettingsBlock>
     </BasePage>
   );
 };
@@ -130,6 +135,7 @@ const Settings = ({ musicLibraryPath, currentProfile }) => {
 export default connect(
   (state) => ({
     musicLibraryPath: state.settings.musicLibraryPath,
+    t: state.settings.t,
     currentProfile: state.profile.currentProfile,
   }),
   (dispatch) => ({ dispatch }),

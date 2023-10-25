@@ -190,7 +190,7 @@ const ArrowDown = styled(ArrowDownStyled)`
 `;
 
 const buttonStyles = css`
-  max-width: 100px;
+  max-width: 120px;
   max-height: 40px;
   justify-self: end;
   align-self: center;
@@ -218,6 +218,7 @@ const Search = ({
   isSearchTermLocked,
   scrollPos,
   listingWithLabels,
+  t,
   dispatch,
 }) => {
   const [isFetching, setIsFetching] = useState(false);
@@ -335,7 +336,7 @@ const Search = ({
           <SearchInputContainer query={query}>
             <input
               value={query}
-              placeholder="Search by term or year"
+              placeholder={t("search.input.placeholder")}
               onChange={updateQuery}
             />
             <ArrowDown onClick={toggleGenreSelect} />
@@ -359,15 +360,17 @@ const Search = ({
           </SearchInputContainer>
 
           <RandomButton isPrimary isSmall onClick={findRandom}>
-            Random
+            {t("search.action.random")}
           </RandomButton>
           <ClearButton isSecondary isSmall onClick={clear}>
-            Clear
+            {t("search.action.clear")}
           </ClearButton>
         </InputContainer>
         <Wrapper>
           <SearchBlock>
-            <h5>Artists{` (${artistToRender.length})`}</h5>
+            <h5>{`${t("search.results.artists")} (${
+              artistToRender.length
+            })`}</h5>
             <SearchBlockWrapper
               ref={artistListRef}
               onScroll={(event) => {
@@ -384,7 +387,7 @@ const Search = ({
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
-            <h5>Albums{` (${albums.length})`}</h5>
+            <h5>{`${t("search.results.albums")} (${albums.length})`}</h5>
             <SearchBlockWrapper
               ref={albumListRef}
               onScroll={(event) => {
@@ -408,7 +411,7 @@ const Search = ({
             </SearchBlockWrapper>
           </SearchBlock>
           <SearchBlock>
-            <h5>Songs{` (${audios.length})`}</h5>
+            <h5>{`${t("search.results.songs")} (${audios.length})`}</h5>
             <SearchBlockWrapper
               ref={audioListRef}
               onScroll={(event) => {
@@ -447,6 +450,7 @@ export default connect(
     isSearchTermLocked: state.search.isSearchTermLocked,
     scrollPos: state.search.scrollPos,
     listingWithLabels: state.library.listingWithLabels,
+    t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),
 )(Search);

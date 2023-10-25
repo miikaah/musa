@@ -68,7 +68,7 @@ const SongInfo = styled.div`
   }
 `;
 
-const Song = ({ item, dispatch }) => {
+const Song = ({ item, t, dispatch }) => {
   if (!item) {
     return null;
   }
@@ -76,7 +76,7 @@ const Song = ({ item, dispatch }) => {
   const addSongToPlaylist = () => {
     dispatch(addToPlaylist(item));
 
-    const msg = `Added ${item.name} to playlist`;
+    const msg = t("toast.addAlbumOrSongToPlaylist")(item.name);
     const key = `${item.name}-${Date.now()}`;
     dispatchToast(msg, key, dispatch);
   };
@@ -135,6 +135,8 @@ const Song = ({ item, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({}),
+  (state) => ({
+    t: state.settings.t,
+  }),
   (dispatch) => ({ dispatch }),
 )(Song);

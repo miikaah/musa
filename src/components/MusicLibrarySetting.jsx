@@ -23,7 +23,7 @@ const MusicLibrarySettingPath = styled.div`
   }
 `;
 
-const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
+const MusicLibrarySetting = ({ musicLibraryPath, t, dispatch }) => {
   const removeLibraryPath = () => {
     dispatch(
       updateSettings({
@@ -55,7 +55,7 @@ const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
         </Button>
       </MusicLibrarySettingPath>
       <Button onClick={addLibraryPath} isPrimary disabled={musicLibraryPath}>
-        Add new
+        {t("settings.library.addNew")}
       </Button>
     </Container>
   );
@@ -64,6 +64,7 @@ const MusicLibrarySetting = ({ musicLibraryPath, dispatch }) => {
 export default connect(
   (state) => ({
     musicLibraryPath: state.settings.musicLibraryPath,
+    t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),
 )(MusicLibrarySetting);

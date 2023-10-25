@@ -1,58 +1,35 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
 import { REPLAYGAIN_TYPE } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
-import { ArrowDown as ArrowDownStyled } from "common.styles";
+import SettingSelect from "./SettingSelect";
 
-const ReplaygainSettingSelect = styled.div`
-  position: relative;
-
-  select {
-    appearance: none;
-    width: 200px;
-    padding: 10px;
-    font-size: var(--font-size-sm);
-    border-radius: 0;
-    background-color: var(--color-primary-highlight);
-    color: var(--color-typography-primary);
-    cursor: pointer;
-    border-color: transparent;
-  }
-`;
-
-const ArrowDown = styled(ArrowDownStyled)`
-  position: absolute;
-  left: 170px;
-  top: 15px;
-  pointer-events: none;
-`;
-
-const ReplaygainSetting = ({ replaygainType, isInit, dispatch }) => {
-  if (!isInit) {
-    return null;
-  }
-
+const ReplaygainSetting = ({ replaygainType, t, dispatch }) => {
   const updateState = (event) => {
     dispatch(updateSettings({ replaygainType: event.target.value }));
   };
 
   return (
-    <ReplaygainSettingSelect>
+    <SettingSelect>
       <select value={replaygainType} onChange={updateState}>
-        <option value={REPLAYGAIN_TYPE.Track}>Track</option>
-        <option value={REPLAYGAIN_TYPE.Album}>Album</option>
-        <option value={REPLAYGAIN_TYPE.Off}>Off</option>
+        <option value={REPLAYGAIN_TYPE.Track}>
+          {t("settings.advanced.normalization.track")}
+        </option>
+        <option value={REPLAYGAIN_TYPE.Album}>
+          {t("settings.advanced.normalization.album")}
+        </option>
+        <option value={REPLAYGAIN_TYPE.Off}>
+          {t("settings.advanced.normalization.off")}
+        </option>
       </select>
-      <ArrowDown />
-    </ReplaygainSettingSelect>
+    </SettingSelect>
   );
 };
 
 export default connect(
   (state) => ({
     replaygainType: state.settings.replaygainType,
-    isInit: state.settings.isInit,
+    t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),
 )(ReplaygainSetting);

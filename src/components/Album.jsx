@@ -71,13 +71,13 @@ const AlbumInfo = styled.div`
   }
 `;
 
-const Album = ({ item, dispatch }) => {
+const Album = ({ item, t, dispatch }) => {
   if (!item) {
     return null;
   }
 
   const addAlbumSongsToPlaylist = () => {
-    const msg = `Added ${album} to playlist`;
+    const msg = t("toast.addAlbumOrSongToPlaylist")(album);
     const key = `${album}-${Date.now()}`;
 
     dispatch(
@@ -141,6 +141,8 @@ const Album = ({ item, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({}),
+  (state) => ({
+    t: state.settings.t,
+  }),
   (dispatch) => ({ dispatch }),
 )(Album);

@@ -59,7 +59,7 @@ const NoThemes = styled.div`
   padding-bottom: 12px;
 `;
 
-const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
+const ThemeLibrary = ({ currentTheme, themes, setThemes, t, dispatch }) => {
   const hasThemes = Array.isArray(themes) && themes.length > 0;
 
   const changeCurrentTheme = (theme) => {
@@ -86,7 +86,9 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
   return (
     <Container>
       <div>
-        <h5>Library ({themes.length})</h5>
+        <h5>
+          {t("settings.theme.collection")} ({themes.length})
+        </h5>
         <ThemeList>
           {hasThemes &&
             themes.map((theme) => (
@@ -96,12 +98,12 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
                 setCurrentTheme={changeCurrentTheme}
               />
             ))}
-          {!hasThemes && <NoThemes>No themes yet</NoThemes>}
+          {!hasThemes && <NoThemes>{t("settings.theme.noThemes")}</NoThemes>}
         </ThemeList>
       </div>
       <CurrentThemeContainer>
         <CurrentTheme>
-          <h5>Current theme</h5>
+          <h5>{t("settings.theme.currentTheme")}</h5>
           <ThemeWrapper>
             <ThemeList2>
               <ThemeBlock
@@ -112,7 +114,7 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
             </ThemeList2>
             {hasThemes && (
               <RemoveThemeButton onClick={removeTheme} isSecondary>
-                Remove theme
+                {t("settings.theme.removeTheme")}
               </RemoveThemeButton>
             )}
           </ThemeWrapper>
@@ -125,6 +127,7 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, dispatch }) => {
 export default connect(
   (state) => ({
     currentTheme: state.settings.currentTheme,
+    t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),
 )(ThemeLibrary);

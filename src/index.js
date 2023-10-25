@@ -15,10 +15,13 @@ export const store = createStore(rootReducer);
 let previousSettings;
 let timerId;
 store.subscribe(() => {
-  const settings = store.getState().settings;
+  const settings = { ...store.getState().settings };
 
   if (settings.isInit && !isEqual(previousSettings, settings)) {
     clearTimeout(timerId);
+
+    // Delete functions because they can not be serialized to JSON
+    delete settings.t;
 
     timerId = setTimeout(() => {
       Api.insertSettings({
