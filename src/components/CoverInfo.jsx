@@ -127,19 +127,19 @@ const CoverInfo = ({ item, isSmall, toggleEdit, t }) => {
           </div>
           <div>
             <span>{t("coverInfo.metadata.normalization.track")}</span>
-            <span>{item?.metadata?.replayGainTrackGain?.dB}</span>
+            <span>{item?.metadata?.replayGainTrackGain?.dB} dB</span>
           </div>
           <div>
             <span>{t("coverInfo.metadata.normalization.album")}</span>
-            <span>{item?.metadata?.replayGainAlbumGain?.dB}</span>
+            <span>{item?.metadata?.replayGainAlbumGain?.dB} dB</span>
           </div>
           <div>
             <span>{t("coverInfo.metadata.dr.track")}</span>
-            <span>{item?.metadata?.dynamicRange}</span>
+            <span>{item?.metadata?.dynamicRange} dB</span>
           </div>
           <div>
             <span>{t("coverInfo.metadata.dr.album")}</span>
-            <span>{item?.metadata?.dynamicRangeAlbum}</span>
+            <span>{item?.metadata?.dynamicRangeAlbum} dB</span>
           </div>
           <div>
             <span>{t("coverInfo.metadata.bitrate")}</span>
