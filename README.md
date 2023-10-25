@@ -27,7 +27,6 @@ jpeg, png and webp images.
 - feat: Bulk album tags editor + deduce tags from filename
 - feat: Add ReplayGain scanning
 - feat: Make navigation work with keyboard
-- feat: Language selector and i18n
 - feat: Create srcset of album covers
 - investigate: Script for downloading all impulse responses from AutoEQ repo?
 - investigate: How hard is it to write a rudimentary multiband compressor?
