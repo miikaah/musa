@@ -86,6 +86,35 @@ library.add(
   faShare,
 );
 
+// This should never be re-rendered from this level as changing the language
+// triggers a re-render for the App component but that screws up the Player
+// component which is inside of Toolbar component, which causes playing
+// to restart. The Player component should NEVER be re-rendered because
+// it has an AudioContext that breaks the app if it is reconnected.
+const Main = React.memo(() => (
+  <StyleSheetManager
+    shouldForwardProp={(propName, elementToBeRendered) => {
+      return typeof elementToBeRendered === "string"
+        ? isValidProp(propName)
+        : true;
+    }}
+  >
+    <ThemeProvider theme={theme}>
+      <AppContainer>
+        <Toaster />
+        <Titlebar />
+        <ProgressBar />
+        <Toolbar />
+        <Routes>
+          <Route exact path="/" element={<AppMain />} />
+          <Route exact path="/settings" element={<Settings />} />
+          <Route exact path="/search" element={<Search />} />
+        </Routes>
+      </AppContainer>
+    </ThemeProvider>
+  </StyleSheetManager>
+));
+
 const App = ({ isInit, t, dispatch }) => {
   const [isReady, setIsReady] = useState();
 
@@ -182,30 +211,6 @@ const App = ({ isInit, t, dispatch }) => {
   if (!isReady) {
     return null;
   }
-
-  const Main = () => (
-    <StyleSheetManager
-      shouldForwardProp={(propName, elementToBeRendered) => {
-        return typeof elementToBeRendered === "string"
-          ? isValidProp(propName)
-          : true;
-      }}
-    >
-      <ThemeProvider theme={theme}>
-        <AppContainer>
-          <Toaster />
-          <Titlebar />
-          <ProgressBar />
-          <Toolbar />
-          <Routes>
-            <Route exact path="/" element={<AppMain />} />
-            <Route exact path="/settings" element={<Settings />} />
-            <Route exact path="/search" element={<Search />} />
-          </Routes>
-        </AppContainer>
-      </ThemeProvider>
-    </StyleSheetManager>
-  );
 
   return isElectron ? (
     <HashRouter>

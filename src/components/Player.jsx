@@ -176,6 +176,9 @@ const Player = ({
   useEffect(() => {
     fetchHeadphoneFir()
       .then(() => {
+        if (track) {
+          return;
+        }
         track = audioContext.createMediaElementSource(audioEl);
 
         if (firFile) {
@@ -196,10 +199,6 @@ const Player = ({
         splitter.connect(analyzerR, 1);
       })
       .catch(console.error);
-
-    return () => {
-      audioContext.close();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -405,4 +404,4 @@ export default connect(
     firFile: state.settings.firFile,
   }),
   (dispatch) => ({ dispatch }),
-)(Player);
+)(React.memo(Player));
