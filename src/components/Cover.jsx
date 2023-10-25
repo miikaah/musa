@@ -12,7 +12,7 @@ import { setCoverData } from "reducers/player.reducer";
 import CoverInfo from "./CoverInfo";
 import ThemeBlock from "./ThemeBlock";
 import { rgb2hsl, hsl2rgb } from "colors";
-import Api from "api-client";
+import Api from "apiClient";
 
 const Colors = {
   Bg: "#21252b",

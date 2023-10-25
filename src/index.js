@@ -6,7 +6,7 @@ import isEqual from "lodash.isequal";
 import rootReducer from "./reducers";
 import ErrorBoundary from "./ErrorBoundary";
 import App from "./App.jsx";
-import Api from "api-client";
+import Api from "apiClient";
 
 import "./index.css";
 

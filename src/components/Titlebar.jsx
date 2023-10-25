@@ -8,7 +8,7 @@ import { KEYS, isCtrlDown, dispatchToast } from "../util";
 import Library from "components/LibraryV2";
 import { breakpoints } from "../breakpoints";
 import config from "config";
-import Api from "api-client";
+import Api from "apiClient";
 
 const { isElectron } = config;
 

@@ -5,7 +5,7 @@ import { updateCurrentTheme } from "../util";
 import { updateSettings } from "reducers/settings.reducer";
 import ThemeBlock from "./ThemeBlock";
 import Button from "./Button";
-import Api from "api-client";
+import Api from "apiClient";
 import { FALLBACK_THEME } from "config";
 
 const Container = styled.div`

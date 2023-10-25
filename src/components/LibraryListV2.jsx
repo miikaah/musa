@@ -4,7 +4,7 @@ import styled, { css } from "styled-components";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
 import config from "config";
-import Api from "api-client";
+import Api from "apiClient";
 import {
   expandHeight,
   contractHeight,

@@ -8,7 +8,7 @@ import Cover from "components/Cover";
 import Modal from "components/Modal";
 import TagEditor from "components/TagEditor";
 import config from "config";
-import Api from "api-client";
+import Api from "apiClient";
 
 const { isElectron } = config;
 

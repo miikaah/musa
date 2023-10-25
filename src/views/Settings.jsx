@@ -9,7 +9,7 @@ import MusicLibrarySetting from "components/MusicLibrarySetting";
 import Button from "components/Button";
 import BasePage from "components/BasePage";
 import config from "config";
-import Api from "api-client";
+import Api from "apiClient";
 
 const { isElectron } = config;
 

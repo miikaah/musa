@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { updateSettings } from "reducers/settings.reducer";
 import Button from "./Button";
-import Api from "api-client";
+import Api from "apiClient";
 
 const Container = styled.div``;
 

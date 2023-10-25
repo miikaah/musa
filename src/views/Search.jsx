@@ -18,7 +18,7 @@ import Artist from "components/Artist";
 import Button from "components/Button";
 import Select from "components/Select";
 import config from "config";
-import Api from "api-client";
+import Api from "apiClient";
 import { ArrowDown as ArrowDownStyled } from "common.styles";
 
 const { isElectron } = config;
