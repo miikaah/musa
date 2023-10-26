@@ -5,10 +5,10 @@
   "homepage": "./",
   "scripts": {
     "setup": "shx mkdir build && shx mkdir build-server",
-    "start": "shx rm -rf build-server && shx mkdir build-server && shx cp -R public/* build-server && env-cmd -f .env.server.local node scripts/serve.mjs",
-    "start:electron": "shx rm -rf build && shx mkdir build && shx cp -R public/* build && env-cmd -f .env.electron.local node scripts/serve.mjs",
-    "build": "shx rm -rf build-server && shx mkdir build-server && shx cp -R public/* build-server && env-cmd -f .env.server.prod node scripts/build.mjs && git rev-parse HEAD > version",
-    "build:electron": "shx rm -rf build && shx mkdir build && shx cp -R public/* build && env-cmd -f .env.electron.prod node scripts/build.mjs && git rev-parse HEAD > version"
+    "start:s": "vite --port 3667 --mode server",
+    "start:e": "vite --port 3666 --mode electron",
+    "build:s": "shx rm -rf build-server && shx mkdir build-server && shx cp -R public/* build-server && env-cmd -f .env.server.prod node scripts/build.mjs && git rev-parse HEAD > version",
+    "build:e": "shx rm -rf build && shx mkdir build && shx cp -R public/* build && env-cmd -f .env.electron.prod node scripts/build.mjs && git rev-parse HEAD > version"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.2.1",
@@ -30,6 +30,7 @@
     "styled-components": "^6.0.8"
   },
   "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.4.0",
     "env-cmd": "^10.1.0",
     "esbuild": "^0.19.4",
     "esbuild-plugin-inline-image": "^0.0.9",
@@ -38,6 +39,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "handlebars": "^4.7.8",
     "prettier": "^3.0.3",
-    "shx": "^0.3.4"
+    "shx": "^0.3.4",
+    "vite": "^4.5.0"
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { ArrowDown as ArrowDownStyled } from "common.styles";
+import { ArrowDown as ArrowDownStyled } from "../common.styles";
 
 const StyledSettingSelect = styled.div`
   position: relative;

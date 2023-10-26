@@ -5,10 +5,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown, dispatchToast } from "../util";
-import Library from "components/LibraryV2";
+import Library from "./LibraryV2";
 import { breakpoints } from "../breakpoints";
-import config from "config";
-import Api from "apiClient";
+import config from "../config";
+import Api from "../apiClient";
 
 const { isElectron } = config;
 

@@ -3,16 +3,16 @@ import { connect, useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./common/AlbumCoverV2";
-import config from "config";
-import Api from "apiClient";
+import config from "../config";
+import Api from "../apiClient";
 import {
   expandHeight,
   contractHeight,
   fadeOut,
   expandHeightAlbum,
   contractHeightAlbum,
-} from "animations";
-import { pasteToPlaylist } from "reducers/player.reducer";
+} from "../animations";
+import { pasteToPlaylist } from "../reducers/player.reducer";
 import { breakpoints } from "../breakpoints";
 
 const { isElectron } = config;

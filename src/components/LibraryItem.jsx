@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { addToPlaylist } from "reducers/player.reducer";
-import config from "config";
-import Api from "apiClient";
+import { addToPlaylist } from "../reducers/player.reducer";
+import config from "../config";
+import Api from "../apiClient";
 import { breakpoints } from "../breakpoints";
 
 const { isElectron } = config;

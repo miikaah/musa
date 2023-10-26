@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components";
-import { playIndex, replay } from "reducers/player.reducer";
+import { playIndex, replay } from "../reducers/player.reducer";
 import { formatDuration } from "../util";
-import { ellipsisTextOverflow } from "common.styles";
+import { ellipsisTextOverflow } from "../common.styles";
 import AlbumImage from "./common/AlbumImageV2";
-import { breakpoints } from "breakpoints";
+import { breakpoints } from "../breakpoints";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);

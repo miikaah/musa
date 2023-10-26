@@ -4,9 +4,9 @@ import styled from "styled-components";
 import TagInput from "./TagInput";
 import TagTextarea from "./TagTextarea";
 import Button from "./Button";
-import Api from "apiClient";
+import Api from "../apiClient";
 import { dispatchToast } from "../util";
-import { ellipsisTextOverflow } from "common.styles";
+import { ellipsisTextOverflow } from "../common.styles";
 
 const Container = styled.div`
   display: flex;

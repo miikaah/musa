@@ -7,12 +7,12 @@ import styled from "styled-components";
 import Palette from "../img-palette/img-palette";
 import { updateCurrentTheme } from "../util";
 import { breakpoints } from "../breakpoints";
-import { updateSettings } from "reducers/settings.reducer";
-import { setCoverData } from "reducers/player.reducer";
+import { updateSettings } from "../reducers/settings.reducer";
+import { setCoverData } from "../reducers/player.reducer";
 import CoverInfo from "./CoverInfo";
 import ThemeBlock from "./ThemeBlock";
-import { rgb2hsl, hsl2rgb } from "colors";
-import Api from "apiClient";
+import { rgb2hsl, hsl2rgb } from "../colors";
+import Api from "../apiClient";
 
 const Colors = {
   Bg: "#21252b",

@@ -1,8 +1,8 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import AlbumImageV2 from "./common/AlbumImageV2";
-import { ellipsisTextOverflow } from "common.styles";
-import { fadeIn } from "animations";
+import { ellipsisTextOverflow } from "../common.styles";
+import { fadeIn } from "../animations";
 
 const commonImageCss = css`
   width: 50px;

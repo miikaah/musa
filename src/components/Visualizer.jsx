@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
-import { rgb2hsl, hsl2rgb } from "colors";
 import styled from "styled-components";
+import { rgb2hsl, hsl2rgb } from "../colors";
 
 /*
  * Square is a good shape for seeing the relative power differences

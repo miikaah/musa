@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import ThemeLibrary from "components/ThemeLibrary";
-import ReplaygainSetting from "components/ReplaygainSetting";
-import PreAmpSetting from "components/PreAmpSetting";
-import UseFirSetting from "components/UseFirSetting";
-import MusicLibrarySetting from "components/MusicLibrarySetting";
-import Button from "components/Button";
-import BasePage from "components/BasePage";
-import LanguageSetting from "components/LanguageSetting";
-import config from "config";
-import Api from "apiClient";
+import ThemeLibrary from "../components/ThemeLibrary";
+import ReplaygainSetting from "../components/ReplaygainSetting";
+import PreAmpSetting from "../components/PreAmpSetting";
+import UseFirSetting from "../components/UseFirSetting";
+import MusicLibrarySetting from "../components/MusicLibrarySetting";
+import Button from "../components/Button";
+import BasePage from "../components/BasePage";
+import LanguageSetting from "../components/LanguageSetting";
+import config from "../config";
+import Api from "../apiClient";
 
 const { isElectron } = config;
 

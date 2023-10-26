@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ellipsisTextOverflow } from "common.styles";
+import { ellipsisTextOverflow } from "../common.styles";
 
 const Container = styled.div`
   position: absolute;

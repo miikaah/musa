@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { cleanUrl } from "../../util";
-import { fadeIn } from "animations";
+import { fadeIn } from "../../animations";
 
 const Image = styled.img`
   animation: ${({ animate }) =>

@@ -1,4 +1,4 @@
-const isElectron = process.env.REACT_APP_ENV === "electron";
+const isElectron = import.meta.env.VITE_ENV === "electron";
 
 export const FALLBACK_THEME = {
   bg: [33, 37, 43],

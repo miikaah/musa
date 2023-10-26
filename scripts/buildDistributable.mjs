@@ -4,8 +4,8 @@ import { execSync } from "child_process";
 const [, , environment] = process.argv;
 
 const npmScriptByEnvironment = {
-  server: "npm run build",
-  electron: "npm run build:electron",
+  server: "npm run build:s",
+  electron: "npm run build:e",
 };
 
 const build = () => {

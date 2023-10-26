@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
-import { addToPlaylist, pasteToPlaylist } from "reducers/player.reducer";
-import Playlist from "components/PlaylistV4";
-import Cover from "components/Cover";
-import Modal from "components/Modal";
-import TagEditor from "components/TagEditor";
-import config from "config";
-import Api from "apiClient";
+import { addToPlaylist, pasteToPlaylist } from "../reducers/player.reducer";
+import Playlist from "../components/PlaylistV4";
+import Cover from "../components/Cover";
+import Modal from "../components/Modal";
+import TagEditor from "../components/TagEditor";
+import config from "../config";
+import Api from "../apiClient";
 
 const { isElectron } = config;
 

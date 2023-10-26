@@ -24,25 +24,25 @@ import {
 import styled, { StyleSheetManager, ThemeProvider } from "styled-components";
 import isValidProp from "@emotion/is-prop-valid";
 import { createStyledBreakpointsTheme } from "styled-breakpoints";
-import config, { FALLBACK_THEME } from "config";
-import { updateSettings } from "reducers/settings.reducer";
-import { setScanProps, setListingWithLabels } from "reducers/library.reducer";
-import { updateCurrentProfile } from "reducers/profile.reducer";
+import config, { FALLBACK_THEME } from "./config";
+import { updateSettings } from "./reducers/settings.reducer";
+import { setScanProps, setListingWithLabels } from "./reducers/library.reducer";
+import { updateCurrentProfile } from "./reducers/profile.reducer";
 import {
   updateCurrentTheme,
   dispatchToast,
   getQueryStringAsObject,
 } from "./util";
-import { breakpointsAsPixels } from "breakpoints";
-import Api from "apiClient";
-import AppMain from "views/AppMain";
-import Settings from "views/Settings";
-import Search from "views/Search";
-import Titlebar from "components/Titlebar";
-import Toolbar from "components/Toolbar";
-import Toaster from "components/Toaster";
-import ProgressBar from "components/ProgressBar";
-import { pasteToPlaylist } from "reducers/player.reducer";
+import { breakpointsAsPixels } from "./breakpoints";
+import Api from "./apiClient";
+import AppMain from "./views/AppMain";
+import Settings from "./views/Settings";
+import Search from "./views/Search";
+import Titlebar from "./components/Titlebar";
+import Toolbar from "./components/Toolbar";
+import Toaster from "./components/Toaster";
+import ProgressBar from "./components/ProgressBar";
+import { pasteToPlaylist } from "./reducers/player.reducer";
 
 const { isElectron } = config;
 

@@ -10,16 +10,16 @@ import {
   setIsSearchTermLocked,
   clearSearch,
   updateScrollPosition,
-} from "reducers/search.reducer";
-import { useDebounce } from "hooks";
-import Song from "components/Song";
-import Album from "components/Album";
-import Artist from "components/Artist";
-import Button from "components/Button";
-import Select from "components/Select";
-import config from "config";
-import Api from "apiClient";
-import { ArrowDown as ArrowDownStyled } from "common.styles";
+} from "../reducers/search.reducer";
+import { useDebounce } from "../hooks";
+import Song from "../components/Song";
+import Album from "../components/Album";
+import Artist from "../components/Artist";
+import Button from "../components/Button";
+import Select from "../components/Select";
+import config from "../config";
+import Api from "../apiClient";
+import { ArrowDown as ArrowDownStyled } from "../common.styles";
 
 const { isElectron } = config;
 

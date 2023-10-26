@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Player from "components/Player";
+import Player from "./Player";
 
 const ToolbarContainer = styled.div`
   display: flex;

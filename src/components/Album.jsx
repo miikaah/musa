@@ -2,9 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components";
 import { dispatchToast } from "../util";
-import { pasteToPlaylist } from "reducers/player.reducer";
-import { setQuery } from "reducers/search.reducer";
-import { listImage, cardActionShadow } from "common.styles";
+import { pasteToPlaylist } from "../reducers/player.reducer";
+import { setQuery } from "../reducers/search.reducer";
+import { listImage, cardActionShadow } from "../common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 
 const AlbumContainer = styled.div`

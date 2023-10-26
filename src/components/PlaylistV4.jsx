@@ -7,7 +7,7 @@ import {
   removeIndexesFromPlaylist,
   playIndex,
   replay,
-} from "reducers/player.reducer";
+} from "../reducers/player.reducer";
 import { KEYS, isCtrlDown } from "../util";
 import { useKeyPress } from "../hooks";
 import PlaylistItem from "./PlaylistItemV3";

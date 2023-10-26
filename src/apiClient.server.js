@@ -1,4 +1,4 @@
-const baseUrl = process.env.REACT_APP_API_BASE_URL || window.location.origin;
+const baseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
 const defaultHeaders = {
   "Content-Type": "application/json",
 };

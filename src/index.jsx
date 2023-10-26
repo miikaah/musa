@@ -6,7 +6,7 @@ import isEqual from "lodash.isequal";
 import rootReducer from "./reducers";
 import ErrorBoundary from "./ErrorBoundary";
 import App from "./App.jsx";
-import Api from "apiClient";
+import Api from "./apiClient";
 
 import "./index.css";
 
@@ -34,20 +34,10 @@ store.subscribe(() => {
   }
 });
 
-const container = document.getElementById("root");
-const root = createRoot(container);
-
-root.render(
+createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
   </Provider>,
 );
-
-if (process.env.NODE_ENV === "development") {
-  // Live reload for esbuild
-  new EventSource("/esbuild").addEventListener("change", () =>
-    location.reload(),
-  );
-}

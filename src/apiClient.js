@@ -1,6 +1,6 @@
-import ElectronApi from "apiClient.electron";
-import ServerApi from "apiClient.server";
-import config from "config";
+import ElectronApi from "./apiClient.electron";
+import ServerApi from "./apiClient.server";
+import config from "./config";
 
 const { isElectron } = config;
 

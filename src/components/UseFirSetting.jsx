@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { firFileMap } from "config";
+import { firFileMap } from "../config";
 import UseFirFile from "./UseFirFile";
 
 const FirFilesContainer = styled.div`

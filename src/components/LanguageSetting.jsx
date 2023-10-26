@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { updateSettings } from "reducers/settings.reducer";
-import { languages } from "i18n/i18n";
+import { updateSettings } from "../reducers/settings.reducer";
+import { languages } from "../i18n/i18n";
 import SettingSelect from "./SettingSelect";
 
 const LanguageSetting = ({ language, t, dispatch }) => {

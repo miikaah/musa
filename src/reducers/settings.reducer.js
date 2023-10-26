@@ -1,6 +1,6 @@
-import { FALLBACK_THEME, firFileMap } from "config";
+import { FALLBACK_THEME, firFileMap } from "../config";
 import { REPLAYGAIN_TYPE } from "../util";
-import { translate } from "i18n/i18n";
+import { translate } from "../i18n/i18n";
 
 export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS";
 export const updateSettings = (props) => ({

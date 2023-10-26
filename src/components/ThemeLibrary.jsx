@@ -2,11 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components";
 import { updateCurrentTheme } from "../util";
-import { updateSettings } from "reducers/settings.reducer";
+import { updateSettings } from "../reducers/settings.reducer";
 import ThemeBlock from "./ThemeBlock";
 import Button from "./Button";
-import Api from "apiClient";
-import { FALLBACK_THEME } from "config";
+import Api from "../apiClient";
+import { FALLBACK_THEME } from "../config";
 
 const Container = styled.div`
   display: grid;
