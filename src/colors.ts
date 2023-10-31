@@ -36,7 +36,11 @@ export const rgb2hsl = (r: number, g: number, b: number) => {
   return [h, s, l];
 };
 
-export const hsl2rgb = (h: number, s: number, l: number) => {
+export const hsl2rgb = (
+  h: number,
+  s: number,
+  l: number,
+): [number, number, number] => {
   let r, g, b;
 
   if (s === 0) {

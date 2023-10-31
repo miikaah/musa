@@ -1,10 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { updateSettings } from "../reducers/settings.reducer";
+import { SettingsState, updateSettings } from "../reducers/settings.reducer";
 import Button from "./Button";
 import Api from "../apiClient";
+import { TranslateFn } from "../i18n";
 
 const Container = styled.div``;
 
@@ -23,7 +25,17 @@ const MusicLibrarySettingPath = styled.div`
   }
 `;
 
-const MusicLibrarySetting = ({ musicLibraryPath, t, dispatch }) => {
+type MusicLibrarySettingProps = {
+  musicLibraryPath: string;
+  t: TranslateFn;
+  dispatch: Dispatch;
+};
+
+const MusicLibrarySetting = ({
+  musicLibraryPath,
+  t,
+  dispatch,
+}: MusicLibrarySettingProps) => {
   const removeLibraryPath = () => {
     dispatch(
       updateSettings({
@@ -54,7 +66,7 @@ const MusicLibrarySetting = ({ musicLibraryPath, t, dispatch }) => {
           <FontAwesomeIcon icon="trash" />
         </Button>
       </MusicLibrarySettingPath>
-      <Button onClick={addLibraryPath} isPrimary disabled={musicLibraryPath}>
+      <Button onClick={addLibraryPath} isPrimary disabled={!!musicLibraryPath}>
         {t("settings.library.addNew")}
       </Button>
     </Container>
@@ -62,7 +74,7 @@ const MusicLibrarySetting = ({ musicLibraryPath, t, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     musicLibraryPath: state.settings.musicLibraryPath,
     t: state.settings.t,
   }),

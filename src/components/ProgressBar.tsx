@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
+import { LibraryState } from "../reducers/library.reducer";
 
 const ProgressBarContainer = styled("div")`
   position: fixed;
@@ -12,11 +13,13 @@ const ProgressBarContainer = styled("div")`
   background-color: var(--color-slider-track);
 `;
 
-const ProgressBarValue = styled.div.attrs(({ width }) => ({
-  style: {
-    width: `${width}%`,
-  },
-}))`
+const ProgressBarValue = styled.div.attrs<{ width: number; scanColor: string }>(
+  ({ width }) => ({
+    style: {
+      width: `${width}%`,
+    },
+  }),
+)`
   background-color: ${({ scanColor }) => scanColor};
   height: 4px;
 `;
@@ -33,7 +36,7 @@ const ProgressBar = ({ scanLength, scannedLength, scanColor }) => {
   );
 };
 
-export default connect((state) => ({
+export default connect((state: { library: LibraryState }) => ({
   scanLength: state.library.scanLength,
   scannedLength: state.library.scannedLength,
   scanColor: state.library.scanColor,

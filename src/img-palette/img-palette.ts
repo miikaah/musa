@@ -18,7 +18,7 @@ const MAX_MUTED_SATURATION = 0.4;
 const TARGET_VIBRANT_SATURATION = 1;
 const MIN_VIBRANT_SATURATION = 0.35;
 
-function weightedMean(...values) {
+function weightedMean(...values: number[]) {
   let sum = 0.0;
   let sumWeight = 0.0;
 
@@ -32,12 +32,18 @@ function weightedMean(...values) {
   return sum / sumWeight;
 }
 
-function invertDiff(value, targetValue) {
+function invertDiff(value: number, targetValue: number) {
   return 1.0 - Math.abs(value - targetValue);
 }
 
-class Swatch {
-  constructor(rgb, population) {
+export class Swatch {
+  rgb: [number, number, number];
+  red: number;
+  green: number;
+  blue: number;
+  population: number;
+
+  constructor(rgb: [number, number, number], population: number) {
     this.rgb = rgb;
     this.red = rgb[0];
     this.green = rgb[1];
@@ -45,14 +51,14 @@ class Swatch {
     this.population = population;
   }
 
-  getHsl() {
-    let rf = this.rgb[0] / 255.0;
-    let gf = this.rgb[1] / 255.0;
-    let bf = this.rgb[2] / 255.0;
+  getHsl(): [number, number, number] {
+    const rf = this.rgb[0] / 255.0;
+    const gf = this.rgb[1] / 255.0;
+    const bf = this.rgb[2] / 255.0;
 
-    let max = Math.max(rf, gf, bf);
-    let min = Math.min(rf, gf, bf);
-    let deltaMaxMin = max - min;
+    const max = Math.max(rf, gf, bf);
+    const min = Math.min(rf, gf, bf);
+    const deltaMaxMin = max - min;
 
     let h;
     let s;
@@ -75,70 +81,74 @@ class Swatch {
 
     return [(h * 60.0) % 360.0, s, l];
   }
+
+  static fromHsl(hsl: number[], population: number) {
+    const h = hsl[0];
+    const s = hsl[1];
+    const l = hsl[2];
+
+    const c = (1.0 - Math.abs(2 * l - 1.0)) * s;
+    const m = l - 0.5 * c;
+    const x = c * (1.0 - Math.abs(((h / 60.0) % 2.0) - 1.0));
+
+    const hueSegment = ~~h / 60;
+
+    let r = 0;
+    let g = 0;
+    let b = 0;
+
+    switch (hueSegment) {
+      case 0:
+        r = Math.round(255 * (c + m));
+        g = Math.round(255 * (x + m));
+        b = Math.round(255 * m);
+        break;
+      case 1:
+        r = Math.round(255 * (x + m));
+        g = Math.round(255 * (c + m));
+        b = Math.round(255 * m);
+        break;
+      case 2:
+        r = Math.round(255 * m);
+        g = Math.round(255 * (c + m));
+        b = Math.round(255 * (x + m));
+        break;
+      case 3:
+        r = Math.round(255 * m);
+        g = Math.round(255 * (x + m));
+        b = Math.round(255 * (c + m));
+        break;
+      case 4:
+        r = Math.round(255 * (x + m));
+        g = Math.round(255 * m);
+        b = Math.round(255 * (c + m));
+        break;
+      case 5:
+      case 6:
+        r = Math.round(255 * (c + m));
+        g = Math.round(255 * m);
+        b = Math.round(255 * (x + m));
+        break;
+      default:
+        break;
+    }
+
+    r = Math.max(0, Math.min(255, r));
+    g = Math.max(0, Math.min(255, g));
+    b = Math.max(0, Math.min(255, b));
+
+    return new Swatch([r, g, b], population);
+  }
 }
 
-Swatch.fromHsl = function fromHsl(hsl, population) {
-  let h = hsl[0];
-  let s = hsl[1];
-  let l = hsl[2];
-
-  let c = (1.0 - Math.abs(2 * l - 1.0)) * s;
-  let m = l - 0.5 * c;
-  let x = c * (1.0 - Math.abs(((h / 60.0) % 2.0) - 1.0));
-
-  let hueSegment = ~~h / 60;
-
-  let r = 0;
-  let g = 0;
-  let b = 0;
-
-  switch (hueSegment) {
-    case 0:
-      r = Math.round(255 * (c + m));
-      g = Math.round(255 * (x + m));
-      b = Math.round(255 * m);
-      break;
-    case 1:
-      r = Math.round(255 * (x + m));
-      g = Math.round(255 * (c + m));
-      b = Math.round(255 * m);
-      break;
-    case 2:
-      r = Math.round(255 * m);
-      g = Math.round(255 * (c + m));
-      b = Math.round(255 * (x + m));
-      break;
-    case 3:
-      r = Math.round(255 * m);
-      g = Math.round(255 * (x + m));
-      b = Math.round(255 * (c + m));
-      break;
-    case 4:
-      r = Math.round(255 * (x + m));
-      g = Math.round(255 * m);
-      b = Math.round(255 * (c + m));
-      break;
-    case 5:
-    case 6:
-      r = Math.round(255 * (c + m));
-      g = Math.round(255 * m);
-      b = Math.round(255 * (x + m));
-      break;
-    default:
-      break;
-  }
-
-  r = Math.max(0, Math.min(255, r));
-  g = Math.max(0, Math.min(255, g));
-  b = Math.max(0, Math.min(255, b));
-
-  return new Swatch([r, g, b], population);
-};
-
 class CanvasImage {
-  constructor(image) {
+  canvas: HTMLCanvasElement;
+  context: CanvasRenderingContext2D;
+  pixelCount: number;
+
+  constructor(image: HTMLImageElement) {
     this.canvas = document.createElement("canvas");
-    this.context = this.canvas.getContext("2d");
+    this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.canvas.width = image.width;
     this.canvas.height = image.height;
     this.context.drawImage(image, 0, 0, image.width, image.height);
@@ -151,16 +161,28 @@ class CanvasImage {
       0,
       0,
       this.canvas.width,
-      this.canvas.height
+      this.canvas.height,
     );
   }
 }
 
 export default class Palette {
+  image: HTMLImageElement;
+  quality: number;
+  colorCount: number;
+  swatches: Swatch[];
+  highestPopulation: number;
+  vibrantSwatch: Swatch | null;
+  lightVibrantSwatch: Swatch | null;
+  darkVibrantSwatch: Swatch | null;
+  mutedSwatch: Swatch | null;
+  lightMutedSwatch: Swatch | null;
+  darkMutedSwatch: Swatch | null;
+
   constructor(
-    image,
+    image: HTMLImageElement,
     quality = 5,
-    colorCount = DEFAULT_CALCULATE_NUMBER_COLORS
+    colorCount = DEFAULT_CALCULATE_NUMBER_COLORS,
   ) {
     this.image = image;
     this.quality = Math.max(1, quality);
@@ -174,7 +196,7 @@ export default class Palette {
       MAX_NORMAL_LUMA,
       TARGET_VIBRANT_SATURATION,
       MIN_VIBRANT_SATURATION,
-      1.0
+      1.0,
     );
 
     this.lightVibrantSwatch = this.findColor(
@@ -183,7 +205,7 @@ export default class Palette {
       1.0,
       TARGET_VIBRANT_SATURATION,
       MIN_VIBRANT_SATURATION,
-      1.0
+      1.0,
     );
 
     this.darkVibrantSwatch = this.findColor(
@@ -192,7 +214,7 @@ export default class Palette {
       MAX_DARK_LUMA,
       TARGET_VIBRANT_SATURATION,
       MIN_VIBRANT_SATURATION,
-      1.0
+      1.0,
     );
 
     this.mutedSwatch = this.findColor(
@@ -201,7 +223,7 @@ export default class Palette {
       MAX_NORMAL_LUMA,
       TARGET_MUTED_SATURATION,
       0.0,
-      MAX_MUTED_SATURATION
+      MAX_MUTED_SATURATION,
     );
 
     this.lightMutedSwatch = this.findColor(
@@ -210,7 +232,7 @@ export default class Palette {
       1.0,
       TARGET_MUTED_SATURATION,
       0.0,
-      MAX_MUTED_SATURATION
+      MAX_MUTED_SATURATION,
     );
 
     this.darkMutedSwatch = this.findColor(
@@ -219,7 +241,7 @@ export default class Palette {
       MAX_DARK_LUMA,
       TARGET_MUTED_SATURATION,
       0.0,
-      MAX_MUTED_SATURATION
+      MAX_MUTED_SATURATION,
     );
 
     this.generateEmptySwatches();
@@ -232,7 +254,7 @@ export default class Palette {
     let pixelData = [];
     for (let i = 0; i < canvas.pixelCount; i += this.quality) {
       let offset = i * 4;
-      let rgb = [
+      let rgb: [number, number, number] = [
         imagePixels[offset],
         imagePixels[offset + 1],
         imagePixels[offset + 2],
@@ -240,7 +262,11 @@ export default class Palette {
       pixelData.push(rgb);
     }
 
-    let cmap = quantize(pixelData, this.colorCount);
+    const cmap = quantize(pixelData, this.colorCount);
+    if (!cmap) {
+      return [];
+    }
+
     return cmap.vboxes.map((vbox) => {
       return new Swatch(vbox.color, vbox.vbox.count());
     });
@@ -255,7 +281,7 @@ export default class Palette {
     return population;
   }
 
-  isAlreadySelected(swatch) {
+  isAlreadySelected(swatch: Swatch) {
     return (
       this.vibrantSwatch === swatch ||
       this.darkVibrantSwatch === swatch ||
@@ -267,12 +293,12 @@ export default class Palette {
   }
 
   findColor(
-    targetLuma,
-    minLuma,
-    maxLuma,
-    targetSaturation,
-    minSaturation,
-    maxSaturation
+    targetLuma: number,
+    minLuma: number,
+    maxLuma: number,
+    targetSaturation: number,
+    minSaturation: number,
+    maxSaturation: number,
   ) {
     let max = null;
     let maxValue = 0.0;
@@ -295,7 +321,7 @@ export default class Palette {
           luma,
           targetLuma,
           swatch.population,
-          this.highestPopulation
+          this.highestPopulation,
         );
 
         if (max === null || thisValue > maxValue) {
@@ -309,12 +335,12 @@ export default class Palette {
   }
 
   createComparisonValue(
-    saturation,
-    targetSaturation,
-    luma,
-    targetLuma,
-    population,
-    highestPopulation
+    saturation: number,
+    targetSaturation: number,
+    luma: number,
+    targetLuma: number,
+    population: number,
+    highestPopulation: number,
   ) {
     return weightedMean(
       invertDiff(saturation, targetSaturation),
@@ -322,19 +348,19 @@ export default class Palette {
       invertDiff(luma, targetLuma),
       6.5,
       population / highestPopulation,
-      0.5
+      0.5,
     );
   }
 
   generateEmptySwatches() {
     if (!this.vibrantSwatch && this.darkVibrantSwatch) {
-      let hsl = this.darkVibrantSwatch.getHsl().slice();
+      const hsl = this.darkVibrantSwatch.getHsl().slice();
       hsl[2] = TARGET_NORMAL_LUMA;
       this.vibrantSwatch = Swatch.fromHsl(hsl, 0);
     }
 
     if (!this.darkVibrantSwatch && this.vibrantSwatch) {
-      let hsl = this.vibrantSwatch.getHsl().slice();
+      const hsl = this.vibrantSwatch.getHsl().slice();
       hsl[2] = TARGET_DARK_LUMA;
       this.darkVibrantSwatch = Swatch.fromHsl(hsl, 0);
     }

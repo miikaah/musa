@@ -81,9 +81,9 @@ export default {
   "titlebar.location.settings": "Asetukset",
   "toast.updatingLibrary": "Päivitetään kirjasto",
   "toast.updateComplete": "Päivitys valmis",
-  "toast.addAlbumOrSongToPlaylist": (album) =>
+  "toast.addAlbumOrSongToPlaylist": (album: string) =>
     `${album} lisättiin soittolistaan`,
-  "toast.createPlaylist": (text) => `${text} kopioitiin leikepöydälle`,
+  "toast.createPlaylist": (text: string) => `${text} kopioitiin leikepöydälle`,
   "toast.failedToUpdateTags": "Tagien päivitys ei onnistunut",
   "toast.succeededToUpdateTags": "Tagit päivitettiin",
 };

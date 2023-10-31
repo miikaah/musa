@@ -22,7 +22,7 @@ const BasePageContainer = styled.div`
   }
 `;
 
-const BasePageWrapper = styled.div`
+const BasePageWrapper = styled.div<{ setMaxWidth: boolean }>`
   padding: 20px 20px 160px;
   max-width: ${({ setMaxWidth }) => setMaxWidth && "960px"};
   min-width: 344px;
@@ -37,7 +37,12 @@ const BasePageWrapper = styled.div`
   }
 `;
 
-const BasePage = ({ children, setMaxWidth = true }) => {
+type BasePageProps = {
+  children?: React.ReactNode;
+  setMaxWidth?: boolean;
+};
+
+const BasePage = ({ children, setMaxWidth = true }: BasePageProps) => {
   return (
     <BasePageContainer>
       <BasePageWrapper setMaxWidth={setMaxWidth}>{children}</BasePageWrapper>

@@ -1,11 +1,15 @@
+import { AlbumWithFilesAndMetadata } from "@miikaah/musa-core";
 import React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import styled, { css } from "styled-components";
 import { dispatchToast } from "../util";
 import { pasteToPlaylist } from "../reducers/player.reducer";
 import { setQuery } from "../reducers/search.reducer";
+import { SettingsState } from "../reducers/settings.reducer";
 import { listImage, cardActionShadow } from "../common.styles";
 import AlbumImage from "./common/AlbumImageV2";
+import { TranslateFnFn } from "../i18n";
 
 const AlbumContainer = styled.div`
   display: flex;
@@ -18,7 +22,7 @@ const bottomBorder = css`
   border-bottom-width: 2px;
 `;
 
-const AlbumFullAdd = styled.div`
+const AlbumFullAdd = styled.div<{ hasCover: boolean }>`
   display: flex;
   flex: 100%;
   max-height: 80px;
@@ -71,7 +75,13 @@ const AlbumInfo = styled.div`
   }
 `;
 
-const Album = ({ item, t, dispatch }) => {
+type AlbumProps = {
+  item: AlbumWithFilesAndMetadata;
+  t: TranslateFnFn;
+  dispatch: Dispatch;
+};
+
+const Album = ({ item, t, dispatch }: AlbumProps) => {
   if (!item) {
     return null;
   }
@@ -112,7 +122,8 @@ const Album = ({ item, t, dispatch }) => {
     (item?.files || [])[0]?.metadata?.artist ||
     "";
   const album = item?.metadata?.album || item.name || "";
-  const year = item?.metadata?.year || item?.year || "";
+  // TODO: Check why item?.year was here
+  const year = item?.metadata?.year || "";
 
   return (
     <AlbumContainer>
@@ -141,7 +152,7 @@ const Album = ({ item, t, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),

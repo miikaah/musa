@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { ellipsisTextOverflow } from "../common.styles";
 
-const Container = styled.div`
+const Container = styled.div<{ top: number; dock: string; maxWidth: number }>`
   position: absolute;
   top: ${({ top }) => top}px;
   ${({ dock }) => (dock === "left" ? "left: 0" : "right: 0")};

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Icon = styled.div`
+const Icon = styled.div<{ isSmall: boolean }>`
   ${({ isSmall }) =>
     isSmall &&
     `

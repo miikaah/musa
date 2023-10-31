@@ -10,8 +10,9 @@ import {
   ellipsisTextOverflow,
 } from "../common.styles";
 import AlbumImage from "./common/AlbumImageV2";
+import { SettingsState } from "../reducers/settings.reducer";
 
-const SongContainer = styled.div`
+const SongContainer = styled.div<{ hasCover: boolean }>`
   display: flex;
   max-height: 80px;
   margin: 0 8px 10px 0;
@@ -138,7 +139,7 @@ const Song = ({ item, t, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),

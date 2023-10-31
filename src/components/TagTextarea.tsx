@@ -8,7 +8,7 @@ const Textarea = styled.textarea`
 const TagTextarea = ({ field, isDisabled, updateValue }) => {
   const [value, setValue] = useState(field || "");
 
-  const update = (event) => {
+  const update = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateValue(event.target.value);
     setValue(event.target.value);
   };

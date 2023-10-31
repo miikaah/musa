@@ -1,9 +1,13 @@
+import {
+  AlbumWithFilesAndMetadata,
+  AudioWithMetadata,
+} from "@miikaah/musa-core";
 import React from "react";
 import styled, { css } from "styled-components";
 import { cleanUrl } from "../../util";
 import { fadeIn } from "../../animations";
 
-const Image = styled.img`
+const Image = styled.img<{ animate: boolean }>`
   animation: ${({ animate }) =>
     animate
       ? css`
@@ -13,15 +17,33 @@ const Image = styled.img`
   object-fit: scale-down;
 `;
 
-const getFileType = (audioOrAlbum) => {
-  return (
-    audioOrAlbum?.metadata?.codec ||
-    (audioOrAlbum.files || [])[0]?.metadata?.codec ||
-    "mpeg"
-  );
+const hasFiles = (
+  album: AudioWithMetadata | AlbumWithFilesAndMetadata,
+): album is AlbumWithFilesAndMetadata => {
+  return "files" in album;
 };
 
-const AlbumImage = ({ item, animate = true }) => {
+const getFileType = (
+  audioOrAlbum: AudioWithMetadata | AlbumWithFilesAndMetadata,
+) => {
+  let fileType;
+  if (audioOrAlbum?.metadata?.codec) {
+    fileType = audioOrAlbum?.metadata.codec;
+  }
+
+  if (hasFiles(audioOrAlbum)) {
+    fileType = (audioOrAlbum.files || [])[0]?.metadata?.codec;
+  }
+
+  return fileType || "mpeg";
+};
+
+type AlbumImageProps = {
+  item: AudioWithMetadata | AlbumWithFilesAndMetadata;
+  animate?: boolean;
+};
+
+const AlbumImage = ({ item, animate = true }: AlbumImageProps) => {
   const type = getFileType(item);
   const isMp3 = type.toLowerCase().startsWith("mpeg");
   const isFlac = type.toLowerCase().startsWith("flac");

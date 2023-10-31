@@ -70,9 +70,9 @@ export function prefixNumber(value: number) {
   return value < 10 ? `0${value}` : `${value}`;
 }
 
-export function cleanUrl(url: string | undefined | unknown) {
+export function cleanUrl(url: string | undefined | unknown): string {
   if (!url) {
-    return url;
+    return "";
   }
   if (typeof url !== "string") {
     return "";

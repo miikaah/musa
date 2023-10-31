@@ -1,7 +1,8 @@
 import en from "./en";
 import fi from "./fi";
 
-export type TranslateFn = (key: string) => string | ((s: string) => string);
+export type TranslateFn = (key: string) => string;
+export type TranslateFnFn = (key: string) => (s: string) => string;
 
 const dictionary: Record<
   string,

@@ -1,7 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { SettingsState } from "../reducers/settings.reducer";
 
-const Container = styled.span.attrs(({ rgb }) => ({
+const Container = styled.span.attrs<{
+  rgb: number[];
+  hasMargin: boolean;
+  isEditing: boolean;
+}>(({ rgb }) => ({
   style: {
     backgroundColor: rgb && `rgb(${rgb})`,
   },
@@ -16,17 +21,31 @@ const Container = styled.span.attrs(({ rgb }) => ({
   border-color: ${({ isEditing }) => isEditing && "#f00"};
 `;
 
-const Color = styled.span.attrs(({ rgb }) => ({
-  style: {
-    backgroundColor: rgb && `rgb(${rgb})`,
-  },
-}))`
+const Color = styled.span.attrs<{ rgb: number[]; isEditing: boolean }>(
+  ({ rgb }) => ({
+    style: {
+      backgroundColor: rgb && `rgb(${rgb})`,
+    },
+  }),
+)`
   display: inline-block;
   width: 30px;
   height: 30px;
   border: 1px solid transparent;
   border-color: ${({ isEditing }) => isEditing && "#f00"};
 `;
+
+export type EditTarget = "bg" | "primary" | "secondary" | null;
+
+type ThemeBlockProps = {
+  currentTheme: SettingsState["currentTheme"];
+  isThemeEditor: boolean;
+  editTarget: EditTarget;
+  setEditTarget: (target: EditTarget) => void;
+  className?: string;
+  hasMargin?: boolean;
+  setCurrentTheme?: (theme: SettingsState["currentTheme"]) => void;
+};
 
 const ThemeBlock = ({
   className,
@@ -36,7 +55,7 @@ const ThemeBlock = ({
   isThemeEditor = false,
   editTarget,
   setEditTarget,
-}) => {
+}: ThemeBlockProps) => {
   if (!currentTheme) {
     return null;
   }
@@ -52,7 +71,7 @@ const ThemeBlock = ({
 
     // This is parent click
     if (event.target === event.currentTarget) {
-      setEditTarget(editTarget === "bg" ? "" : "bg");
+      setEditTarget(editTarget === "bg" ? null : "bg");
     }
   };
 
@@ -61,22 +80,28 @@ const ThemeBlock = ({
       className={className}
       title={filename || ""}
       rgb={colors.bg}
-      onClick={(event) =>
-        isThemeEditor ? setEditTargetToBg(event) : setCurrentTheme(currentTheme)
-      }
+      onClick={(event) => {
+        if (isThemeEditor) {
+          setEditTargetToBg(event);
+        } else if (setCurrentTheme) {
+          setCurrentTheme(currentTheme);
+        }
+      }}
       hasMargin={isThemeEditor ? false : hasMargin}
       isEditing={editTarget === "bg"}
     >
       <Color
         rgb={colors.primary}
         isEditing={editTarget === "primary"}
-        onClick={() => setEditTarget(editTarget === "primary" ? "" : "primary")}
+        onClick={() =>
+          setEditTarget(editTarget === "primary" ? null : "primary")
+        }
       />
       <Color
         rgb={colors.secondary}
         isEditing={editTarget === "secondary"}
         onClick={() =>
-          setEditTarget(editTarget === "secondary" ? "" : "secondary")
+          setEditTarget(editTarget === "secondary" ? null : "secondary")
         }
       />
     </Container>

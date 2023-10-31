@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { ellipsisTextOverflow } from "../common.styles";
+import { SettingsState } from "../reducers/settings.reducer";
 
-const Container = styled.div`
+const Container = styled.div<{ isSmall: boolean }>`
   padding: ${({ isSmall }) =>
     isSmall ? "20px 20px 20px 10px" : "20px 20px 20px 10px"};
   min-width: ${({ isSmall }) => (isSmall ? 394 : 432)}px;
@@ -92,7 +93,7 @@ const getSampleRate = (sampleRate) => {
 };
 
 const CoverInfo = ({ item, isSmall, toggleEdit, t }) => {
-  if (Object.keys(item) < 1) {
+  if (Object.keys(item).length < 1) {
     return null;
   }
 
@@ -156,7 +157,7 @@ const CoverInfo = ({ item, isSmall, toggleEdit, t }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),

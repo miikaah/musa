@@ -2,6 +2,7 @@ import { AudioWithMetadata } from "@miikaah/musa-core";
 import isEmpty from "lodash.isempty";
 import { cleanUrl } from "../util";
 import { CoverData } from "../types";
+import { EnrichedAlbumFile } from "@miikaah/musa-core/lib/db.types";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
 export type PlayAction = {
@@ -64,7 +65,7 @@ export type PasteToPlaylistAction = {
   index: number;
 };
 export const pasteToPlaylist = (
-  items: AudioWithMetadata[],
+  items: AudioWithMetadata[] | EnrichedAlbumFile[],
   index?: number,
 ) => ({
   type: PASTE_TO_PLAYLIST,

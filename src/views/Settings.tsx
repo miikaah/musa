@@ -11,6 +11,8 @@ import BasePage from "../components/BasePage";
 import LanguageSetting from "../components/LanguageSetting";
 import config from "../config";
 import Api from "../apiClient";
+import { SettingsState } from "../reducers/settings.reducer";
+import { ProfileState } from "../reducers/profile.reducer";
 
 const { isElectron } = config;
 
@@ -133,7 +135,7 @@ const Settings = ({ musicLibraryPath, currentProfile, t }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState; profile: ProfileState }) => ({
     musicLibraryPath: state.settings.musicLibraryPath,
     t: state.settings.t,
     currentProfile: state.profile.currentProfile,

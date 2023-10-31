@@ -4,17 +4,33 @@ import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import styled from "styled-components";
-import Palette from "../img-palette/img-palette";
+import Palette, { Swatch } from "../img-palette/img-palette";
 import { updateCurrentTheme } from "../util";
 import { breakpoints } from "../breakpoints";
-import { updateSettings } from "../reducers/settings.reducer";
-import { setCoverData } from "../reducers/player.reducer";
+import { SettingsState, updateSettings } from "../reducers/settings.reducer";
+import { setCoverData, PlayerState } from "../reducers/player.reducer";
 import CoverInfo from "./CoverInfo";
-import ThemeBlock from "./ThemeBlock";
+import ThemeBlock, { EditTarget } from "./ThemeBlock";
 import { rgb2hsl, hsl2rgb } from "../colors";
 import Api from "../apiClient";
 
-const Colors = {
+type ColorsType = {
+  Bg: string;
+  Primary: string;
+  Secondary: string;
+  Typography: string;
+  TypographyLight: string;
+  TypographyGhost: string;
+  TypographyGhostLight: string;
+  PrimaryRgb: [number, number, number];
+  SecondaryRgb: [number, number, number];
+  SliderTrack: string;
+  SliderTrackRgb: [number, number, number];
+  WhiteRgb: [number, number, number];
+  RedRgb: [number, number, number];
+};
+
+const Colors: ColorsType = {
   Bg: "#21252b",
   Primary: "#753597",
   Secondary: "#21737e",
@@ -30,7 +46,7 @@ const Colors = {
   RedRgb: [255, 0, 0],
 };
 
-const Container = styled.div`
+const Container = styled.div<{ isSmall: boolean }>`
   width: 100%;
   max-width: 1010px;
   min-width: ${({ isSmall }) => (isSmall ? "var(--library-width)" : "1010px")};
@@ -61,16 +77,20 @@ const Wrapper = styled.div`
   }
 `;
 
-const Image = styled.img.attrs(
-  ({ maxHeight, isCoverLoaded, src, scaleDownImage, isMobile }) => ({
-    style: {
-      maxHeight: `${maxHeight}px`,
-      objectFit: isMobile || scaleDownImage ? "scale-down" : "cover",
-      transition: isCoverLoaded && "max-height 0.3s",
-      visibility: isCoverLoaded && src ? "visible" : "hidden",
-    },
-  }),
-)`
+const Image = styled.img.attrs<{
+  maxHeight: number;
+  isCoverLoaded: boolean;
+  src: string;
+  scaleDownImage: boolean;
+  isMobile: boolean;
+}>(({ maxHeight, isCoverLoaded, src, scaleDownImage, isMobile }) => ({
+  style: {
+    maxHeight: `${maxHeight}px`,
+    objectFit: isMobile || scaleDownImage ? "scale-down" : "cover",
+    transition: isCoverLoaded ? "max-height 0.3s" : "",
+    visibility: isCoverLoaded && src ? "visible" : "hidden",
+  },
+}))`
   width: 100%;
   height: 100%;
   flex: 1 0 auto; // Needed by Firefox
@@ -91,7 +111,7 @@ const isVibrantCover = (mostPopularSwatch) => {
   return mostPopularSwatch.rgb.some((value) => value > 125);
 };
 
-const luminance = (r, g, b) => {
+const luminance = (r: number, g: number, b: number) => {
   const a = [r, g, b].map((v) => {
     v /= 255;
     return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
@@ -99,7 +119,10 @@ const luminance = (r, g, b) => {
   return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
 };
 
-const contrast = (rgb1, rgb2) => {
+const contrast = (
+  rgb1: [number, number, number],
+  rgb2: [number, number, number],
+) => {
   const lum1 = luminance(...rgb1) + 0.05;
   const lum2 = luminance(...rgb2) + 0.05;
 
@@ -114,10 +137,10 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   const [isSmall, setIsSmall] = useState(
     window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
   );
-  const [editTarget, setEditTarget] = useState();
-  const [isEditing, setIsEditing] = useState();
-  const containerRef = useRef();
-  const coverRef = useRef();
+  const [editTarget, setEditTarget] = useState<EditTarget>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const coverRef = useRef<HTMLImageElement>(null);
 
   const calcMaxHeight = () => {
     const libraryWidth = Number(
@@ -128,7 +151,8 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     );
 
     let heightToWidthRatio =
-      coverRef.current.naturalHeight / coverRef.current.naturalWidth;
+      Number(coverRef.current?.naturalHeight) /
+      Number(coverRef.current?.naturalWidth);
 
     if (heightToWidthRatio > 0.949) {
       heightToWidthRatio = 1;
@@ -139,11 +163,20 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       : libraryWidth;
   };
 
-  const calculateTheme = (coverTarget, options) => {
+  const calculateTheme = (
+    coverTarget: HTMLImageElement,
+    options?: { bg: { rgb: [number, number, number] } },
+  ) => {
     let palette = new Palette(coverTarget);
     let mostPopularSwatch = palette.swatches.find(
       (s) => s.population === palette.highestPopulation,
     );
+
+    if (!mostPopularSwatch) {
+      throw new Error(
+        "Could not calculate most popular Swatch (should not happen).",
+      );
+    }
 
     // If didn't get some swatches try again
     if (!palette.vibrantSwatch || !palette.lightVibrantSwatch) {
@@ -159,9 +192,9 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     );
 
     // Defaults are for dark covers
-    let bg = options?.bg || mostPopularSwatch;
-    let primary;
-    let secondary;
+    let bg = options?.bg || (mostPopularSwatch as Swatch);
+    let primary: Swatch | { rgb: [number, number, number] } | undefined;
+    let secondary: Swatch | { rgb: [number, number, number] } | undefined;
     let color = Colors.Typography;
     let ghostColor = Colors.TypographyGhost;
     let primaryColor = Colors.Typography;
@@ -285,10 +318,10 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
   };
 
   useEffect(() => {
-    const onLoadCover = async (event) => {
+    const onLoadCover = async (event: Event) => {
       // Save to variable here, because the target is set to null in the event
       // variable when it goes out of scope
-      const coverTarget = event.target;
+      const coverTarget = event.target as HTMLImageElement;
       const { naturalWidth, naturalHeight } = coverTarget;
       const aspectRatio = naturalWidth / naturalHeight;
 
@@ -322,6 +355,9 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     };
 
     const ref = coverRef.current;
+    if (!ref) {
+      return;
+    }
 
     ref.addEventListener("load", onLoadCover);
 
@@ -379,15 +415,24 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
     );
   }
 
-  const getColorFromImage = (event) => {
+  const getColorFromImage = (event: React.MouseEvent) => {
     if (!isEditing) {
       return;
     }
-    const img = document.getElementById("albumCover");
-    const { width, height } = event.target;
+    const img = document.getElementById("albumCover") as HTMLImageElement;
+
+    if (!img) {
+      return;
+    }
+
+    const { width, height } = event.target as HTMLImageElement;
 
     canvas.width = width;
     canvas.height = height;
+
+    if (!canvasCtx) {
+      return;
+    }
 
     canvasCtx.drawImage(img, 0, 0, width, height);
 
@@ -397,7 +442,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       1,
       1,
     ).data;
-    const rgb = [r, g, b];
+    const rgb: [number, number, number] = [r, g, b];
     const { colors: c } = currentTheme;
 
     let colors;
@@ -469,7 +514,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
-    setEditTarget("");
+    setEditTarget(null);
   };
 
   return (
@@ -522,7 +567,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { player: PlayerState; settings: SettingsState }) => ({
     currentItem: state.player.currentItem,
     coverData: state.player.coverData,
     currentTheme: state.settings.currentTheme,

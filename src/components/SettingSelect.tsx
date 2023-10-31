@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { ArrowDown as ArrowDownStyled } from "../common.styles";
+import { SettingsState } from "../reducers/settings.reducer";
 
 const StyledSettingSelect = styled.div`
   position: relative;
@@ -40,7 +41,7 @@ const SettingSelect = ({ isInit, children }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     isInit: state.settings.isInit,
   }),
   (dispatch) => ({ dispatch }),

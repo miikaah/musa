@@ -26,7 +26,7 @@ import Select from "../components/Select";
 import config from "../config";
 import Api from "../apiClient";
 import { ArrowDown as ArrowDownStyled } from "../common.styles";
-import { TranslateFn } from "../i18n";
+import { TranslateFnWithStringReturn } from "../i18n";
 
 const { isElectron } = config;
 
@@ -225,7 +225,7 @@ type SearchProps = {
   isSearchTermLocked: boolean;
   scrollPos: ScrollPos;
   listingWithLabels: ArtistObject;
-  t: TranslateFn;
+  t: TranslateFnWithStringReturn;
   dispatch: Dispatch;
 };
 
@@ -245,9 +245,9 @@ const Search = ({
   const [genres, setGenres] = useState<string[]>([]);
   const [showGenreSelect, setShowGenreSelect] = useState(false);
   const queryToBackend = useDebounce(query, 300);
-  const artistListRef = useRef();
-  const albumListRef = useRef();
-  const audioListRef = useRef();
+  const artistListRef = useRef<HTMLDivElement & { scrollTop: number }>(null);
+  const albumListRef = useRef<HTMLDivElement & { scrollTop: number }>(null);
+  const audioListRef = useRef<HTMLDivElement & { scrollTop: number }>(null);
 
   useEffect(() => {
     if (queryToBackend && !isSearchTermLocked) {
@@ -264,9 +264,16 @@ const Search = ({
 
       dispatch(setIsSearchRandom(false));
       dispatch(updateScrollPosition({ artists: 0, albums: 0, audios: 0 }));
-      artistListRef.current.scrollTop = 0;
-      albumListRef.current.scrollTop = 0;
-      audioListRef.current.scrollTop = 0;
+
+      if (artistListRef.current) {
+        artistListRef.current.scrollTop = 0;
+      }
+      if (albumListRef.current) {
+        albumListRef.current.scrollTop = 0;
+      }
+      if (audioListRef.current) {
+        audioListRef.current.scrollTop = 0;
+      }
     } else if (!isSearchRandom && !isFetching && query.length < 1) {
       dispatch(
         setSearchResults({
@@ -280,9 +287,15 @@ const Search = ({
   }, [queryToBackend]);
 
   useEffect(() => {
-    artistListRef.current.scrollTop = scrollPos.artists;
-    albumListRef.current.scrollTop = scrollPos.albums;
-    audioListRef.current.scrollTop = scrollPos.audios;
+    if (artistListRef.current) {
+      artistListRef.current.scrollTop = scrollPos.artists;
+    }
+    if (albumListRef.current) {
+      albumListRef.current.scrollTop = scrollPos.albums;
+    }
+    if (audioListRef.current) {
+      audioListRef.current.scrollTop = scrollPos.audios;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -395,7 +408,9 @@ const Search = ({
               ref={artistListRef}
               onScroll={(event) => {
                 dispatch(
-                  updateScrollPosition({ artists: event.target.scrollTop }),
+                  updateScrollPosition({
+                    artists: (event.target as HTMLElement).scrollTop,
+                  }),
                 );
               }}
             >
@@ -412,7 +427,9 @@ const Search = ({
               ref={albumListRef}
               onScroll={(event) => {
                 dispatch(
-                  updateScrollPosition({ albums: event.target.scrollTop }),
+                  updateScrollPosition({
+                    albums: (event.target as HTMLElement).scrollTop,
+                  }),
                 );
               }}
             >
@@ -436,7 +453,9 @@ const Search = ({
               ref={audioListRef}
               onScroll={(event) => {
                 dispatch(
-                  updateScrollPosition({ audios: event.target.scrollTop }),
+                  updateScrollPosition({
+                    audios: (event.target as HTMLElement).scrollTop,
+                  }),
                 );
               }}
             >

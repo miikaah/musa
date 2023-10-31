@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { REPLAYGAIN_TYPE } from "../util";
-import { updateSettings } from "../reducers/settings.reducer";
+import { SettingsState, updateSettings } from "../reducers/settings.reducer";
 import SettingSelect from "./SettingSelect";
 
 const ReplaygainSetting = ({ replaygainType, t, dispatch }) => {
@@ -27,7 +27,7 @@ const ReplaygainSetting = ({ replaygainType, t, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     replaygainType: state.settings.replaygainType,
     t: state.settings.t,
   }),

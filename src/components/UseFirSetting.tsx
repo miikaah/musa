@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { firFileMap } from "../config";
 import UseFirFile from "./UseFirFile";
+import { SettingsState } from "../reducers/settings.reducer";
 
 const FirFilesContainer = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ const UseFirSetting = ({ isInit, t }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     isInit: state.settings.isInit,
     t: state.settings.t,
   }),

@@ -36,6 +36,7 @@
     "@types/lodash.isempty": "^4.4.8",
     "@types/lodash.isequal": "^4.5.7",
     "@types/lodash.sortby": "^4.7.8",
+    "@types/quantize": "^1.0.1",
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
     "@vitejs/plugin-react-swc": "^3.4.0",

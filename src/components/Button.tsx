@@ -38,9 +38,7 @@ const ButtonContainer = styled.button<Partial<ButtonContainerProps>>`
 
 type ButtonProps = Partial<ButtonContainerProps> & {
   children: React.ReactNode;
-  onClick: (
-    event: React.MouseEvent,
-  ) => Promise<void> | ((event: React.MouseEvent) => void);
+  onClick: Function;
   className?: string;
   disabled?: boolean;
 };
@@ -50,6 +48,7 @@ const Button = ({ className, children, onClick, ...rest }: ButtonProps) => {
     <ButtonContainer
       className={className}
       type="button"
+      // @ts-expect-error onClick is completely generic
       onClick={onClick}
       {...rest}
     >

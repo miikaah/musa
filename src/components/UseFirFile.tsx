@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { updateSettings } from "../reducers/settings.reducer";
+import { SettingsState, updateSettings } from "../reducers/settings.reducer";
 
 const Container = styled.div`
   display: grid;
@@ -102,7 +102,7 @@ const UseFirFile = ({
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     isInit: state.settings.isInit,
     firFile: state.settings.firFile,
     firFiles: state.settings.firFiles,

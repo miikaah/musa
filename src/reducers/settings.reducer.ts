@@ -1,6 +1,6 @@
 import { FALLBACK_THEME, firFileMap } from "../config";
 import { REPLAYGAIN_TYPE } from "../util";
-import { TranslateFn, translate } from "../i18n";
+import { translate } from "../i18n";
 import { ReplaygainType } from "../types";
 
 export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS";
@@ -19,6 +19,8 @@ export type SettingsState = {
   isInit: boolean;
   currentTheme: {
     colors: typeof FALLBACK_THEME;
+    filename: string;
+    id: string;
   };
   key: string;
   replaygainType: ReplaygainType;
@@ -29,7 +31,7 @@ export type SettingsState = {
   volume: number;
   musicLibraryPath: string;
   language: string;
-  t: TranslateFn;
+  t: any;
 };
 
 export type Settings = Omit<SettingsState, "t">;
@@ -38,6 +40,8 @@ const initialState: SettingsState = {
   isInit: false,
   currentTheme: {
     colors: FALLBACK_THEME,
+    filename: "",
+    id: "",
   },
   key: "state",
   replaygainType: REPLAYGAIN_TYPE.Album,
