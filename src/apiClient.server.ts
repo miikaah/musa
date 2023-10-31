@@ -1,3 +1,5 @@
+import { ScanStartListenerCallback } from "./apiClient";
+
 const baseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
 const defaultHeaders = {
   "Content-Type": "application/json",
@@ -151,7 +153,7 @@ const refreshLibrary = () => {};
 
 const onInit = async () => {};
 
-const addScanStartListener = (callback) => {};
+const addScanStartListener = (callback: ScanStartListenerCallback) => {};
 
 const addScanUpdateListener = (callback) => {};
 

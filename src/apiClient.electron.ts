@@ -1,8 +1,11 @@
+import { ScanStartListenerCallback } from "./apiClient";
+import { Settings } from "./reducers/settings.reducer";
+
 const getSettings = async () => {
   return window.electron.getSettings();
 };
 
-const insertSettings = (settings) => {
+const insertSettings = async (settings: Settings) => {
   return window.electron.insertSettings(settings);
 };
 
@@ -104,7 +107,7 @@ const refreshLibrary = () => {
   window.electron.scan();
 };
 
-const addScanStartListener = (callback) => {
+const addScanStartListener = (callback: ScanStartListenerCallback) => {
   window.electron.addScanStartListener(callback);
 };
 

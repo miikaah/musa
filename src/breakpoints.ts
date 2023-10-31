@@ -5,7 +5,14 @@ export const breakpoints = {
   xl: 1961,
 };
 
-export const breakpointsAsPixels = {
+type BreakpointAsString = `${number}px`;
+
+export const breakpointsAsPixels: {
+  sm: BreakpointAsString;
+  md: BreakpointAsString;
+  lg: BreakpointAsString;
+  xl: BreakpointAsString;
+} = {
   sm: `${breakpoints.sm}px`,
   md: `${breakpoints.md}px`,
   lg: `${breakpoints.lg}px`,

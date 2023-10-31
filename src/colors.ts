@@ -1,4 +1,4 @@
-export const rgb2hsl = (r, g, b) => {
+export const rgb2hsl = (r: number, g: number, b: number) => {
   let d, h, l, max, min, s;
   r /= 255;
   g /= 255;
@@ -36,13 +36,13 @@ export const rgb2hsl = (r, g, b) => {
   return [h, s, l];
 };
 
-export const hsl2rgb = (h, s, l) => {
+export const hsl2rgb = (h: number, s: number, l: number) => {
   let r, g, b;
 
   if (s === 0) {
     r = g = b = l; // achromatic
   } else {
-    const hue2rgb = (p, q, t) => {
+    const hue2rgb = (p: number, q: number, t: number) => {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
       if (t < 1 / 6) return p + (q - p) * 6 * t;

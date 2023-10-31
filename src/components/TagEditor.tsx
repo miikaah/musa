@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import styled from "styled-components";
 import TagInput from "./TagInput";
 import TagTextarea from "./TagTextarea";
@@ -7,6 +8,9 @@ import Button from "./Button";
 import Api from "../apiClient";
 import { dispatchToast } from "../util";
 import { ellipsisTextOverflow } from "../common.styles";
+import { SettingsState } from "../reducers/settings.reducer";
+import { AudioWithMetadata } from "@miikaah/musa-core";
+import { TranslateFn } from "../i18n";
 
 const Container = styled.div`
   display: flex;
@@ -49,18 +53,39 @@ const SaveButton = styled(Button)`
   margin-top: 10px;
 `;
 
-const TagEditor = ({ files = [], t, dispatch }) => {
-  const [artist, setArtist] = useState();
-  const [title, setTitle] = useState();
-  const [album, setAlbum] = useState();
-  const [year, setYear] = useState();
-  const [track, setTrack] = useState();
-  const [tracks, setTracks] = useState();
-  const [disk, setDisk] = useState();
-  const [disks, setDisks] = useState();
-  const [genre, setGenre] = useState();
-  const [composer, setComposer] = useState();
-  const [comment, setComment] = useState();
+type Tags = Partial<{
+  artist: string;
+  title: string;
+  album: string;
+  year: string;
+  trackNumber: string;
+  partOfSet: string;
+  genre: string;
+  composer: string;
+  comment: {
+    language: string;
+    text: string;
+  };
+}>;
+
+type TagEditorProps = {
+  files: AudioWithMetadata[];
+  t: TranslateFn;
+  dispatch: Dispatch;
+};
+
+const TagEditor = ({ files = [], t, dispatch }: TagEditorProps) => {
+  const [artist, setArtist] = useState<string>();
+  const [title, setTitle] = useState<string>();
+  const [album, setAlbum] = useState<string>();
+  const [year, setYear] = useState<string>();
+  const [track, setTrack] = useState<string>();
+  const [tracks, setTracks] = useState<string>();
+  const [disk, setDisk] = useState<string>();
+  const [disks, setDisks] = useState<string>();
+  const [genre, setGenre] = useState<string>();
+  const [composer, setComposer] = useState<string>();
+  const [comment, setComment] = useState<string>();
   const [isUpdating, setIsUpdating] = useState(false);
 
   const getCodecInfo = (file) => {
@@ -83,7 +108,7 @@ const TagEditor = ({ files = [], t, dispatch }) => {
   };
 
   const saveTags = async (event, file) => {
-    const tags = {};
+    const tags: Tags = {};
 
     if (typeof artist !== "undefined") {
       tags.artist = artist;
@@ -155,7 +180,7 @@ const TagEditor = ({ files = [], t, dispatch }) => {
         return (
           <Container key={file.id}>
             <Filename>
-              {file.fileUrl.replace("media:\\", "").replace("media:/", "")}
+              {file.fileUrl?.replace("media:\\", "").replace("media:/", "")}
             </Filename>
             <Wrapper>
               <span>{t("tagEditor.tag.artist")}</span>
@@ -228,7 +253,7 @@ const TagEditor = ({ files = [], t, dispatch }) => {
               />
             </Wrapper>
             <SaveButton
-              onClick={(event) => saveTags(event, file)}
+              onClick={(event: React.MouseEvent) => saveTags(event, file)}
               isPrimary
               disabled={isUpdating}
             >
@@ -242,7 +267,7 @@ const TagEditor = ({ files = [], t, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),

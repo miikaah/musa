@@ -1,3 +1,4 @@
+import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Navigate } from "react-router-dom";
@@ -9,6 +10,7 @@ import Modal from "../components/Modal";
 import TagEditor from "../components/TagEditor";
 import config from "../config";
 import Api from "../apiClient";
+import { SettingsState } from "../reducers/settings.reducer";
 
 const { isElectron } = config;
 
@@ -24,17 +26,26 @@ const Container = styled.div`
   }
 `;
 
+interface CustomFile extends File {
+  path: string;
+}
+
 const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
   const [showModal, setShowModal] = useState(false);
-  const [filesToEdit, setFilesToBeEdited] = useState([]);
+  const [filesToEdit, setFilesToBeEdited] = useState<AudioWithMetadata[]>([]);
 
-  const onDragOver = (event) => event.preventDefault();
+  const onDragOver = (event: React.DragEvent<HTMLDivElement>) =>
+    event.preventDefault();
 
-  const onDrop = async (event) => {
+  const onDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    if (!event.dataTransfer) {
+      return;
+    }
+
     if (event.dataTransfer.files.length > 0) {
-      const paths = Array.from(event.dataTransfer.files).map(
-        ({ path }) => path,
-      );
+      const paths = Array.from(
+        event.dataTransfer.files as unknown as CustomFile[],
+      ).map(({ path }) => path);
 
       const files = await Api.getAudiosByFilepaths(paths);
 
@@ -79,13 +90,13 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
     setShowModal(false);
   };
 
-  const toggleModal = (items) => {
+  const toggleModal = (items: AudioWithMetadata[]) => {
     const itemsIds = items.map(({ id }) => id);
     const currentFilesIds = filesToEdit.map(({ id }) => id);
     const hasSameFiles = itemsIds.every((id) => currentFilesIds.includes(id));
 
     if (hasSameFiles) {
-      closeModal(items);
+      closeModal();
     } else {
       openModal(items);
     }
@@ -105,7 +116,7 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     isInit: state.settings.isInit,
     musicLibraryPath: state.settings.musicLibraryPath,
   }),

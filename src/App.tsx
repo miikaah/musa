@@ -43,6 +43,7 @@ import Toolbar from "./components/Toolbar";
 import Toaster from "./components/Toaster";
 import ProgressBar from "./components/ProgressBar";
 import { pasteToPlaylist } from "./reducers/player.reducer";
+import { SettingsState } from "./reducers/settings.reducer";
 
 const { isElectron } = config;
 
@@ -106,9 +107,9 @@ const Main = React.memo(() => (
         <ProgressBar />
         <Toolbar />
         <Routes>
-          <Route exact path="/" element={<AppMain />} />
-          <Route exact path="/settings" element={<Settings />} />
-          <Route exact path="/search" element={<Search />} />
+          <Route path="/" element={<AppMain />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
       </AppContainer>
     </ThemeProvider>
@@ -116,7 +117,7 @@ const Main = React.memo(() => (
 ));
 
 const App = ({ isInit, t, dispatch }) => {
-  const [isReady, setIsReady] = useState();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     Api.addScanStartListener(({ scanLength, scanColor }) => {
@@ -224,7 +225,7 @@ const App = ({ isInit, t, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     isInit: state.settings.isInit,
     t: state.settings.t,
   }),

@@ -237,7 +237,15 @@ const onInit = async () => {
   return ElectronApi.onInit();
 };
 
-const addScanStartListener = (callback) => {
+export type ScanStartListenerCallback = ({
+  scanLength,
+  scanColor,
+}: {
+  scanLength: number;
+  scanColor: string;
+}) => void;
+
+const addScanStartListener = (callback: ScanStartListenerCallback) => {
   if (!isElectron) {
     return;
   }

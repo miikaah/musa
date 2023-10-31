@@ -1,46 +1,96 @@
 export const SET_QUERY = "MUSA/SEARCH/SET_QUERY";
-export const setQuery = (query) => ({
+export type SetQueryAction = {
+  type: typeof SET_QUERY;
+  query: string;
+};
+export const setQuery = (query: string) => ({
   type: SET_QUERY,
   query,
 });
 
 export const SET_FILTER = "MUSA/SEARCH/SET_FILTER";
-export const setFilter = (filter) => ({
+export type SetFilterAction = {
+  type: typeof SET_FILTER;
+  filter: string;
+};
+export const setFilter = (filter: string) => ({
   type: SET_FILTER,
   filter,
 });
 
 export const SET_IS_RANDOM = "MUSA/SEARCH/SET_IS_RANDOM";
-export const setIsSearchRandom = (isRandom) => ({
+export type SetIsSearchRandomAction = {
+  type: typeof SET_IS_RANDOM;
+  isRandom: boolean;
+};
+export const setIsSearchRandom = (isRandom: boolean) => ({
   type: SET_IS_RANDOM,
   isRandom,
 });
 
 export const SET_IS_SEARCH_TERM_LOCKED =
   "MUSA/SEARCH/SET_IS_SEARCH_TERM_LOCKED";
-export const setIsSearchTermLocked = (isSearchTermLocked) => ({
+export type SetIsSearchTermLockedAction = {
+  type: typeof SET_IS_SEARCH_TERM_LOCKED;
+  isSearchTermLocked: boolean;
+};
+export const setIsSearchTermLocked = (isSearchTermLocked: boolean) => ({
   type: SET_IS_SEARCH_TERM_LOCKED,
   isSearchTermLocked,
 });
 
+type SearchResult = {
+  artists: unknown[];
+  albums: unknown[];
+  audios: unknown[];
+};
+
 export const SET_SEARCH_RESULTS = "MUSA/SEARCH/SET_SEARCH_RESULTS";
-export const setSearchResults = (result) => ({
+export type SetSearchResultsAction = {
+  type: typeof SET_SEARCH_RESULTS;
+  result: SearchResult;
+};
+export const setSearchResults = (result: SearchResult) => ({
   type: SET_SEARCH_RESULTS,
   result,
 });
 
 export const CLEAR_SEARCH = "MUSA/SEARCH/CLEAR_SEARCH";
+export type ClearSearchAction = {
+  type: typeof CLEAR_SEARCH;
+};
 export const clearSearch = () => ({
   type: CLEAR_SEARCH,
 });
 
+export type ScrollPos = {
+  artists: number;
+  albums: number;
+  audios: number;
+};
+
 export const UPDATE_SCROLL_POSITION = "MUSA/SEARCH/UPDATE_SCROLL_POSITION";
-export const updateScrollPosition = (props) => ({
+export type UpdateScrollPositionAction = {
+  type: typeof UPDATE_SCROLL_POSITION;
+  props: ScrollPos;
+};
+export const updateScrollPosition = (props: Partial<ScrollPos>) => ({
   type: UPDATE_SCROLL_POSITION,
   props,
 });
 
-const initialState = {
+export type SearchState = {
+  query: string;
+  filter: string;
+  isRandom: boolean;
+  isSearchTermLocked: boolean;
+  searchArtists: unknown[];
+  searchAlbums: unknown[];
+  searchAudios: unknown[];
+  scrollPos: ScrollPos;
+};
+
+const initialState: SearchState = {
   query: "",
   filter: "",
   isRandom: false,
@@ -55,7 +105,16 @@ const initialState = {
   },
 };
 
-const search = (state = initialState, action) => {
+type SearchAction =
+  | SetQueryAction
+  | SetFilterAction
+  | SetIsSearchRandomAction
+  | SetIsSearchTermLockedAction
+  | SetSearchResultsAction
+  | ClearSearchAction
+  | UpdateScrollPositionAction;
+
+const search = (state = initialState, action: SearchAction) => {
   switch (action.type) {
     case SET_QUERY: {
       return {

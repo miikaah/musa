@@ -1,7 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-const ButtonContainer = styled.button`
+type ButtonContainerProps = {
+  isPrimary: boolean;
+  isSecondary: boolean;
+  isSmall: boolean;
+};
+
+const ButtonContainer = styled.button<Partial<ButtonContainerProps>>`
   width: 100%;
   font-size: 1rem;
   padding: 12px;
@@ -30,7 +36,16 @@ const ButtonContainer = styled.button`
   `}
 `;
 
-const Button = ({ className, children, onClick, ...rest }) => {
+type ButtonProps = Partial<ButtonContainerProps> & {
+  children: React.ReactNode;
+  onClick: (
+    event: React.MouseEvent,
+  ) => Promise<void> | ((event: React.MouseEvent) => void);
+  className?: string;
+  disabled?: boolean;
+};
+
+const Button = ({ className, children, onClick, ...rest }: ButtonProps) => {
   return (
     <ButtonContainer
       className={className}

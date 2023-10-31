@@ -7,15 +7,16 @@ import rootReducer from "./reducers";
 import ErrorBoundary from "./ErrorBoundary";
 import App from "./App.jsx";
 import Api from "./apiClient";
+import { SettingsState } from "./reducers/settings.reducer";
 
 import "./index.css";
 
 export const store = createStore(rootReducer);
 
-let previousSettings;
-let timerId;
+let previousSettings: Partial<SettingsState>;
+let timerId: number;
 store.subscribe(() => {
-  const settings = { ...store.getState().settings };
+  const settings = { ...store.getState().settings } as Partial<SettingsState>;
 
   if (settings.isInit && !isEqual(previousSettings, settings)) {
     clearTimeout(timerId);

@@ -8,13 +8,15 @@
     "start:s": "vite --port 3667 --mode server",
     "start:e": "vite --port 3666 --mode electron",
     "build:s": "shx rm -rf build-server && shx mkdir build-server && shx cp -R public/* build-server && env-cmd -f .env.server.prod node scripts/build.mjs && git rev-parse HEAD > version",
-    "build:e": "shx rm -rf build && shx mkdir build && shx cp -R public/* build && env-cmd -f .env.electron.prod node scripts/build.mjs && git rev-parse HEAD > version"
+    "build:e": "shx rm -rf build && shx mkdir build && shx cp -R public/* build && env-cmd -f .env.electron.prod node scripts/build.mjs && git rev-parse HEAD > version",
+    "tsc:w": "tsc --watch --noEmit"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.2.1",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@types/react-redux": "^7.1.28",
     "lodash.defaultto": "^4.14.0",
     "lodash.isempty": "^4.4.0",
     "lodash.isequal": "^4.5.0",
@@ -30,6 +32,12 @@
     "styled-components": "^6.0.8"
   },
   "devDependencies": {
+    "@miikaah/musa-core": "^9.4.1",
+    "@types/lodash.isempty": "^4.4.8",
+    "@types/lodash.isequal": "^4.5.7",
+    "@types/lodash.sortby": "^4.7.8",
+    "@types/react": "^18.2.33",
+    "@types/react-dom": "^18.2.14",
     "@vitejs/plugin-react-swc": "^3.4.0",
     "env-cmd": "^10.1.0",
     "esbuild": "^0.19.4",

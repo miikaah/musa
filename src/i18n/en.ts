@@ -1,4 +1,4 @@
-export default {
+const en: Record<string, string | ((s: string) => string)> = {
   "coverInfo.metadata.genre": "Genre",
   "coverInfo.metadata.normalization.track": "Normalization track",
   "coverInfo.metadata.normalization.album": "Normalization album",
@@ -80,8 +80,11 @@ export default {
   "titlebar.location.settings": "Settings",
   "toast.updatingLibrary": "Updating library",
   "toast.updateComplete": "Update complete",
-  "toast.addAlbumOrSongToPlaylist": (album) => `Added ${album} to playlist`,
-  "toast.createPlaylist": (text) => `Copied ${text} to clipboard`,
+  "toast.addAlbumOrSongToPlaylist": (album: string) =>
+    `Added ${album} to playlist`,
+  "toast.createPlaylist": (text: string) => `Copied ${text} to clipboard`,
   "toast.failedToUpdateTags": "Failed to update tags",
   "toast.succeededToUpdateTags": "Tags updated",
 };
+
+export default en;

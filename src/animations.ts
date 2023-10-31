@@ -18,7 +18,7 @@ export const fadeOut = keyframes`
   }
 `;
 
-export const expandHeight = (albumsLen, filesLen) => keyframes`
+export const expandHeight = (albumsLen: number, filesLen: number) => keyframes`
   from {
     max-height: 23px;
   }
@@ -27,9 +27,9 @@ export const expandHeight = (albumsLen, filesLen) => keyframes`
   }
 `;
 
-export const expandHeightFiles = (filesLen) => 100 + filesLen * 17;
+export const expandHeightFiles = (filesLen: number) => 100 + filesLen * 17;
 
-export const expandHeightAlbum = (songsLen) => keyframes`
+export const expandHeightAlbum = (songsLen: number) => keyframes`
   from {
     max-height: 100px;
   }
@@ -38,7 +38,10 @@ export const expandHeightAlbum = (songsLen) => keyframes`
   }
 `;
 
-export const contractHeight = (albumsLen, filesLen) => keyframes`
+export const contractHeight = (
+  albumsLen: number,
+  filesLen: number,
+) => keyframes`
   from {
     max-height: ${23 + albumsLen * 100 + expandHeightFiles(filesLen)}px;
   }
@@ -47,7 +50,7 @@ export const contractHeight = (albumsLen, filesLen) => keyframes`
   }
 `;
 
-export const contractHeightAlbum = (songsLen) => keyframes`
+export const contractHeightAlbum = (songsLen: number) => keyframes`
   from {
     max-height: ${40 + 100 + expandHeightFiles(songsLen)}px;
   }

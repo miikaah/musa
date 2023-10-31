@@ -41,7 +41,7 @@ export const ArrowDown = styled.span`
   border-top: 10px solid var(--color-typography-primary);
 `;
 
-export const listImage = css`
+export const listImage = css<{ hasCover: boolean }>`
   > div:first-of-type {
     display: flex;
     min-width: 80px;

@@ -1,7 +1,10 @@
+import { ArtistObject } from "@miikaah/musa-core";
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Dispatch } from "redux";
 import styled, { css } from "styled-components";
+import { LibraryState } from "../reducers/library.reducer";
 import {
   setQuery,
   setFilter,
@@ -10,7 +13,10 @@ import {
   setIsSearchTermLocked,
   clearSearch,
   updateScrollPosition,
+  SearchState,
+  ScrollPos,
 } from "../reducers/search.reducer";
+import { SettingsState } from "../reducers/settings.reducer";
 import { useDebounce } from "../hooks";
 import Song from "../components/Song";
 import Album from "../components/Album";
@@ -20,6 +26,7 @@ import Select from "../components/Select";
 import config from "../config";
 import Api from "../apiClient";
 import { ArrowDown as ArrowDownStyled } from "../common.styles";
+import { TranslateFn } from "../i18n";
 
 const { isElectron } = config;
 
@@ -160,7 +167,7 @@ const InputContainer = styled.div`
   }
 `;
 
-const SearchInputContainer = styled.div`
+const SearchInputContainer = styled.div<{ query: string }>`
   > input {
     padding-right: 80px;
   }
@@ -209,6 +216,19 @@ const ClearButton = styled(Button)`
   ${buttonStyles}
 `;
 
+type SearchProps = {
+  query: string;
+  artists: unknown[];
+  albums: unknown[];
+  audios: unknown[];
+  isSearchRandom: boolean;
+  isSearchTermLocked: boolean;
+  scrollPos: ScrollPos;
+  listingWithLabels: ArtistObject;
+  t: TranslateFn;
+  dispatch: Dispatch;
+};
+
 const Search = ({
   query,
   artists,
@@ -220,9 +240,9 @@ const Search = ({
   listingWithLabels,
   t,
   dispatch,
-}) => {
+}: SearchProps) => {
   const [isFetching, setIsFetching] = useState(false);
-  const [genres, setGenres] = useState([]);
+  const [genres, setGenres] = useState<string[]>([]);
   const [showGenreSelect, setShowGenreSelect] = useState(false);
   const queryToBackend = useDebounce(query, 300);
   const artistListRef = useRef();
@@ -441,7 +461,11 @@ const Search = ({
 };
 
 export default connect(
-  (state) => ({
+  (state: {
+    search: SearchState;
+    library: LibraryState;
+    settings: SettingsState;
+  }) => ({
     query: state.search.query,
     artists: state.search.searchArtists,
     albums: state.search.searchAlbums,

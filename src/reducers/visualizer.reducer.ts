@@ -1,4 +1,17 @@
+type VisualizerData = {
+  update: 0 | 1;
+  dataArray: Uint8Array;
+  dataArrayL: Uint8Array;
+  dataArrayR: Uint8Array;
+  peakMeterBuffer: Float32Array;
+  peakMeterBufferL: Float32Array;
+  peakMeterBufferR: Float32Array;
+};
+
 export const SET_DATA = "MUSA/VISUALIZER/SET_DATA";
+export type SetVisualizerDataAction = VisualizerData & {
+  type: typeof SET_DATA;
+};
 export const setVisualizerData = ({
   dataArray,
   dataArrayL,
@@ -6,7 +19,7 @@ export const setVisualizerData = ({
   peakMeterBuffer,
   peakMeterBufferL,
   peakMeterBufferR,
-}) => ({
+}: VisualizerData) => ({
   type: SET_DATA,
   dataArray,
   dataArrayL,
@@ -15,6 +28,10 @@ export const setVisualizerData = ({
   peakMeterBufferL,
   peakMeterBufferR,
 });
+
+export type VisualizerState = VisualizerData & {
+  update: 0 | 1;
+};
 
 const initialState = {
   update: 0,
@@ -26,7 +43,7 @@ const initialState = {
   peakMeterBufferR: new Float32Array(4096),
 };
 
-const visualizer = (state = initialState, action) => {
+const visualizer = (state = initialState, action: SetVisualizerDataAction) => {
   switch (action.type) {
     case SET_DATA: {
       return {

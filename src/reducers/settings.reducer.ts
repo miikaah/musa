@@ -1,16 +1,40 @@
 import { FALLBACK_THEME, firFileMap } from "../config";
 import { REPLAYGAIN_TYPE } from "../util";
-import { translate } from "../i18n/i18n";
+import { TranslateFn, translate } from "../i18n";
+import { ReplaygainType } from "../types";
 
 export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS";
-export const updateSettings = (props) => ({
+export type UpdateSettingsAction = {
+  type: typeof UPDATE_SETTINGS;
+  props: Partial<SettingsState>;
+};
+export const updateSettings = (props: Partial<SettingsState>) => ({
   type: UPDATE_SETTINGS,
   props,
 });
 
 export const VOLUME_DEFAULT = 50;
 
-const initialState = {
+export type SettingsState = {
+  isInit: boolean;
+  currentTheme: {
+    colors: typeof FALLBACK_THEME;
+  };
+  key: string;
+  replaygainType: ReplaygainType;
+  preAmpDb: number;
+  firMakeUpGainDb: number;
+  firFile: string;
+  firFiles: Record<string, string>;
+  volume: number;
+  musicLibraryPath: string;
+  language: string;
+  t: TranslateFn;
+};
+
+export type Settings = Omit<SettingsState, "t">;
+
+const initialState: SettingsState = {
   isInit: false,
   currentTheme: {
     colors: FALLBACK_THEME,
@@ -36,7 +60,9 @@ const initialState = {
   t: translate("en"),
 };
 
-const settings = (state = initialState, action) => {
+type SettingsAction = UpdateSettingsAction;
+
+const settings = (state = initialState, action: SettingsAction) => {
   switch (action.type) {
     case UPDATE_SETTINGS: {
       if (action.props.language) {

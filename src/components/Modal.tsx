@@ -1,15 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components";
+import { SettingsState } from "../reducers/settings.reducer";
+import { TranslateFn } from "../i18n";
 
-const Container = styled.div`
+const Container = styled.div<{ maxWidth: number; top?: number }>`
   width: 100%;
   height: 100%;
   min-height: 90vh;
   background: var(--color-bg);
   position: fixed;
   top: ${({ top }) =>
-    isFinite(top)
+    isFinite(Number(top))
       ? css`
           ${top}px
         `
@@ -27,7 +29,15 @@ const CloseButton = styled.button`
   color: var(--color-typography);
 `;
 
-const Modal = ({ closeModal, children, maxWidth, top, t }) => {
+type ModalProps = {
+  closeModal: () => void;
+  children: React.ReactNode;
+  maxWidth: number;
+  t: TranslateFn;
+  top?: number;
+};
+
+const Modal = ({ closeModal, children, maxWidth, top, t }: ModalProps) => {
   return (
     <Container maxWidth={maxWidth} top={top}>
       {closeModal && (
@@ -39,7 +49,7 @@ const Modal = ({ closeModal, children, maxWidth, top, t }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),

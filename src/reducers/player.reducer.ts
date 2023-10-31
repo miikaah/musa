@@ -1,41 +1,72 @@
+import { AudioWithMetadata } from "@miikaah/musa-core";
 import isEmpty from "lodash.isempty";
 import { cleanUrl } from "../util";
+import { CoverData } from "../types";
 
 export const PLAY = "MUSA/PLAYER/PLAY";
+export type PlayAction = {
+  type: typeof PLAY;
+};
 export const play = () => ({
   type: PLAY,
 });
 
 export const PLAY_INDEX = "MUSA/PLAYER/PLAY_INDEX";
-export const playIndex = (index) => ({
+export type PlayIndexAction = {
+  type: typeof PLAY_INDEX;
+  index: number;
+};
+export const playIndex = (index: number) => ({
   type: PLAY_INDEX,
   index,
 });
 
 export const PLAY_NEXT = "MUSA/PLAYER/PLAY_NEXT";
+export type PlayNextAction = {
+  type: typeof PLAY_NEXT;
+};
 export const playNext = () => ({
   type: PLAY_NEXT,
 });
 
 export const REPLAY = "MUSA/PLAYER/REPLAY";
-export const replay = (replay) => ({
+export type ReplayAction = {
+  type: typeof REPLAY;
+  replay: boolean;
+};
+export const replay = (replay: boolean) => ({
   type: REPLAY,
   replay,
 });
 
 export const PAUSE = "MUSA/PLAYER/PAUSE";
+export type PauseAction = {
+  type: typeof PAUSE;
+};
 export const pause = () => ({
   type: PAUSE,
 });
 
 export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD";
-export const addToPlaylist = (item) => ({
+export type AddToPlaylistAction = {
+  type: typeof ADD_TO_PLAYLIST;
+  item: AudioWithMetadata;
+};
+export const addToPlaylist = (item: AudioWithMetadata) => ({
   type: ADD_TO_PLAYLIST,
   item,
 });
 
 export const PASTE_TO_PLAYLIST = "MUSA/PLAYER/PASTE_TO_PLAYLIST";
-export const pasteToPlaylist = (items, index) => ({
+export type PasteToPlaylistAction = {
+  type: typeof PASTE_TO_PLAYLIST;
+  items: AudioWithMetadata[];
+  index: number;
+};
+export const pasteToPlaylist = (
+  items: AudioWithMetadata[],
+  index?: number,
+) => ({
   type: PASTE_TO_PLAYLIST,
   items,
   index,
@@ -43,23 +74,46 @@ export const pasteToPlaylist = (items, index) => ({
 
 export const REMOVE_INDEXES_FROM_PLAYLIST =
   "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST";
-export const removeIndexesFromPlaylist = (indexes) => ({
+export type RemoveIndexesFromPlaylistAction = {
+  type: typeof REMOVE_INDEXES_FROM_PLAYLIST;
+  indexes: number[];
+};
+export const removeIndexesFromPlaylist = (indexes: number[]) => ({
   type: REMOVE_INDEXES_FROM_PLAYLIST,
   indexes,
 });
 
 export const EMPTY_PLAYLIST = "MUSA/PLAYER/EMPTY_PLAYLIST";
+export type EmptyPlaylistAction = {
+  type: typeof EMPTY_PLAYLIST;
+};
 export const emptyPlaylist = () => ({
   type: EMPTY_PLAYLIST,
 });
 
 export const SET_COVER_DATA = "MUSA/PLAYER/SET_COVER_DATA";
-export const setCoverData = (coverData) => ({
+export type SetCoverDataAction = {
+  type: typeof SET_COVER_DATA;
+  coverData: CoverData;
+};
+export const setCoverData = (coverData: CoverData) => ({
   type: SET_COVER_DATA,
   coverData,
 });
 
-const initialState = {
+export type PlayerState = {
+  items: AudioWithMetadata[];
+  currentItem: AudioWithMetadata | Record<string, unknown>;
+  currentIndex: number;
+  src: string;
+  coverUrl: string;
+  previousCoverUrl: string;
+  isPlaying: boolean;
+  coverData: CoverData;
+  replay: boolean;
+};
+
+const initialState: PlayerState = {
   items: [],
   currentItem: {},
   currentIndex: -1,
@@ -75,7 +129,25 @@ const initialState = {
   replay: false,
 };
 
-const player = (state = initialState, action) => {
+type PlayerAction =
+  | PlayAction
+  | PlayIndexAction
+  | PlayNextAction
+  | ReplayAction
+  | PauseAction
+  | AddToPlaylistAction
+  | PasteToPlaylistAction
+  | RemoveIndexesFromPlaylistAction
+  | EmptyPlaylistAction
+  | SetCoverDataAction;
+
+const hasIndex = (
+  action: PlayIndexAction | PlayNextAction,
+): action is PlayIndexAction => {
+  return "index" in action && typeof action.index === "number";
+};
+
+const player = (state = initialState, action: PlayerAction) => {
   switch (action.type) {
     case PLAY: {
       // * If play is paused and playlist has items resume playback
@@ -104,12 +176,14 @@ const player = (state = initialState, action) => {
     }
     case PLAY_INDEX:
     case PLAY_NEXT: {
-      const newIndex =
-        typeof action.index === "number"
-          ? action.index
-          : state.currentIndex + 1;
-      const newItem = state.items[newIndex];
+      let newIndex;
+      if (hasIndex(action)) {
+        newIndex = action.index;
+      } else {
+        newIndex = state.currentIndex + 1;
+      }
 
+      const newItem = state.items[newIndex];
       if (newItem) {
         // This is a duplicate play so need to set replay even though index is moved forward
         if (state.currentItem?.id === newItem.id) {
@@ -170,7 +244,7 @@ const player = (state = initialState, action) => {
       const playlistStart = state.items.slice(0, action.index + 1);
       const playlistEnd = state.items.slice(
         action.index + 1,
-        state.items.length
+        state.items.length,
       );
       const newItems = [...playlistStart, ...action.items, ...playlistEnd];
       let newIndex =
@@ -188,13 +262,13 @@ const player = (state = initialState, action) => {
     }
     case REMOVE_INDEXES_FROM_PLAYLIST: {
       const newItems = state.items.filter(
-        (_, index) => !action.indexes.includes(index)
+        (_, index) => !action.indexes.includes(index),
       );
       const isRemovingCurrentIndex = action.indexes.includes(
-        state.currentIndex
+        state.currentIndex,
       );
       const indexesBelowCurrentIndex = action.indexes.filter(
-        (i) => i < state.currentIndex
+        (i) => i < state.currentIndex,
       );
       const newIndex = isRemovingCurrentIndex
         ? -1
@@ -222,7 +296,10 @@ const player = (state = initialState, action) => {
   }
 };
 
-function getPlayBase(newItem, newIndex) {
+function getPlayBase(
+  newItem: AudioWithMetadata | Record<string, unknown>,
+  newIndex: number,
+) {
   return {
     currentItem: newItem,
     currentIndex: newIndex,
@@ -232,7 +309,11 @@ function getPlayBase(newItem, newIndex) {
   };
 }
 
-function getStateByPlaylistChange(state, newItems, currentIndex) {
+function getStateByPlaylistChange(
+  state: PlayerState,
+  newItems: AudioWithMetadata[],
+  currentIndex: number,
+) {
   return {
     ...state,
     items: newItems,
