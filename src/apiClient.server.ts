@@ -1,6 +1,7 @@
 import {
   AlbumWithFilesAndMetadata,
   Artist,
+  ArtistObject,
   ArtistWithEnrichedAlbums,
   AudioWithMetadata,
   Colors,
@@ -101,7 +102,7 @@ const getAudioById = async (url: string): Promise<AudioWithMetadata> => {
   return getByUrl(url);
 };
 
-const getArtists = async () => {
+const getArtists = async (): Promise<ArtistObject> => {
   return get("/artists");
 };
 

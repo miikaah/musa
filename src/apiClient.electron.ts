@@ -1,8 +1,13 @@
 import {
+  AlbumWithFilesAndMetadata,
+  Artist,
+  ArtistObject,
+  ArtistWithEnrichedAlbums,
   AudioWithMetadata,
   Colors,
   FindResult,
   Tags,
+  Theme,
 } from "@miikaah/musa-core";
 import {
   ScanEndCompleteListenerCallback,
@@ -11,51 +16,67 @@ import {
 } from "./apiClient";
 import { Settings } from "./reducers/settings.reducer";
 
-const getSettings = async () => {
+const getSettings = async (): Promise<Settings> => {
   return window.electron.getSettings();
 };
 
-const insertSettings = async (settings: Partial<Settings>) => {
+const insertSettings = async (
+  settings: Partial<Settings>,
+): Promise<Settings> => {
   return window.electron.insertSettings(settings);
 };
 
-const getArtists = async () => {
+const getArtists = async (): Promise<ArtistObject> => {
   return window.electron.getArtists();
 };
 
-const getArtistById = async (id: string) => {
+const getArtistById = async (id: string): Promise<Artist> => {
   return window.electron.getArtistById(id);
 };
 
-const getArtistAlbums = async (id: string) => {
+const getArtistAlbums = async (
+  id: string,
+): Promise<ArtistWithEnrichedAlbums> => {
   return window.electron.getArtistAlbums(id);
 };
 
-const getAlbumById = async (id: string) => {
+const getAlbumById = async (id: string): Promise<AlbumWithFilesAndMetadata> => {
   return window.electron.getAlbumById(id);
 };
 
-const getAudioById = async (id: string) => {
+const getAudioById = async (id: string): Promise<AudioWithMetadata> => {
   return window.electron.getAudioById(id);
 };
 
-const getThemes = async () => {
+const getThemes = async (): Promise<Theme[]> => {
   return window.electron.getAllThemes();
 };
 
-const getThemeById = async ({ id }: { id: string }) => {
+const getThemeById = async ({ id }: { id: string }): Promise<Theme> => {
   return window.electron.getThemeById(id);
 };
 
-const insertTheme = async ({ id, colors }: { id: string; colors: Colors }) => {
+const insertTheme = async ({
+  id,
+  colors,
+}: {
+  id: string;
+  colors: Colors;
+}): Promise<Theme> => {
   return window.electron.insertTheme(id, colors);
 };
 
-const updateTheme = async ({ id, colors }: { id: string; colors: Colors }) => {
+const updateTheme = async ({
+  id,
+  colors,
+}: {
+  id: string;
+  colors: Colors;
+}): Promise<Theme> => {
   return window.electron.updateTheme(id, colors);
 };
 
-const removeTheme = async ({ id }: { id: string }) => {
+const removeTheme = async ({ id }: { id: string }): Promise<void> => {
   return window.electron.removeThemeById(id);
 };
 
