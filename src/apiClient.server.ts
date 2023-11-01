@@ -81,11 +81,11 @@ const del = async (path: string) => {
   });
 };
 
-const getSettings = async (): Promise<Settings> => {
+export const getSettings = async (): Promise<Settings> => {
   return get(`/app-settings`);
 };
 
-const insertSettings = async (
+export const insertSettings = async (
   settings: Partial<Settings>,
 ): Promise<Settings> => {
   return put(`/app-settings`, {
@@ -98,39 +98,39 @@ const insertSettings = async (
   });
 };
 
-const getAudioById = async (url: string): Promise<AudioWithMetadata> => {
+export const getAudioById = async (url: string): Promise<AudioWithMetadata> => {
   return getByUrl(url);
 };
 
-const getArtists = async (): Promise<ArtistObject> => {
+export const getArtists = async (): Promise<ArtistObject> => {
   return get("/artists");
 };
 
-const getArtistById = async (url: string): Promise<Artist> => {
+export const getArtistById = async (url: string): Promise<Artist> => {
   return getByUrl(url);
 };
 
-const getArtistAlbums = async (
+export const getArtistAlbums = async (
   id: string,
 ): Promise<ArtistWithEnrichedAlbums> => {
   return get(`/artists/${id}/albums`);
 };
 
-const getAlbumById = async (
+export const getAlbumById = async (
   url: string,
 ): Promise<AlbumWithFilesAndMetadata> => {
   return getByUrl(url);
 };
 
-const getThemes = async (): Promise<Theme[]> => {
+export const getThemes = async (): Promise<Theme[]> => {
   return get("/themes");
 };
 
-const getThemeById = async ({ id }: { id: string }): Promise<Theme> => {
+export const getThemeById = async ({ id }: { id: string }): Promise<Theme> => {
   return get(`/themes/${id.split("/").pop()}`);
 };
 
-const insertTheme = async ({
+export const insertTheme = async ({
   id,
   colors,
 }: {
@@ -140,7 +140,7 @@ const insertTheme = async ({
   return put(`/themes/${id.split("/").pop()}`, { body: { colors } });
 };
 
-const updateTheme = async ({
+export const updateTheme = async ({
   id,
   colors,
 }: {
@@ -150,25 +150,25 @@ const updateTheme = async ({
   return patch(`/themes/${id.split("/").pop()}`, { body: { colors } });
 };
 
-const removeTheme = async ({ id }: { id: string }): Promise<void> => {
+export const removeTheme = async ({ id }: { id: string }): Promise<void> => {
   await del(`/themes/${id}`);
 };
 
-const getAllGenres = async (): Promise<string[]> => {
+export const getAllGenres = async (): Promise<string[]> => {
   return get("/genres");
 };
 
-const find = async (queryToBackend: string): Promise<FindResult> => {
+export const find = async (queryToBackend: string): Promise<FindResult> => {
   return get(`/find/${queryToBackend}`);
 };
 
-const findRandom = async (query?: string): Promise<FindResult> => {
+export const findRandom = async (query?: string): Promise<FindResult> => {
   return query ? get(`/find-random/${query}`) : get("/find-random");
 };
 
 // Server specific Apis
 
-const insertPlaylist = async ({
+export const insertPlaylist = async ({
   pathIds,
 }: {
   pathIds: string[];
@@ -176,7 +176,7 @@ const insertPlaylist = async ({
   return post(`/playlists`, { body: { pathIds } });
 };
 
-const getPlaylist = async ({
+export const getPlaylist = async ({
   id,
 }: {
   id: string;
@@ -184,7 +184,7 @@ const getPlaylist = async ({
   return get(`/playlists/${id}`);
 };
 
-const getPlaylistAudios = async ({
+export const getPlaylistAudios = async ({
   id,
 }: {
   id: string;
@@ -194,63 +194,28 @@ const getPlaylistAudios = async ({
 
 // Electron specific Apis
 
-const addMusicLibraryPath = async () => {};
+export const addMusicLibraryPath = async () => {};
 
-const getPlatform = async () => {};
+export const getPlatform = async () => {};
 
-const minimizeWindow = () => {};
+export const minimizeWindow = () => {};
 
-const maximizeWindow = () => {};
+export const maximizeWindow = () => {};
 
-const unmaximizeWindow = () => {};
+export const unmaximizeWindow = () => {};
 
-const isWindowMaximized = async () => {};
+export const isWindowMaximized = async () => {};
 
-const closeWindow = () => {};
+export const closeWindow = () => {};
 
-const refreshLibrary = () => {};
+export const refreshLibrary = () => {};
 
-const onInit = async () => {};
+export const onInit = async () => {};
 
-const addScanStartListener = () => {};
+export const addScanStartListener = () => {};
 
-const addScanUpdateListener = () => {};
+export const addScanUpdateListener = () => {};
 
-const addScanEndListener = () => {};
+export const addScanEndListener = () => {};
 
-const addScanCompleteListener = () => {};
-
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
-  getSettings,
-  insertSettings,
-  getAudioById,
-  getArtists,
-  getArtistById,
-  getArtistAlbums,
-  getAlbumById,
-  getThemes,
-  getThemeById,
-  insertTheme,
-  updateTheme,
-  removeTheme,
-  getAllGenres,
-  find,
-  findRandom,
-  insertPlaylist,
-  getPlaylist,
-  getPlaylistAudios,
-  addMusicLibraryPath,
-  getPlatform,
-  minimizeWindow,
-  maximizeWindow,
-  unmaximizeWindow,
-  isWindowMaximized,
-  closeWindow,
-  refreshLibrary,
-  onInit,
-  addScanStartListener,
-  addScanUpdateListener,
-  addScanEndListener,
-  addScanCompleteListener,
-};
+export const addScanCompleteListener = () => {};

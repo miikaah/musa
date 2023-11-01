@@ -9,8 +9,8 @@ import {
   Tags,
   Playlist,
 } from "@miikaah/musa-core";
-import ElectronApi from "./apiClient.electron";
-import ServerApi from "./apiClient.server";
+import * as ElectronApi from "./apiClient.electron";
+import * as ServerApi from "./apiClient.server";
 import config from "./config";
 import { Settings } from "./reducers/settings.reducer";
 
