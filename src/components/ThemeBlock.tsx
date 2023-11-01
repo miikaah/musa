@@ -39,9 +39,9 @@ export type EditTarget = "bg" | "primary" | "secondary" | null;
 
 type ThemeBlockProps = {
   currentTheme: SettingsState["currentTheme"];
-  isThemeEditor: boolean;
-  editTarget: EditTarget;
-  setEditTarget: (target: EditTarget) => void;
+  isThemeEditor?: boolean;
+  editTarget?: EditTarget;
+  setEditTarget?: (target: EditTarget) => void;
   className?: string;
   hasMargin?: boolean;
   setCurrentTheme?: (theme: SettingsState["currentTheme"]) => void;
@@ -66,11 +66,11 @@ const ThemeBlock = ({
     return null;
   }
 
-  const setEditTargetToBg = (event) => {
+  const setEditTargetToBg = (event: React.MouseEvent) => {
     event.preventDefault();
 
     // This is parent click
-    if (event.target === event.currentTarget) {
+    if (event.target === event.currentTarget && setEditTarget) {
       setEditTarget(editTarget === "bg" ? null : "bg");
     }
   };
@@ -80,7 +80,7 @@ const ThemeBlock = ({
       className={className}
       title={filename || ""}
       rgb={colors.bg}
-      onClick={(event) => {
+      onClick={(event: React.MouseEvent) => {
         if (isThemeEditor) {
           setEditTargetToBg(event);
         } else if (setCurrentTheme) {
@@ -94,6 +94,7 @@ const ThemeBlock = ({
         rgb={colors.primary}
         isEditing={editTarget === "primary"}
         onClick={() =>
+          setEditTarget &&
           setEditTarget(editTarget === "primary" ? null : "primary")
         }
       />
@@ -101,6 +102,7 @@ const ThemeBlock = ({
         rgb={colors.secondary}
         isEditing={editTarget === "secondary"}
         onClick={() =>
+          setEditTarget &&
           setEditTarget(editTarget === "secondary" ? null : "secondary")
         }
       />

@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
+import { PlayerState } from "../reducers/player.reducer";
 
 const ButtonContainer = styled.span`
   margin-right: 8px;
@@ -13,15 +14,25 @@ const ButtonContainer = styled.span`
   }
 `;
 
-const PlayerPlayPauseButton = ({ playOrPause, isPlaying }) => {
-  const playerPlayPause = useRef(null);
+type PlayerPlayPauseButtonProps = {
+  playOrPause: () => void;
+  isPlaying: PlayerState["isPlaying"];
+};
+
+const PlayerPlayPauseButton = ({
+  playOrPause,
+  isPlaying,
+}: PlayerPlayPauseButtonProps) => {
+  const playerPlayPauseRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <ButtonContainer>
       <button
-        ref={playerPlayPause}
+        ref={playerPlayPauseRef}
         onClick={playOrPause}
-        onFocus={() => playerPlayPause.current.blur()}
+        onFocus={() =>
+          playerPlayPauseRef.current && playerPlayPauseRef.current.blur()
+        }
       >
         <FontAwesomeIcon icon={isPlaying ? "pause" : "play"} />
       </button>
@@ -30,7 +41,7 @@ const PlayerPlayPauseButton = ({ playOrPause, isPlaying }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { player: PlayerState }) => ({
     isPlaying: state.player.isPlaying,
   }),
   (dispatch) => ({ dispatch }),

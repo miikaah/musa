@@ -1,3 +1,4 @@
+import { AudioWithMetadata, Tags } from "@miikaah/musa-core";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -9,7 +10,6 @@ import Api from "../apiClient";
 import { dispatchToast } from "../util";
 import { ellipsisTextOverflow } from "../common.styles";
 import { SettingsState } from "../reducers/settings.reducer";
-import { AudioWithMetadata } from "@miikaah/musa-core";
 import { TranslateFn } from "../i18n";
 
 const Container = styled.div`
@@ -53,20 +53,24 @@ const SaveButton = styled(Button)`
   margin-top: 10px;
 `;
 
-type Tags = Partial<{
-  artist: string;
-  title: string;
-  album: string;
-  year: string;
-  trackNumber: string;
-  partOfSet: string;
-  genre: string;
-  composer: string;
-  comment: {
-    language: string;
-    text: string;
-  };
-}>;
+const getCodecInfo = (file: AudioWithMetadata) => {
+  const { codec, codecProfile, container } = file?.metadata || {};
+
+  let str = "";
+  if (codec) {
+    str += codec;
+    str += ", ";
+  }
+  if (codecProfile) {
+    str += codecProfile;
+    str += ", ";
+  }
+  if (container) {
+    str += container;
+  }
+
+  return str;
+};
 
 type TagEditorProps = {
   files: AudioWithMetadata[];
@@ -88,27 +92,8 @@ const TagEditor = ({ files = [], t, dispatch }: TagEditorProps) => {
   const [comment, setComment] = useState<string>();
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const getCodecInfo = (file) => {
-    const { codec, codecProfile, container } = file?.metadata || {};
-
-    let str = "";
-    if (codec) {
-      str += codec;
-      str += ", ";
-    }
-    if (codecProfile) {
-      str += codecProfile;
-      str += ", ";
-    }
-    if (container) {
-      str += container;
-    }
-
-    return str;
-  };
-
-  const saveTags = async (event, file) => {
-    const tags: Tags = {};
+  const saveTags = async (event: React.MouseEvent, file: AudioWithMetadata) => {
+    const tags: Partial<Tags> = {};
 
     if (typeof artist !== "undefined") {
       tags.artist = artist;

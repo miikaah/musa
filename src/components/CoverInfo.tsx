@@ -1,9 +1,11 @@
+import { AudioWithMetadata } from "@miikaah/musa-core";
 import React from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 import { ellipsisTextOverflow } from "../common.styles";
 import { SettingsState } from "../reducers/settings.reducer";
+import { TranslateFn } from "../i18n";
 
 const Container = styled.div<{ isSmall: boolean }>`
   padding: ${({ isSmall }) =>
@@ -84,15 +86,22 @@ const ToggleEditButton = styled.button`
   cursor: pointer;
 `;
 
-const getBitrate = (bitrate) => {
+const getBitrate = (bitrate: number) => {
   return isFinite(bitrate) ? `${Math.floor(bitrate / 1000)} kbps` : "";
 };
 
-const getSampleRate = (sampleRate) => {
+const getSampleRate = (sampleRate: number) => {
   return sampleRate ? `${sampleRate} Hz` : "";
 };
 
-const CoverInfo = ({ item, isSmall, toggleEdit, t }) => {
+type CoverInfoProps = {
+  item: AudioWithMetadata;
+  isSmall: boolean;
+  toggleEdit: () => void;
+  t: TranslateFn;
+};
+
+const CoverInfo = ({ item, isSmall, toggleEdit, t }: CoverInfoProps) => {
   if (Object.keys(item).length < 1) {
     return null;
   }
@@ -105,8 +114,8 @@ const CoverInfo = ({ item, isSmall, toggleEdit, t }) => {
   const genre = Array.isArray(item?.metadata?.genre)
     ? item?.metadata?.genre.join(", ")
     : "";
-  const bitrate = getBitrate(item?.metadata?.bitrate);
-  const sampleRate = getSampleRate(item?.metadata?.sampleRate);
+  const bitrate = getBitrate(Number(item?.metadata?.bitrate));
+  const sampleRate = getSampleRate(Number(item?.metadata?.sampleRate));
 
   return (
     <Container isSmall={isSmall}>

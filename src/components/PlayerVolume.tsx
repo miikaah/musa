@@ -1,21 +1,36 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
 import ProgressInput from "./ProgressInput";
+import { SettingsState } from "../reducers/settings.reducer";
 
 const MAIN_BUTTON_DOWN = 1;
 
 const VOLUME_MUTED = 0;
 const VOLUME_STEP = 5;
 
-const PlayerVolume = ({ volume, setVolumeForStateAndPlayer, dispatch }) => {
-  const playerVolume = useRef(null);
+type PlayerVolumeProps = {
+  volume: number;
+  setVolumeForStateAndPlayer: (vol: number) => void;
+};
 
-  const setVolumeByEvent = (vol) => {
+const PlayerVolume = ({
+  volume,
+  setVolumeForStateAndPlayer,
+}: PlayerVolumeProps) => {
+  const playerVolume = useRef<HTMLDivElement | null>(null);
+
+  const setVolumeByEvent = (vol: number) => {
     setVolumeForStateAndPlayer(vol <= VOLUME_STEP ? VOLUME_MUTED : vol);
   };
 
-  const handleVolumeChange = (e) => {
-    if (e.type === "mousemove" && e.buttons !== MAIN_BUTTON_DOWN) return;
+  const handleVolumeChange = (e: React.MouseEvent) => {
+    if (e.type === "mousemove" && e.buttons !== MAIN_BUTTON_DOWN) {
+      return;
+    }
+    if (!playerVolume.current) {
+      return;
+    }
+
     const x = e.clientX;
     const { left, width } = playerVolume.current.getBoundingClientRect();
     const vol = Math.floor(((x - left) / width) * 100);
@@ -38,8 +53,8 @@ const PlayerVolume = ({ volume, setVolumeForStateAndPlayer, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     volume: state.settings.volume,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(PlayerVolume);

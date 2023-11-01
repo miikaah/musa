@@ -181,7 +181,6 @@ const App = ({ isInit, t, dispatch }: AppProps) => {
           currentTheme,
         }),
       );
-      console.log("settings", settings);
 
       const profile = settings.currentProfile;
       dispatch(updateCurrentProfile(profile));

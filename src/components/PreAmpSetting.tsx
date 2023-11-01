@@ -1,22 +1,37 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import styled from "styled-components";
 import { SettingsState, updateSettings } from "../reducers/settings.reducer";
+import { TranslateFn } from "../i18n";
 
 const Input = styled.input`
   max-width: 104px;
 `;
 
-const PreAmpSetting = ({ isInit, preAmpDb, t, dispatch }) => {
+type PreAmpSettingProps = {
+  isInit: SettingsState["isInit"];
+  preAmpDb: number;
+  t: TranslateFn;
+  dispatch: Dispatch;
+};
+
+const PreAmpSetting = ({
+  isInit,
+  preAmpDb,
+  t,
+  dispatch,
+}: PreAmpSettingProps) => {
   const [value, setValue] = useState(preAmpDb || 0);
 
   if (!isInit) {
     return null;
   }
 
-  const updateState = (event) => {
-    setValue(event.target.value);
-    dispatch(updateSettings({ preAmpDb: event.target.value }));
+  const updateState = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const num = Number(event.target.value);
+    setValue(num);
+    dispatch(updateSettings({ preAmpDb: num }));
   };
 
   return (

@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import isEmpty from "lodash.isempty";
 import styled, { css } from "styled-components";
-import { play, replay, pause, playNext } from "../reducers/player.reducer";
-import { VOLUME_DEFAULT, updateSettings } from "../reducers/settings.reducer";
+import {
+  play,
+  replay,
+  pause,
+  playNext,
+  PlayerState,
+} from "../reducers/player.reducer";
+import {
+  SettingsState,
+  VOLUME_DEFAULT,
+  updateSettings,
+} from "../reducers/settings.reducer";
 import { setVisualizerData } from "../reducers/visualizer.reducer";
 import { store } from "..";
 import { KEYS, getReplaygainDb, dispatchToast } from "../util";
@@ -104,7 +115,20 @@ const peakMeterBufferR = new Float32Array(analyzer.fftSize);
 
 const audioEl = document.createElement("audio");
 audioEl.crossOrigin = "anonymous";
-let track;
+let track: MediaElementAudioSourceNode;
+
+type PlayerProps = {
+  playlist: PlayerState["items"];
+  isPlaying: PlayerState["isPlaying"];
+  volume: SettingsState["volume"];
+  replaygainType: SettingsState["replaygainType"];
+  preAmpDb: SettingsState["preAmpDb"];
+  firMakeUpGainDb: SettingsState["firMakeUpGainDb"];
+  firFile: SettingsState["firFile"];
+  src: PlayerState["src"];
+  currentItem: PlayerState["currentItem"];
+  dispatch: Dispatch;
+};
 
 const Player = ({
   playlist,
@@ -117,14 +141,14 @@ const Player = ({
   src,
   currentItem,
   dispatch,
-}) => {
+}: PlayerProps) => {
   const [duration, setDuration] = useState(0);
   const [volumeBeforeMuting, setVolumeBeforeMuting] = useState(VOLUME_DEFAULT);
   const [currentTime, setCurrentTime] = useState(0);
 
   const isMuted = () => volume === VOLUME_MUTED;
 
-  const playOrPause = (event) => {
+  const playOrPause = (event?: Event) => {
     if (event) {
       event.preventDefault();
     }
@@ -257,7 +281,11 @@ const Player = ({
     );
   });
 
-  const setVolumeForPlayer = (v) => {
+  const setVolumeForPlayer = (v?: number) => {
+    if (!currentItem) {
+      return;
+    }
+
     const vol = typeof v === "number" ? v : volume;
     const replaygainDb = getReplaygainDb(replaygainType, currentItem);
     const trackGainPercentage = replaygainDb
@@ -279,7 +307,7 @@ const Player = ({
       firMakeUpGainPercentage;
   };
 
-  const setVolumeForStateAndPlayer = (v) => {
+  const setVolumeForStateAndPlayer = (v: number) => {
     setVolumeForPlayer(v);
     dispatch(updateSettings({ volume: v }));
   };
@@ -298,7 +326,7 @@ const Player = ({
 
   useEffect(() => {
     const handleStoreChange = () => {
-      const state = store.getState().player;
+      const state = store.getState().player as PlayerState;
       const { replay: shouldReplay, currentItem } = state;
 
       if (shouldReplay) {
@@ -316,8 +344,14 @@ const Player = ({
         dispatch(replay(false));
       }
 
+      if (!currentItem) {
+        return;
+      }
+
       const { metadata, name } = currentItem;
-      if (!currentItem || !metadata) return;
+      if (!metadata) {
+        return;
+      }
 
       document.title = metadata.title || name || "Musa";
     };
@@ -331,7 +365,7 @@ const Player = ({
       return Math.floor(Number.isNaN(duration) ? 0 : duration);
     };
 
-    const handleLoadedData = (event) => {
+    const handleLoadedData = () => {
       setDuration(getDuration());
 
       audioContext.resume();
@@ -382,17 +416,14 @@ const Player = ({
       <PlayerRightContainer>
         {firFile && <FirEnabledIndicator />}
         <PlayerVolumeButton volume={volume} muteOrUnmute={muteOrUnmute} />
-        <PlayerVolume
-          volume={volume}
-          setVolumeForStateAndPlayer={setVolumeForStateAndPlayer}
-        />
+        <PlayerVolume setVolumeForStateAndPlayer={setVolumeForStateAndPlayer} />
       </PlayerRightContainer>
     </PlayerContainer>
   );
 };
 
 export default connect(
-  (state) => ({
+  (state: { player: PlayerState; settings: SettingsState }) => ({
     src: state.player.src,
     isPlaying: state.player.isPlaying,
     playlist: state.player.items,

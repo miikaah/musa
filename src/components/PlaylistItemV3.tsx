@@ -1,9 +1,11 @@
+import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components";
-import { playIndex, replay } from "../reducers/player.reducer";
+import { PlayerState, playIndex, replay } from "../reducers/player.reducer";
 import { formatDuration } from "../util";
 import { ellipsisTextOverflow } from "../common.styles";
 import AlbumImage from "./common/AlbumImageV2";
@@ -35,7 +37,10 @@ const colorCss = css`
   }
 `;
 
-const PlaylistItemContainer = styled.li`
+const PlaylistItemContainer = styled.li<{
+  isMovingItems?: boolean;
+  isActiveOrSelected?: boolean;
+}>`
   cursor: pointer;
   display: flex;
   max-height: 60px;
@@ -182,11 +187,46 @@ const SecondRow = styled.div`
   min-height: 15px;
 `;
 
-const SecondRowItem = styled.span`
+const SecondRowItem = styled.span<{ hasMargins?: boolean }>`
   ${({ hasMargins }) => hasMargins && `margin: 0 2px;`}
 `;
 
-let touchTimeout;
+let touchTimeout: NodeJS.Timeout;
+
+export type MouseUpDownOptions = {
+  index: number;
+  isShiftDown: boolean;
+  isCtrlDown: boolean;
+};
+
+type PlaylistItemProps = {
+  item: AudioWithMetadata;
+  currentItem: PlayerState["currentItem"];
+  currentIndex: PlayerState["currentIndex"];
+  isPlaying: PlayerState["isPlaying"];
+  index: number;
+  activeIndex: number;
+  startIndex: number;
+  endIndex: number;
+  isSelected: boolean;
+  onSetActiveIndex: (index: number) => void;
+  onMouseOverItem: (index: number) => void;
+  onMouseDownItem: ({
+    index,
+    isShiftDown,
+    isCtrlDown,
+  }: MouseUpDownOptions) => void;
+  onMouseUpItem: ({
+    index,
+    isShiftDown,
+    isCtrlDown,
+  }: MouseUpDownOptions) => void;
+  onScrollPlaylist: () => void;
+  toggleModal: (items: AudioWithMetadata[]) => void;
+  removeItems: () => void;
+  isMovingItems: boolean;
+  dispatch: Dispatch;
+};
 
 const PlaylistItem = ({
   item,
@@ -198,7 +238,6 @@ const PlaylistItem = ({
   startIndex,
   endIndex,
   isSelected,
-  dispatch,
   onSetActiveIndex,
   onMouseOverItem,
   onMouseDownItem,
@@ -207,11 +246,12 @@ const PlaylistItem = ({
   toggleModal,
   removeItems,
   isMovingItems,
-}) => {
+  dispatch,
+}: PlaylistItemProps) => {
   const [lastTouchTime, setLastTouchTime] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
 
-  const elRef = useRef(null);
+  const elRef = useRef<HTMLLIElement | null>(null);
 
   useEffect(() => {
     const onResize = () => {
@@ -231,6 +271,12 @@ const PlaylistItem = ({
     startIndex,
     endIndex,
     isSelected,
+  }: {
+    index: number;
+    activeIndex: number;
+    startIndex: number;
+    endIndex: number;
+    isSelected: boolean;
   }) => {
     if (isMovingItems) return;
 
@@ -278,7 +324,7 @@ const PlaylistItem = ({
     onSetActiveIndex(index);
   };
 
-  const handleMouseDown = (event) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLLIElement>) => {
     onMouseDownItem({
       index,
       isShiftDown: event.shiftKey,
@@ -287,7 +333,7 @@ const PlaylistItem = ({
     event.stopPropagation();
   };
 
-  const handleMouseUp = (event) => {
+  const handleMouseUp = (event: React.MouseEvent<HTMLLIElement>) => {
     onMouseUpItem({
       index,
       isShiftDown: event.shiftKey,
@@ -306,7 +352,10 @@ const PlaylistItem = ({
   };
 
   useEffect(() => {
-    if (!isIndexCurrentIndex()) return;
+    if (!isIndexCurrentIndex() || !elRef.current) {
+      return;
+    }
+
     const elRect = elRef.current.getBoundingClientRect();
     if (elRect.bottom > window.innerHeight - 1) {
       elRef.current.scrollIntoView(false); // Scrolls to correct song
@@ -381,7 +430,7 @@ const PlaylistItem = ({
 };
 
 export default connect(
-  (state) => ({
+  (state: { player: PlayerState }) => ({
     currentItem: state.player.currentItem,
     currentIndex: state.player.currentIndex,
     isPlaying: state.player.isPlaying,

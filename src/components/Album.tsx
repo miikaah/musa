@@ -101,17 +101,17 @@ const Album = ({ item, t, dispatch }: AlbumProps) => {
     dispatchToast(msg, key, dispatch);
   };
 
-  const setAlbumToSearchQuery = (e) => {
+  const setAlbumToSearchQuery = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(setQuery(`album:${album}`));
   };
 
-  const setArtistToSearchQuery = (e) => {
+  const setArtistToSearchQuery = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(setQuery(`artist:${artist}`));
   };
 
-  const setYearToSearchQuery = (e) => {
+  const setYearToSearchQuery = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(setQuery(`year:${year}`));
   };

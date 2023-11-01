@@ -28,15 +28,20 @@ const VolumeButtonContainer = styled.span`
 
 const VOLUME_STEP = 5;
 
-const PlayerVolumeButton = ({ volume, muteOrUnmute }) => {
-  const playerMute = useRef(null);
+type PlayerVolumeButtonProps = { volume: number; muteOrUnmute: () => void };
+
+const PlayerVolumeButton = ({
+  volume,
+  muteOrUnmute,
+}: PlayerVolumeButtonProps) => {
+  const playerMute = useRef<HTMLButtonElement | null>(null);
 
   return (
     <VolumeButtonContainer>
       <button
         ref={playerMute}
         onClick={muteOrUnmute}
-        onFocus={() => playerMute.current.blur()}
+        onFocus={() => playerMute.current && playerMute.current.blur()}
       >
         <FontAwesomeIcon
           icon={volume > VOLUME_STEP - 1 ? "volume-up" : "volume-mute"}

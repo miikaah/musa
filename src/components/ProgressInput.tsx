@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-const Container = styled.div`
+const Container = styled.div<{ width: number }>`
   display: flex;
   align-items: center;
   min-width: ${({ width }) => `${width}px`};
@@ -27,7 +27,7 @@ const sharedCss = css`
   width: 100%;
 `;
 
-const Background = styled.div`
+const Background = styled.div<{ width: number }>`
   ${sharedCss}
   max-width: ${({ width }) => `${width}px`};
   min-width: ${({ width }) => `${width}px`};
@@ -41,7 +41,7 @@ const ForegroundWrapper = styled.div`
   overflow: hidden;
 `;
 
-const Foreground = styled.div.attrs(({ progress }) => ({
+const Foreground = styled.div.attrs<{ progress: number }>(({ progress }) => ({
   style: {
     transform: `translateX(-${progress}%)`,
   },
@@ -50,14 +50,26 @@ const Foreground = styled.div.attrs(({ progress }) => ({
   background-color: var(--color-slider);
 `;
 
+type ProgressInputProps = {
+  progress: number;
+  handleMouseDown: (e: React.MouseEvent) => void;
+  handleMouseMove: (e: React.MouseEvent) => void;
+  width: number;
+};
+
 const ProgressInput = React.forwardRef(
-  ({ progress, handleMouseDown, handleMouseMove, width }, ref) => {
+  (
+    { progress, handleMouseDown, handleMouseMove, width }: ProgressInputProps,
+    ref: React.ForwardedRef<HTMLDivElement>,
+  ) => {
     return (
       <Container
         ref={ref}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
-        onFocus={() => ref.current.blur()}
+        onFocus={() =>
+          typeof ref !== "function" && ref?.current && ref?.current.blur()
+        }
         width={width + 20}
       >
         <Background width={width}>

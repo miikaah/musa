@@ -19,7 +19,7 @@ import { EnrichedAlbumFile } from "@miikaah/musa-core/lib/db.types";
 
 const { isElectron } = config;
 
-const getExpandTiming = (len) => {
+const getExpandTiming = (len: number) => {
   if (len < 2) {
     return "0.1s";
   } else if (len < 7) {
@@ -37,7 +37,7 @@ const getExpandTiming = (len) => {
   }
 };
 
-const getContractTiming = (len) => {
+const getContractTiming = (len: number) => {
   if (len < 2) {
     return "0.1666s";
   } else if (len < 7) {

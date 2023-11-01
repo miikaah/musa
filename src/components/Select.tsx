@@ -34,7 +34,21 @@ const Container = styled.div<{ top: number; dock: string; maxWidth: number }>`
   }
 `;
 
-const Select = ({ showSelect, top = 0, maxWidth, dock = "left", children }) => {
+type SelectProps = {
+  showSelect: boolean;
+  top?: number;
+  maxWidth: number;
+  dock?: string;
+  children: React.ReactNode;
+};
+
+const Select = ({
+  showSelect,
+  top = 0,
+  maxWidth,
+  dock = "left",
+  children,
+}: SelectProps) => {
   return showSelect ? (
     <Container top={top} maxWidth={maxWidth} dock={dock}>
       {children}

@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import styled from "styled-components";
 import { dispatchToast } from "../util";
 import { addToPlaylist } from "../reducers/player.reducer";
@@ -11,6 +12,8 @@ import {
 } from "../common.styles";
 import AlbumImage from "./common/AlbumImageV2";
 import { SettingsState } from "../reducers/settings.reducer";
+import { TranslateFnFn } from "../i18n";
+import { AudioWithMetadata } from "@miikaah/musa-core";
 
 const SongContainer = styled.div<{ hasCover: boolean }>`
   display: flex;
@@ -72,7 +75,13 @@ const SongInfo = styled.div`
   }
 `;
 
-const Song = ({ item, t, dispatch }) => {
+type SongProps = {
+  item: AudioWithMetadata;
+  t: TranslateFnFn;
+  dispatch: Dispatch;
+};
+
+const Song = ({ item, t, dispatch }: SongProps) => {
   if (!item) {
     return null;
   }
@@ -85,22 +94,22 @@ const Song = ({ item, t, dispatch }) => {
     dispatchToast(msg, key, dispatch);
   };
 
-  const setSongToSearchQuery = (e) => {
+  const setSongToSearchQuery = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(setQuery(title));
   };
 
-  const setAlbumToSearchQuery = (e) => {
+  const setAlbumToSearchQuery = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(setQuery(`album:${album}`));
   };
 
-  const setArtistToSearchQuery = (e) => {
+  const setArtistToSearchQuery = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(setQuery(`artist:${artist}`));
   };
 
-  const setYearToSearchQuery = (e) => {
+  const setYearToSearchQuery = (e: React.MouseEvent) => {
     e.stopPropagation();
     dispatch(setQuery(`year:${year}`));
   };

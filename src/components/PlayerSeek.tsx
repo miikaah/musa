@@ -3,8 +3,18 @@ import { connect } from "react-redux";
 import ProgressInput from "./ProgressInput";
 import { useInterval } from "../hooks";
 import { breakpoints } from "../breakpoints";
+import { PlayerState } from "../reducers/player.reducer";
 
 const MAIN_BUTTON_DOWN = 1;
+
+type PlayerSeekProps = {
+  player: HTMLAudioElement;
+  duration: number;
+  currentTime: number;
+  setCurrentTime: (seconds: number) => void;
+  isPlaying: PlayerState["isPlaying"];
+  currentItem: PlayerState["currentItem"];
+};
 
 const PlayerSeek = ({
   player,
@@ -13,10 +23,10 @@ const PlayerSeek = ({
   setCurrentTime,
   isPlaying,
   currentItem,
-}) => {
+}: PlayerSeekProps) => {
   const [prevCurrentTime, setPrevCurrentTime] = useState(0);
 
-  const playerSeek = useRef(null);
+  const playerSeekRef = useRef<HTMLDivElement | null>(null);
 
   useInterval(() => {
     if (isPlaying) {
@@ -24,7 +34,7 @@ const PlayerSeek = ({
     }
   }, 200);
 
-  const seek = (seekPosInSeconds) => {
+  const seek = (seekPosInSeconds: number) => {
     if (prevCurrentTime === seekPosInSeconds) return;
 
     player.currentTime = seekPosInSeconds;
@@ -37,11 +47,19 @@ const PlayerSeek = ({
 
   const hasCurrentItem = () => !!(currentItem && currentItem.metadata);
 
-  const handleSeek = (e) => {
-    if (!hasCurrentItem()) return;
-    if (e.type === "mousemove" && e.buttons !== MAIN_BUTTON_DOWN) return;
+  const handleSeek = (e: React.MouseEvent) => {
+    if (!hasCurrentItem()) {
+      return;
+    }
+    if (e.type === "mousemove" && e.buttons !== MAIN_BUTTON_DOWN) {
+      return;
+    }
+    if (!playerSeekRef.current) {
+      return;
+    }
+
     const x = e.clientX;
-    const { left, width } = playerSeek.current.getBoundingClientRect();
+    const { left, width } = playerSeekRef.current.getBoundingClientRect();
     const pos = (x - left) / width;
     const seekPosInSeconds = Math.floor(duration * pos);
     seek(seekPosInSeconds);
@@ -56,7 +74,7 @@ const PlayerSeek = ({
     <ProgressInput
       handleMouseDown={handleSeek}
       handleMouseMove={handleSeek}
-      ref={playerSeek}
+      ref={playerSeekRef}
       progress={convertCurrentTimeToPercentage()}
       width={window.innerWidth < breakpoints.md ? 120 : 240}
     />
@@ -64,9 +82,9 @@ const PlayerSeek = ({
 };
 
 export default connect(
-  (state) => ({
+  (state: { player: PlayerState }) => ({
     isPlaying: state.player.isPlaying,
     currentItem: state.player.currentItem,
   }),
-  (dispatch) => ({ dispatch })
+  (dispatch) => ({ dispatch }),
 )(PlayerSeek);

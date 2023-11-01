@@ -162,7 +162,10 @@ const findRandomWithLockedSearchTerm = async (
   }
 };
 
-const writeTags = async (id: string, tags: Tags): Promise<void> => {
+const writeTags = async (
+  id: string,
+  tags: Partial<Tags>,
+): Promise<undefined | Error> => {
   if (isElectron) {
     return ElectronApi.writeTags(id, tags);
   } else {

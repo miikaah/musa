@@ -110,7 +110,7 @@ export const setCoverData = (coverData: CoverData) => ({
 
 export type PlayerState = {
   items: AudioWithMetadata[];
-  currentItem: AudioWithMetadata | Record<string, unknown>;
+  currentItem: AudioWithMetadata | undefined;
   currentIndex: number;
   src: string;
   coverUrl: string;
@@ -122,7 +122,7 @@ export type PlayerState = {
 
 const initialState: PlayerState = {
   items: [],
-  currentItem: {},
+  currentItem: undefined,
   currentIndex: -1,
   src: "",
   coverUrl: "",
@@ -205,11 +205,11 @@ const player = (state = initialState, action: PlayerAction) => {
         return {
           ...state,
           ...getPlayBase(newItem, newIndex),
-          previousCoverUrl: cleanUrl(state.currentItem.coverUrl),
+          previousCoverUrl: cleanUrl(state.currentItem?.coverUrl),
           coverData: {
             ...state.coverData,
             isCoverLoaded:
-              cleanUrl(state.currentItem.coverUrl) ===
+              cleanUrl(state.currentItem?.coverUrl) ===
               cleanUrl(newItem.coverUrl),
           },
         };

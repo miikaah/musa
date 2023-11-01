@@ -24,7 +24,17 @@ const ProgressBarValue = styled.div.attrs<{ width: number; scanColor: string }>(
   height: 4px;
 `;
 
-const ProgressBar = ({ scanLength, scannedLength, scanColor }) => {
+type ProgressBarProps = {
+  scanLength: number;
+  scannedLength: number;
+  scanColor: string;
+};
+
+const ProgressBar = ({
+  scanLength,
+  scannedLength,
+  scanColor,
+}: ProgressBarProps) => {
   const width = scanLength > 0 ? (scannedLength / scanLength) * 100 : 0;
 
   if (width < 1) return null;

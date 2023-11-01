@@ -1,11 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import { SettingsState, updateSettings } from "../reducers/settings.reducer";
-import { languages } from "../i18n/i18n";
+import { TranslateFn, languages } from "../i18n/i18n";
 import SettingSelect from "./SettingSelect";
 
-const LanguageSetting = ({ language, t, dispatch }) => {
-  const updateState = (event) => {
+type LanguageSettingProps = {
+  language: SettingsState["language"];
+  t: TranslateFn;
+  dispatch: Dispatch;
+};
+
+const LanguageSetting = ({ language, t, dispatch }: LanguageSettingProps) => {
+  const updateState = (event: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(updateSettings({ language: event.target.value }));
   };
 

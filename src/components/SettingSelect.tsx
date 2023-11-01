@@ -27,7 +27,12 @@ const ArrowDown = styled(ArrowDownStyled)`
   pointer-events: none;
 `;
 
-const SettingSelect = ({ isInit, children }) => {
+type SettingSelectProps = {
+  isInit: SettingsState["isInit"];
+  children: React.ReactNode;
+};
+
+const SettingSelect = ({ isInit, children }: SettingSelectProps) => {
   if (!isInit) {
     return null;
   }

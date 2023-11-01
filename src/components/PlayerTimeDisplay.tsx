@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { formatDuration } from "../util";
+import { AudioWithMetadata } from "@miikaah/musa-core";
+import { PlayerState } from "../reducers/player.reducer";
 
 const TimeDisplay = styled.span`
   min-width: 86px;
@@ -14,7 +16,15 @@ const TimePlayed = styled.span`
   display: inline-block;
 `;
 
-const PlayerTimeDisplay = ({ currentTime, currentItem }) => {
+type PlayerTimeDisplayProps = {
+  currentTime: number;
+  currentItem: PlayerState["currentItem"];
+};
+
+const PlayerTimeDisplay = ({
+  currentTime,
+  currentItem,
+}: PlayerTimeDisplayProps) => {
   return (
     <TimeDisplay>
       <TimePlayed>{formatDuration(currentTime)}</TimePlayed>

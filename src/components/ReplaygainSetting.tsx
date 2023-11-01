@@ -1,12 +1,44 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import { REPLAYGAIN_TYPE } from "../util";
 import { SettingsState, updateSettings } from "../reducers/settings.reducer";
 import SettingSelect from "./SettingSelect";
+import { ReplaygainType } from "../types";
+import { TranslateFn } from "../i18n";
 
-const ReplaygainSetting = ({ replaygainType, t, dispatch }) => {
-  const updateState = (event) => {
-    dispatch(updateSettings({ replaygainType: event.target.value }));
+type ReplaygainSettingProps = {
+  replaygainType: ReplaygainType;
+  t: TranslateFn;
+  dispatch: Dispatch;
+};
+
+const getReplaygainType = (value: string): ReplaygainType => {
+  switch (value) {
+    case "track": {
+      return "track";
+    }
+    case "album": {
+      return "album";
+    }
+    case "off": {
+      return "off";
+    }
+    default: {
+      throw new Error("Invalid ReplayGain type");
+    }
+  }
+};
+
+const ReplaygainSetting = ({
+  replaygainType,
+  t,
+  dispatch,
+}: ReplaygainSettingProps) => {
+  const updateState = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch(
+      updateSettings({ replaygainType: getReplaygainType(event.target.value) }),
+    );
   };
 
   return (

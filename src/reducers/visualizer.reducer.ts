@@ -1,5 +1,4 @@
 type VisualizerData = {
-  update: 0 | 1;
   dataArray: Uint8Array;
   dataArrayL: Uint8Array;
   dataArrayR: Uint8Array;

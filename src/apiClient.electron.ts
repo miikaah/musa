@@ -77,7 +77,10 @@ const findRandomWithLockedSearchTerm = async (
   return window.electron.findRandomWithLockedSearchTerm(term);
 };
 
-const writeTags = async (id: string, tags: Tags): Promise<void> => {
+const writeTags = async (
+  id: string,
+  tags: Partial<Tags>,
+): Promise<undefined | Error> => {
   return window.electron.writeTags(id, tags);
 };
 

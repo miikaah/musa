@@ -1,3 +1,4 @@
+import { RgbColor } from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -15,7 +16,6 @@ import ThemeBlock, { EditTarget } from "./ThemeBlock";
 import { rgb2hsl, hsl2rgb } from "../colors";
 import Api from "../apiClient";
 import { CoverData } from "../types";
-import { AudioWithMetadata } from "@miikaah/musa-core";
 
 type ColorsType = {
   Bg: string;
@@ -110,7 +110,7 @@ const Theme = styled(ThemeBlock)`
   right: 10px;
 `;
 
-const isVibrantCover = (mostPopularSwatch) => {
+const isVibrantCover = (mostPopularSwatch: { rgb: RgbColor }) => {
   return mostPopularSwatch.rgb.some((value) => value > 125);
 };
 
@@ -420,7 +420,12 @@ const Cover = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!coverData.isCoverLoaded && !currentItem.coverUrl && coverRef.current) {
+  if (
+    !coverData.isCoverLoaded &&
+    currentItem &&
+    !currentItem.coverUrl &&
+    coverRef.current
+  ) {
     dispatch(
       setCoverData({
         isCoverLoaded: true,
@@ -525,7 +530,7 @@ const Cover = ({
     });
   };
 
-  const setEditTargetOrHide = (target) => {
+  const setEditTargetOrHide = (target: EditTarget) => {
     setEditTarget(target);
 
     if (!target) {
@@ -538,6 +543,10 @@ const Cover = ({
     setEditTarget(null);
   };
 
+  if (!currentItem) {
+    return null;
+  }
+
   return (
     <Container ref={containerRef} isSmall={isSmall}>
       <Wrapper>
@@ -548,7 +557,7 @@ const Cover = ({
                 id="albumCover"
                 src={
                   // HACK: To fix Electron mangling the beginning of the request url
-                  (currentItem?.coverUrl as string)?.replace(
+                  (currentItem.coverUrl as string)?.replace(
                     "media:/",
                     "media:///",
                   ) || ""

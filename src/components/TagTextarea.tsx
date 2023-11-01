@@ -5,7 +5,13 @@ const Textarea = styled.textarea`
   resize: none;
 `;
 
-const TagTextarea = ({ field, isDisabled, updateValue }) => {
+type TagTextareaProps = {
+  field: string;
+  isDisabled: boolean;
+  updateValue: (s: string) => void;
+};
+
+const TagTextarea = ({ field, isDisabled, updateValue }: TagTextareaProps) => {
   const [value, setValue] = useState(field || "");
 
   const update = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

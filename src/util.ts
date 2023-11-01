@@ -44,7 +44,9 @@ export const getReplaygainDb = (
   return 0;
 };
 
-export function formatDuration(duration: number) {
+export function formatDuration(dur?: number | string) {
+  const duration = Number(dur);
+
   if (duration < 1) {
     return "0:00";
   }

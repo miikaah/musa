@@ -1,12 +1,15 @@
+import { Theme } from "@miikaah/musa-core";
 import React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import styled, { css } from "styled-components";
 import { updateCurrentTheme } from "../util";
-import { updateSettings } from "../reducers/settings.reducer";
+import { SettingsState, updateSettings } from "../reducers/settings.reducer";
 import ThemeBlock from "./ThemeBlock";
 import Button from "./Button";
 import Api from "../apiClient";
 import { FALLBACK_THEME } from "../config";
+import { TranslateFn } from "../i18n";
 
 const Container = styled.div`
   display: grid;
@@ -59,10 +62,24 @@ const NoThemes = styled.div`
   padding-bottom: 12px;
 `;
 
-const ThemeLibrary = ({ currentTheme, themes, setThemes, t, dispatch }) => {
+type ThemeLibraryProps = {
+  currentTheme: SettingsState["currentTheme"];
+  themes: Theme[];
+  setThemes: (themes: Theme[]) => void;
+  t: TranslateFn;
+  dispatch: Dispatch;
+};
+
+const ThemeLibrary = ({
+  currentTheme,
+  themes,
+  setThemes,
+  t,
+  dispatch,
+}: ThemeLibraryProps) => {
   const hasThemes = Array.isArray(themes) && themes.length > 0;
 
-  const changeCurrentTheme = (theme) => {
+  const changeCurrentTheme = (theme: Theme) => {
     updateCurrentTheme(theme.colors);
     dispatch(updateSettings({ currentTheme: theme }));
   };
@@ -78,6 +95,8 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, t, dispatch }) => {
       updateSettings({
         currentTheme: {
           colors: FALLBACK_THEME,
+          filename: "",
+          id: "",
         },
       }),
     );
@@ -125,7 +144,7 @@ const ThemeLibrary = ({ currentTheme, themes, setThemes, t, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState }) => ({
     currentTheme: state.settings.currentTheme,
     t: state.settings.t,
   }),

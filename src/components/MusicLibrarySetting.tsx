@@ -26,7 +26,7 @@ const MusicLibrarySettingPath = styled.div`
 `;
 
 type MusicLibrarySettingProps = {
-  musicLibraryPath: string;
+  musicLibraryPath?: string;
   t: TranslateFn;
   dispatch: Dispatch;
 };

@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import AlbumImageV2 from "./common/AlbumImageV2";
 import { ellipsisTextOverflow } from "../common.styles";
 import { fadeIn } from "../animations";
+import { AudioWithMetadata } from "@miikaah/musa-core";
 
 const commonImageCss = css`
   width: 50px;
@@ -48,7 +49,7 @@ const PlaceholderImage = styled.div`
   opacity: 0.666;
 `;
 
-const PlaceholderLine = styled.div`
+const PlaceholderLine = styled.div<{ isFirst?: boolean }>`
   background: #d7d7d7;
   border-radius: 50px;
   animation: ${fadeIn} 0.2s;
@@ -58,28 +59,36 @@ const PlaceholderLine = styled.div`
   opacity: 0.666;
 `;
 
-const PlayerCurrentlyPlaying = React.memo(({ currentItem }) => {
-  const { artist, title } = currentItem.metadata || {};
-  const songTitle = title || currentItem?.name;
-  const hasCurrentItem = !!Object.keys(currentItem).length;
+type PlayerCurrentlyPlayingProps = { currentItem?: AudioWithMetadata };
 
-  return (
-    <Container>
-      {hasCurrentItem ? (
-        <AlbumImageV2 item={currentItem} animate={false} />
-      ) : (
-        <PlaceholderImage />
-      )}
-      <Info>
-        {songTitle ? (
-          <div title={songTitle}>{songTitle}</div>
+const PlayerCurrentlyPlaying = React.memo(
+  ({ currentItem }: PlayerCurrentlyPlayingProps) => {
+    const { artist, title } = currentItem?.metadata || {};
+    const songTitle = title || currentItem?.name;
+    const hasCurrentItem = !!Object.keys(currentItem || {}).length;
+
+    if (!currentItem) {
+      return null;
+    }
+
+    return (
+      <Container>
+        {hasCurrentItem ? (
+          <AlbumImageV2 item={currentItem} animate={false} />
         ) : (
-          <PlaceholderLine isFirst />
+          <PlaceholderImage />
         )}
-        {songTitle || artist ? <div>{artist}</div> : <PlaceholderLine />}
-      </Info>
-    </Container>
-  );
-});
+        <Info>
+          {songTitle ? (
+            <div title={songTitle}>{songTitle}</div>
+          ) : (
+            <PlaceholderLine isFirst />
+          )}
+          {songTitle || artist ? <div>{artist}</div> : <PlaceholderLine />}
+        </Info>
+      </Container>
+    );
+  },
+);
 
 export default PlayerCurrentlyPlaying;

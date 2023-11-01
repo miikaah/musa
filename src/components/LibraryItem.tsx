@@ -67,12 +67,12 @@ const LibraryItem = ({
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const onDragStart = (event) => {
+  const onDragStart = (event: React.DragEvent) => {
     event.dataTransfer.setData("text/plain", JSON.stringify({ item }));
     event.stopPropagation();
   };
 
-  const onTouchStart = (event) => {
+  const onTouchStart = (event: React.TouchEvent) => {
     hasDragged = false;
     startX = event.touches[0].clientX;
 
@@ -89,7 +89,7 @@ const LibraryItem = ({
     }
   };
 
-  const onTouchMove = (event) => {
+  const onTouchMove = (event: React.TouchEvent) => {
     const deltaX = event.touches[0].clientX - startX;
 
     if (Math.abs(deltaX) > 100) {
@@ -97,7 +97,7 @@ const LibraryItem = ({
     }
   };
 
-  const onTouchEnd = async (event) => {
+  const onTouchEnd = async (event: React.TouchEvent) => {
     if (!timerRef.current) {
       return;
     }
