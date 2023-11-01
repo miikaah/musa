@@ -1,7 +1,7 @@
-import { AudioWithMetadata } from "@miikaah/musa-core";
+import { AudioWithMetadata, Colors } from "@miikaah/musa-core";
 import { Dispatch } from "redux";
 import { addToast, removeToast } from "./reducers/toaster.reducer";
-import { Colors, ReplaygainKey, ReplaygainType } from "./types";
+import { ReplaygainKey, ReplaygainType } from "./types";
 
 export const KEYS = {
   Backspace: 8,

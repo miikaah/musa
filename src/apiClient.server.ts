@@ -3,9 +3,12 @@ import {
   Artist,
   ArtistWithEnrichedAlbums,
   AudioWithMetadata,
+  Colors,
   FindResult,
+  Playlist,
+  Theme,
 } from "@miikaah/musa-core";
-import { ScanStartListenerCallback } from "./apiClient";
+import { Settings } from "./reducers/settings.reducer";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
 const defaultHeaders = {
@@ -20,7 +23,13 @@ const getByUrl = async (url: string) => {
   return fetch(url).then((response) => response.json());
 };
 
-const post = async (path: string, { body, headers = {} }) => {
+const post = async (
+  path: string,
+  {
+    body,
+    headers = {},
+  }: { body: Record<string, unknown>; headers?: Record<string, unknown> },
+) => {
   return fetch(`${baseUrl}${path}`, {
     method: "POST",
     headers: {
@@ -31,7 +40,13 @@ const post = async (path: string, { body, headers = {} }) => {
   }).then((response) => response.json());
 };
 
-const put = async (path: string, { body, headers = {} }) => {
+const put = async (
+  path: string,
+  {
+    body,
+    headers = {},
+  }: { body: Record<string, unknown>; headers?: Record<string, unknown> },
+) => {
   return fetch(`${baseUrl}${path}`, {
     method: "PUT",
     headers: {
@@ -42,7 +57,13 @@ const put = async (path: string, { body, headers = {} }) => {
   }).then((response) => response.json());
 };
 
-const patch = async (path: string, { body, headers = {} }) => {
+const patch = async (
+  path: string,
+  {
+    body,
+    headers = {},
+  }: { body: Record<string, unknown>; headers?: Record<string, unknown> },
+) => {
   return fetch(`${baseUrl}${path}`, {
     method: "PATCH",
     headers: {
@@ -59,11 +80,11 @@ const del = async (path: string) => {
   });
 };
 
-const getSettings = async () => {
+const getSettings = async (): Promise<Settings> => {
   return get(`/app-settings`);
 };
 
-const insertSettings = async (settings) => {
+const insertSettings = async (settings: Settings): Promise<Settings> => {
   return put(`/app-settings`, {
     body: {
       settings: {
@@ -98,27 +119,39 @@ const getAlbumById = async (
   return getByUrl(url);
 };
 
-const getThemes = async () => {
+const getThemes = async (): Promise<Theme[]> => {
   return get("/themes");
 };
 
-const getThemeById = async ({ id }) => {
+const getThemeById = async ({ id }: { id: string }): Promise<Theme> => {
   return get(`/themes/${id.split("/").pop()}`);
 };
 
-const insertTheme = async ({ id, colors }) => {
+const insertTheme = async ({
+  id,
+  colors,
+}: {
+  id: string;
+  colors: Colors;
+}): Promise<Theme> => {
   return put(`/themes/${id.split("/").pop()}`, { body: { colors } });
 };
 
-const updateTheme = async ({ id, colors }) => {
+const updateTheme = async ({
+  id,
+  colors,
+}: {
+  id: string;
+  colors: Colors;
+}): Promise<Theme> => {
   return patch(`/themes/${id.split("/").pop()}`, { body: { colors } });
 };
 
-const removeTheme = async ({ id }) => {
-  return del(`/themes/${id}`);
+const removeTheme = async ({ id }: { id: string }): Promise<void> => {
+  await del(`/themes/${id}`);
 };
 
-const getAllGenres = async () => {
+const getAllGenres = async (): Promise<string[]> => {
   return get("/genres");
 };
 
@@ -126,21 +159,33 @@ const find = async (queryToBackend: string): Promise<FindResult> => {
   return get(`/find/${queryToBackend}`);
 };
 
-const findRandom = async (query?: string) => {
+const findRandom = async (query?: string): Promise<FindResult> => {
   return query ? get(`/find-random/${query}`) : get("/find-random");
 };
 
 // Server specific Apis
 
-const insertPlaylist = async ({ pathIds }) => {
+const insertPlaylist = async ({
+  pathIds,
+}: {
+  pathIds: string[];
+}): Promise<Playlist> => {
   return post(`/playlists`, { body: { pathIds } });
 };
 
-const getPlaylist = async ({ id }) => {
+const getPlaylist = async ({
+  id,
+}: {
+  id: string;
+}): Promise<Playlist | undefined> => {
   return get(`/playlists/${id}`);
 };
 
-const getPlaylistAudios = async ({ id }) => {
+const getPlaylistAudios = async ({
+  id,
+}: {
+  id: string;
+}): Promise<AudioWithMetadata[]> => {
   return get(`/playlists/${id}/audios`);
 };
 
@@ -164,13 +209,13 @@ const refreshLibrary = () => {};
 
 const onInit = async () => {};
 
-const addScanStartListener = (callback: ScanStartListenerCallback) => {};
+const addScanStartListener = () => {};
 
-const addScanUpdateListener = (callback) => {};
+const addScanUpdateListener = () => {};
 
-const addScanEndListener = (callback) => {};
+const addScanEndListener = () => {};
 
-const addScanCompleteListener = (callback) => {};
+const addScanCompleteListener = () => {};
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {

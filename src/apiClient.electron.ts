@@ -1,4 +1,9 @@
-import { ScanStartListenerCallback } from "./apiClient";
+import { Colors, FindResult, Tags } from "@miikaah/musa-core";
+import {
+  ScanEndCompleteListenerCallback,
+  ScanStartListenerCallback,
+  ScanUpdateListenerCallback,
+} from "./apiClient";
 import { Settings } from "./reducers/settings.reducer";
 
 const getSettings = async () => {
@@ -33,97 +38,99 @@ const getThemes = async () => {
   return window.electron.getAllThemes();
 };
 
-const getThemeById = async ({ id }) => {
+const getThemeById = async ({ id }: { id: string }) => {
   return window.electron.getThemeById(id);
 };
 
-const insertTheme = async ({ id, colors }) => {
+const insertTheme = async ({ id, colors }: { id: string; colors: Colors }) => {
   return window.electron.insertTheme(id, colors);
 };
 
-const updateTheme = async ({ id, colors }) => {
+const updateTheme = async ({ id, colors }: { id: string; colors: Colors }) => {
   return window.electron.updateTheme(id, colors);
 };
 
-const removeTheme = async ({ id }) => {
+const removeTheme = async ({ id }: { id: string }) => {
   return window.electron.removeThemeById(id);
 };
 
-const getAllGenres = async () => {
+const getAllGenres = async (): Promise<string[]> => {
   return window.electron.getAllGenres();
 };
 
-const find = async (query: string) => {
+const find = async (query: string): Promise<FindResult> => {
   return window.electron.find(query);
 };
 
-const findRandom = async () => {
+const findRandom = async (): Promise<FindResult> => {
   return window.electron.findRandom();
 };
 
-const findRandomWithLockedSearchTerm = async (term) => {
+const findRandomWithLockedSearchTerm = async (
+  term: string,
+): Promise<FindResult> => {
   return window.electron.findRandomWithLockedSearchTerm(term);
 };
 
-const writeTags = async (id, tags) => {
+const writeTags = async (id: string, tags: Tags): Promise<void> => {
   return window.electron.writeTags(id, tags);
 };
 
 // Electron specific Apis
 
-const onInit = async () => {
+const onInit = async (): Promise<void> => {
   return window.electron.onInit();
 };
 
-const addMusicLibraryPath = async () => {
+const addMusicLibraryPath = async (): Promise<string> => {
   return window.electron.addMusicLibraryPath();
 };
 
-const getPlatform = async () => {
+const getPlatform = async (): Promise<string> => {
   return window.electron.getPlatform();
 };
 
-const minimizeWindow = () => {
-  window.electron.minimizeWindow();
+const minimizeWindow = async (): Promise<void> => {
+  await window.electron.minimizeWindow();
 };
 
-const maximizeWindow = () => {
-  window.electron.maximizeWindow();
+const maximizeWindow = async (): Promise<void> => {
+  await window.electron.maximizeWindow();
 };
 
-const unmaximizeWindow = () => {
-  window.electron.unmaximizeWindow();
+const unmaximizeWindow = async (): Promise<void> => {
+  await window.electron.unmaximizeWindow();
 };
 
-const isWindowMaximized = async () => {
+const isWindowMaximized = async (): Promise<boolean> => {
   return window.electron.isWindowMaximized();
 };
 
-const closeWindow = () => {
-  window.electron.closeWindow();
+const closeWindow = async (): Promise<void> => {
+  await window.electron.closeWindow();
 };
 
-const refreshLibrary = () => {
-  window.electron.scan();
+const refreshLibrary = async (): Promise<void> => {
+  await window.electron.scan();
 };
 
 const addScanStartListener = (callback: ScanStartListenerCallback) => {
   window.electron.addScanStartListener(callback);
 };
 
-const addScanUpdateListener = (callback) => {
+const addScanUpdateListener = (callback: ScanUpdateListenerCallback) => {
   window.electron.addScanUpdateListener(callback);
 };
 
-const addScanEndListener = (callback) => {
+const addScanEndListener = (callback: ScanEndCompleteListenerCallback) => {
   window.electron.addScanEndListener(callback);
 };
 
-const addScanCompleteListener = (callback) => {
+const addScanCompleteListener = (callback: ScanEndCompleteListenerCallback) => {
   window.electron.addScanCompleteListener(callback);
 };
 
-const getAudiosByFilepaths = async (paths) => {
+const getAudiosByFilepaths = async (paths: string[]) => {
   return window.electron.getAudiosByFilepaths(paths);
 };
 

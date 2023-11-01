@@ -1,3 +1,4 @@
+import { Theme } from "@miikaah/musa-core";
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -45,7 +46,7 @@ const ActionButton = styled(Button)`
 `;
 
 const Settings = ({ musicLibraryPath, currentProfile, t }) => {
-  const [themes, setThemes] = useState([]);
+  const [themes, setThemes] = useState<Theme[]>([]);
   const [hasFetchedThemes, setHasFetchedThemes] = useState(false);
 
   useEffect(() => {
