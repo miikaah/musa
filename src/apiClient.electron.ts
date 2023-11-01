@@ -13,19 +13,19 @@ const getArtists = async () => {
   return window.electron.getArtists();
 };
 
-const getArtistById = async (id) => {
+const getArtistById = async (id: string) => {
   return window.electron.getArtistById(id);
 };
 
-const getArtistAlbums = async (id) => {
+const getArtistAlbums = async (id: string) => {
   return window.electron.getArtistAlbums(id);
 };
 
-const getAlbumById = async (id) => {
+const getAlbumById = async (id: string) => {
   return window.electron.getAlbumById(id);
 };
 
-const getAudioById = async (id) => {
+const getAudioById = async (id: string) => {
   return window.electron.getAudioById(id);
 };
 
@@ -53,7 +53,7 @@ const getAllGenres = async () => {
   return window.electron.getAllGenres();
 };
 
-const find = async (query) => {
+const find = async (query: string) => {
   return window.electron.find(query);
 };
 

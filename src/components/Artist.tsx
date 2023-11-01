@@ -1,9 +1,11 @@
+import { Artist } from "@miikaah/musa-core";
 import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components";
 import { setQuery } from "../reducers/search.reducer";
 import { ToasterState } from "../reducers/toaster.reducer";
 import { ellipsisTextOverflow } from "../common.styles";
+import { Dispatch } from "redux";
 
 const bottomBorder = css`
   cursor: pointer;
@@ -27,7 +29,12 @@ const ArtistName = styled.div`
   ${ellipsisTextOverflow}
 `;
 
-const Artist = ({ item: artist, dispatch }) => {
+type ArtistProps = {
+  item: Artist;
+  dispatch: Dispatch;
+};
+
+const Artist = ({ item: artist, dispatch }: ArtistProps) => {
   if (!artist) {
     return null;
   }

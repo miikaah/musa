@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
@@ -13,6 +14,8 @@ import CoverInfo from "./CoverInfo";
 import ThemeBlock, { EditTarget } from "./ThemeBlock";
 import { rgb2hsl, hsl2rgb } from "../colors";
 import Api from "../apiClient";
+import { CoverData } from "../types";
+import { AudioWithMetadata } from "@miikaah/musa-core";
 
 type ColorsType = {
   Bg: string;
@@ -132,7 +135,19 @@ const contrast = (
 const canvas = document.createElement("canvas");
 const canvasCtx = canvas.getContext("2d");
 
-const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
+type CoverProps = {
+  currentItem: PlayerState["currentItem"];
+  coverData: CoverData;
+  currentTheme: SettingsState["currentTheme"];
+  dispatch: Dispatch;
+};
+
+const Cover = ({
+  currentItem,
+  coverData,
+  currentTheme,
+  dispatch,
+}: CoverProps) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
     window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
@@ -443,7 +458,7 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       1,
     ).data;
     const rgb: [number, number, number] = [r, g, b];
-    const { colors: c } = currentTheme;
+    const c = currentTheme.colors;
 
     let colors;
     switch (editTarget) {
@@ -458,7 +473,9 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       }
       case "primary": {
         // Background color is used to calculate text colors
-        colors = calculateTheme(img, { bg: { rgb: c.bg } });
+        colors = calculateTheme(img, {
+          bg: { rgb: c.bg as [number, number, number] },
+        });
         colors.bg = c.bg;
         colors.primary = rgb;
         colors.secondary = c.secondary;
@@ -467,7 +484,9 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       }
       case "secondary": {
         // Background color is used to calculate text colors
-        colors = calculateTheme(img, { bg: { rgb: c.bg } });
+        colors = calculateTheme(img, {
+          bg: { rgb: c.bg as [number, number, number] },
+        });
         colors.bg = c.bg;
         colors.primary = c.primary;
         colors.secondary = rgb;
@@ -476,7 +495,9 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
       }
       default: {
         // Background color is used to calculate text colors
-        colors = calculateTheme(img, { bg: { rgb: c.bg } });
+        colors = calculateTheme(img, {
+          bg: { rgb: c.bg as [number, number, number] },
+        });
       }
     }
 
@@ -527,7 +548,10 @@ const Cover = ({ currentItem, coverData, currentTheme, dispatch }) => {
                 id="albumCover"
                 src={
                   // HACK: To fix Electron mangling the beginning of the request url
-                  currentItem?.coverUrl?.replace("media:/", "media:///") || ""
+                  (currentItem?.coverUrl as string)?.replace(
+                    "media:/",
+                    "media:///",
+                  ) || ""
                 }
                 ref={coverRef}
                 crossOrigin=""

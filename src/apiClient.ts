@@ -1,3 +1,10 @@
+import {
+  AlbumWithFilesAndMetadata,
+  Artist,
+  ArtistWithEnrichedAlbums,
+  AudioWithMetadata,
+  FindResult,
+} from "@miikaah/musa-core";
 import ElectronApi from "./apiClient.electron";
 import ServerApi from "./apiClient.server";
 import config from "./config";
@@ -20,7 +27,7 @@ const insertSettings = (settings) => {
   }
 };
 
-const getAudioById = async (idOrUrl) => {
+const getAudioById = async (idOrUrl: string): Promise<AudioWithMetadata> => {
   if (isElectron) {
     return ElectronApi.getAudioById(idOrUrl);
   } else {
@@ -36,7 +43,7 @@ const getArtists = async () => {
   }
 };
 
-const getArtistById = async (idOrUrl) => {
+const getArtistById = async (idOrUrl: string): Promise<Artist> => {
   if (isElectron) {
     return ElectronApi.getArtistById(idOrUrl);
   } else {
@@ -44,7 +51,9 @@ const getArtistById = async (idOrUrl) => {
   }
 };
 
-const getArtistAlbums = async (id) => {
+const getArtistAlbums = async (
+  id: string,
+): Promise<ArtistWithEnrichedAlbums> => {
   if (isElectron) {
     return ElectronApi.getArtistAlbums(id);
   } else {
@@ -52,7 +61,9 @@ const getArtistAlbums = async (id) => {
   }
 };
 
-const getAlbumById = async (idOrUrl) => {
+const getAlbumById = async (
+  idOrUrl: string,
+): Promise<AlbumWithFilesAndMetadata> => {
   if (isElectron) {
     return ElectronApi.getAlbumById(idOrUrl);
   } else {
@@ -108,7 +119,7 @@ const getAllGenres = async () => {
   }
 };
 
-const find = async (queryToBackend) => {
+const find = async (queryToBackend: string): Promise<FindResult> => {
   if (isElectron) {
     return ElectronApi.find(queryToBackend);
   } else {

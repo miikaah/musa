@@ -26,7 +26,7 @@ import Select from "../components/Select";
 import config from "../config";
 import Api from "../apiClient";
 import { ArrowDown as ArrowDownStyled } from "../common.styles";
-import { TranslateFnWithStringReturn } from "../i18n";
+import { TranslateFn } from "../i18n";
 
 const { isElectron } = config;
 
@@ -218,14 +218,14 @@ const ClearButton = styled(Button)`
 
 type SearchProps = {
   query: string;
-  artists: unknown[];
-  albums: unknown[];
-  audios: unknown[];
+  artists: SearchState["searchArtists"];
+  albums: SearchState["searchAlbums"];
+  audios: SearchState["searchAudios"];
   isSearchRandom: boolean;
   isSearchTermLocked: boolean;
   scrollPos: ScrollPos;
   listingWithLabels: ArtistObject;
-  t: TranslateFnWithStringReturn;
+  t: TranslateFn;
   dispatch: Dispatch;
 };
 
@@ -244,7 +244,7 @@ const Search = ({
   const [isFetching, setIsFetching] = useState(false);
   const [genres, setGenres] = useState<string[]>([]);
   const [showGenreSelect, setShowGenreSelect] = useState(false);
-  const queryToBackend = useDebounce(query, 300);
+  const queryToBackend = useDebounce<string>(query, 300);
   const artistListRef = useRef<HTMLDivElement & { scrollTop: number }>(null);
   const albumListRef = useRef<HTMLDivElement & { scrollTop: number }>(null);
   const audioListRef = useRef<HTMLDivElement & { scrollTop: number }>(null);

@@ -1,4 +1,8 @@
-import { AudioWithMetadata } from "@miikaah/musa-core";
+import {
+  Artist,
+  AudioWithMetadata,
+  File as MusaFile,
+} from "@miikaah/musa-core";
 import isEmpty from "lodash.isempty";
 import { cleanUrl } from "../util";
 import { CoverData } from "../types";
@@ -53,7 +57,9 @@ export type AddToPlaylistAction = {
   type: typeof ADD_TO_PLAYLIST;
   item: AudioWithMetadata;
 };
-export const addToPlaylist = (item: AudioWithMetadata) => ({
+export const addToPlaylist = (
+  item: AudioWithMetadata | EnrichedAlbumFile | Artist["albums"][0],
+) => ({
   type: ADD_TO_PLAYLIST,
   item,
 });
@@ -65,7 +71,7 @@ export type PasteToPlaylistAction = {
   index: number;
 };
 export const pasteToPlaylist = (
-  items: AudioWithMetadata[] | EnrichedAlbumFile[],
+  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
   index?: number,
 ) => ({
   type: PASTE_TO_PLAYLIST,

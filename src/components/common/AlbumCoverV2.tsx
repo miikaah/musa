@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import AlbumImage from "./AlbumImageV2";
+import { AlbumWithFilesAndMetadata, Artist } from "@miikaah/musa-core";
 
 const AlbumCoverContainer = styled.div`
   display: flex;
@@ -45,7 +46,12 @@ const AlbumInfo = styled.div`
   }
 `;
 
-const AlbumCover = ({ item, onClick }) => {
+type AlbumCoverProps = {
+  item: Artist["albums"][0];
+  onClick?: any;
+};
+
+const AlbumCover = ({ item, onClick }: AlbumCoverProps) => {
   const { name, year } = item;
 
   return (

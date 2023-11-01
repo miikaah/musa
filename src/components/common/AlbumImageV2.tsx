@@ -1,5 +1,6 @@
 import {
   AlbumWithFilesAndMetadata,
+  Artist,
   AudioWithMetadata,
 } from "@miikaah/musa-core";
 import React from "react";
@@ -17,17 +18,18 @@ const Image = styled.img<{ animate: boolean }>`
   object-fit: scale-down;
 `;
 
-const hasFiles = (
-  album: AudioWithMetadata | AlbumWithFilesAndMetadata,
-): album is AlbumWithFilesAndMetadata => {
+const hasMetadata = (audio: AlbumItem): audio is AudioWithMetadata => {
+  return "metadata" in audio;
+};
+
+const hasFiles = (album: AlbumItem): album is AlbumWithFilesAndMetadata => {
   return "files" in album;
 };
 
-const getFileType = (
-  audioOrAlbum: AudioWithMetadata | AlbumWithFilesAndMetadata,
-) => {
-  let fileType;
-  if (audioOrAlbum?.metadata?.codec) {
+const getFileType = (audioOrAlbum: AlbumItem) => {
+  let fileType: string | undefined;
+
+  if (hasMetadata(audioOrAlbum)) {
     fileType = audioOrAlbum?.metadata.codec;
   }
 
@@ -38,8 +40,13 @@ const getFileType = (
   return fileType || "mpeg";
 };
 
+type AlbumItem =
+  | AudioWithMetadata
+  | AlbumWithFilesAndMetadata
+  | Artist["albums"][0];
+
 type AlbumImageProps = {
-  item: AudioWithMetadata | AlbumWithFilesAndMetadata;
+  item: AlbumItem;
   animate?: boolean;
 };
 

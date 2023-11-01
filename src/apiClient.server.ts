@@ -1,3 +1,10 @@
+import {
+  AlbumWithFilesAndMetadata,
+  Artist,
+  ArtistWithEnrichedAlbums,
+  AudioWithMetadata,
+  FindResult,
+} from "@miikaah/musa-core";
 import { ScanStartListenerCallback } from "./apiClient";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
@@ -5,15 +12,15 @@ const defaultHeaders = {
   "Content-Type": "application/json",
 };
 
-const get = async (path) => {
+const get = async (path: string) => {
   return fetch(`${baseUrl}${path}`).then((response) => response.json());
 };
 
-const getByUrl = async (url) => {
+const getByUrl = async (url: string) => {
   return fetch(url).then((response) => response.json());
 };
 
-const post = async (path, { body, headers = {} }) => {
+const post = async (path: string, { body, headers = {} }) => {
   return fetch(`${baseUrl}${path}`, {
     method: "POST",
     headers: {
@@ -24,7 +31,7 @@ const post = async (path, { body, headers = {} }) => {
   }).then((response) => response.json());
 };
 
-const put = async (path, { body, headers = {} }) => {
+const put = async (path: string, { body, headers = {} }) => {
   return fetch(`${baseUrl}${path}`, {
     method: "PUT",
     headers: {
@@ -35,7 +42,7 @@ const put = async (path, { body, headers = {} }) => {
   }).then((response) => response.json());
 };
 
-const patch = async (path, { body, headers = {} }) => {
+const patch = async (path: string, { body, headers = {} }) => {
   return fetch(`${baseUrl}${path}`, {
     method: "PATCH",
     headers: {
@@ -46,7 +53,7 @@ const patch = async (path, { body, headers = {} }) => {
   }).then((response) => response.json());
 };
 
-const del = async (path) => {
+const del = async (path: string) => {
   return fetch(`${baseUrl}${path}`, {
     method: "DELETE",
   });
@@ -67,7 +74,7 @@ const insertSettings = async (settings) => {
   });
 };
 
-const getAudioById = async (url) => {
+const getAudioById = async (url: string): Promise<AudioWithMetadata> => {
   return getByUrl(url);
 };
 
@@ -75,15 +82,19 @@ const getArtists = async () => {
   return get("/artists");
 };
 
-const getArtistById = async (url) => {
+const getArtistById = async (url: string): Promise<Artist> => {
   return getByUrl(url);
 };
 
-const getArtistAlbums = async (id) => {
+const getArtistAlbums = async (
+  id: string,
+): Promise<ArtistWithEnrichedAlbums> => {
   return get(`/artists/${id}/albums`);
 };
 
-const getAlbumById = async (url) => {
+const getAlbumById = async (
+  url: string,
+): Promise<AlbumWithFilesAndMetadata> => {
   return getByUrl(url);
 };
 
@@ -111,11 +122,11 @@ const getAllGenres = async () => {
   return get("/genres");
 };
 
-const find = async (queryToBackend) => {
+const find = async (queryToBackend: string): Promise<FindResult> => {
   return get(`/find/${queryToBackend}`);
 };
 
-const findRandom = async (query) => {
+const findRandom = async (query?: string) => {
   return query ? get(`/find-random/${query}`) : get("/find-random");
 };
 

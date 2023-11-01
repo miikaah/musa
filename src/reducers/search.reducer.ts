@@ -1,3 +1,9 @@
+import {
+  AlbumWithFilesAndMetadata,
+  Artist,
+  AudioWithMetadata,
+} from "@miikaah/musa-core";
+
 export const SET_QUERY = "MUSA/SEARCH/SET_QUERY";
 export type SetQueryAction = {
   type: typeof SET_QUERY;
@@ -84,9 +90,9 @@ export type SearchState = {
   filter: string;
   isRandom: boolean;
   isSearchTermLocked: boolean;
-  searchArtists: unknown[];
-  searchAlbums: unknown[];
-  searchAudios: unknown[];
+  searchArtists: Artist[];
+  searchAlbums: AlbumWithFilesAndMetadata[];
+  searchAudios: AudioWithMetadata[];
   scrollPos: ScrollPos;
 };
 

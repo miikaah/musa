@@ -1,10 +1,12 @@
+import { AlbumWithFilesAndMetadata, Artist } from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import { addToPlaylist } from "../reducers/player.reducer";
 import config from "../config";
 import Api from "../apiClient";
 import { breakpoints } from "../breakpoints";
+import { Dispatch } from "redux";
 
 const { isElectron } = config;
 
@@ -12,7 +14,7 @@ const Container = styled.li`
   position: relative;
 `;
 
-const Title = styled.p`
+const Title = styled.p<{ isFirstOfDisk?: boolean; hasAlbum?: boolean }>`
   cursor: pointer;
   padding-top: ${({ isFirstOfDisk }) => isFirstOfDisk && "12px"};
   padding-left: ${({ hasAlbum }) => (hasAlbum ? 90 : 24)}px;
@@ -21,7 +23,7 @@ const Title = styled.p`
   margin: 0;
 `;
 
-const DiskNumber = styled.div`
+const DiskNumber = styled.div<{ isFirstOfFirstDisk: boolean }>`
   position: absolute;
   top: ${({ isFirstOfFirstDisk }) => (isFirstOfFirstDisk ? 10 : 6)}px;
   left: 26px;
@@ -34,12 +36,36 @@ let hasDragged = false;
 let startScrollPos = 0;
 let scrollPos = 0;
 
-const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
+type LibraryListItem =
+  | Artist["albums"][0]
+  | AlbumWithFilesAndMetadata["files"][0];
+
+type LibraryItemProps = {
+  item: LibraryListItem;
+  hasAlbum?: boolean;
+  hasMultipleDisks?: boolean;
+  dispatch: Dispatch;
+};
+
+const getId = (item: LibraryListItem): string => {
+  return isElectron ? item.id : item.url || "";
+};
+
+const isAlbumFile = (
+  item: LibraryListItem,
+): item is AlbumWithFilesAndMetadata["files"][0] => {
+  return "track" in item;
+};
+
+const LibraryItem = ({
+  item,
+  hasAlbum,
+  hasMultipleDisks,
+  dispatch,
+}: LibraryItemProps) => {
   const [isLongTouch, setIsLongTouch] = useState(false);
 
-  const dispatch = useDispatch();
-
-  const timerRef = useRef(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const onDragStart = (event) => {
     event.dataTransfer.setData("text/plain", JSON.stringify({ item }));
@@ -55,7 +81,9 @@ const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
         setIsLongTouch(true);
       }, 500);
 
-      const { scrollTop } = document.getElementById("LibraryContainer");
+      const { scrollTop } = document.getElementById(
+        "LibraryContainer",
+      ) as HTMLElement;
       startScrollPos = scrollTop;
       scrollPos = scrollTop;
     }
@@ -70,6 +98,10 @@ const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
   };
 
   const onTouchEnd = async (event) => {
+    if (!timerRef.current) {
+      return;
+    }
+
     if ((!hasDragged && !isLongTouch) || startScrollPos !== scrollPos) {
       startX = 0;
       clearTimeout(timerRef.current);
@@ -78,7 +110,7 @@ const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
     }
     event.preventDefault();
 
-    const audio = await Api.getAudioById(isElectron ? item.id : item.url);
+    const audio = await Api.getAudioById(getId(item));
 
     dispatch(addToPlaylist(audio));
 
@@ -88,7 +120,9 @@ const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
   };
 
   const handleScroll = () => {
-    const { scrollTop } = document.getElementById("LibraryContainer");
+    const { scrollTop } = document.getElementById(
+      "LibraryContainer",
+    ) as HTMLElement;
     scrollPos = scrollTop;
   };
 
@@ -105,13 +139,15 @@ const LibraryItem = ({ item, hasAlbum, hasMultipleDisks }) => {
   }, []);
 
   const isFirstOfDisk = new RegExp(/^\d\.01|^\d\.001|^\d\.0001/).test(
-    item?.track,
+    isAlbumFile(item) ? item?.track : "",
   );
   const isFirstOfFirstDisk = new RegExp(/^1\.01|^1\.001|^1\.0001/).test(
-    item?.track,
+    isAlbumFile(item) ? item?.track : "",
   );
-  const title = item?.metadata?.title || item.name || "Unnamed file";
-  const diskNo = item?.metadata?.disk?.no || "";
+  const title = isAlbumFile(item)
+    ? item?.metadata?.title
+    : item.name || "Unnamed file";
+  const diskNo = isAlbumFile(item) ? item?.metadata?.disk?.no : "";
 
   return (
     <Container
