@@ -543,10 +543,6 @@ const Cover = ({
     setEditTarget(null);
   };
 
-  if (!currentItem) {
-    return null;
-  }
-
   return (
     <Container ref={containerRef} isSmall={isSmall}>
       <Wrapper>
@@ -557,7 +553,7 @@ const Cover = ({
                 id="albumCover"
                 src={
                   // HACK: To fix Electron mangling the beginning of the request url
-                  (currentItem.coverUrl as string)?.replace(
+                  (currentItem?.coverUrl as string)?.replace(
                     "media:/",
                     "media:///",
                   ) || ""
@@ -582,7 +578,7 @@ const Cover = ({
           );
           // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [
-          currentItem.coverUrl,
+          currentItem?.coverUrl,
           coverData,
           currentTheme,
           editTarget,

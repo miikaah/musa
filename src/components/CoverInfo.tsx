@@ -95,14 +95,14 @@ const getSampleRate = (sampleRate: number) => {
 };
 
 type CoverInfoProps = {
-  item: AudioWithMetadata;
+  item: AudioWithMetadata | undefined;
   isSmall: boolean;
   toggleEdit: () => void;
   t: TranslateFn;
 };
 
 const CoverInfo = ({ item, isSmall, toggleEdit, t }: CoverInfoProps) => {
-  if (Object.keys(item).length < 1) {
+  if (!item || Object.keys(item).length < 1) {
     return null;
   }
 
