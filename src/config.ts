@@ -1,6 +1,8 @@
+import { Colors } from "@miikaah/musa-core";
+
 const isElectron = import.meta.env.VITE_ENV === "electron";
 
-export const FALLBACK_THEME = {
+export const FALLBACK_THEME: Colors = {
   bg: [33, 37, 43],
   primary: [117, 53, 151],
   secondary: [33, 115, 126],
@@ -8,6 +10,7 @@ export const FALLBACK_THEME = {
   typography: "#fbfbfb",
   typographyPrimary: "#fbfbfb",
   typographySecondary: "#fbfbfb",
+  typographyGhost: "#d2d2d2",
 };
 
 export const firFileMap = {

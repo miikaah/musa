@@ -1,3 +1,4 @@
+import { ArtistObject } from "@miikaah/musa-core";
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -6,8 +7,16 @@ import { listOverflow } from "../common.styles";
 import { breakpoints } from "../breakpoints";
 import LibraryList from "./LibraryListV2";
 import Visualizer from "./Visualizer";
+import { LibraryState } from "../reducers/library.reducer";
+import { SettingsState } from "../reducers/settings.reducer";
+import { TranslateFn } from "../i18n";
 
-const Container = styled.div`
+const Container = styled.div<{
+  isSmall: boolean;
+  isVisible: boolean;
+  isLibrary: boolean;
+  filter?: string;
+}>`
   text-align: left;
   border: 0 solid var(--color-secondary-highlight);
   border-left-width: 4px;
@@ -76,7 +85,21 @@ const Label = styled.div`
   }
 `;
 
-const Library = ({ forwardRef, libraryMode, listingWithLabels, t }) => {
+export type LibraryMode = "none" | "library" | "visualizer";
+
+type LibraryProps = {
+  forwardRef: React.ForwardedRef<HTMLDivElement>;
+  libraryMode: LibraryMode;
+  listingWithLabels: LibraryState["listingWithLabels"];
+  t: TranslateFn;
+};
+
+const Library = ({
+  forwardRef,
+  libraryMode,
+  listingWithLabels,
+  t,
+}: LibraryProps) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [filter, setFilter] = useState("");
   const [filteredListing, setFilteredListing] = useState({});
@@ -118,7 +141,9 @@ const Library = ({ forwardRef, libraryMode, listingWithLabels, t }) => {
   }, []);
 
   const clearArtistFilter = () => {
-    const filterEl = document.getElementById("artistFilter");
+    const filterEl = document.getElementById(
+      "artistFilter",
+    ) as HTMLInputElement;
     filterEl.value = "";
     setFilter("");
   };
@@ -146,9 +171,9 @@ const Library = ({ forwardRef, libraryMode, listingWithLabels, t }) => {
           </FilterContainer>
           {listingWithLabels &&
             Object.entries(
-              Object.keys(filteredListing).length && filter
+              (Object.keys(filteredListing).length && filter
                 ? filteredListing
-                : listingWithLabels,
+                : listingWithLabels) as ArtistObject,
             ).map(([key, artist]) => (
               <div key={key}>
                 <Label>
@@ -173,13 +198,16 @@ const Library = ({ forwardRef, libraryMode, listingWithLabels, t }) => {
 };
 
 const ConnectedLibrary = connect(
-  (state) => ({
+  (state: { library: LibraryState; settings: SettingsState }) => ({
     listingWithLabels: state.library.listingWithLabels,
     t: state.settings.t,
   }),
   (dispatch) => ({ dispatch }),
 )(Library);
 
-export default React.forwardRef((props, ref) => (
-  <ConnectedLibrary {...props} forwardRef={ref} />
-));
+export default React.forwardRef(
+  (
+    props: { libraryMode: LibraryMode },
+    ref: React.ForwardedRef<HTMLDivElement>,
+  ) => <ConnectedLibrary {...props} forwardRef={ref} />,
+);

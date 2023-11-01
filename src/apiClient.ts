@@ -24,7 +24,7 @@ const getSettings = async (): Promise<Settings> => {
   }
 };
 
-const insertSettings = (settings: Settings) => {
+const insertSettings = (settings: Partial<Settings>) => {
   if (isElectron) {
     return ElectronApi.insertSettings(settings);
   } else {
@@ -317,7 +317,9 @@ const addScanCompleteListener = (callback: ScanEndCompleteListenerCallback) => {
   return ElectronApi.addScanCompleteListener(callback);
 };
 
-const getAudiosByFilepaths = (paths: string[]): Promise<AudioWithMetadata> => {
+const getAudiosByFilepaths = (
+  paths: string[],
+): Promise<AudioWithMetadata[]> => {
   if (!isElectron) {
     throw new Error("Not implemented");
   }

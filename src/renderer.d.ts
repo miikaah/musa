@@ -18,13 +18,13 @@ import {
 
 export type ElectronApi = {
   getSettings: () => Promise<Settings>;
-  insertSettings: (settings: Settings) => Promise<Settings>;
+  insertSettings: (settings: Partial<Settings>) => Promise<Settings>;
   getArtists: () => Promise<ArtistObject>;
   getArtistById: (id: string) => Promise<Artist>;
   getArtistAlbums: (id: string) => Promise<ArtistWithEnrichedAlbums>;
   getAlbumById: (id: string) => Promise<AlbumWithFilesAndMetadata>;
   getAudioById: (id: string) => Promise<AudioWithMetadata>;
-  getAudiosByFilepaths: (paths: string[]) => Promise<AudioWithMetadata>;
+  getAudiosByFilepaths: (paths: string[]) => Promise<AudioWithMetadata[]>;
   getAllThemes: () => Promise<Theme[]>;
   getThemeById: (id: string) => Promise<Theme>;
   insertTheme: (id: string, colors: Colors) => Promise<Theme>;

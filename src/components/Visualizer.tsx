@@ -1,8 +1,11 @@
+import { RgbColor } from "@miikaah/musa-core";
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { rgb2hsl, hsl2rgb } from "../colors";
+import { VisualizerState } from "../reducers/visualizer.reducer";
+import { PlayerState } from "../reducers/player.reducer";
 
 /*
  * Square is a good shape for seeing the relative power differences
@@ -15,14 +18,14 @@ const height = width;
 const spectroHeight = height - 100;
 const peakHeight = spectroHeight;
 
-let spectroCanvas;
-let tempCanvas;
-let barCtx;
-let peakCtx;
-let spectroCtx;
-let tempCtx;
+let spectroCanvas: HTMLCanvasElement;
+let tempCanvas: HTMLCanvasElement;
+let barCtx: CanvasRenderingContext2D;
+let peakCtx: CanvasRenderingContext2D;
+let spectroCtx: CanvasRenderingContext2D;
+let tempCtx: CanvasRenderingContext2D;
 
-const Container = styled.div`
+const Container = styled.div<{ isVisible: boolean }>`
   overflow: auto;
   max-height: ${({ isVisible }) => (isVisible ? "900px" : "0")};
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
@@ -42,39 +45,51 @@ const BottomWrapper = styled.div``;
 
 let lastDrawAt = Date.now();
 
-const parseRgb = (rgb) =>
-  rgb.replace("rgb(", "").replace(")", "").split(",").map(Number);
+const parseRgb = (rgb: string): RgbColor =>
+  rgb.replace("rgb(", "").replace(")", "").split(",").map(Number) as RgbColor;
 
 let lockSpectroGraph = false;
 
+type VisualizerProps = {
+  isVisible: boolean;
+  update: 0 | 1;
+  dataArray: VisualizerState["dataArray"];
+  dataArrayL: VisualizerState["dataArrayL"];
+  dataArrayR: VisualizerState["dataArrayR"];
+  peakMeterBufferL: VisualizerState["peakMeterBufferL"];
+  peakMeterBufferR: VisualizerState["peakMeterBufferR"];
+  currentItem: PlayerState["currentItem"];
+};
+
 const Visualizer = ({
-  dispatch,
-  forwardRef,
   isVisible,
-  update,
+  update, // Triggers update
   dataArray,
   dataArrayL,
   dataArrayR,
-  peakMeterBuffer,
   peakMeterBufferL,
   peakMeterBufferR,
   currentItem,
-}) => {
+}: VisualizerProps) => {
   const location = useLocation();
   const shouldDraw =
     isVisible && location.pathname === "/" && Date.now() - lastDrawAt > 16;
 
   useEffect(() => {
-    const barCanvas = document.getElementById("barCanvas");
-    barCtx = barCanvas.getContext("2d");
-    const peakCanvas = document.getElementById("peakCanvas");
-    peakCtx = peakCanvas.getContext("2d");
-    spectroCanvas = document.getElementById("spectroCanvas");
-    spectroCtx = spectroCanvas.getContext("2d");
+    const barCanvas = document.getElementById("barCanvas") as HTMLCanvasElement;
+    barCtx = barCanvas.getContext("2d") as CanvasRenderingContext2D;
+    const peakCanvas = document.getElementById(
+      "peakCanvas",
+    ) as HTMLCanvasElement;
+    peakCtx = peakCanvas.getContext("2d") as CanvasRenderingContext2D;
+    spectroCanvas = document.getElementById(
+      "spectroCanvas",
+    ) as HTMLCanvasElement;
+    spectroCtx = spectroCanvas.getContext("2d") as CanvasRenderingContext2D;
     tempCanvas = document.createElement("canvas");
     tempCanvas.width = spectroWidth;
     tempCanvas.height = spectroHeight;
-    tempCtx = tempCanvas.getContext("2d");
+    tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
   }, []);
 
   useEffect(() => {
@@ -252,10 +267,10 @@ const Visualizer = ({
     // Copy the current canvas onto the temp canvas
     tempCtx.drawImage(spectroCanvas, 0, 0, spectroWidth, spectroHeight);
 
-    const getBarHeight = (i) => (i < 8 ? 4 : i < 32 ? 2 : 1);
+    const getBarHeight = (i: number) => (i < 8 ? 4 : i < 32 ? 2 : 1);
 
     // The multiplier sets the overall brightness. Minus increases contrast.
-    const getDv = (v) => (v < 70 ? v - 10 : v * 1.2);
+    const getDv = (v: number) => (v < 70 ? v - 10 : v * 1.2);
 
     let xOffset = spectroWidth - 1;
     let yOffset = spectroHeight;
@@ -318,7 +333,7 @@ const Visualizer = ({
 };
 
 export default connect(
-  (state) => ({
+  (state: { visualizer: VisualizerState; player: PlayerState }) => ({
     // Needed so that redux triggers an update and the updated dataArray can be read
     update: state.visualizer.update,
     dataArray: state.visualizer.dataArray,

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import styled from "styled-components";
 import { SettingsState, updateSettings } from "../reducers/settings.reducer";
 
@@ -23,6 +24,15 @@ const Container = styled.div`
   }
 `;
 
+type UseFirFileProps = {
+  isInit: SettingsState["isInit"];
+  name: string;
+  filename: string;
+  firFile: SettingsState["firFile"];
+  firFiles: SettingsState["firFiles"];
+  dispatch: Dispatch;
+};
+
 const UseFirFile = ({
   isInit,
   name,
@@ -30,7 +40,7 @@ const UseFirFile = ({
   firFile,
   firFiles,
   dispatch,
-}) => {
+}: UseFirFileProps) => {
   const [firMakeUpGainValue, setFirMakeUpGainValue] = useState(
     firFiles[filename]?.makeUpGain || 0,
   );
@@ -40,7 +50,7 @@ const UseFirFile = ({
     return null;
   }
 
-  const toggleFir = (event) => {
+  const toggleFir = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.target.blur();
 
     dispatch(
@@ -55,11 +65,11 @@ const UseFirFile = ({
     );
   };
 
-  const updateFirMakeUpGain = (event) => {
+  const updateFirMakeUpGain = (event: React.ChangeEvent<HTMLInputElement>) => {
     const integer = parseInt(event.target.value);
 
     if (isNaN(integer)) {
-      setFirMakeUpGainValue("");
+      setFirMakeUpGainValue(0);
       return;
     }
 

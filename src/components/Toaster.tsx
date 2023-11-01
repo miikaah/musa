@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
+import { ToasterState } from "../reducers/toaster.reducer";
 
 const fade = keyframes`
   from {
@@ -40,7 +41,11 @@ const Toast = styled.div`
   text-align: center;
 `;
 
-const Toaster = ({ messages }) => {
+type ToasterProps = {
+  messages: ToasterState["messages"];
+};
+
+const Toaster = ({ messages }: ToasterProps) => {
   return (
     <ToasterContainer>
       {Object.entries(messages).map(([key, message]) => (
@@ -53,7 +58,7 @@ const Toaster = ({ messages }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { toaster: ToasterState }) => ({
     messages: state.toaster.messages,
   }),
   (dispatch) => ({ dispatch }),

@@ -1,6 +1,7 @@
 import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import { addToPlaylist, pasteToPlaylist } from "../reducers/player.reducer";
@@ -30,7 +31,13 @@ interface CustomFile extends File {
   path: string;
 }
 
-const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
+type AppMainProps = {
+  isInit: SettingsState["isInit"];
+  musicLibraryPath: SettingsState["musicLibraryPath"];
+  dispatch: Dispatch;
+};
+
+const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
   const [showModal, setShowModal] = useState(false);
   const [filesToEdit, setFilesToBeEdited] = useState<AudioWithMetadata[]>([]);
 
@@ -60,7 +67,9 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
       const artist = await Api.getArtistAlbums(item.id);
       const songs = artist.albums.map((a) => a.files).flat(Infinity);
 
-      dispatch(pasteToPlaylist([...songs, ...artist.files]));
+      dispatch(
+        pasteToPlaylist([...songs, ...artist.files] as AudioWithMetadata[]),
+      );
 
       return;
     } else if (isAlbum) {
@@ -80,7 +89,7 @@ const AppMain = ({ dispatch, isInit, musicLibraryPath }) => {
     return <Navigate to="/settings" />;
   }
 
-  const openModal = (items) => {
+  const openModal = (items: AudioWithMetadata[]) => {
     setFilesToBeEdited(items);
     setShowModal(true);
   };

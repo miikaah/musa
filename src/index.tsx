@@ -14,7 +14,7 @@ import "./index.css";
 export const store = createStore(rootReducer);
 
 let previousSettings: Partial<SettingsState>;
-let timerId: number;
+let timerId: NodeJS.Timeout;
 store.subscribe(() => {
   const settings = { ...store.getState().settings } as Partial<SettingsState>;
 
@@ -35,7 +35,7 @@ store.subscribe(() => {
   }
 });
 
-createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById("root") as HTMLElement).render(
   <Provider store={store}>
     <ErrorBoundary>
       <App />

@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useKeyPress } from "../hooks";
 import { KEYS, isCtrlDown, dispatchToast } from "../util";
-import Library from "./LibraryV2";
+import Library, { LibraryMode } from "./LibraryV2";
 import { breakpoints } from "../breakpoints";
 import config from "../config";
 import Api from "../apiClient";
+import { SettingsState } from "../reducers/settings.reducer";
+import { PlayerState } from "../reducers/player.reducer";
+import { TranslateFn } from "../i18n";
 
 const { isElectron } = config;
 
@@ -110,7 +114,7 @@ const CloseButton = styled.div`
   }
 `;
 
-const buttonCss2 = css`
+const buttonCss2 = css<{ isActive?: boolean }>`
   font-size: 1.2rem;
   outline: none;
   -webkit-app-region: no-drag;
@@ -126,22 +130,22 @@ const buttonCss2 = css`
   }
 `;
 
-const LibraryButton = styled.button`
+const LibraryButton = styled.button<{ isActive?: boolean; isSmall: boolean }>`
   ${buttonCss2}
 
   background: ${({ isActive, isSmall }) =>
     isActive && isSmall ? "#9b9b9b" : "transparent"};
 `;
 
-const SearchButton = styled.button`
+const SearchButton = styled.button<{ isActive?: boolean }>`
   ${buttonCss2}
 `;
 
-const SettingsButton = styled.button`
+const SettingsButton = styled.button<{ isActive?: boolean }>`
   ${buttonCss2}
 `;
 
-const ShareButton = styled.button`
+const ShareButton = styled.button<{ isActive?: boolean }>`
   ${buttonCss2}
 `;
 
@@ -149,11 +153,13 @@ const Title = styled.div`
   font-size: 0.9rem;
 `;
 
-const ActionsContainer = styled.div`
+const ActionsContainer = styled.div<{ isElectron: boolean }>`
   visibility: ${({ isElectron }) => (isElectron ? "visible" : "hidden")};
 `;
 
-const locationToTitleMap = (t) => ({
+const locationToTitleMap: (t: TranslateFn) => Record<string, string> = (
+  t: TranslateFn,
+) => ({
   "/": "Musa",
   "/search": t("titlebar.location.search"),
   "/search/": t("titlebar.location.search"),
@@ -161,7 +167,30 @@ const locationToTitleMap = (t) => ({
   "/settings/": t("titlebar.location.settings"),
 });
 
-const Titlebar = ({ playlist, t, dispatch }) => {
+const getLibraryMode = (libraryMode: string): LibraryMode => {
+  switch (libraryMode) {
+    case "none": {
+      return "none";
+    }
+    case "library": {
+      return "library";
+    }
+    case "visualizer": {
+      return "visualizer";
+    }
+    default: {
+      throw new Error("Invalid libraryMode");
+    }
+  }
+};
+
+type TitleBarProps = {
+  playlist: PlayerState["items"];
+  t: any;
+  dispatch: Dispatch;
+};
+
+const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
     window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
@@ -195,24 +224,24 @@ const Titlebar = ({ playlist, t, dispatch }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const libraryRef = useRef();
-  const libraryButtonRef = useRef();
-  const visualizerButtonRef = useRef();
-  const settingsButtonRef = useRef();
-  const searchButtonRef = useRef();
-  const shareButtonRef = useRef();
+  const libraryRef = useRef<HTMLDivElement | null>(null);
+  const libraryButtonRef = useRef<HTMLButtonElement | null>(null);
+  const visualizerButtonRef = useRef<HTMLButtonElement | null>(null);
+  const settingsButtonRef = useRef<HTMLButtonElement | null>(null);
+  const searchButtonRef = useRef<HTMLButtonElement | null>(null);
+  const shareButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     // Close library when clicking outside it like the playlist
-    const handleClick = (e) => {
+    const handleClick = (e: MouseEvent) => {
       if (
         libraryButtonRef.current &&
-        libraryButtonRef.current.contains(e.target)
+        libraryButtonRef.current.contains(e.target as Node)
       ) {
         return;
       }
 
-      if (libraryRef.current && libraryRef.current.contains(e.target)) {
+      if (libraryRef.current && libraryRef.current.contains(e.target as Node)) {
         return;
       }
 
@@ -232,7 +261,7 @@ const Titlebar = ({ playlist, t, dispatch }) => {
     };
   }, [isSmall, location, libraryMode]);
 
-  const goToSearchByKeyEvent = (event) => {
+  const goToSearchByKeyEvent = (event: KeyboardEvent) => {
     if (!isCtrlDown(event) || !event.shiftKey) {
       return;
     }
@@ -246,7 +275,11 @@ const Titlebar = ({ playlist, t, dispatch }) => {
   };
   useKeyPress(KEYS.F, goToSearchByKeyEvent);
 
-  const toggleLibrary = (event) => {
+  const toggleLibrary = (event: React.MouseEvent) => {
+    if (!libraryButtonRef.current) {
+      return;
+    }
+
     libraryButtonRef.current.blur();
 
     if (location.pathname !== "/") {
@@ -259,7 +292,11 @@ const Titlebar = ({ playlist, t, dispatch }) => {
     event.stopPropagation();
   };
 
-  const toggleVisualizer = (event) => {
+  const toggleVisualizer = (event: React.MouseEvent) => {
+    if (!visualizerButtonRef.current) {
+      return;
+    }
+
     visualizerButtonRef.current.blur();
 
     if (location.pathname !== "/") {
@@ -272,7 +309,11 @@ const Titlebar = ({ playlist, t, dispatch }) => {
     event.stopPropagation();
   };
 
-  const toggleSettings = (event) => {
+  const toggleSettings = (event: React.MouseEvent) => {
+    if (!settingsButtonRef.current) {
+      return;
+    }
+
     settingsButtonRef.current.blur();
 
     if (location.pathname.startsWith("/settings")) {
@@ -291,7 +332,7 @@ const Titlebar = ({ playlist, t, dispatch }) => {
   // NOTE: The modern way of doing this with Navigator
   //       doesn't work with http only https. It does work
   //       with http in localhost though.
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text: string) => {
     const textarea = document.createElement("textarea");
     textarea.value = text;
 
@@ -307,7 +348,11 @@ const Titlebar = ({ playlist, t, dispatch }) => {
     document.body.removeChild(textarea);
   };
 
-  const createPlaylist = (event) => {
+  const createPlaylist = (event: React.MouseEvent) => {
+    if (!shareButtonRef.current) {
+      return;
+    }
+
     shareButtonRef.current.blur();
 
     if (Array.isArray(playlist) && playlist.length) {
@@ -329,7 +374,11 @@ const Titlebar = ({ playlist, t, dispatch }) => {
     event.stopPropagation();
   };
 
-  const toggleSearch = (event) => {
+  const toggleSearch = (event: React.MouseEvent) => {
+    if (!searchButtonRef.current) {
+      return;
+    }
+
     searchButtonRef.current.blur();
 
     if (location.pathname.startsWith("/search")) {
@@ -373,7 +422,7 @@ const Titlebar = ({ playlist, t, dispatch }) => {
 
   return (
     <>
-      <Library ref={libraryRef} libraryMode={libraryMode} />
+      <Library ref={libraryRef} libraryMode={getLibraryMode(libraryMode)} />
       <Container>
         <div>
           <LibraryButton
@@ -445,7 +494,7 @@ const Titlebar = ({ playlist, t, dispatch }) => {
 };
 
 export default connect(
-  (state) => ({
+  (state: { settings: SettingsState; player: PlayerState }) => ({
     t: state.settings.t,
     playlist: state.player.items,
   }),

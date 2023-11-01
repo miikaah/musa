@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { firFileMap } from "../config";
 import UseFirFile from "./UseFirFile";
 import { SettingsState } from "../reducers/settings.reducer";
+import { TranslateFn } from "../i18n";
 
 const FirFilesContainer = styled.div`
   display: flex;
@@ -11,7 +12,9 @@ const FirFilesContainer = styled.div`
   max-width: 486px;
 `;
 
-const UseFirSetting = ({ isInit, t }) => {
+type UseFirSettingProps = { isInit: SettingsState["isInit"]; t: TranslateFn };
+
+const UseFirSetting = ({ isInit, t }: UseFirSettingProps) => {
   if (!isInit) {
     return null;
   }

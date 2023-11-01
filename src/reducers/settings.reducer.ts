@@ -1,3 +1,4 @@
+import { Colors } from "@miikaah/musa-core";
 import { FALLBACK_THEME, firFileMap } from "../config";
 import { REPLAYGAIN_TYPE } from "../util";
 import { translate } from "../i18n";
@@ -16,20 +17,21 @@ export const updateSettings = (props: Partial<SettingsState>) => ({
 export const VOLUME_DEFAULT = 50;
 
 export type SettingsState = {
-  isInit: boolean;
+  isInit: boolean | null;
   currentTheme: {
-    colors: typeof FALLBACK_THEME;
+    colors: Colors;
     filename: string;
     id: string;
   };
-  key: string;
+  currentProfile?: string; // Only on server
+  key?: string;
   replaygainType: ReplaygainType;
   preAmpDb: number;
   firMakeUpGainDb: number;
   firFile: string;
-  firFiles: Record<string, string>;
+  firFiles: Record<string, { name: string; makeUpGain: number }>;
   volume: number;
-  musicLibraryPath: string;
+  musicLibraryPath?: string;
   language: string;
   t: any;
 };

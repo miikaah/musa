@@ -1,4 +1,4 @@
-import { ArtistObject } from "@miikaah/musa-core";
+import { ArtistObject, Artist as ArtistType } from "@miikaah/musa-core";
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -326,7 +326,9 @@ const Search = ({
 
   const artistToRender = artists.length
     ? artists
-    : Object.values(listingWithLabels).flat(Infinity);
+    : (Object.values(listingWithLabels).flat(
+        Infinity,
+      ) as unknown as ArtistType[]);
 
   // NOTE: Need to keep track of this because at least on Windows
   //       when going from long scrolled list to a short one that can not be
@@ -335,7 +337,7 @@ const Search = ({
   //       flash of different albums covers and titles
   const isFetchingRandomFirstTime = isFetching && !isSearchRandom;
 
-  const updateQuery = (e) => {
+  const updateQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setQuery(e.target.value));
     dispatch(setIsSearchTermLocked(false));
   };
@@ -352,9 +354,9 @@ const Search = ({
     dispatch(clearSearch());
   };
 
-  const setGenre = (event) => {
+  const setGenre = (event: React.MouseEvent<HTMLDivElement>) => {
     dispatch(setIsSearchTermLocked(false));
-    dispatch(setQuery(`genre:${event.target.textContent}`));
+    dispatch(setQuery(`genre:${(event.target as HTMLElement).textContent}`));
     setShowGenreSelect(false);
   };
 
@@ -406,7 +408,7 @@ const Search = ({
             })`}</h5>
             <SearchBlockWrapper
               ref={artistListRef}
-              onScroll={(event) => {
+              onScroll={(event: React.UIEvent) => {
                 dispatch(
                   updateScrollPosition({
                     artists: (event.target as HTMLElement).scrollTop,
@@ -425,7 +427,7 @@ const Search = ({
             <h5>{`${t("search.results.albums")} (${albums.length})`}</h5>
             <SearchBlockWrapper
               ref={albumListRef}
-              onScroll={(event) => {
+              onScroll={(event: React.UIEvent) => {
                 dispatch(
                   updateScrollPosition({
                     albums: (event.target as HTMLElement).scrollTop,
@@ -451,7 +453,7 @@ const Search = ({
             <h5>{`${t("search.results.songs")} (${audios.length})`}</h5>
             <SearchBlockWrapper
               ref={audioListRef}
-              onScroll={(event) => {
+              onScroll={(event: React.UIEvent) => {
                 dispatch(
                   updateScrollPosition({
                     audios: (event.target as HTMLElement).scrollTop,

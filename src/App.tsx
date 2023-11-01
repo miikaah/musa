@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faPlay,
@@ -25,7 +26,10 @@ import styled, { StyleSheetManager, ThemeProvider } from "styled-components";
 import isValidProp from "@emotion/is-prop-valid";
 import { createStyledBreakpointsTheme } from "styled-breakpoints";
 import config, { FALLBACK_THEME } from "./config";
-import { updateSettings } from "./reducers/settings.reducer";
+import {
+  Settings as SettingsData,
+  updateSettings,
+} from "./reducers/settings.reducer";
 import { setScanProps, setListingWithLabels } from "./reducers/library.reducer";
 import { updateCurrentProfile } from "./reducers/profile.reducer";
 import {
@@ -44,6 +48,7 @@ import Toaster from "./components/Toaster";
 import ProgressBar from "./components/ProgressBar";
 import { pasteToPlaylist } from "./reducers/player.reducer";
 import { SettingsState } from "./reducers/settings.reducer";
+import { TranslateFn } from "./i18n";
 
 const { isElectron } = config;
 
@@ -116,7 +121,13 @@ const Main = React.memo(() => (
   </StyleSheetManager>
 ));
 
-const App = ({ isInit, t, dispatch }) => {
+type AppProps = {
+  isInit: SettingsState["isInit"];
+  t: TranslateFn;
+  dispatch: Dispatch;
+};
+
+const App = ({ isInit, t, dispatch }: AppProps) => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -153,11 +164,13 @@ const App = ({ isInit, t, dispatch }) => {
   }, [isInit]);
 
   useEffect(() => {
-    const update = (settings) => {
+    const update = (settings: SettingsData) => {
       const currentTheme = settings?.currentTheme?.colors
         ? settings?.currentTheme
         : {
             colors: FALLBACK_THEME,
+            filename: "",
+            id: "",
           };
       updateCurrentTheme(currentTheme?.colors);
 
@@ -168,6 +181,7 @@ const App = ({ isInit, t, dispatch }) => {
           currentTheme,
         }),
       );
+      console.log("settings", settings);
 
       const profile = settings.currentProfile;
       dispatch(updateCurrentProfile(profile));

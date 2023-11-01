@@ -14,6 +14,7 @@ import config from "../config";
 import Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
 import { ProfileState } from "../reducers/profile.reducer";
+import { TranslateFn } from "../i18n";
 
 const { isElectron } = config;
 
@@ -45,7 +46,13 @@ const ActionButton = styled(Button)`
   max-width: 200px;
 `;
 
-const Settings = ({ musicLibraryPath, currentProfile, t }) => {
+type SettingsProps = {
+  musicLibraryPath: SettingsState["musicLibraryPath"];
+  currentProfile: ProfileState["currentProfile"];
+  t: TranslateFn;
+};
+
+const Settings = ({ musicLibraryPath, currentProfile, t }: SettingsProps) => {
   const [themes, setThemes] = useState<Theme[]>([]);
   const [hasFetchedThemes, setHasFetchedThemes] = useState(false);
 

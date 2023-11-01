@@ -1,4 +1,9 @@
-import { Colors, FindResult, Tags } from "@miikaah/musa-core";
+import {
+  AudioWithMetadata,
+  Colors,
+  FindResult,
+  Tags,
+} from "@miikaah/musa-core";
 import {
   ScanEndCompleteListenerCallback,
   ScanStartListenerCallback,
@@ -10,7 +15,7 @@ const getSettings = async () => {
   return window.electron.getSettings();
 };
 
-const insertSettings = async (settings: Settings) => {
+const insertSettings = async (settings: Partial<Settings>) => {
   return window.electron.insertSettings(settings);
 };
 
@@ -130,7 +135,9 @@ const addScanCompleteListener = (callback: ScanEndCompleteListenerCallback) => {
   window.electron.addScanCompleteListener(callback);
 };
 
-const getAudiosByFilepaths = async (paths: string[]) => {
+const getAudiosByFilepaths = async (
+  paths: string[],
+): Promise<AudioWithMetadata[]> => {
   return window.electron.getAudiosByFilepaths(paths);
 };
 

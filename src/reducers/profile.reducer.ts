@@ -3,7 +3,7 @@ export type UpdateCurrentProfileAction = {
   type: typeof UPDATE_CURRENT_PROFILE;
   profile: string;
 };
-export const updateCurrentProfile = (profile: string) => ({
+export const updateCurrentProfile = (profile?: string) => ({
   type: UPDATE_CURRENT_PROFILE,
   profile,
 });

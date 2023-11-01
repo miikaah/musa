@@ -84,7 +84,9 @@ const getSettings = async (): Promise<Settings> => {
   return get(`/app-settings`);
 };
 
-const insertSettings = async (settings: Settings): Promise<Settings> => {
+const insertSettings = async (
+  settings: Partial<Settings>,
+): Promise<Settings> => {
   return put(`/app-settings`, {
     body: {
       settings: {
