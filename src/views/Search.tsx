@@ -19,7 +19,7 @@ import {
 import { SettingsState } from "../reducers/settings.reducer";
 import { useDebounce } from "../hooks";
 import Song from "../components/Song";
-import Album from "../components/Album";
+import Album from "../components/Album/Album";
 import Artist from "../components/Artist";
 import Button from "../components/Button";
 import Select from "../components/Select";

@@ -8,7 +8,9 @@
     "moduleResolution": "node",
     "strict": true,
     "outDir": "dist",
-    "jsx": "react"
+    "jsx": "react",
+    "types": ["vitest/globals", "vitest-dom/extend-expect"],
+    "skipLibCheck": true
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./test/**/*.tsx"]
 }
