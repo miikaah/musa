@@ -29,7 +29,7 @@ const PlayerTimeDisplay = ({
     <TimeDisplay>
       <TimePlayed>{formatDuration(currentTime)}</TimePlayed>
       <span> / </span>
-      <span>{formatDuration(currentItem?.metadata?.duration || "0:00")}</span>
+      <span>{formatDuration(currentItem?.metadata?.duration)}</span>
     </TimeDisplay>
   );
 };
