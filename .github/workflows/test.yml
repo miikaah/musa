@@ -18,6 +18,8 @@ jobs:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
+        env:
+          GITHUB_PAT: ${{ secrets.MUSA_GITHUB_PAT }}
       - run: npm run test
       - run: npm run setup
       - run: npm run build:e
