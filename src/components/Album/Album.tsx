@@ -1,7 +1,6 @@
 import { AlbumWithFilesAndMetadata } from "@miikaah/musa-core";
 import React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import { dispatchToast } from "../../util";
 import { pasteToPlaylist } from "../../reducers/player.reducer";
@@ -76,12 +75,13 @@ const AlbumInfo = styled.div`
 `;
 
 type AlbumProps = {
-  item: AlbumWithFilesAndMetadata;
+  item?: AlbumWithFilesAndMetadata;
   t: TranslateFnFn;
-  dispatch: Dispatch;
 };
 
-const Album = ({ item, t, dispatch }: AlbumProps) => {
+const Album = ({ item, t }: AlbumProps) => {
+  const dispatch = useDispatch();
+
   if (!item) {
     return null;
   }
@@ -130,6 +130,7 @@ const Album = ({ item, t, dispatch }: AlbumProps) => {
       <AlbumFullAdd
         onClick={addAlbumSongsToPlaylist}
         hasCover={!!item.coverUrl}
+        data-testid="AlbumFullAdd"
       >
         <div>
           <AlbumImage item={item} />
@@ -151,9 +152,6 @@ const Album = ({ item, t, dispatch }: AlbumProps) => {
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    t: state.settings.t,
-  }),
-  (dispatch) => ({ dispatch }),
-)(Album);
+export default connect((state: { settings: SettingsState }) => ({
+  t: state.settings.t,
+}))(Album);
