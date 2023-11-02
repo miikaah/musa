@@ -9,6 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     permissions:
+      packages: read
       contents: read
     steps:
       - uses: actions/checkout@v3
@@ -16,7 +17,6 @@ jobs:
         with:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - run: npm ci
       - run: npm run test
       - run: npm run setup
