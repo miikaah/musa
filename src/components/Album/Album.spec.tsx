@@ -19,11 +19,13 @@ const album = String(albumFixture.metadata.album);
 const artist = String(albumFixture.metadata.artist);
 const year = String(albumFixture.metadata.year);
 
+const state = {
+  settings: { t: translate("en") },
+};
+
 describe("Album", () => {
   it("renders Album component", async () => {
-    render(<Album item={albumFixture} />, {
-      settings: { t: translate("en") },
-    });
+    render(<Album item={albumFixture} />, state);
 
     expect(screen.getByText(album)).toBeInTheDocument();
     expect(screen.getByText(artist)).toBeInTheDocument();
@@ -31,9 +33,7 @@ describe("Album", () => {
   });
 
   it("renders null when empty item", async () => {
-    render(<Album item={undefined} />, {
-      settings: { t: translate("en") },
-    });
+    render(<Album item={undefined} />, state);
 
     expect(screen.queryByText(album)).not.toBeInTheDocument();
     expect(screen.queryByText(artist)).not.toBeInTheDocument();
@@ -41,9 +41,7 @@ describe("Album", () => {
   });
 
   it("dispatches set album to search query action", async () => {
-    render(<Album item={albumFixture} />, {
-      settings: { t: translate("en") },
-    });
+    render(<Album item={albumFixture} />, state);
 
     await userEvent.click(screen.getByText(album));
 
@@ -53,9 +51,7 @@ describe("Album", () => {
   });
 
   it("dispatches set artist to search query action", async () => {
-    render(<Album item={albumFixture} />, {
-      settings: { t: translate("en") },
-    });
+    render(<Album item={albumFixture} />, state);
 
     await userEvent.click(screen.getByText(artist));
 
@@ -65,9 +61,7 @@ describe("Album", () => {
   });
 
   it("dispatches set year to search query action", async () => {
-    render(<Album item={albumFixture} />, {
-      settings: { t: translate("en") },
-    });
+    render(<Album item={albumFixture} />, state);
 
     await userEvent.click(screen.getByText(year));
 
@@ -77,9 +71,7 @@ describe("Album", () => {
   });
 
   it("dispatches add album songs to playlist action", async () => {
-    render(<Album item={albumFixture} />, {
-      settings: { t: translate("en") },
-    });
+    render(<Album item={albumFixture} />, state);
 
     await userEvent.click(screen.getByTestId("AlbumFullAdd"));
 
