@@ -1,0 +1,24 @@
+name: Test Main
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com/
+      - run: npm ci
+      - run: npm run test
+      - run: npm run setup
+      - run: npm run build:e
+      - run: npm run build:s
+      - run: npm run tsc
