@@ -44,8 +44,10 @@ type BasePageProps = {
 
 const BasePage = ({ children, setMaxWidth = true }: BasePageProps) => {
   return (
-    <BasePageContainer>
-      <BasePageWrapper setMaxWidth={setMaxWidth}>{children}</BasePageWrapper>
+    <BasePageContainer data-testid="BasePageContainer">
+      <BasePageWrapper setMaxWidth={setMaxWidth} data-testid="BasePageWrapper">
+        {children}
+      </BasePageWrapper>
     </BasePageContainer>
   );
 };
