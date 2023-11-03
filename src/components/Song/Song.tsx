@@ -1,18 +1,17 @@
 import React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { dispatchToast } from "../util";
-import { addToPlaylist } from "../reducers/player.reducer";
-import { setQuery } from "../reducers/search.reducer";
+import { dispatchToast } from "../../util";
+import { addToPlaylist } from "../../reducers/player.reducer";
+import { setQuery } from "../../reducers/search.reducer";
 import {
   listImage,
   cardActionShadow,
   ellipsisTextOverflow,
-} from "../common.styles";
-import AlbumImage from "./common/AlbumImageV2";
-import { SettingsState } from "../reducers/settings.reducer";
-import { TranslateFnFn } from "../i18n";
+} from "../../common.styles";
+import AlbumImage from "../common/AlbumImageV2";
+import { SettingsState } from "../../reducers/settings.reducer";
+import { TranslateFnFn } from "../../i18n";
 import { AudioWithMetadata } from "@miikaah/musa-core";
 
 const SongContainer = styled.div<{ hasCover: boolean }>`
@@ -76,12 +75,13 @@ const SongInfo = styled.div`
 `;
 
 type SongProps = {
-  item: AudioWithMetadata;
+  item?: AudioWithMetadata;
   t: TranslateFnFn;
-  dispatch: Dispatch;
 };
 
-const Song = ({ item, t, dispatch }: SongProps) => {
+const Song = ({ item, t }: SongProps) => {
+  const dispatch = useDispatch();
+
   if (!item) {
     return null;
   }
@@ -120,7 +120,11 @@ const Song = ({ item, t, dispatch }: SongProps) => {
   const year = item?.metadata?.year || "";
 
   return (
-    <SongContainer onClick={addSongToPlaylist} hasCover={!!item.coverUrl}>
+    <SongContainer
+      onClick={addSongToPlaylist}
+      hasCover={!!item.coverUrl}
+      data-testid="SongContainer"
+    >
       <div>
         <AlbumImage item={item} />
       </div>
