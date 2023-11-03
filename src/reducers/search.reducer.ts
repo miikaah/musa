@@ -1,6 +1,6 @@
 import {
   AlbumWithFilesAndMetadata,
-  Artist,
+  ArtistWithEnrichedAlbums,
   AudioWithMetadata,
 } from "@miikaah/musa-core";
 
@@ -90,7 +90,7 @@ export type SearchState = {
   filter: string;
   isRandom: boolean;
   isSearchTermLocked: boolean;
-  searchArtists: Artist[];
+  searchArtists: ArtistWithEnrichedAlbums[];
   searchAlbums: AlbumWithFilesAndMetadata[];
   searchAudios: AudioWithMetadata[];
   scrollPos: ScrollPos;

@@ -151,9 +151,6 @@ const Song = ({ item, t }: SongProps) => {
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    t: state.settings.t,
-  }),
-  (dispatch) => ({ dispatch }),
-)(Song);
+export default connect((state: { settings: SettingsState }) => ({
+  t: state.settings.t,
+}))(Song);

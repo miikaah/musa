@@ -1,11 +1,9 @@
-import { Artist } from "@miikaah/musa-core";
+import { ArtistWithEnrichedAlbums } from "@miikaah/musa-core";
 import React from "react";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
-import { setQuery } from "../reducers/search.reducer";
-import { ToasterState } from "../reducers/toaster.reducer";
-import { ellipsisTextOverflow } from "../common.styles";
-import { Dispatch } from "redux";
+import { setQuery } from "../../reducers/search.reducer";
+import { ellipsisTextOverflow } from "../../common.styles";
 
 const bottomBorder = css`
   cursor: pointer;
@@ -30,11 +28,12 @@ const ArtistName = styled.div`
 `;
 
 type ArtistProps = {
-  item: Artist;
-  dispatch: Dispatch;
+  item?: ArtistWithEnrichedAlbums;
 };
 
-const Artist = ({ item: artist, dispatch }: ArtistProps) => {
+const Artist = ({ item: artist }: ArtistProps) => {
+  const dispatch = useDispatch();
+
   if (!artist) {
     return null;
   }
@@ -50,9 +49,4 @@ const Artist = ({ item: artist, dispatch }: ArtistProps) => {
   );
 };
 
-export default connect(
-  (state: { toaster: ToasterState }) => ({
-    messages: state.toaster.messages,
-  }),
-  (dispatch) => ({ dispatch }),
-)(Artist);
+export default Artist;

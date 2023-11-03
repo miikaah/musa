@@ -1,4 +1,4 @@
-import { ArtistObject, Artist as ArtistType } from "@miikaah/musa-core";
+import { ArtistObject, ArtistWithEnrichedAlbums } from "@miikaah/musa-core";
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -328,7 +328,7 @@ const Search = ({
     ? artists
     : (Object.values(listingWithLabels).flat(
         Infinity,
-      ) as unknown as ArtistType[]);
+      ) as unknown as ArtistWithEnrichedAlbums[]); // Cast because the subset fits
 
   // NOTE: Need to keep track of this because at least on Windows
   //       when going from long scrolled list to a short one that can not be
