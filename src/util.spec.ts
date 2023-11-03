@@ -110,7 +110,7 @@ describe("Util", () => {
   });
 
   describe("updateCurrentTheme()", () => {
-    it("calls dispatch function with add and remove toast actions", () => {
+    it("update document.body.style with theme colors", () => {
       updateCurrentTheme(FALLBACK_THEME);
 
       expect((<any>document.body.style)._values).toEqual({
