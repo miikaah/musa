@@ -1,9 +1,11 @@
 export const UPDATE_CURRENT_PROFILE = "MUSA/PROFILE/UPDATE_CURRENT_PROFILE";
 export type UpdateCurrentProfileAction = {
   type: typeof UPDATE_CURRENT_PROFILE;
-  profile: string;
+  profile?: string;
 };
-export const updateCurrentProfile = (profile?: string) => ({
+export const updateCurrentProfile = (
+  profile?: string,
+): UpdateCurrentProfileAction => ({
   type: UPDATE_CURRENT_PROFILE,
   profile,
 });
