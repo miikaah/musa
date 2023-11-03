@@ -4,7 +4,7 @@ export type AddToastAction = {
   message: string;
   key: string;
 };
-export const addToast = (message: string, key: string) => ({
+export const addToast = (message: string, key: string): AddToastAction => ({
   type: ADD_TOAST,
   message,
   key,
@@ -15,7 +15,7 @@ export type RemoveToastAction = {
   type: typeof REMOVE_TOAST;
   key: string;
 };
-export const removeToast = (key: string) => ({
+export const removeToast = (key: string): RemoveToastAction => ({
   type: REMOVE_TOAST,
   key,
 });
