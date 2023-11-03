@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import LibraryItem from "./LibraryItem";
-import AlbumCover from "./common/AlbumCoverV2";
+import AlbumCover from "./AlbumCover";
 import config from "../config";
 import Api from "../apiClient";
 import {
