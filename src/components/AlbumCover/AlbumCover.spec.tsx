@@ -2,7 +2,7 @@ import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AlbumCover from "./AlbumCover";
-import { albumCoverFixture } from "./AlbumCover.fixture";
+import { albumCoverFixture } from "../../fixtures/albumCover.fixture";
 import { render } from "../../../test/render";
 import { translate } from "../../i18n";
 

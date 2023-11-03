@@ -1,7 +1,7 @@
 import React from "react";
 import { screen } from "@testing-library/react";
 import AlbumImage from "./AlbumImage";
-import { albumFixture } from "../Album/Album.fixture";
+import { albumFixture } from "../../fixtures/album.fixture";
 import { render } from "../../../test/render";
 import { translate } from "../../i18n";
 

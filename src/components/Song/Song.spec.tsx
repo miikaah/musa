@@ -2,7 +2,7 @@ import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Song from "./Song";
-import { songFixture } from "./Song.fixture";
+import { audioFixture } from "../../fixtures/audio.fixture";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
 import { dispatchToast } from "../../util";
@@ -15,10 +15,10 @@ vi.mock("react-redux", async () => ({
 
 vi.mock("../../util");
 
-const title = String(songFixture.metadata.title);
-const album = String(songFixture.metadata.album);
-const artist = String(songFixture.metadata.artist);
-const year = String(songFixture.metadata.year);
+const title = String(audioFixture.metadata.title);
+const album = String(audioFixture.metadata.album);
+const artist = String(audioFixture.metadata.artist);
+const year = String(audioFixture.metadata.year);
 
 const state = {
   settings: { t: translate("en") },
@@ -26,7 +26,7 @@ const state = {
 
 describe("Song", () => {
   it("renders Song component", async () => {
-    render(<Song item={songFixture} />, state);
+    render(<Song item={audioFixture} />, state);
 
     expect(screen.getByText(album)).toBeInTheDocument();
     expect(screen.getByText(artist)).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe("Song", () => {
   });
 
   it("dispatches set title to search query action", async () => {
-    render(<Song item={songFixture} />, state);
+    render(<Song item={audioFixture} />, state);
 
     await userEvent.click(screen.getByText(title));
 
@@ -52,7 +52,7 @@ describe("Song", () => {
   });
 
   it("dispatches set album to search query action", async () => {
-    render(<Song item={songFixture} />, state);
+    render(<Song item={audioFixture} />, state);
 
     await userEvent.click(screen.getByText(album));
 
@@ -62,7 +62,7 @@ describe("Song", () => {
   });
 
   it("dispatches set artist to search query action", async () => {
-    render(<Song item={songFixture} />, state);
+    render(<Song item={audioFixture} />, state);
 
     await userEvent.click(screen.getByText(artist));
 
@@ -72,7 +72,7 @@ describe("Song", () => {
   });
 
   it("dispatches set year to search query action", async () => {
-    render(<Song item={songFixture} />, state);
+    render(<Song item={audioFixture} />, state);
 
     await userEvent.click(screen.getByText(year));
 
@@ -82,12 +82,12 @@ describe("Song", () => {
   });
 
   it("dispatches add album songs to playlist action", async () => {
-    render(<Song item={songFixture} />, state);
+    render(<Song item={audioFixture} />, state);
 
     await userEvent.click(screen.getByTestId("SongContainer"));
 
     expect(mockDispatch).toHaveBeenCalledWith(
-      expect.objectContaining({ item: songFixture }),
+      expect.objectContaining({ item: audioFixture }),
     );
     expect(dispatchToast).toHaveBeenCalledWith(
       `Added ${title} to playlist`,

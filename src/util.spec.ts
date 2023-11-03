@@ -1,4 +1,4 @@
-import { songFixture } from "./components/Song/Song.fixture";
+import { audioFixture } from "./fixtures/audio.fixture";
 import { FALLBACK_THEME } from "./config";
 import { addToast, removeToast } from "./reducers/toaster.reducer";
 import {
@@ -16,8 +16,8 @@ import {
 describe("Util", () => {
   describe("getReplaygainDb()", () => {
     it("returns track gain for track", () => {
-      expect(getReplaygainDb(REPLAYGAIN_TYPE.Track, songFixture)).toBe(
-        songFixture.metadata.replayGainTrackGain?.dB,
+      expect(getReplaygainDb(REPLAYGAIN_TYPE.Track, audioFixture)).toBe(
+        audioFixture.metadata.replayGainTrackGain?.dB,
       );
     });
 
@@ -32,8 +32,8 @@ describe("Util", () => {
     });
 
     it("returns album gain for album", () => {
-      expect(getReplaygainDb(REPLAYGAIN_TYPE.Album, songFixture)).toBe(
-        songFixture.metadata.replayGainAlbumGain?.dB,
+      expect(getReplaygainDb(REPLAYGAIN_TYPE.Album, audioFixture)).toBe(
+        audioFixture.metadata.replayGainAlbumGain?.dB,
       );
     });
 

@@ -1,6 +1,6 @@
 import { AudioWithMetadata } from "@miikaah/musa-core";
 
-export const songFixture: AudioWithMetadata = {
+export const audioFixture: AudioWithMetadata = {
   id: "Q01YL0F1cmlua28vQ01YIFB5aGlpbnZhZWx0YWphLm1wMw",
   name: "Pyhiinvaeltaja",
   artistName: "CMX",

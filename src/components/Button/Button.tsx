@@ -50,6 +50,7 @@ const Button = ({ className, children, onClick, ...rest }: ButtonProps) => {
       type="button"
       // @ts-expect-error onClick is completely generic
       onClick={onClick}
+      data-testid="ButtonContainer"
       {...rest}
     >
       {children}
