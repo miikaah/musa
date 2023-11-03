@@ -45,13 +45,13 @@ export const getReplaygainDb = (
 };
 
 export function formatDuration(dur?: number | string) {
-  const duration = Number(dur ?? 0);
+  if (typeof dur === "string") {
+    return dur;
+  }
 
+  const duration = Number(dur ?? 0);
   if (duration < 1) {
     return "0:00";
-  }
-  if (typeof duration === "string") {
-    return duration;
   }
 
   let output = "";
@@ -113,7 +113,7 @@ export function dispatchToast(msg: string, key: string, dispatch: Dispatch) {
   setTimeout(() => dispatch(removeToast(key)), 3050);
 }
 
-export const isCtrlDown = (event: KeyboardEvent) =>
+export const isCtrlDown = (event: KeyboardEvent): boolean =>
   event.ctrlKey || event.metaKey;
 
 type QueryAsObject = {
