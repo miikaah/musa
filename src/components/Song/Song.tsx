@@ -9,7 +9,7 @@ import {
   cardActionShadow,
   ellipsisTextOverflow,
 } from "../../common.styles";
-import AlbumImage from "../common/AlbumImageV2";
+import AlbumImage from "../AlbumImage";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFnFn } from "../../i18n";
 import { AudioWithMetadata } from "@miikaah/musa-core";

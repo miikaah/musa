@@ -8,7 +8,7 @@ import styled, { css } from "styled-components";
 import { PlayerState, playIndex, replay } from "../reducers/player.reducer";
 import { formatDuration } from "../util";
 import { ellipsisTextOverflow } from "../common.styles";
-import AlbumImage from "./common/AlbumImageV2";
+import AlbumImage from "./AlbumImage";
 import { breakpoints } from "../breakpoints";
 
 const colorCss = css`

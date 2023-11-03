@@ -7,7 +7,7 @@ import { pasteToPlaylist } from "../../reducers/player.reducer";
 import { setQuery } from "../../reducers/search.reducer";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { listImage, cardActionShadow } from "../../common.styles";
-import AlbumImage from "../common/AlbumImageV2";
+import AlbumImage from "../AlbumImage";
 import { TranslateFnFn } from "../../i18n";
 
 const AlbumContainer = styled.div`

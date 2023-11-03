@@ -16,7 +16,7 @@ const state = {
 };
 
 describe("AlbumCover", () => {
-  it("renders Album component", async () => {
+  it("renders AlbumCover component", async () => {
     render(<AlbumCover item={albumCoverFixture} />, state);
 
     expect(screen.getByRole("img")).toBeInTheDocument();

@@ -1,7 +1,7 @@
 import { Artist } from "@miikaah/musa-core";
 import React from "react";
 import styled from "styled-components";
-import AlbumImage from "../common/AlbumImageV2";
+import AlbumImage from "../AlbumImage";
 
 const AlbumCoverContainer = styled.div`
   display: flex;

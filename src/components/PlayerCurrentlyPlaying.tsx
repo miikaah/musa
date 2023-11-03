@@ -1,9 +1,9 @@
+import { AudioWithMetadata } from "@miikaah/musa-core";
 import React from "react";
 import styled, { css } from "styled-components";
-import AlbumImageV2 from "./common/AlbumImageV2";
+import AlbumImage from "./AlbumImage";
 import { ellipsisTextOverflow } from "../common.styles";
 import { fadeIn } from "../animations";
-import { AudioWithMetadata } from "@miikaah/musa-core";
 
 const commonImageCss = css`
   width: 50px;
@@ -74,7 +74,7 @@ const PlayerCurrentlyPlaying = React.memo(
     return (
       <Container>
         {hasCurrentItem ? (
-          <AlbumImageV2 item={currentItem} animate={false} />
+          <AlbumImage item={currentItem} animate={false} />
         ) : (
           <PlaceholderImage />
         )}
