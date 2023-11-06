@@ -6,12 +6,6 @@ import { audioFixture } from "../../fixtures/audio.fixture";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
 
-const mockDispatch = vi.fn();
-vi.mock("react-redux", async () => ({
-  ...(await vi.importActual<Record<string, unknown>>("react-redux")),
-  useDispatch: () => mockDispatch,
-}));
-
 const mockToggleEdit = vi.fn();
 
 const title = String(audioFixture.metadata.title);

@@ -165,9 +165,6 @@ const CoverInfo = ({ item, isSmall, toggleEdit, t }: CoverInfoProps) => {
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    t: state.settings.t,
-  }),
-  (dispatch) => ({ dispatch }),
-)(CoverInfo);
+export default connect((state: { settings: SettingsState }) => ({
+  t: state.settings.t,
+}))(CoverInfo);

@@ -5,14 +5,7 @@ import Cover from "./Cover";
 import { audioFixture } from "../../fixtures/audio.fixture";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
-import Api from "../../apiClient";
 import { FALLBACK_THEME } from "../../config";
-
-const mockDispatch = vi.fn();
-vi.mock("react-redux", async () => ({
-  ...(await vi.importActual<Record<string, unknown>>("react-redux")),
-  useDispatch: () => mockDispatch,
-}));
 
 vi.mock("../../apiClient");
 
