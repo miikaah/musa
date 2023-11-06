@@ -18,6 +18,7 @@ const artist = String(audioFixture.metadata.artist);
 const missingData = {
   ...audioFixture,
   name: "",
+  coverUrl: "",
   metadata: {
     ...audioFixture.metadata,
     artist: "",

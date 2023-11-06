@@ -1,1 +1,1 @@
-export { default } from "./PlayerCurrentlyPlaying";
+export { default } from "./Player";

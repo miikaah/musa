@@ -9,22 +9,22 @@ import {
   pause,
   playNext,
   PlayerState,
-} from "../reducers/player.reducer";
+} from "../../reducers/player.reducer";
 import {
   SettingsState,
   VOLUME_DEFAULT,
   updateSettings,
-} from "../reducers/settings.reducer";
-import { setVisualizerData } from "../reducers/visualizer.reducer";
-import { store } from "..";
-import { KEYS, getReplaygainDb, dispatchToast } from "../util";
-import { useKeyPress, useAnimationFrame } from "../hooks";
+} from "../../reducers/settings.reducer";
+import { setVisualizerData } from "../../reducers/visualizer.reducer";
+import { store } from "../..";
+import { KEYS, getReplaygainDb, dispatchToast } from "../../util";
+import { useKeyPress, useAnimationFrame } from "../../hooks";
 import PlayerSeek from "./PlayerSeek";
 import PlayerVolume from "./PlayerVolume";
+import PlayerCurrentlyPlaying from "./PlayerCurrentlyPlaying";
 import PlayerPlayPauseButton from "./PlayerPlayPauseButton";
 import PlayerVolumeButton from "./PlayerVolumeButton";
 import PlayerTimeDisplay from "./PlayerTimeDisplay";
-import PlayerCurrentlyPlaying from "./Player/PlayerCurrentlyPlaying";
 
 const sharedCss = css`
   min-height: 54px;

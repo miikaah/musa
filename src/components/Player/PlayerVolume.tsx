@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { connect } from "react-redux";
-import ProgressInput from "./ProgressInput";
-import { SettingsState } from "../reducers/settings.reducer";
+import ProgressInput from "../ProgressInput";
+import { SettingsState } from "../../reducers/settings.reducer";
 
 const MAIN_BUTTON_DOWN = 1;
 

@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import ProgressInput from "./ProgressInput";
-import { useInterval } from "../hooks";
-import { breakpoints } from "../breakpoints";
-import { PlayerState } from "../reducers/player.reducer";
+import ProgressInput from "../ProgressInput";
+import { useInterval } from "../../hooks";
+import { breakpoints } from "../../breakpoints";
+import { PlayerState } from "../../reducers/player.reducer";
 
 const MAIN_BUTTON_DOWN = 1;
 

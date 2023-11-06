@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { formatDuration } from "../util";
+import { formatDuration } from "../../util";
 import { AudioWithMetadata } from "@miikaah/musa-core";
-import { PlayerState } from "../reducers/player.reducer";
+import { PlayerState } from "../../reducers/player.reducer";
 
 const TimeDisplay = styled.span`
   min-width: 86px;

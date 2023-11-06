@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
-import { PlayerState } from "../reducers/player.reducer";
+import { PlayerState } from "../../reducers/player.reducer";
 
 const ButtonContainer = styled.span`
   margin-right: 8px;

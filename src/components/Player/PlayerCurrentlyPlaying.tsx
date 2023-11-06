@@ -66,10 +66,11 @@ const PlayerCurrentlyPlaying = React.memo(
     const { artist, title } = currentItem?.metadata || {};
     const songTitle = title || currentItem?.name;
     const hasCurrentItem = !!Object.keys(currentItem || {}).length;
+    console.log("hasCurrentItem", hasCurrentItem);
 
     return (
       <Container>
-        {hasCurrentItem ? (
+        {currentItem?.coverUrl ? (
           <AlbumImage item={currentItem} animate={false} />
         ) : (
           <PlaceholderImage data-testid="PlaceholderImage" />
