@@ -30,7 +30,11 @@ const state = {
     },
   },
   settings: {
-    currentTheme: FALLBACK_THEME,
+    currentTheme: {
+      colors: FALLBACK_THEME,
+      filename: "",
+      id: "",
+    },
     t: translate("en"),
   },
 };
@@ -46,5 +50,15 @@ describe("Cover", () => {
     expect((screen.getByTestId("CoverImage") as HTMLImageElement).src).toBe(
       "media:///CMX/Aurinko/Aurinko.jpg",
     );
+  });
+
+  it("renders Theme component when clicking edit button", async () => {
+    render(<Cover />, state);
+
+    expect(screen.queryByTestId("ThemeBlockContainer")).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button"));
+
+    expect(screen.getByTestId("ThemeBlockContainer")).toBeInTheDocument();
   });
 });

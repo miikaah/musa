@@ -89,6 +89,7 @@ const ThemeBlock = ({
       }}
       hasMargin={isThemeEditor ? false : hasMargin}
       isEditing={editTarget === "bg"}
+      data-testid="ThemeBlockContainer"
     >
       <Color
         rgb={colors.primary}

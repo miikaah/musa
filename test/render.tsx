@@ -5,8 +5,48 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { StyleSheetManager, ThemeProvider } from "styled-components";
 import { createStyledBreakpointsTheme } from "styled-breakpoints";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faPlay,
+  faPause,
+  faVolumeUp,
+  faVolumeMute,
+  faBars,
+  faCog,
+  faSearch,
+  faTrash,
+  faAngleDown,
+  faChevronLeft,
+  faChevronRight,
+  faLock,
+  faLockOpen,
+  faPencil,
+  faChartColumn,
+  faXmark,
+  faShare,
+} from "@fortawesome/free-solid-svg-icons";
 import rootReducer from "../src/reducers";
 import { breakpointsAsPixels } from "../src/breakpoints";
+
+library.add(
+  faPlay,
+  faPause,
+  faVolumeUp,
+  faVolumeMute,
+  faBars,
+  faCog,
+  faSearch,
+  faTrash,
+  faAngleDown,
+  faChevronLeft,
+  faChevronRight,
+  faLock,
+  faLockOpen,
+  faPencil,
+  faChartColumn,
+  faXmark,
+  faShare,
+);
 
 const theme = createStyledBreakpointsTheme({
   breakpoints: breakpointsAsPixels,
