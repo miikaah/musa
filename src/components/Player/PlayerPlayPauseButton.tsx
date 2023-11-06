@@ -34,15 +34,15 @@ const PlayerPlayPauseButton = ({
           playerPlayPauseRef.current && playerPlayPauseRef.current.blur()
         }
       >
-        <FontAwesomeIcon icon={isPlaying ? "pause" : "play"} />
+        <FontAwesomeIcon
+          icon={isPlaying ? "pause" : "play"}
+          data-testid="PlayerPlayPauseButtonIcon"
+        />
       </button>
     </ButtonContainer>
   );
 };
 
-export default connect(
-  (state: { player: PlayerState }) => ({
-    isPlaying: state.player.isPlaying,
-  }),
-  (dispatch) => ({ dispatch }),
-)(PlayerPlayPauseButton);
+export default connect((state: { player: PlayerState }) => ({
+  isPlaying: state.player.isPlaying,
+}))(PlayerPlayPauseButton);
