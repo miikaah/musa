@@ -3,9 +3,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
-import { ellipsisTextOverflow } from "../common.styles";
-import { SettingsState } from "../reducers/settings.reducer";
-import { TranslateFn } from "../i18n";
+import { ellipsisTextOverflow } from "../../common.styles";
+import { SettingsState } from "../../reducers/settings.reducer";
+import { TranslateFn } from "../../i18n";
 
 const Container = styled.div<{ isSmall: boolean }>`
   padding: ${({ isSmall }) =>
