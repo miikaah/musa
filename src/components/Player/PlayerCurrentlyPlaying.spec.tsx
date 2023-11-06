@@ -26,7 +26,7 @@ const missingData = {
 };
 
 describe("PlayerCurrentlyPlaying", () => {
-  it.only("renders PlayerCurrentlyPlaying component", async () => {
+  it("renders PlayerCurrentlyPlaying component", async () => {
     render(<PlayerCurrentlyPlaying currentItem={audioFixture} />, {});
 
     expect(screen.getByRole("img")).toBeInTheDocument();
