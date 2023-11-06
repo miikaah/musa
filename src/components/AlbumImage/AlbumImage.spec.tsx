@@ -18,4 +18,10 @@ describe("AlbumImage", () => {
       "media:///Maustetyto%CC%88t/Eiva%CC%88t%20enkelitka%CC%88a%CC%88n%20ilman%20siipia%CC%88%20lenna%CC%88/Eiva%CC%88t%20enkelitka%CC%88a%CC%88n%20ilman%20siipia%CC%88%20lenna%CC%88.jpg",
     );
   });
+
+  it("renders null when empty item", async () => {
+    render(<AlbumImage item={undefined} />, state);
+
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
 });

@@ -24,7 +24,7 @@ import PlayerVolume from "./PlayerVolume";
 import PlayerPlayPauseButton from "./PlayerPlayPauseButton";
 import PlayerVolumeButton from "./PlayerVolumeButton";
 import PlayerTimeDisplay from "./PlayerTimeDisplay";
-import PlayerCurrentlyPlaying from "./PlayerCurrentlyPlaying";
+import PlayerCurrentlyPlaying from "./Player/PlayerCurrentlyPlaying";
 
 const sharedCss = css`
   min-height: 54px;

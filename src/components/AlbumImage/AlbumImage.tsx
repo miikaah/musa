@@ -46,11 +46,15 @@ type AlbumItem =
   | Artist["albums"][0];
 
 type AlbumImageProps = {
-  item: AlbumItem;
+  item: AlbumItem | undefined;
   animate?: boolean;
 };
 
 const AlbumImage = ({ item, animate = true }: AlbumImageProps) => {
+  if (!item) {
+    return null;
+  }
+
   const type = getFileType(item);
   const isMp3 = type.toLowerCase().startsWith("mpeg");
   const isFlac = type.toLowerCase().startsWith("flac");

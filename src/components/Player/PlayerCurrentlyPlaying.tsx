@@ -1,9 +1,9 @@
 import { AudioWithMetadata } from "@miikaah/musa-core";
 import React from "react";
 import styled, { css } from "styled-components";
-import AlbumImage from "./AlbumImage";
-import { ellipsisTextOverflow } from "../common.styles";
-import { fadeIn } from "../animations";
+import AlbumImage from "../AlbumImage";
+import { ellipsisTextOverflow } from "../../common.styles";
+import { fadeIn } from "../../animations";
 
 const commonImageCss = css`
   width: 50px;
@@ -67,24 +67,24 @@ const PlayerCurrentlyPlaying = React.memo(
     const songTitle = title || currentItem?.name;
     const hasCurrentItem = !!Object.keys(currentItem || {}).length;
 
-    if (!currentItem) {
-      return null;
-    }
-
     return (
       <Container>
         {hasCurrentItem ? (
           <AlbumImage item={currentItem} animate={false} />
         ) : (
-          <PlaceholderImage />
+          <PlaceholderImage data-testid="PlaceholderImage" />
         )}
         <Info>
           {songTitle ? (
             <div title={songTitle}>{songTitle}</div>
           ) : (
-            <PlaceholderLine isFirst />
+            <PlaceholderLine isFirst data-testid="PlaceholderLine1" />
           )}
-          {songTitle || artist ? <div>{artist}</div> : <PlaceholderLine />}
+          {songTitle || artist ? (
+            <div>{artist}</div>
+          ) : (
+            <PlaceholderLine data-testid="PlaceholderLine2" />
+          )}
         </Info>
       </Container>
     );
