@@ -10,3 +10,5 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
 });
+
+HTMLCanvasElement.prototype.getContext = () => null;

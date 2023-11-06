@@ -1,21 +1,20 @@
 import { RgbColor } from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import styled from "styled-components";
-import Palette, { Swatch } from "../img-palette/img-palette";
-import { updateCurrentTheme } from "../util";
-import { breakpoints } from "../breakpoints";
-import { SettingsState, updateSettings } from "../reducers/settings.reducer";
-import { setCoverData, PlayerState } from "../reducers/player.reducer";
-import CoverInfo from "./CoverInfo";
-import ThemeBlock, { EditTarget } from "./ThemeBlock";
-import { rgb2hsl, hsl2rgb } from "../colors";
-import Api from "../apiClient";
-import { CoverData } from "../types";
+import Palette, { Swatch } from "../../img-palette/img-palette";
+import { updateCurrentTheme } from "../../util";
+import { breakpoints } from "../../breakpoints";
+import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
+import { setCoverData, PlayerState } from "../../reducers/player.reducer";
+import CoverInfo from "../CoverInfo";
+import ThemeBlock, { EditTarget } from "../ThemeBlock";
+import { rgb2hsl, hsl2rgb } from "../../colors";
+import Api from "../../apiClient";
+import { CoverData } from "../../types";
 
 type ColorsType = {
   Bg: string;
@@ -25,12 +24,12 @@ type ColorsType = {
   TypographyLight: string;
   TypographyGhost: string;
   TypographyGhostLight: string;
-  PrimaryRgb: [number, number, number];
-  SecondaryRgb: [number, number, number];
+  PrimaryRgb: RgbColor;
+  SecondaryRgb: RgbColor;
   SliderTrack: string;
-  SliderTrackRgb: [number, number, number];
-  WhiteRgb: [number, number, number];
-  RedRgb: [number, number, number];
+  SliderTrackRgb: RgbColor;
+  WhiteRgb: RgbColor;
+  RedRgb: RgbColor;
 };
 
 const Colors: ColorsType = {
@@ -122,10 +121,7 @@ const luminance = (r: number, g: number, b: number) => {
   return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
 };
 
-const contrast = (
-  rgb1: [number, number, number],
-  rgb2: [number, number, number],
-) => {
+const contrast = (rgb1: RgbColor, rgb2: RgbColor) => {
   const lum1 = luminance(...rgb1) + 0.05;
   const lum2 = luminance(...rgb2) + 0.05;
 
@@ -139,15 +135,9 @@ type CoverProps = {
   currentItem: PlayerState["currentItem"];
   coverData: CoverData;
   currentTheme: SettingsState["currentTheme"];
-  dispatch: Dispatch;
 };
 
-const Cover = ({
-  currentItem,
-  coverData,
-  currentTheme,
-  dispatch,
-}: CoverProps) => {
+const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
     window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
@@ -156,6 +146,7 @@ const Cover = ({
   const [isEditing, setIsEditing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLImageElement>(null);
+  const dispatch = useDispatch();
 
   const calcMaxHeight = () => {
     const libraryWidth = Number(
@@ -180,7 +171,7 @@ const Cover = ({
 
   const calculateTheme = (
     coverTarget: HTMLImageElement,
-    options?: { bg: { rgb: [number, number, number] } },
+    options?: { bg: { rgb: RgbColor } },
   ) => {
     let palette = new Palette(coverTarget);
     let mostPopularSwatch = palette.swatches.find(
@@ -462,7 +453,7 @@ const Cover = ({
       1,
       1,
     ).data;
-    const rgb: [number, number, number] = [r, g, b];
+    const rgb: RgbColor = [r, g, b];
     const c = currentTheme.colors;
 
     let colors;
@@ -479,7 +470,7 @@ const Cover = ({
       case "primary": {
         // Background color is used to calculate text colors
         colors = calculateTheme(img, {
-          bg: { rgb: c.bg as [number, number, number] },
+          bg: { rgb: c.bg as RgbColor },
         });
         colors.bg = c.bg;
         colors.primary = rgb;
@@ -490,7 +481,7 @@ const Cover = ({
       case "secondary": {
         // Background color is used to calculate text colors
         colors = calculateTheme(img, {
-          bg: { rgb: c.bg as [number, number, number] },
+          bg: { rgb: c.bg as RgbColor },
         });
         colors.bg = c.bg;
         colors.primary = c.primary;
@@ -501,7 +492,7 @@ const Cover = ({
       default: {
         // Background color is used to calculate text colors
         colors = calculateTheme(img, {
-          bg: { rgb: c.bg as [number, number, number] },
+          bg: { rgb: c.bg as RgbColor },
         });
       }
     }
@@ -565,6 +556,7 @@ const Cover = ({
                 isCoverLoaded={coverData.isCoverLoaded}
                 isMobile={isMobile}
                 onClick={getColorFromImage}
+                data-testid="CoverImage"
               />
               {isEditing && (
                 <Theme
@@ -601,5 +593,4 @@ export default connect(
     coverData: state.player.coverData,
     currentTheme: state.settings.currentTheme,
   }),
-  (dispatch) => ({ dispatch }),
 )(Cover);
