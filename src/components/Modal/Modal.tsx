@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled, { css } from "styled-components";
-import { SettingsState } from "../reducers/settings.reducer";
-import { TranslateFn } from "../i18n";
+import { SettingsState } from "../../reducers/settings.reducer";
+import { TranslateFn } from "../../i18n";
 
 const Container = styled.div<{ maxWidth: number; top?: number }>`
   width: 100%;
@@ -48,9 +48,6 @@ const Modal = ({ closeModal, children, maxWidth, top, t }: ModalProps) => {
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    t: state.settings.t,
-  }),
-  (dispatch) => ({ dispatch }),
-)(Modal);
+export default connect((state: { settings: SettingsState }) => ({
+  t: state.settings.t,
+}))(Modal);
