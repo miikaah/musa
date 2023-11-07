@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { ArrowDown as ArrowDownStyled } from "../common.styles";
-import { SettingsState } from "../reducers/settings.reducer";
+import { ArrowDown as ArrowDownStyled } from "../../common.styles";
+import { SettingsState } from "../../reducers/settings.reducer";
 
 const StyledSettingSelect = styled.div`
   position: relative;
@@ -40,14 +40,11 @@ const SettingSelect = ({ isInit, children }: SettingSelectProps) => {
   return (
     <StyledSettingSelect>
       {children}
-      <ArrowDown />
+      <ArrowDown data-testid="SettingSelectArrowDown" />
     </StyledSettingSelect>
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    isInit: state.settings.isInit,
-  }),
-  (dispatch) => ({ dispatch }),
-)(SettingSelect);
+export default connect((state: { settings: SettingsState }) => ({
+  isInit: state.settings.isInit,
+}))(SettingSelect);
