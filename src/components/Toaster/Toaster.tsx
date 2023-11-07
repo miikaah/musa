@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
-import { ToasterState } from "../reducers/toaster.reducer";
+import { ToasterState } from "../../reducers/toaster.reducer";
 
 const fade = keyframes`
   from {
@@ -57,9 +57,6 @@ const Toaster = ({ messages }: ToasterProps) => {
   );
 };
 
-export default connect(
-  (state: { toaster: ToasterState }) => ({
-    messages: state.toaster.messages,
-  }),
-  (dispatch) => ({ dispatch }),
-)(Toaster);
+export default connect((state: { toaster: ToasterState }) => ({
+  messages: state.toaster.messages,
+}))(Toaster);
