@@ -1,8 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
 import styled from "styled-components";
 import { formatDuration } from "../../util";
-import { AudioWithMetadata } from "@miikaah/musa-core";
 import { PlayerState } from "../../reducers/player.reducer";
 
 const TimeDisplay = styled.span`
@@ -27,14 +25,15 @@ const PlayerTimeDisplay = ({
 }: PlayerTimeDisplayProps) => {
   return (
     <TimeDisplay>
-      <TimePlayed>{formatDuration(currentTime)}</TimePlayed>
-      <span> / </span>
-      <span>{formatDuration(currentItem?.metadata?.duration)}</span>
+      <TimePlayed data-testid="TimeDisplayTimePlayed">
+        {formatDuration(currentTime)}
+      </TimePlayed>
+      <span data-testid="TimeDisplaySeparator"> / </span>
+      <span data-testid="TimeDisplayDuration">
+        {formatDuration(currentItem?.metadata?.duration)}
+      </span>
     </TimeDisplay>
   );
 };
 
-export default connect(
-  (state) => ({}),
-  (dispatch) => ({ dispatch }),
-)(PlayerTimeDisplay);
+export default PlayerTimeDisplay;
