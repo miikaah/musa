@@ -65,7 +65,6 @@ const PlayerCurrentlyPlaying = React.memo(
   ({ currentItem }: PlayerCurrentlyPlayingProps) => {
     const { artist, title } = currentItem?.metadata || {};
     const songTitle = title || currentItem?.name;
-    const hasCurrentItem = !!Object.keys(currentItem || {}).length;
 
     return (
       <Container>

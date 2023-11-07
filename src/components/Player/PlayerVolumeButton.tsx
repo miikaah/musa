@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
+import { VOLUME_STEP } from "../../config";
 
 const VolumeButtonContainer = styled.span`
   min-width: 42px;
@@ -24,8 +25,6 @@ const VolumeButtonContainer = styled.span`
     }
   }
 `;
-
-export const VOLUME_STEP = 5;
 
 type PlayerVolumeButtonProps = { volume: number; muteOrUnmute: () => void };
 

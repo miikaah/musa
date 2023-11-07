@@ -2,6 +2,10 @@ import { Colors } from "@miikaah/musa-core";
 
 const isElectron = import.meta.env.VITE_ENV === "electron";
 
+export const MAIN_BUTTON_DOWN = 1;
+export const VOLUME_MUTED = 0;
+export const VOLUME_STEP = 5;
+
 export const FALLBACK_THEME: Colors = {
   bg: [33, 37, 43],
   primary: [117, 53, 151],
