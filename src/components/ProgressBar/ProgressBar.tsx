@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { LibraryState } from "../reducers/library.reducer";
+import { LibraryState } from "../../reducers/library.reducer";
 
 const ProgressBarContainer = styled("div")`
   position: fixed;
@@ -37,11 +37,17 @@ const ProgressBar = ({
 }: ProgressBarProps) => {
   const width = scanLength > 0 ? (scannedLength / scanLength) * 100 : 0;
 
-  if (width < 1) return null;
+  if (width < 1) {
+    return null;
+  }
 
   return (
     <ProgressBarContainer>
-      <ProgressBarValue width={width} scanColor={scanColor} />
+      <ProgressBarValue
+        width={width}
+        scanColor={scanColor}
+        data-testid="ProgressBarValue"
+      />
     </ProgressBarContainer>
   );
 };
