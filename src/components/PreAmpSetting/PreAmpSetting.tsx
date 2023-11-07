@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { SettingsState, updateSettings } from "../reducers/settings.reducer";
-import { TranslateFn } from "../i18n";
+import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
+import { TranslateFn } from "../../i18n";
 
 const Input = styled.input`
   max-width: 104px;
@@ -13,16 +12,11 @@ type PreAmpSettingProps = {
   isInit: SettingsState["isInit"];
   preAmpDb: number;
   t: TranslateFn;
-  dispatch: Dispatch;
 };
 
-const PreAmpSetting = ({
-  isInit,
-  preAmpDb,
-  t,
-  dispatch,
-}: PreAmpSettingProps) => {
+const PreAmpSetting = ({ isInit, preAmpDb, t }: PreAmpSettingProps) => {
   const [value, setValue] = useState(preAmpDb || 0);
+  const dispatch = useDispatch();
 
   if (!isInit) {
     return null;
@@ -50,11 +44,8 @@ const PreAmpSetting = ({
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    isInit: state.settings.isInit,
-    t: state.settings.t,
-    preAmpDb: state.settings.preAmpDb,
-  }),
-  (dispatch) => ({ dispatch }),
-)(PreAmpSetting);
+export default connect((state: { settings: SettingsState }) => ({
+  isInit: state.settings.isInit,
+  t: state.settings.t,
+  preAmpDb: state.settings.preAmpDb,
+}))(PreAmpSetting);
