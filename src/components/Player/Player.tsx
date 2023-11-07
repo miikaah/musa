@@ -17,7 +17,8 @@ import {
 } from "../../reducers/settings.reducer";
 import { setVisualizerData } from "../../reducers/visualizer.reducer";
 import { store } from "../..";
-import { KEYS, getReplaygainDb, dispatchToast } from "../../util";
+import { getReplaygainDb, dispatchToast } from "../../util";
+import { KEYS } from "../../config";
 import { useKeyPress, useAnimationFrame } from "../../hooks";
 import PlayerSeek from "./PlayerSeek";
 import PlayerVolume from "./PlayerVolume";

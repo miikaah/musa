@@ -23,12 +23,10 @@ import Album from "../components/Album";
 import Artist from "../components/Artist";
 import Button from "../components/Button";
 import Select from "../components/Select";
-import config from "../config";
+import { isElectron } from "../config";
 import Api from "../apiClient";
 import { ArrowDown as ArrowDownStyled } from "../common.styles";
 import { TranslateFn } from "../i18n";
-
-const { isElectron } = config;
 
 const Container = styled.div`
   position: fixed;

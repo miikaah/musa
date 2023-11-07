@@ -1,6 +1,29 @@
 import { Colors } from "@miikaah/musa-core";
+import { ReplaygainKey, ReplaygainType } from "./types";
 
-const isElectron = import.meta.env.VITE_ENV === "electron";
+export const isElectron = import.meta.env.VITE_ENV === "electron";
+
+export const KEYS = {
+  Backspace: 8,
+  Enter: 13,
+  Space: 32,
+  Up: 38,
+  Down: 40,
+  Delete: 46,
+  A: 65,
+  C: 67,
+  D: 68,
+  F: 70,
+  M: 77,
+  V: 86,
+  X: 88,
+};
+
+export const REPLAYGAIN_TYPE: Record<ReplaygainKey, ReplaygainType> = {
+  Track: "track",
+  Album: "album",
+  Off: "off",
+};
 
 export const MAIN_BUTTON_DOWN = 1;
 export const VOLUME_MUTED = 0;
@@ -27,9 +50,3 @@ export const firFileMap = {
   "Sony MDR-V6 44.1 kHz": "sony_mdr_v6_44100Hz.wav",
   "Sony MDR-V6 48 kHz": "sony_mdr_v6_48000Hz.wav",
 };
-
-const config = {
-  isElectron,
-};
-
-export default config;

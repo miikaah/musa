@@ -10,13 +10,11 @@ import MusicLibrarySetting from "../components/MusicLibrarySetting";
 import Button from "../components/Button";
 import BasePage from "../components/BasePage";
 import LanguageSetting from "../components/LanguageSetting";
-import config from "../config";
+import { isElectron } from "../config";
 import Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
 import { ProfileState } from "../reducers/profile.reducer";
 import { TranslateFn } from "../i18n";
-
-const { isElectron } = config;
 
 const FirstRow = styled.div`
   display: grid;

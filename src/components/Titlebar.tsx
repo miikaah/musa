@@ -5,16 +5,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { useKeyPress } from "../hooks";
-import { KEYS, isCtrlDown, dispatchToast } from "../util";
+import { isCtrlDown, dispatchToast } from "../util";
+import { KEYS, isElectron } from "../config";
 import Library, { LibraryMode } from "./LibraryV2";
 import { breakpoints } from "../breakpoints";
-import config from "../config";
 import Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
 import { PlayerState } from "../reducers/player.reducer";
 import { TranslateFn } from "../i18n";
-
-const { isElectron } = config;
 
 const Container = styled.div`
   display: flex;

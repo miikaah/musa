@@ -11,7 +11,8 @@ import {
   replay,
   PlayerState,
 } from "../reducers/player.reducer";
-import { KEYS, isCtrlDown } from "../util";
+import { isCtrlDown } from "../util";
+import { KEYS } from "../config";
 import { useKeyPress } from "../hooks";
 import PlaylistItem, { MouseUpDownOptions } from "./PlaylistItemV3";
 import { listOverflow } from "../common.styles";

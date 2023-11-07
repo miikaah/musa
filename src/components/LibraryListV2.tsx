@@ -4,7 +4,7 @@ import { connect, useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "./AlbumCover";
-import config from "../config";
+import { isElectron } from "../config";
 import Api from "../apiClient";
 import {
   expandHeight,
@@ -16,8 +16,6 @@ import {
 import { pasteToPlaylist } from "../reducers/player.reducer";
 import { breakpoints } from "../breakpoints";
 import { EnrichedAlbumFile } from "@miikaah/musa-core/lib/db.types";
-
-const { isElectron } = config;
 
 const getExpandTiming = (len: number) => {
   if (len < 2) {

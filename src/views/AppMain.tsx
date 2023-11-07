@@ -9,11 +9,9 @@ import Playlist from "../components/PlaylistV4";
 import Cover from "../components/Cover";
 import Modal from "../components/Modal";
 import TagEditor from "../components/TagEditor";
-import config from "../config";
+import { isElectron } from "../config";
 import Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
-
-const { isElectron } = config;
 
 const Container = styled.div`
   padding: 0;

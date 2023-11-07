@@ -1,17 +1,10 @@
 import React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
-import { REPLAYGAIN_TYPE } from "../util";
+import { connect, useDispatch } from "react-redux";
+import { REPLAYGAIN_TYPE } from "../config";
 import { SettingsState, updateSettings } from "../reducers/settings.reducer";
 import SettingSelect from "./SettingSelect";
 import { ReplaygainType } from "../types";
 import { TranslateFn } from "../i18n";
-
-type ReplaygainSettingProps = {
-  replaygainType: ReplaygainType;
-  t: TranslateFn;
-  dispatch: Dispatch;
-};
 
 const getReplaygainType = (value: string): ReplaygainType => {
   switch (value) {
@@ -30,11 +23,14 @@ const getReplaygainType = (value: string): ReplaygainType => {
   }
 };
 
-const ReplaygainSetting = ({
-  replaygainType,
-  t,
-  dispatch,
-}: ReplaygainSettingProps) => {
+type ReplaygainSettingProps = {
+  replaygainType: ReplaygainType;
+  t: TranslateFn;
+};
+
+const ReplaygainSetting = ({ replaygainType, t }: ReplaygainSettingProps) => {
+  const dispatch = useDispatch();
+
   const updateState = (event: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(
       updateSettings({ replaygainType: getReplaygainType(event.target.value) }),
@@ -58,10 +54,7 @@ const ReplaygainSetting = ({
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    replaygainType: state.settings.replaygainType,
-    t: state.settings.t,
-  }),
-  (dispatch) => ({ dispatch }),
-)(ReplaygainSetting);
+export default connect((state: { settings: SettingsState }) => ({
+  replaygainType: state.settings.replaygainType,
+  t: state.settings.t,
+}))(ReplaygainSetting);

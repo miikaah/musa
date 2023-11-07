@@ -1,29 +1,8 @@
 import { AudioWithMetadata, Colors } from "@miikaah/musa-core";
 import { Dispatch } from "redux";
 import { addToast, removeToast } from "./reducers/toaster.reducer";
-import { ReplaygainKey, ReplaygainType } from "./types";
-
-export const KEYS = {
-  Backspace: 8,
-  Enter: 13,
-  Space: 32,
-  Up: 38,
-  Down: 40,
-  Delete: 46,
-  A: 65,
-  C: 67,
-  D: 68,
-  F: 70,
-  M: 77,
-  V: 86,
-  X: 88,
-};
-
-export const REPLAYGAIN_TYPE: Record<ReplaygainKey, ReplaygainType> = {
-  Track: "track",
-  Album: "album",
-  Off: "off",
-};
+import { ReplaygainType } from "./types";
+import { REPLAYGAIN_TYPE } from "./config";
 
 export const getReplaygainDb = (
   replaygainType: ReplaygainType,

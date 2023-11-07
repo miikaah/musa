@@ -11,10 +11,8 @@ import {
 } from "@miikaah/musa-core";
 import * as ElectronApi from "./apiClient.electron";
 import * as ServerApi from "./apiClient.server";
-import config from "./config";
+import { isElectron } from "./config";
 import { Settings } from "./reducers/settings.reducer";
-
-const { isElectron } = config;
 
 const getSettings = async (): Promise<Settings> => {
   if (isElectron) {

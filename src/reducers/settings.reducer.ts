@@ -1,6 +1,5 @@
 import { Colors } from "@miikaah/musa-core";
-import { FALLBACK_THEME, firFileMap } from "../config";
-import { REPLAYGAIN_TYPE } from "../util";
+import { FALLBACK_THEME, REPLAYGAIN_TYPE, firFileMap } from "../config";
 import { translate } from "../i18n";
 import { ReplaygainType } from "../types";
 

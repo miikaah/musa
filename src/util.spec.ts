@@ -1,5 +1,5 @@
 import { audioFixture } from "./fixtures/audio.fixture";
-import { FALLBACK_THEME } from "./config";
+import { FALLBACK_THEME, REPLAYGAIN_TYPE } from "./config";
 import { addToast, removeToast } from "./reducers/toaster.reducer";
 import {
   cleanUrl,
@@ -9,7 +9,6 @@ import {
   getReplaygainDb,
   isCtrlDown,
   prefixNumber,
-  REPLAYGAIN_TYPE,
   updateCurrentTheme,
 } from "./util";
 

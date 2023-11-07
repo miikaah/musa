@@ -25,7 +25,7 @@ import {
 import styled, { StyleSheetManager, ThemeProvider } from "styled-components";
 import isValidProp from "@emotion/is-prop-valid";
 import { createStyledBreakpointsTheme } from "styled-breakpoints";
-import config, { FALLBACK_THEME } from "./config";
+import { isElectron, FALLBACK_THEME } from "./config";
 import {
   Settings as SettingsData,
   updateSettings,
@@ -49,8 +49,6 @@ import ProgressBar from "./components/ProgressBar";
 import { pasteToPlaylist } from "./reducers/player.reducer";
 import { SettingsState } from "./reducers/settings.reducer";
 import { TranslateFn } from "./i18n";
-
-const { isElectron } = config;
 
 const theme = createStyledBreakpointsTheme({
   breakpoints: breakpointsAsPixels,
