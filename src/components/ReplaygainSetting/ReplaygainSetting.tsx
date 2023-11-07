@@ -1,10 +1,10 @@
 import React from "react";
 import { connect, useDispatch } from "react-redux";
-import { REPLAYGAIN_TYPE } from "../config";
-import { SettingsState, updateSettings } from "../reducers/settings.reducer";
-import SettingSelect from "./SettingSelect";
-import { ReplaygainType } from "../types";
-import { TranslateFn } from "../i18n";
+import { REPLAYGAIN_TYPE } from "../../config";
+import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
+import SettingSelect from "../SettingSelect";
+import { ReplaygainType } from "../../types";
+import { TranslateFn } from "../../i18n";
 
 const getReplaygainType = (value: string): ReplaygainType => {
   switch (value) {

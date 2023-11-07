@@ -27,8 +27,6 @@ describe("LanguageSetting", () => {
   it("renders LanguageSetting component", async () => {
     render(<LanguageSetting />, state);
 
-    await userEvent.selectOptions(screen.getByRole("combobox"), ["en"]);
-
     expect(
       (screen.getByRole("option", { name: enText }) as HTMLOptionElement)
         .selected,
