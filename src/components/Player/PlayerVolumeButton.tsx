@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
 
@@ -26,7 +25,7 @@ const VolumeButtonContainer = styled.span`
   }
 `;
 
-const VOLUME_STEP = 5;
+export const VOLUME_STEP = 5;
 
 type PlayerVolumeButtonProps = { volume: number; muteOrUnmute: () => void };
 
@@ -45,13 +44,11 @@ const PlayerVolumeButton = ({
       >
         <FontAwesomeIcon
           icon={volume > VOLUME_STEP - 1 ? "volume-up" : "volume-mute"}
+          data-testid={"PlayerVolumeButtonIcon"}
         />
       </button>
     </VolumeButtonContainer>
   );
 };
 
-export default connect(
-  (state) => ({}),
-  (dispatch) => ({ dispatch }),
-)(PlayerVolumeButton);
+export default PlayerVolumeButton;
