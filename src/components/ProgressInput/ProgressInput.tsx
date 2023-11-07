@@ -71,11 +71,14 @@ const ProgressInput = React.forwardRef(
           typeof ref !== "function" && ref?.current && ref?.current.blur()
         }
         width={width + 20}
-        data-testid={"ProgressInput"}
+        data-testid="ProgressInput"
       >
         <Background width={width}>
           <ForegroundWrapper>
-            <Foreground progress={progress} />
+            <Foreground
+              progress={progress}
+              data-testid="ProgressInputForeground"
+            />
           </ForegroundWrapper>
         </Background>
       </Container>
