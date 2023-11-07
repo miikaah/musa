@@ -4,8 +4,7 @@ import ProgressInput from "../ProgressInput";
 import { useInterval } from "../../hooks";
 import { breakpoints } from "../../breakpoints";
 import { PlayerState } from "../../reducers/player.reducer";
-
-const MAIN_BUTTON_DOWN = 1;
+import { MAIN_BUTTON_DOWN } from "../../config";
 
 type PlayerSeekProps = {
   player: HTMLAudioElement;
@@ -81,10 +80,7 @@ const PlayerSeek = ({
   );
 };
 
-export default connect(
-  (state: { player: PlayerState }) => ({
-    isPlaying: state.player.isPlaying,
-    currentItem: state.player.currentItem,
-  }),
-  (dispatch) => ({ dispatch }),
-)(PlayerSeek);
+export default connect((state: { player: PlayerState }) => ({
+  isPlaying: state.player.isPlaying,
+  currentItem: state.player.currentItem,
+}))(PlayerSeek);

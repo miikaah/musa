@@ -55,13 +55,13 @@ type ProgressInputProps = {
   handleMouseDown: (e: React.MouseEvent) => void;
   handleMouseMove: (e: React.MouseEvent) => void;
   width: number;
-  ["data-testid"]?: string;
 };
 
 const ProgressInput = React.forwardRef(
-  (props: ProgressInputProps, ref: React.ForwardedRef<HTMLDivElement>) => {
-    const { progress, handleMouseDown, handleMouseMove, width } = props;
-
+  (
+    { progress, handleMouseDown, handleMouseMove, width }: ProgressInputProps,
+    ref: React.ForwardedRef<HTMLDivElement>,
+  ) => {
     return (
       <Container
         ref={ref}
@@ -71,7 +71,7 @@ const ProgressInput = React.forwardRef(
           typeof ref !== "function" && ref?.current && ref?.current.blur()
         }
         width={width + 20}
-        data-testid={props["data-testid"]}
+        data-testid={"ProgressInput"}
       >
         <Background width={width}>
           <ForegroundWrapper>

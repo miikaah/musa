@@ -44,7 +44,6 @@ const PlayerVolume = ({
       ref={playerVolumeRef}
       progress={convertVolumeToPercentage()}
       width={120}
-      data-testid="ProgressInput"
     />
   );
 };
