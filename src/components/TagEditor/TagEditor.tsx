@@ -1,16 +1,15 @@
 import { AudioWithMetadata, Tags } from "@miikaah/musa-core";
 import React, { useState } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import styled from "styled-components";
 import TagInput from "./TagInput";
 import TagTextarea from "./TagTextarea";
-import Button from "./Button";
-import Api from "../apiClient";
-import { dispatchToast } from "../util";
-import { ellipsisTextOverflow } from "../common.styles";
-import { SettingsState } from "../reducers/settings.reducer";
-import { TranslateFn } from "../i18n";
+import Button from "../Button";
+import Api from "../../apiClient";
+import { dispatchToast } from "../../util";
+import { ellipsisTextOverflow } from "../../common.styles";
+import { SettingsState } from "../../reducers/settings.reducer";
+import { TranslateFn } from "../../i18n";
 
 const Container = styled.div`
   display: flex;
@@ -53,7 +52,7 @@ const SaveButton = styled(Button)`
   margin-top: 10px;
 `;
 
-const getCodecInfo = (file: AudioWithMetadata) => {
+export const getCodecInfo = (file: AudioWithMetadata) => {
   const { codec, codecProfile, container } = file?.metadata || {};
 
   let str = "";
@@ -75,10 +74,9 @@ const getCodecInfo = (file: AudioWithMetadata) => {
 type TagEditorProps = {
   files: AudioWithMetadata[];
   t: TranslateFn;
-  dispatch: Dispatch;
 };
 
-const TagEditor = ({ files = [], t, dispatch }: TagEditorProps) => {
+const TagEditor = ({ files = [], t }: TagEditorProps) => {
   const [artist, setArtist] = useState<string>();
   const [title, setTitle] = useState<string>();
   const [album, setAlbum] = useState<string>();
@@ -91,8 +89,12 @@ const TagEditor = ({ files = [], t, dispatch }: TagEditorProps) => {
   const [composer, setComposer] = useState<string>();
   const [comment, setComment] = useState<string>();
   const [isUpdating, setIsUpdating] = useState(false);
+  const dispatch = useDispatch();
 
-  const saveTags = async (event: React.MouseEvent, file: AudioWithMetadata) => {
+  const saveTags = async (
+    _event: React.MouseEvent,
+    file: AudioWithMetadata,
+  ) => {
     const tags: Partial<Tags> = {};
 
     if (typeof artist !== "undefined") {
@@ -251,9 +253,6 @@ const TagEditor = ({ files = [], t, dispatch }: TagEditorProps) => {
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    t: state.settings.t,
-  }),
-  (dispatch) => ({ dispatch }),
-)(TagEditor);
+export default connect((state: { settings: SettingsState }) => ({
+  t: state.settings.t,
+}))(TagEditor);

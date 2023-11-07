@@ -26,7 +26,7 @@ export const audioFixture: AudioWithMetadata = {
     artist: "CMX",
     genre: ["Pop"],
     albumArtist: "CMX",
-    comment: ["1468;3385024"],
+    comment: ["mock comment"],
     bitrate: 320000,
     duration: 192.39183673469387,
     container: "MPEG",
@@ -39,5 +39,6 @@ export const audioFixture: AudioWithMetadata = {
     tagTypes: ["ID3v2.3", "ID3v1"],
     dynamicRange: "8",
     dynamicRangeAlbum: "10",
+    composer: ["A.W. Yrjänä"],
   },
 };
