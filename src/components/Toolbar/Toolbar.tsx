@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Player from "./Player";
+import Player from "../Player";
 
 const ToolbarContainer = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ const ToolbarContainer = styled.div`
 
 const Toolbar = () => {
   return (
-    <ToolbarContainer>
+    <ToolbarContainer data-testid="ToolbarContainer">
       <Player />
     </ToolbarContainer>
   );

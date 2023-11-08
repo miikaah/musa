@@ -12,7 +12,7 @@ import {
 } from "../../reducers/player.reducer";
 import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
 import { setVisualizerData } from "../../reducers/visualizer.reducer";
-import { store } from "../..";
+import { store } from "../../store";
 import { getReplaygainDb, dispatchToast } from "../../util";
 import { KEYS, VOLUME_DEFAULT } from "../../config";
 import { useKeyPress, useAnimationFrame } from "../../hooks";
