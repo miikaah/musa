@@ -9,7 +9,7 @@ export type SetQueryAction = {
   type: typeof SET_QUERY;
   query: string;
 };
-export const setQuery = (query: string) => ({
+export const setQuery = (query: string): SetQueryAction => ({
   type: SET_QUERY,
   query,
 });
@@ -19,7 +19,7 @@ export type SetFilterAction = {
   type: typeof SET_FILTER;
   filter: string;
 };
-export const setFilter = (filter: string) => ({
+export const setFilter = (filter: string): SetFilterAction => ({
   type: SET_FILTER,
   filter,
 });
@@ -29,7 +29,9 @@ export type SetIsSearchRandomAction = {
   type: typeof SET_IS_RANDOM;
   isRandom: boolean;
 };
-export const setIsSearchRandom = (isRandom: boolean) => ({
+export const setIsSearchRandom = (
+  isRandom: boolean,
+): SetIsSearchRandomAction => ({
   type: SET_IS_RANDOM,
   isRandom,
 });
@@ -40,15 +42,17 @@ export type SetIsSearchTermLockedAction = {
   type: typeof SET_IS_SEARCH_TERM_LOCKED;
   isSearchTermLocked: boolean;
 };
-export const setIsSearchTermLocked = (isSearchTermLocked: boolean) => ({
+export const setIsSearchTermLocked = (
+  isSearchTermLocked: boolean,
+): SetIsSearchTermLockedAction => ({
   type: SET_IS_SEARCH_TERM_LOCKED,
   isSearchTermLocked,
 });
 
 type SearchResult = {
-  artists: unknown[];
-  albums: unknown[];
-  audios: unknown[];
+  artists: ArtistWithEnrichedAlbums[];
+  albums: AlbumWithFilesAndMetadata[];
+  audios: AudioWithMetadata[];
 };
 
 export const SET_SEARCH_RESULTS = "MUSA/SEARCH/SET_SEARCH_RESULTS";
@@ -56,7 +60,9 @@ export type SetSearchResultsAction = {
   type: typeof SET_SEARCH_RESULTS;
   result: SearchResult;
 };
-export const setSearchResults = (result: SearchResult) => ({
+export const setSearchResults = (
+  result: SearchResult,
+): SetSearchResultsAction => ({
   type: SET_SEARCH_RESULTS,
   result,
 });
@@ -65,7 +71,7 @@ export const CLEAR_SEARCH = "MUSA/SEARCH/CLEAR_SEARCH";
 export type ClearSearchAction = {
   type: typeof CLEAR_SEARCH;
 };
-export const clearSearch = () => ({
+export const clearSearch = (): ClearSearchAction => ({
   type: CLEAR_SEARCH,
 });
 
@@ -78,9 +84,11 @@ export type ScrollPos = {
 export const UPDATE_SCROLL_POSITION = "MUSA/SEARCH/UPDATE_SCROLL_POSITION";
 export type UpdateScrollPositionAction = {
   type: typeof UPDATE_SCROLL_POSITION;
-  props: ScrollPos;
+  props: Partial<ScrollPos>;
 };
-export const updateScrollPosition = (props: Partial<ScrollPos>) => ({
+export const updateScrollPosition = (
+  props: Partial<ScrollPos>,
+): UpdateScrollPositionAction => ({
   type: UPDATE_SCROLL_POSITION,
   props,
 });
@@ -96,7 +104,7 @@ export type SearchState = {
   scrollPos: ScrollPos;
 };
 
-const initialState: SearchState = {
+export const initialState: SearchState = {
   query: "",
   filter: "",
   isRandom: false,
