@@ -42,4 +42,32 @@ describe("Library reducer", () => {
       ...initialScanProps,
     });
   });
+
+  it("allows partial scan update", () => {
+    const scannedLength = 50;
+
+    expect(
+      reducer(
+        { listingWithLabels: {}, ...scanProps },
+        setScanProps({ scannedLength }),
+      ),
+    ).toEqual({
+      listingWithLabels: {},
+      ...scanProps,
+      scannedLength,
+    });
+
+    const scanLength = 150;
+
+    expect(
+      reducer(
+        { listingWithLabels: {}, ...scanProps },
+        setScanProps({ scanLength }),
+      ),
+    ).toEqual({
+      listingWithLabels: {},
+      ...scanProps,
+      scanLength,
+    });
+  });
 });
