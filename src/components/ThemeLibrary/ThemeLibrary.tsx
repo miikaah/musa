@@ -1,15 +1,14 @@
 import { Theme } from "@miikaah/musa-core";
 import React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
-import { updateCurrentTheme } from "../util";
-import { SettingsState, updateSettings } from "../reducers/settings.reducer";
-import ThemeBlock from "./ThemeBlock";
-import Button from "./Button";
-import Api from "../apiClient";
-import { FALLBACK_THEME } from "../config";
-import { TranslateFn } from "../i18n";
+import { updateCurrentTheme } from "../../util";
+import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
+import ThemeBlock from "../ThemeBlock";
+import Button from "../Button";
+import Api from "../../apiClient";
+import { FALLBACK_THEME } from "../../config";
+import { TranslateFn } from "../../i18n";
 
 const Container = styled.div`
   display: grid;
@@ -67,7 +66,6 @@ type ThemeLibraryProps = {
   themes: Theme[];
   setThemes: (themes: Theme[]) => void;
   t: TranslateFn;
-  dispatch: Dispatch;
 };
 
 const ThemeLibrary = ({
@@ -75,9 +73,9 @@ const ThemeLibrary = ({
   themes,
   setThemes,
   t,
-  dispatch,
 }: ThemeLibraryProps) => {
   const hasThemes = Array.isArray(themes) && themes.length > 0;
+  const dispatch = useDispatch();
 
   const changeCurrentTheme = (theme: Theme) => {
     updateCurrentTheme(theme.colors);
@@ -115,6 +113,7 @@ const ThemeLibrary = ({
                 key={theme.id}
                 currentTheme={theme}
                 setCurrentTheme={changeCurrentTheme}
+                dataTestId="ThemeLibraryThemeBlock"
               />
             ))}
           {!hasThemes && <NoThemes>{t("settings.theme.noThemes")}</NoThemes>}
@@ -143,10 +142,7 @@ const ThemeLibrary = ({
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    currentTheme: state.settings.currentTheme,
-    t: state.settings.t,
-  }),
-  (dispatch) => ({ dispatch }),
-)(ThemeLibrary);
+export default connect((state: { settings: SettingsState }) => ({
+  currentTheme: state.settings.currentTheme,
+  t: state.settings.t,
+}))(ThemeLibrary);

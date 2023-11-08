@@ -54,6 +54,7 @@ type ThemeBlockProps = (ThemeBlockThemeProps | ThemeBlockThemeEditorProps) & {
   className?: string;
   hasMargin?: boolean;
   setCurrentTheme?: (theme: SettingsState["currentTheme"]) => void;
+  dataTestId?: string;
 };
 
 const ThemeBlock = ({
@@ -64,6 +65,7 @@ const ThemeBlock = ({
   isThemeEditor = false,
   editTarget,
   setEditTarget,
+  dataTestId,
 }: ThemeBlockProps) => {
   const { colors, filename } = currentTheme;
 
@@ -90,7 +92,7 @@ const ThemeBlock = ({
       }}
       hasMargin={isThemeEditor ? false : hasMargin}
       isEditing={editTarget === "bg"}
-      data-testid="ThemeBlockContainer"
+      data-testid={dataTestId || "ThemeBlockContainer"}
     >
       <Color
         rgb={colors.primary}
