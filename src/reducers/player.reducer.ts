@@ -12,7 +12,7 @@ export const PLAY = "MUSA/PLAYER/PLAY";
 export type PlayAction = {
   type: typeof PLAY;
 };
-export const play = () => ({
+export const play = (): PlayAction => ({
   type: PLAY,
 });
 
@@ -21,7 +21,7 @@ export type PlayIndexAction = {
   type: typeof PLAY_INDEX;
   index: number;
 };
-export const playIndex = (index: number) => ({
+export const playIndex = (index: number): PlayIndexAction => ({
   type: PLAY_INDEX,
   index,
 });
@@ -30,7 +30,7 @@ export const PLAY_NEXT = "MUSA/PLAYER/PLAY_NEXT";
 export type PlayNextAction = {
   type: typeof PLAY_NEXT;
 };
-export const playNext = () => ({
+export const playNext = (): PlayNextAction => ({
   type: PLAY_NEXT,
 });
 
@@ -39,7 +39,7 @@ export type ReplayAction = {
   type: typeof REPLAY;
   replay: boolean;
 };
-export const replay = (replay: boolean) => ({
+export const replay = (replay: boolean): ReplayAction => ({
   type: REPLAY,
   replay,
 });
@@ -48,18 +48,18 @@ export const PAUSE = "MUSA/PLAYER/PAUSE";
 export type PauseAction = {
   type: typeof PAUSE;
 };
-export const pause = () => ({
+export const pause = (): PauseAction => ({
   type: PAUSE,
 });
 
 export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD";
 export type AddToPlaylistAction = {
   type: typeof ADD_TO_PLAYLIST;
-  item: AudioWithMetadata;
+  item: AudioWithMetadata | EnrichedAlbumFile | Artist["albums"][0];
 };
 export const addToPlaylist = (
   item: AudioWithMetadata | EnrichedAlbumFile | Artist["albums"][0],
-) => ({
+): AddToPlaylistAction => ({
   type: ADD_TO_PLAYLIST,
   item,
 });
@@ -67,13 +67,13 @@ export const addToPlaylist = (
 export const PASTE_TO_PLAYLIST = "MUSA/PLAYER/PASTE_TO_PLAYLIST";
 export type PasteToPlaylistAction = {
   type: typeof PASTE_TO_PLAYLIST;
-  items: AudioWithMetadata[];
-  index: number;
+  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[];
+  index?: number;
 };
 export const pasteToPlaylist = (
   items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
   index?: number,
-) => ({
+): PasteToPlaylistAction => ({
   type: PASTE_TO_PLAYLIST,
   items,
   index,
@@ -85,7 +85,9 @@ export type RemoveIndexesFromPlaylistAction = {
   type: typeof REMOVE_INDEXES_FROM_PLAYLIST;
   indexes: number[];
 };
-export const removeIndexesFromPlaylist = (indexes: number[]) => ({
+export const removeIndexesFromPlaylist = (
+  indexes: number[],
+): RemoveIndexesFromPlaylistAction => ({
   type: REMOVE_INDEXES_FROM_PLAYLIST,
   indexes,
 });
@@ -94,7 +96,7 @@ export const EMPTY_PLAYLIST = "MUSA/PLAYER/EMPTY_PLAYLIST";
 export type EmptyPlaylistAction = {
   type: typeof EMPTY_PLAYLIST;
 };
-export const emptyPlaylist = () => ({
+export const emptyPlaylist = (): EmptyPlaylistAction => ({
   type: EMPTY_PLAYLIST,
 });
 
@@ -103,7 +105,7 @@ export type SetCoverDataAction = {
   type: typeof SET_COVER_DATA;
   coverData: CoverData;
 };
-export const setCoverData = (coverData: CoverData) => ({
+export const setCoverData = (coverData: CoverData): SetCoverDataAction => ({
   type: SET_COVER_DATA,
   coverData,
 });
@@ -120,7 +122,7 @@ export type PlayerState = {
   replay: boolean;
 };
 
-const initialState: PlayerState = {
+export const initialState: PlayerState = {
   items: [],
   currentItem: undefined,
   currentIndex: -1,
@@ -243,7 +245,10 @@ const player = (state = initialState, action: PlayerAction) => {
     case PASTE_TO_PLAYLIST: {
       // The action doesn't have index set so append items to the end of the playlist
       if (!action.index && action.index !== 0) {
-        const newItems = [...state.items, ...action.items];
+        const newItems = [
+          ...state.items,
+          ...action.items,
+        ] as AudioWithMetadata[];
 
         return getStateByPlaylistChange(state, newItems, state.currentIndex);
       }
@@ -253,7 +258,11 @@ const player = (state = initialState, action: PlayerAction) => {
         action.index + 1,
         state.items.length,
       );
-      const newItems = [...playlistStart, ...action.items, ...playlistEnd];
+      const newItems = [
+        ...playlistStart,
+        ...action.items,
+        ...playlistEnd,
+      ] as AudioWithMetadata[];
       let newIndex =
         action.index < state.currentIndex
           ? action.items.length + state.currentIndex
