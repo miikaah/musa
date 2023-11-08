@@ -1,5 +1,10 @@
 import { Colors } from "@miikaah/musa-core";
-import { FALLBACK_THEME, REPLAYGAIN_TYPE, firFileMap } from "../config";
+import {
+  FALLBACK_THEME,
+  REPLAYGAIN_TYPE,
+  VOLUME_DEFAULT,
+  firFileMap,
+} from "../config";
 import { translate } from "../i18n";
 import { ReplaygainType } from "../types";
 
@@ -8,12 +13,12 @@ export type UpdateSettingsAction = {
   type: typeof UPDATE_SETTINGS;
   props: Partial<SettingsState>;
 };
-export const updateSettings = (props: Partial<SettingsState>) => ({
+export const updateSettings = (
+  props: Partial<SettingsState>,
+): UpdateSettingsAction => ({
   type: UPDATE_SETTINGS,
   props,
 });
-
-export const VOLUME_DEFAULT = 50;
 
 export type SettingsState = {
   isInit: boolean | null;
@@ -37,7 +42,7 @@ export type SettingsState = {
 
 export type Settings = Omit<SettingsState, "t">;
 
-const initialState: SettingsState = {
+export const initialState: SettingsState = {
   isInit: false,
   currentTheme: {
     colors: FALLBACK_THEME,

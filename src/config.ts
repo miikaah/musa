@@ -18,6 +18,7 @@ export const KEYS = {
   V: 86,
   X: 88,
 };
+export const MAIN_BUTTON_DOWN = 1;
 
 export const REPLAYGAIN_TYPE: Record<ReplaygainKey, ReplaygainType> = {
   Track: "track",
@@ -25,9 +26,9 @@ export const REPLAYGAIN_TYPE: Record<ReplaygainKey, ReplaygainType> = {
   Off: "off",
 };
 
-export const MAIN_BUTTON_DOWN = 1;
 export const VOLUME_MUTED = 0;
 export const VOLUME_STEP = 5;
+export const VOLUME_DEFAULT = 50;
 
 export const FALLBACK_THEME: Colors = {
   bg: [33, 37, 43],

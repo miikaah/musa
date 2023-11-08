@@ -10,15 +10,11 @@ import {
   playNext,
   PlayerState,
 } from "../../reducers/player.reducer";
-import {
-  SettingsState,
-  VOLUME_DEFAULT,
-  updateSettings,
-} from "../../reducers/settings.reducer";
+import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
 import { setVisualizerData } from "../../reducers/visualizer.reducer";
 import { store } from "../..";
 import { getReplaygainDb, dispatchToast } from "../../util";
-import { KEYS } from "../../config";
+import { KEYS, VOLUME_DEFAULT } from "../../config";
 import { useKeyPress, useAnimationFrame } from "../../hooks";
 import PlayerSeek from "./PlayerSeek";
 import PlayerVolume from "./PlayerVolume";
