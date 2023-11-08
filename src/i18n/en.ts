@@ -85,6 +85,7 @@ const en: Record<string, string | ((s: string) => string)> = {
   "toast.createPlaylist": (text: string) => `Copied ${text} to clipboard`,
   "toast.failedToUpdateTags": "Failed to update tags",
   "toast.succeededToUpdateTags": "Tags updated",
+  "test.onlyExistsInEnglish": "mock",
 };
 
 export default en;
