@@ -1,7 +1,7 @@
 import reducer, { updateSettings, initialState } from "./settings.reducer";
 
 describe("Settings reducer", () => {
-  it("updates current profile", () => {
+  it("updates settings", () => {
     const settings = {
       isInit: true,
     };

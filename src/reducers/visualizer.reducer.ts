@@ -18,7 +18,7 @@ export const setVisualizerData = ({
   peakMeterBuffer,
   peakMeterBufferL,
   peakMeterBufferR,
-}: VisualizerData) => ({
+}: VisualizerData): SetVisualizerDataAction => ({
   type: SET_DATA,
   dataArray,
   dataArrayL,
