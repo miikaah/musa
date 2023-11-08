@@ -268,8 +268,8 @@ const player = (state = initialState, action: PlayerAction) => {
           ? action.items.length + state.currentIndex
           : state.currentIndex;
 
-      // If there is no new index found after paste assume it's a copy-paste operation
-      // where the currently playing index is being copy-pasted and try to find index by item
+      // If the index is -1 playback has not yet begun or it's out of sync.
+      // Try to find the index by currentItem.
       if (newIndex < 0) {
         newIndex = newItems.findIndex((item) => item === state.currentItem);
       }
@@ -321,7 +321,7 @@ function getPlayBase(
     currentIndex: newIndex,
     isPlaying: true,
     src: cleanUrl(newItem.fileUrl),
-    coverUrl: cleanUrl(newItem.coverUrl) || "",
+    coverUrl: cleanUrl(newItem.coverUrl),
   };
 }
 

@@ -1,12 +1,17 @@
 import { AudioWithMetadata } from "@miikaah/musa-core";
 import { artistFixture } from "../fixtures/artist.fixture";
 import reducer, {
+  addToPlaylist,
+  emptyPlaylist,
   initialState,
+  pasteToPlaylist,
   pause,
   play,
   playIndex,
   playNext,
+  removeIndexesFromPlaylist,
   replay,
+  setCoverData,
 } from "./player.reducer";
 
 const playlist = artistFixture.albums[0].files as AudioWithMetadata[];
@@ -128,6 +133,132 @@ describe("Player reducer", () => {
       expect(reducer({ ...state2, isPlaying: true }, pause())).toEqual({
         ...state2,
         isPlaying: false,
+      });
+    });
+  });
+
+  describe("addToPlaylist", () => {
+    it("adds item to playlist", () => {
+      expect(
+        reducer(
+          { ...initialState, items: [playlist[0]] },
+          addToPlaylist(playlist[1]),
+        ),
+      ).toEqual({
+        ...initialState,
+        items: [playlist[0], playlist[1]],
+      });
+    });
+  });
+
+  describe("pasteToPlaylist", () => {
+    it("appends items to the end of the playlist", () => {
+      expect(
+        reducer(
+          { ...initialState, items: [playlist[0], playlist[1]] },
+          pasteToPlaylist([playlist[2]]),
+        ),
+      ).toEqual({
+        ...initialState,
+        items: [playlist[0], playlist[1], playlist[2]],
+      });
+    });
+
+    it("pastes items to playlist to specific index", () => {
+      expect(
+        reducer(
+          { ...initialState, items: [playlist[0], playlist[1]] },
+          pasteToPlaylist([playlist[2]], 0),
+        ),
+      ).toEqual({
+        ...initialState,
+        items: [playlist[0], playlist[2], playlist[1]],
+      });
+    });
+
+    it("pastes items to playlist to specific index and moves the currentIndex", () => {
+      expect(
+        reducer(
+          {
+            ...initialState,
+            items: [playlist[0], playlist[1]],
+            currentIndex: 1,
+          },
+          pasteToPlaylist([playlist[2]], 0),
+        ),
+      ).toEqual({
+        ...initialState,
+        items: [playlist[0], playlist[2], playlist[1]],
+        currentIndex: 2,
+      });
+    });
+  });
+
+  describe("removeIndexesFromPlaylist", () => {
+    it("removes indexes from playlist and resets currentIndex", () => {
+      expect(
+        reducer(
+          {
+            ...initialState,
+            items: [playlist[0], playlist[1], playlist[2]],
+            currentIndex: 1,
+          },
+          removeIndexesFromPlaylist([1]),
+        ),
+      ).toEqual({
+        ...initialState,
+        items: [playlist[0], playlist[2]],
+        currentIndex: -1,
+      });
+    });
+
+    it("removes indexes from playlist and moves currentIndex", () => {
+      expect(
+        reducer(
+          {
+            ...initialState,
+            items: [playlist[0], playlist[1], playlist[2]],
+            currentIndex: 1,
+          },
+          removeIndexesFromPlaylist([0]),
+        ),
+      ).toEqual({
+        ...initialState,
+        items: [playlist[1], playlist[2]],
+        currentIndex: 0,
+      });
+    });
+  });
+
+  describe("emptyPlaylist", () => {
+    it("empties playlist and resets currentIndex", () => {
+      expect(
+        reducer(
+          {
+            ...state2,
+            items: [playlist[0], playlist[1], playlist[2]],
+          },
+          emptyPlaylist(),
+        ),
+      ).toEqual({
+        ...state2,
+        items: [],
+        currentIndex: -1,
+      });
+    });
+  });
+
+  describe("setCoverData", () => {
+    it("set cover data", () => {
+      const coverData = {
+        isCoverLoaded: true,
+        scaleDownImage: true,
+        maxHeight: 420,
+      };
+
+      expect(reducer({ ...initialState }, setCoverData(coverData))).toEqual({
+        ...initialState,
+        coverData,
       });
     });
   });
