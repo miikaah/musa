@@ -1,5 +1,5 @@
 import React from "react";
-import { render as tlrRender } from "@testing-library/react";
+import { render as rtlRender } from "@testing-library/react";
 import isValidProp from "@emotion/is-prop-valid";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
@@ -53,7 +53,7 @@ const theme = createStyledBreakpointsTheme({
 });
 
 export const render = (children: React.ReactElement, state: any) => {
-  tlrRender(
+  rtlRender(
     <StyleSheetManager
       shouldForwardProp={(propName, elementToBeRendered) => {
         return typeof elementToBeRendered === "string"

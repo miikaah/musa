@@ -109,7 +109,7 @@ describe("Util", () => {
   });
 
   describe("updateCurrentTheme()", () => {
-    it("update document.body.style with theme colors", () => {
+    it("updates document.body.style with theme colors", () => {
       updateCurrentTheme(FALLBACK_THEME);
 
       expect((<any>document.body.style)._values).toEqual({

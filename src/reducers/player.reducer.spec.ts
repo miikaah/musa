@@ -249,7 +249,7 @@ describe("Player reducer", () => {
   });
 
   describe("setCoverData", () => {
-    it("set cover data", () => {
+    it("sets cover data", () => {
       const coverData = {
         isCoverLoaded: true,
         scaleDownImage: true,
