@@ -92,7 +92,7 @@ describe("ThemeBlock", () => {
       expect(mockSetEditTarget).toHaveBeenCalledWith(null);
     });
 
-    it("calls setEditTarget click handler for primary with bg", async () => {
+    it("calls setEditTarget click handler for primary with primary", async () => {
       render(
         <ThemeBlock
           currentTheme={theme}
@@ -124,7 +124,7 @@ describe("ThemeBlock", () => {
       expect(mockSetEditTarget).toHaveBeenCalledWith(null);
     });
 
-    it("calls setEditTarget click handler for primary with bg", async () => {
+    it("calls setEditTarget click handler for secondary with secondary", async () => {
       render(
         <ThemeBlock
           currentTheme={theme}
