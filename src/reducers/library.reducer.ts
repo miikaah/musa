@@ -1,11 +1,14 @@
 import { ArtistObject } from "@miikaah/musa-core";
+import { scanColor } from "../config";
 
 export const SET_LISTING_WITH_LABELS = "MUSA/LIBRARY/SET_LISTING_WITH_LABELS";
 export type SetListingWithLabelsAction = {
   type: typeof SET_LISTING_WITH_LABELS;
   listingWithLabels: ArtistObject;
 };
-export const setListingWithLabels = (listingWithLabels: ArtistObject) => ({
+export const setListingWithLabels = (
+  listingWithLabels: ArtistObject,
+): SetListingWithLabelsAction => ({
   type: SET_LISTING_WITH_LABELS,
   listingWithLabels,
 });
@@ -18,7 +21,7 @@ type ScanProps = {
 };
 
 export const SET_SCAN_PROPS = "MUSA/LIBRARY/SET_SCAN_PROPS";
-export type SetScanPropsAction = ScanProps & {
+export type SetScanPropsAction = Partial<ScanProps> & {
   type: typeof SET_SCAN_PROPS;
 };
 export const setScanProps = ({
@@ -26,19 +29,13 @@ export const setScanProps = ({
   scannedLength,
   scanColor,
   reset,
-}: Partial<ScanProps>) => ({
+}: Partial<ScanProps>): SetScanPropsAction => ({
   type: SET_SCAN_PROPS,
   scanLength,
   scannedLength,
   scanColor,
   reset,
 });
-
-const scanColor = {
-  RED: "#f00",
-  YELLOW: "#ff0",
-  GREEN: "#0f0",
-};
 
 export type LibraryState = {
   listingWithLabels: ArtistObject;
@@ -51,7 +48,7 @@ const initialState: LibraryState = {
   listingWithLabels: {},
   scanLength: -1,
   scannedLength: 0,
-  scanColor: scanColor.RED,
+  scanColor: scanColor.INSERT_FILES,
 };
 
 type LibraryAction = SetListingWithLabelsAction | SetScanPropsAction;
@@ -70,6 +67,7 @@ const library = (state = initialState, action: LibraryAction) => {
           ...state,
           scanLength: initialState.scanLength,
           scannedLength: initialState.scannedLength,
+          scanColor: scanColor.INSERT_FILES,
         };
       }
       return {

@@ -50,3 +50,9 @@ export const firFileMap = {
   "Sony MDR-V6 44.1 kHz": "sony_mdr_v6_44100Hz.wav",
   "Sony MDR-V6 48 kHz": "sony_mdr_v6_48000Hz.wav",
 };
+
+export const scanColor = {
+  INSERT_FILES: "#f00",
+  UPDATE_FILES: "#ff0",
+  UPDATE_ALBUMS: "#0f0",
+};
