@@ -50,7 +50,7 @@ describe("Button", () => {
     );
 
     expect(
-      (screen.getByTestId("ButtonContainer") as HTMLButtonElement).disabled,
+      screen.getByTestId<HTMLButtonElement>("ButtonContainer").disabled,
     ).toBe(true);
   });
 });

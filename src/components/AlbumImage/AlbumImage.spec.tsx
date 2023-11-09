@@ -14,7 +14,7 @@ describe("AlbumImage", () => {
     render(<AlbumImage item={albumFixture} />, state);
 
     expect(screen.getByRole("img")).toBeInTheDocument();
-    expect((screen.getByRole("img") as HTMLImageElement).src).toBe(
+    expect(screen.getByRole<HTMLImageElement>("img").src).toBe(
       "media:///Maustetyto%CC%88t/Eiva%CC%88t%20enkelitka%CC%88a%CC%88n%20ilman%20siipia%CC%88%20lenna%CC%88/Eiva%CC%88t%20enkelitka%CC%88a%CC%88n%20ilman%20siipia%CC%88%20lenna%CC%88.jpg",
     );
   });

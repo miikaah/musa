@@ -40,7 +40,7 @@ describe("Cover", () => {
     expect(screen.getByText(artist)).toBeInTheDocument();
     expect(screen.getByText(year)).toBeInTheDocument();
     expect(screen.getByTestId("CoverImage")).toBeInTheDocument();
-    expect((screen.getByTestId("CoverImage") as HTMLImageElement).src).toBe(
+    expect(screen.getByTestId<HTMLImageElement>("CoverImage").src).toBe(
       "media:///CMX/Aurinko/Aurinko.jpg",
     );
   });

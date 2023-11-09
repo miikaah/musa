@@ -31,7 +31,7 @@ describe("PlayerCurrentlyPlaying", () => {
     render(<PlayerCurrentlyPlaying currentItem={audioFixture} />, {});
 
     expect(screen.getByRole("img")).toBeInTheDocument();
-    expect((screen.getByRole("img") as HTMLImageElement).src).toBe(
+    expect(screen.getByRole<HTMLImageElement>("img").src).toBe(
       "media:///CMX/Aurinko/Aurinko.jpg",
     );
     expect(screen.getByText(title)).toBeInTheDocument();

@@ -28,12 +28,10 @@ describe("LanguageSetting", () => {
     render(<LanguageSetting />, state);
 
     expect(
-      (screen.getByRole("option", { name: enText }) as HTMLOptionElement)
-        .selected,
+      screen.getByRole<HTMLOptionElement>("option", { name: enText }).selected,
     ).toBe(true);
     expect(
-      (screen.getByRole("option", { name: fiText }) as HTMLOptionElement)
-        .selected,
+      screen.getByRole<HTMLOptionElement>("option", { name: fiText }).selected,
     ).toBe(false);
   });
 

@@ -47,11 +47,8 @@ describe("MusicLibrarySetting", () => {
     render(<MusicLibrarySetting />, state);
 
     expect(
-      (
-        screen.getByTestId(
-          "MusicLibrarySettingRemoveButton",
-        ) as HTMLButtonElement
-      ).disabled,
+      screen.getByTestId<HTMLButtonElement>("MusicLibrarySettingRemoveButton")
+        .disabled,
     ).toBe(true);
   });
 
@@ -59,28 +56,25 @@ describe("MusicLibrarySetting", () => {
     render(<MusicLibrarySetting />, state2);
 
     expect(
-      (
-        screen.getByTestId(
-          "MusicLibrarySettingRemoveButton",
-        ) as HTMLButtonElement
-      ).disabled,
+      screen.getByTestId<HTMLButtonElement>("MusicLibrarySettingRemoveButton")
+        .disabled,
     ).toBe(false);
   });
 
   it("enables add button when music library path is empty", async () => {
     render(<MusicLibrarySetting />, state);
 
-    expect(
-      (screen.getByText(addNewButtonText) as HTMLButtonElement).disabled,
-    ).toBe(false);
+    expect(screen.getByText<HTMLButtonElement>(addNewButtonText).disabled).toBe(
+      false,
+    );
   });
 
   it("disables add button when music library path exists", async () => {
     render(<MusicLibrarySetting />, state2);
 
-    expect(
-      (screen.getByText(addNewButtonText) as HTMLButtonElement).disabled,
-    ).toBe(true);
+    expect(screen.getByText<HTMLButtonElement>(addNewButtonText).disabled).toBe(
+      true,
+    );
   });
 
   it("dispatches remove music library path action", async () => {
