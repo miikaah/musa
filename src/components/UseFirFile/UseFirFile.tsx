@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { SettingsState, updateSettings } from "../reducers/settings.reducer";
+import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
 
 const Container = styled.div`
   display: grid;
@@ -30,7 +29,6 @@ type UseFirFileProps = {
   filename: string;
   firFile: SettingsState["firFile"];
   firFiles: SettingsState["firFiles"];
-  dispatch: Dispatch;
 };
 
 const UseFirFile = ({
@@ -39,12 +37,12 @@ const UseFirFile = ({
   filename,
   firFile,
   firFiles,
-  dispatch,
 }: UseFirFileProps) => {
   const [firMakeUpGainValue, setFirMakeUpGainValue] = useState(
     firFiles[filename]?.makeUpGain || 0,
   );
   const checkboxId = `${filename}-toggle`;
+  const dispatch = useDispatch();
 
   if (!isInit) {
     return null;
@@ -111,11 +109,8 @@ const UseFirFile = ({
   );
 };
 
-export default connect(
-  (state: { settings: SettingsState }) => ({
-    isInit: state.settings.isInit,
-    firFile: state.settings.firFile,
-    firFiles: state.settings.firFiles,
-  }),
-  (dispatch) => ({ dispatch }),
-)(UseFirFile);
+export default connect((state: { settings: SettingsState }) => ({
+  isInit: state.settings.isInit,
+  firFile: state.settings.firFile,
+  firFiles: state.settings.firFiles,
+}))(UseFirFile);

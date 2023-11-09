@@ -20,6 +20,17 @@ export const updateSettings = (
   props,
 });
 
+export const firFiles = Object.entries(firFileMap).reduce(
+  (acc, [name, filename]) => ({
+    ...acc,
+    [filename]: {
+      name,
+      makeUpGain: 0,
+    },
+  }),
+  {},
+);
+
 export type SettingsState = {
   isInit: boolean | null;
   currentTheme: {
@@ -54,16 +65,7 @@ export const initialState: SettingsState = {
   preAmpDb: 0,
   firMakeUpGainDb: 0,
   firFile: "",
-  firFiles: Object.entries(firFileMap).reduce(
-    (acc, [name, filename]) => ({
-      ...acc,
-      [filename]: {
-        name,
-        makeUpGain: 0,
-      },
-    }),
-    {},
-  ),
+  firFiles,
   volume: VOLUME_DEFAULT,
   musicLibraryPath: "",
   language: "en",
