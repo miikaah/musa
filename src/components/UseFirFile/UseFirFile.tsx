@@ -87,7 +87,7 @@ const UseFirFile = ({
   };
 
   return (
-    <Container>
+    <Container data-testid="FirFile">
       <input
         id={checkboxId}
         type="checkbox"
