@@ -1,7 +1,6 @@
 import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useEffect, useRef, useState } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components";
@@ -200,15 +199,16 @@ export type MouseUpDownOptions = {
 };
 
 type PlaylistItemProps = {
-  item: AudioWithMetadata;
   currentItem: PlayerState["currentItem"];
   currentIndex: PlayerState["currentIndex"];
   isPlaying: PlayerState["isPlaying"];
+  item: AudioWithMetadata;
   index: number;
   activeIndex: number;
   startIndex: number;
   endIndex: number;
   isSelected: boolean;
+  isMovingItems: boolean;
   onSetActiveIndex: (index: number) => void;
   onMouseOverItem: (index: number) => void;
   onMouseDownItem: ({
@@ -224,20 +224,19 @@ type PlaylistItemProps = {
   onScrollPlaylist: () => void;
   toggleModal: (items: AudioWithMetadata[]) => void;
   removeItems: () => void;
-  isMovingItems: boolean;
-  dispatch: Dispatch;
 };
 
 const PlaylistItem = ({
-  item,
   currentItem,
   currentIndex,
   isPlaying,
+  item,
   index,
   activeIndex,
   startIndex,
   endIndex,
   isSelected,
+  isMovingItems,
   onSetActiveIndex,
   onMouseOverItem,
   onMouseDownItem,
@@ -245,11 +244,10 @@ const PlaylistItem = ({
   onScrollPlaylist,
   toggleModal,
   removeItems,
-  isMovingItems,
-  dispatch,
 }: PlaylistItemProps) => {
   const [lastTouchTime, setLastTouchTime] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
+  const dispatch = useDispatch();
 
   const elRef = useRef<HTMLLIElement | null>(null);
 
@@ -429,11 +427,8 @@ const PlaylistItem = ({
   );
 };
 
-export default connect(
-  (state: { player: PlayerState }) => ({
-    currentItem: state.player.currentItem,
-    currentIndex: state.player.currentIndex,
-    isPlaying: state.player.isPlaying,
-  }),
-  (dispatch) => ({ dispatch }),
-)(PlaylistItem);
+export default connect((state: { player: PlayerState }) => ({
+  currentItem: state.player.currentItem,
+  currentIndex: state.player.currentIndex,
+  isPlaying: state.player.isPlaying,
+}))(PlaylistItem);
