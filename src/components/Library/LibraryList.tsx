@@ -1,5 +1,8 @@
-import { AlbumWithFilesAndMetadata, Artist } from "@miikaah/musa-core";
-import { EnrichedAlbumFile } from "@miikaah/musa-core/lib/db.types";
+import {
+  AlbumWithFilesAndMetadata,
+  Artist,
+  EnrichedAlbumFile,
+} from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
