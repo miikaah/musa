@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter } from "react-router-dom";
 import { render as rtlRender } from "@testing-library/react";
 import isValidProp from "@emotion/is-prop-valid";
 import { Provider } from "react-redux";
@@ -53,17 +54,23 @@ const theme = createStyledBreakpointsTheme({
 });
 
 export const render = (children: React.ReactElement, state: any) => {
+  const store = createStore(rootReducer, state);
+
   rtlRender(
-    <StyleSheetManager
-      shouldForwardProp={(propName, elementToBeRendered) => {
-        return typeof elementToBeRendered === "string"
-          ? isValidProp(propName)
-          : true;
-      }}
-    >
-      <ThemeProvider theme={theme}>
-        <Provider store={createStore(rootReducer, state)}>{children}</Provider>
-      </ThemeProvider>
-    </StyleSheetManager>,
+    <BrowserRouter>
+      <StyleSheetManager
+        shouldForwardProp={(propName, elementToBeRendered) => {
+          return typeof elementToBeRendered === "string"
+            ? isValidProp(propName)
+            : true;
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <Provider store={store}>{children}</Provider>
+        </ThemeProvider>
+      </StyleSheetManager>
+    </BrowserRouter>,
   );
+
+  return { store };
 };

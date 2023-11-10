@@ -3,9 +3,9 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { rgb2hsl, hsl2rgb } from "../colors";
-import { VisualizerState } from "../reducers/visualizer.reducer";
-import { PlayerState } from "../reducers/player.reducer";
+import { rgb2hsl, hsl2rgb } from "../../colors";
+import { VisualizerState } from "../../reducers/visualizer.reducer";
+import { PlayerState } from "../../reducers/player.reducer";
 
 /*
  * Square is a good shape for seeing the relative power differences
@@ -319,14 +319,25 @@ const Visualizer = ({
 
   return (
     <Container isVisible={isVisible}>
-      <canvas id="barCanvas" width={width} height={height} />
+      <canvas
+        id="barCanvas"
+        width={width}
+        height={height}
+        data-testid="VisualizerBarCanvas"
+      />
       <BottomWrapper>
         <canvas
           id="spectroCanvas"
           width={spectroWidth}
           height={spectroHeight}
+          data-testid="VisualizerSpectroCanvas"
         />
-        <canvas id="peakCanvas" width={peakWidth} height={peakHeight} />
+        <canvas
+          id="peakCanvas"
+          width={peakWidth}
+          height={peakHeight}
+          data-testid="VisualizerPeakCanvas"
+        />
       </BottomWrapper>
     </Container>
   );
@@ -344,5 +355,4 @@ export default connect(
     peakMeterBufferR: state.visualizer.peakMeterBufferR,
     currentItem: state.player.currentItem,
   }),
-  (dispatch) => ({ dispatch }),
 )(Visualizer);
