@@ -30,7 +30,7 @@ const getFileType = (audioOrAlbum: AlbumItem) => {
   let fileType: string | undefined;
 
   if (hasMetadata(audioOrAlbum)) {
-    fileType = audioOrAlbum?.metadata.codec;
+    fileType = audioOrAlbum?.metadata?.codec;
   }
 
   if (hasFiles(audioOrAlbum)) {
