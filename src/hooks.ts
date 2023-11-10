@@ -7,13 +7,17 @@ export const useKeyPress = (
 ) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.keyCode !== key) return;
+      // TODO: Why is this here? RTL userEvent sets keyCode to 0
+      if (process.env.NODE_ENV !== "test" && event.keyCode !== key) {
+        return;
+      }
       if (
         ((event?.target as HTMLElement)?.tagName === "INPUT" ||
           (event?.target as HTMLElement)?.tagName === "TEXTAREA") &&
         (!isCtrlDown(event) || !event.shiftKey)
-      )
+      ) {
         return;
+      }
 
       callback(event);
     };

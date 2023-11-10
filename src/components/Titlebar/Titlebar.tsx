@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { useKeyPress } from "../hooks";
-import { isCtrlDown, dispatchToast } from "../util";
-import { KEYS, isElectron } from "../config";
-import Library, { LibraryMode } from "./LibraryV2";
-import { breakpoints } from "../breakpoints";
-import Api from "../apiClient";
-import { SettingsState } from "../reducers/settings.reducer";
-import { PlayerState } from "../reducers/player.reducer";
-import { TranslateFn } from "../i18n";
+import { useKeyPress } from "../../hooks";
+import { isCtrlDown, dispatchToast } from "../../util";
+import { KEYS, isElectron } from "../../config";
+import Library, { LibraryMode } from "../LibraryV2";
+import { breakpoints } from "../../breakpoints";
+import Api from "../../apiClient";
+import { SettingsState } from "../../reducers/settings.reducer";
+import { PlayerState } from "../../reducers/player.reducer";
+import { TranslateFn } from "../../i18n";
 
 const Container = styled.div`
   display: flex;
@@ -185,18 +184,19 @@ const getLibraryMode = (libraryMode: string): LibraryMode => {
 type TitleBarProps = {
   playlist: PlayerState["items"];
   t: any;
-  dispatch: Dispatch;
 };
 
-const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
+const Titlebar = ({ playlist, t }: TitleBarProps) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
   const [isSmall, setIsSmall] = useState(
     window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.md,
   );
+  const [libraryMode, setLibraryMode] = useState<
+    "none" | "library" | "visualizer"
+  >("none");
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  // "none" | "library" | "visualizer"
-  const [libraryMode, setLibraryMode] = useState("none");
 
   useEffect(() => {
     const onResize = () => {
@@ -307,17 +307,17 @@ const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
     event.stopPropagation();
   };
 
-  const toggleSettings = (event: React.MouseEvent) => {
-    if (!settingsButtonRef.current) {
+  const toggleSearch = (event: React.MouseEvent) => {
+    if (!searchButtonRef.current) {
       return;
     }
 
-    settingsButtonRef.current.blur();
+    searchButtonRef.current.blur();
 
-    if (location.pathname.startsWith("/settings")) {
+    if (location.pathname.startsWith("/search")) {
       navigate("/");
     } else {
-      navigate("/settings");
+      navigate("/search");
 
       if (window.innerWidth < breakpoints.md) {
         setLibraryMode("none");
@@ -372,17 +372,17 @@ const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
     event.stopPropagation();
   };
 
-  const toggleSearch = (event: React.MouseEvent) => {
-    if (!searchButtonRef.current) {
+  const toggleSettings = (event: React.MouseEvent) => {
+    if (!settingsButtonRef.current) {
       return;
     }
 
-    searchButtonRef.current.blur();
+    settingsButtonRef.current.blur();
 
-    if (location.pathname.startsWith("/search")) {
+    if (location.pathname.startsWith("/settings")) {
       navigate("/");
     } else {
-      navigate("/search");
+      navigate("/settings");
 
       if (window.innerWidth < breakpoints.md) {
         setLibraryMode("none");
@@ -421,7 +421,7 @@ const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
   return (
     <>
       <Library ref={libraryRef} libraryMode={getLibraryMode(libraryMode)} />
-      <Container>
+      <Container data-testid="TitlebarContainer">
         <div>
           <LibraryButton
             onClick={toggleLibrary}
@@ -430,6 +430,7 @@ const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
               location.pathname === "/" && libraryMode === "library" && isSmall
             }
             isSmall={isSmall}
+            data-testid="TitlebarLibraryButton"
           >
             <FontAwesomeIcon icon="bars" />
           </LibraryButton>
@@ -444,6 +445,7 @@ const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
                 isSmall
               }
               isSmall={isSmall}
+              data-testid="TitlebarVisualizerButton"
             >
               <FontAwesomeIcon icon="chart-column" />
             </LibraryButton>
@@ -453,12 +455,17 @@ const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
             onClick={toggleSearch}
             ref={searchButtonRef}
             isActive={location.pathname.startsWith("/search")}
+            data-testid="TitlebarSearchButton"
           >
             <FontAwesomeIcon icon="search" />
           </SearchButton>
 
           {!isElectron && (
-            <ShareButton onClick={createPlaylist} ref={shareButtonRef}>
+            <ShareButton
+              onClick={createPlaylist}
+              ref={shareButtonRef}
+              data-testid="TitlebarShareButton"
+            >
               <FontAwesomeIcon icon="share" />
             </ShareButton>
           )}
@@ -467,21 +474,26 @@ const Titlebar = ({ playlist, t, dispatch }: TitleBarProps) => {
             onClick={toggleSettings}
             ref={settingsButtonRef}
             isActive={location.pathname.startsWith("/settings")}
+            data-testid="TitlebarSettingsButton"
           >
             <FontAwesomeIcon icon="cog" />
           </SettingsButton>
         </div>
 
-        {!isMobile && <Title>{locationToTitleMap(t)[location.pathname]}</Title>}
+        {!isMobile && (
+          <Title data-testid="TitlebarLocation">
+            {locationToTitleMap(t)[location.pathname]}
+          </Title>
+        )}
 
         <ActionsContainer isElectron={isElectron}>
-          <MinButton onClick={minimize}>
+          <MinButton onClick={minimize} data-testid="TitlebarMinimizeButton">
             <div />
           </MinButton>
-          <MaxButton onClick={maxOrUnMax}>
+          <MaxButton onClick={maxOrUnMax} data-testid="TitlebarMaximizeButton">
             <div />
           </MaxButton>
-          <CloseButton onClick={close}>
+          <CloseButton onClick={close} data-testid="TitlebarCloseButton">
             <div />
             <div />
           </CloseButton>
