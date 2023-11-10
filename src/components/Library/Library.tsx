@@ -3,13 +3,13 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { listOverflow } from "../common.styles";
-import { breakpoints } from "../breakpoints";
-import LibraryList from "./LibraryListV2";
-import Visualizer from "./Visualizer";
-import { LibraryState } from "../reducers/library.reducer";
-import { SettingsState } from "../reducers/settings.reducer";
-import { TranslateFn } from "../i18n";
+import { listOverflow } from "../../common.styles";
+import { breakpoints } from "../../breakpoints";
+import { LibraryState } from "../../reducers/library.reducer";
+import { SettingsState } from "../../reducers/settings.reducer";
+import { TranslateFn } from "../../i18n";
+import LibraryList from "./LibraryList";
+import Visualizer from "../Visualizer";
 
 const Container = styled.div<{
   isSmall: boolean;

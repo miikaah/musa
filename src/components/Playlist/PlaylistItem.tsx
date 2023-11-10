@@ -5,11 +5,11 @@ import { Dispatch } from "redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components";
-import { PlayerState, playIndex, replay } from "../reducers/player.reducer";
-import { formatDuration } from "../util";
-import { ellipsisTextOverflow } from "../common.styles";
-import AlbumImage from "./AlbumImage";
-import { breakpoints } from "../breakpoints";
+import { PlayerState, playIndex, replay } from "../../reducers/player.reducer";
+import { formatDuration } from "../../util";
+import { ellipsisTextOverflow } from "../../common.styles";
+import AlbumImage from "../AlbumImage";
+import { breakpoints } from "../../breakpoints";
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);

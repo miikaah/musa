@@ -1,21 +1,21 @@
 import { AlbumWithFilesAndMetadata, Artist } from "@miikaah/musa-core";
+import { EnrichedAlbumFile } from "@miikaah/musa-core/lib/db.types";
 import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import LibraryItem from "./LibraryItem";
-import AlbumCover from "./AlbumCover";
-import { isElectron } from "../config";
-import Api from "../apiClient";
+import AlbumCover from "../AlbumCover";
+import { isElectron } from "../../config";
+import Api from "../../apiClient";
 import {
   expandHeight,
   contractHeight,
   fadeOut,
   expandHeightAlbum,
   contractHeightAlbum,
-} from "../animations";
-import { pasteToPlaylist } from "../reducers/player.reducer";
-import { breakpoints } from "../breakpoints";
-import { EnrichedAlbumFile } from "@miikaah/musa-core/lib/db.types";
+} from "../../animations";
+import { pasteToPlaylist } from "../../reducers/player.reducer";
+import { breakpoints } from "../../breakpoints";
 
 const getExpandTiming = (len: number) => {
   if (len < 2) {

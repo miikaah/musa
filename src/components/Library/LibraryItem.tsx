@@ -2,10 +2,10 @@ import { AlbumWithFilesAndMetadata, Artist } from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { addToPlaylist } from "../reducers/player.reducer";
-import { isElectron } from "../config";
-import Api from "../apiClient";
-import { breakpoints } from "../breakpoints";
+import { addToPlaylist } from "../../reducers/player.reducer";
+import { isElectron } from "../../config";
+import Api from "../../apiClient";
+import { breakpoints } from "../../breakpoints";
 import { Dispatch } from "redux";
 
 const Container = styled.li`

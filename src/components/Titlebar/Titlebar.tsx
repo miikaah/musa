@@ -6,7 +6,7 @@ import styled, { css } from "styled-components";
 import { useKeyPress } from "../../hooks";
 import { isCtrlDown, dispatchToast } from "../../util";
 import { KEYS, isElectron } from "../../config";
-import Library, { LibraryMode } from "../LibraryV2";
+import Library, { LibraryMode } from "../Library";
 import { breakpoints } from "../../breakpoints";
 import Api from "../../apiClient";
 import { SettingsState } from "../../reducers/settings.reducer";

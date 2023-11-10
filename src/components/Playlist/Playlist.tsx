@@ -10,15 +10,15 @@ import {
   playIndex,
   replay,
   PlayerState,
-} from "../reducers/player.reducer";
-import { isCtrlDown } from "../util";
-import { KEYS } from "../config";
-import { useKeyPress } from "../hooks";
-import PlaylistItem, { MouseUpDownOptions } from "./PlaylistItemV3";
-import { listOverflow } from "../common.styles";
-import { breakpoints } from "../breakpoints";
-import { SettingsState } from "../reducers/settings.reducer";
-import { TranslateFn } from "../i18n";
+} from "../../reducers/player.reducer";
+import { isCtrlDown } from "../../util";
+import { KEYS } from "../../config";
+import { useKeyPress } from "../../hooks";
+import { listOverflow } from "../../common.styles";
+import { breakpoints } from "../../breakpoints";
+import { SettingsState } from "../../reducers/settings.reducer";
+import { TranslateFn } from "../../i18n";
+import PlaylistItem, { MouseUpDownOptions } from "./PlaylistItem";
 
 const commonCss = css<{ isSmall: boolean }>`
   padding: 14px 0;
