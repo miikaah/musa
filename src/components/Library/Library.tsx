@@ -88,7 +88,7 @@ const Label = styled.div`
 export type LibraryMode = "none" | "library" | "visualizer";
 
 type LibraryProps = {
-  forwardRef: React.ForwardedRef<HTMLDivElement>;
+  forwardRef?: React.ForwardedRef<HTMLDivElement>;
   libraryMode: LibraryMode;
   listingWithLabels: LibraryState["listingWithLabels"];
   t: TranslateFn;
@@ -157,6 +157,7 @@ const Library = ({
         isVisible={libraryMode === "library"}
         isLibrary={libraryMode === "library"}
         filter={filter}
+        data-testid="LibraryLibraryContainer"
       >
         <>
           <FilterContainer>
@@ -167,7 +168,11 @@ const Library = ({
               placeholder={t("library.filter.placeholder")}
               onChange={(e) => setFilter(e.target.value)}
             />
-            <FontAwesomeIcon onClick={clearArtistFilter} icon="xmark" />
+            <FontAwesomeIcon
+              onClick={clearArtistFilter}
+              icon="xmark"
+              data-testid="LibraryFilterClearButton"
+            />
           </FilterContainer>
           {listingWithLabels &&
             Object.entries(
@@ -190,6 +195,7 @@ const Library = ({
         isSmall={isSmall}
         isVisible={libraryMode === "visualizer"}
         isLibrary={libraryMode === "library"}
+        data-testid="LibraryVisualizerContainer"
       >
         <Visualizer isVisible={libraryMode === "visualizer"} />
       </Container>
@@ -202,7 +208,6 @@ const ConnectedLibrary = connect(
     listingWithLabels: state.library.listingWithLabels,
     t: state.settings.t,
   }),
-  (dispatch) => ({ dispatch }),
 )(Library);
 
 export default React.forwardRef(

@@ -318,7 +318,7 @@ const Visualizer = ({
   }
 
   return (
-    <Container isVisible={isVisible}>
+    <Container isVisible={isVisible} data-testid="VisualizerContainer">
       <canvas
         id="barCanvas"
         width={width}
