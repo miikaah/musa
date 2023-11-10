@@ -1,12 +1,11 @@
 import { AlbumWithFilesAndMetadata, Artist } from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { addToPlaylist } from "../../reducers/player.reducer";
 import { isElectron } from "../../config";
 import Api from "../../apiClient";
 import { breakpoints } from "../../breakpoints";
-import { Dispatch } from "redux";
 
 const Container = styled.li`
   position: relative;
@@ -34,17 +33,6 @@ let hasDragged = false;
 let startScrollPos = 0;
 let scrollPos = 0;
 
-type LibraryListItem =
-  | Artist["albums"][0]
-  | AlbumWithFilesAndMetadata["files"][0];
-
-type LibraryItemProps = {
-  item: LibraryListItem;
-  hasAlbum?: boolean;
-  hasMultipleDisks?: boolean;
-  dispatch: Dispatch;
-};
-
 const getId = (item: LibraryListItem): string => {
   return isElectron ? item.id : item.url || "";
 };
@@ -55,13 +43,23 @@ const isAlbumFile = (
   return "track" in item;
 };
 
+type LibraryListItem =
+  | Artist["albums"][0]
+  | AlbumWithFilesAndMetadata["files"][0];
+
+type LibraryItemProps = {
+  item: LibraryListItem;
+  hasAlbum?: boolean;
+  hasMultipleDisks?: boolean;
+};
+
 const LibraryItem = ({
   item,
   hasAlbum,
   hasMultipleDisks,
-  dispatch,
 }: LibraryItemProps) => {
   const [isLongTouch, setIsLongTouch] = useState(false);
+  const dispatch = useDispatch();
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -171,7 +169,4 @@ const LibraryItem = ({
   );
 };
 
-export default connect(
-  () => ({}),
-  (dispatch) => ({ dispatch }),
-)(LibraryItem);
+export default LibraryItem;
