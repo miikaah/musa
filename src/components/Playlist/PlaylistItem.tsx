@@ -343,9 +343,9 @@ const PlaylistItem = ({
   const renderPlayOrPauseIcon = () => {
     if (!isIndexCurrentIndex() || !hasEqualItemAndCurrentItem()) return;
     return isPlaying ? (
-      <FontAwesomeIcon icon="play" />
+      <FontAwesomeIcon icon="play" data-testid="PlaylistItemPlayIcon" />
     ) : (
-      <FontAwesomeIcon icon="pause" />
+      <FontAwesomeIcon icon="pause" data-testid="PlaylistItemPauseIcon" />
     );
   };
 
@@ -389,6 +389,7 @@ const PlaylistItem = ({
       onMouseOver={() => onMouseOverItem(index)}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
+      data-testid="PlaylistItemContainer"
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
       <CoverWrapper>
@@ -398,7 +399,10 @@ const PlaylistItem = ({
         <FirstRow>
           <Title>{title}</Title>
           {!isMobile && (
-            <EditButton onClick={() => toggleModal([item])}>
+            <EditButton
+              onClick={() => toggleModal([item])}
+              data-testid="PlaylistItemEditButton"
+            >
               <div />
               <span />
               <span />
@@ -406,8 +410,14 @@ const PlaylistItem = ({
             </EditButton>
           )}
           <div />
-          <DeleteButton onClick={removeItems}>
-            <FontAwesomeIcon icon="xmark" />
+          <DeleteButton
+            onClick={removeItems}
+            data-testid="PlaylistItemDeleteButton"
+          >
+            <FontAwesomeIcon
+              icon="xmark"
+              data-testid="PlaylistItemDeleteButtonIcon"
+            />
           </DeleteButton>
           <Duration>{duration}</Duration>
         </FirstRow>
