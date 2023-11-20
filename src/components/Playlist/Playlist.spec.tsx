@@ -1,5 +1,5 @@
 import React from "react";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Playlist from "./Playlist";
 import { artistFixture } from "../../fixtures/artist.fixture";
@@ -114,5 +114,18 @@ describe("Playlist", () => {
     expect(screen.getByText(touchControlsText)).toBeInTheDocument();
     expect(screen.getByText(doubleTapText)).toBeInTheDocument();
     expect(screen.getByText(addFromLibraryText)).toBeInTheDocument();
+  });
+
+  it("dispatches remove items action during select all", async () => {
+    render(<Playlist toggleModal={mockToggleModal} />, state);
+
+    await userEvent.keyboard("{Control>}a{/Control}");
+    await userEvent.keyboard("{Backspace}");
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        indexes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      }),
+    );
   });
 });
