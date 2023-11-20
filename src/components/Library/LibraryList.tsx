@@ -139,13 +139,6 @@ type LibraryListItem =
   | Artist["albums"][0]
   | AlbumWithFilesAndMetadata["files"][0];
 
-type LibraryListProps = {
-  item: LibraryListItem;
-  isArtist?: boolean;
-  isAlbum?: boolean;
-  hasMultipleDisks?: boolean;
-};
-
 const getId = (item: LibraryListItem): string => {
   return isElectron ? item.id : item.url || "";
 };
@@ -155,6 +148,13 @@ const isArtistAlbum = (
   isAlbum?: boolean,
 ): _item is Artist["albums"][0] => {
   return Boolean(isAlbum);
+};
+
+type LibraryListProps = {
+  item: LibraryListItem;
+  isArtist?: boolean;
+  isAlbum?: boolean;
+  hasMultipleDisks?: boolean;
 };
 
 const LibraryList = ({

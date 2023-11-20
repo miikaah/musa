@@ -1,7 +1,6 @@
 import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { connect, useDispatch } from "react-redux";
 import isEqual from "lodash.isequal";
 import styled, { css } from "styled-components";
 import {
@@ -130,7 +129,6 @@ type PlaylistProps = {
   currentIndex: PlayerState["currentIndex"];
   toggleModal: (items: AudioWithMetadata[]) => void;
   t: TranslateFn;
-  dispatch: Dispatch;
 };
 
 const Playlist = ({
@@ -139,7 +137,6 @@ const Playlist = ({
   currentIndex,
   toggleModal,
   t,
-  dispatch,
 }: PlaylistProps) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -153,6 +150,7 @@ const Playlist = ({
   );
   const [clipboard, setClipboard] = useState<AudioWithMetadata[]>([]);
   const [hideOverflow, setHideOverflow] = useState(false);
+  const dispatch = useDispatch();
 
   const ref = useRef<HTMLUListElement | null>(null);
 
@@ -621,5 +619,4 @@ export default connect(
     currentIndex: state.player.currentIndex,
     t: state.settings.t,
   }),
-  (dispatch) => ({ dispatch }),
 )(Playlist);
