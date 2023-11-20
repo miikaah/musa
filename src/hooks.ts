@@ -2,13 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { isCtrlDown } from "./util";
 
 export const useKeyPress = (
-  key: number,
+  key: string,
   callback: (event: KeyboardEvent) => void,
 ) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // TODO: Why is this here? RTL userEvent sets keyCode to 0
-      if (process.env.NODE_ENV !== "test" && event.keyCode !== key) {
+      if (event.key !== key) {
         return;
       }
       if (

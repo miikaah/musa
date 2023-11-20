@@ -2,7 +2,7 @@ import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Playlist from "./Playlist";
-import { audioFixture } from "../../fixtures/audio.fixture";
+import { artistFixture } from "../../fixtures/artist.fixture";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
 
@@ -15,8 +15,7 @@ vi.mock("react-redux", async () => ({
 const mockToggleModal = vi.fn();
 
 const t = translate("en");
-const album = String(audioFixture.metadata.album);
-const artist = String(audioFixture.metadata.artist);
+const title = String(artistFixture.albums[0].files[0].metadata?.title);
 const titleText = String(t("playlist.instructions.title"));
 const playControlsText = String(t("playlist.instructions.playControls"));
 const playPauseText = String(t("playlist.instructions.playPause"));
@@ -54,8 +53,8 @@ const addFromLibraryText = String(t("playlist.instructions.addFromLibrary"));
 
 const state = {
   player: {
-    items: [audioFixture],
-    currenItem: audioFixture,
+    items: artistFixture.albums[0].files,
+    currenItem: artistFixture.albums[0].files[0],
     currentIndex: 0,
   },
   settings: { t },
@@ -74,15 +73,13 @@ describe("Playlist", () => {
   it("renders Playlist component", async () => {
     render(<Playlist toggleModal={mockToggleModal} />, state);
 
-    expect(screen.getByText(album)).toBeInTheDocument();
-    expect(screen.getByText(artist)).toBeInTheDocument();
+    expect(screen.getByText(title)).toBeInTheDocument();
   });
 
   it("renders instructions when playlist is empty", async () => {
     render(<Playlist toggleModal={mockToggleModal} />, state2);
 
-    expect(screen.queryByText(album)).not.toBeInTheDocument();
-    expect(screen.queryByText(artist)).not.toBeInTheDocument();
+    expect(screen.queryByText(title)).not.toBeInTheDocument();
     expect(screen.queryByText(titleText)).toBeInTheDocument();
     expect(screen.getByText(playControlsText)).toBeInTheDocument();
     expect(screen.getByText(playPauseText)).toBeInTheDocument();

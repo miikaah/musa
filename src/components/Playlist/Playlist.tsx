@@ -285,7 +285,7 @@ const Playlist = ({
     setStartIndex(0);
     setEndIndex(playlist.length - 1);
   };
-  useKeyPress(KEYS.A, selectAll);
+  useKeyPress(KEYS.a, selectAll);
 
   const moveUp = (event: KeyboardEvent) => {
     event.preventDefault();
@@ -368,7 +368,7 @@ const Playlist = ({
       return;
     }
   };
-  useKeyPress(KEYS.X, cut);
+  useKeyPress(KEYS.x, cut);
 
   const copy = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;
@@ -381,7 +381,7 @@ const Playlist = ({
       return;
     }
   };
-  useKeyPress(KEYS.C, copy);
+  useKeyPress(KEYS.c, copy);
 
   const duplicate = (event: KeyboardEvent) => {
     if (!isCtrlDown(event) || !event.shiftKey) return;
@@ -396,7 +396,7 @@ const Playlist = ({
       return;
     }
   };
-  useKeyPress(KEYS.D, duplicate);
+  useKeyPress(KEYS.d, duplicate);
 
   const paste = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;
@@ -407,7 +407,7 @@ const Playlist = ({
       ),
     );
   };
-  useKeyPress(KEYS.V, paste);
+  useKeyPress(KEYS.v, paste);
 
   const updateEndIndex = (endIndex: number) => {
     if (!isMouseDown) return;
@@ -585,6 +585,7 @@ const Playlist = ({
       }}
       onMouseUp={clearSelection}
       hideOverflow={hideOverflow}
+      data-testid="PlaylistContainer"
     >
       {playlist.map(
         (item, index) =>

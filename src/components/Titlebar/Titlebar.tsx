@@ -271,6 +271,7 @@ const Titlebar = ({ playlist, t }: TitleBarProps) => {
 
     navigate("/search");
   };
+  useKeyPress(KEYS.f, goToSearchByKeyEvent);
   useKeyPress(KEYS.F, goToSearchByKeyEvent);
 
   const toggleLibrary = (event: React.MouseEvent) => {

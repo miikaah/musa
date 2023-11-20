@@ -4,19 +4,20 @@ import { ReplaygainKey, ReplaygainType } from "./types";
 export const isElectron = import.meta.env.VITE_ENV === "electron";
 
 export const KEYS = {
-  Backspace: 8,
-  Enter: 13,
-  Space: 32,
-  Up: 38,
-  Down: 40,
-  Delete: 46,
-  A: 65,
-  C: 67,
-  D: 68,
-  F: 70,
-  M: 77,
-  V: 86,
-  X: 88,
+  Backspace: "Backspace",
+  Enter: "Enter",
+  Space: " ",
+  Up: "ArrowUp",
+  Down: "ArrowDown",
+  Delete: "Delete",
+  a: "a",
+  c: "c",
+  d: "d",
+  f: "f",
+  F: "F",
+  m: "m",
+  v: "v",
+  x: "x",
 };
 export const MAIN_BUTTON_DOWN = 1;
 
