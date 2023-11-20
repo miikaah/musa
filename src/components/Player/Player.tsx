@@ -319,7 +319,7 @@ const Player = ({
     setVolumeBeforeMuting(volume);
     setVolumeForStateAndPlayer(VOLUME_MUTED);
   };
-  useKeyPress(KEYS.M, muteOrUnmute);
+  useKeyPress(KEYS.m, muteOrUnmute);
 
   useEffect(() => {
     const handleStoreChange = () => {
