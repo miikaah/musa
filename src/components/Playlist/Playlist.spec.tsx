@@ -16,6 +16,7 @@ const mockToggleModal = vi.fn();
 
 const t = translate("en");
 const title = String(artistFixture.albums[0].files[0].metadata?.title);
+const title2 = String(artistFixture.albums[0].files[2]?.metadata?.title);
 const titleText = String(t("playlist.instructions.title"));
 const playControlsText = String(t("playlist.instructions.playControls"));
 const playPauseText = String(t("playlist.instructions.playPause"));
@@ -71,13 +72,13 @@ const state2 = {
 
 describe("Playlist", () => {
   it("renders Playlist component", async () => {
-    render(<Playlist toggleModal={mockToggleModal} />, state);
+    render(<Playlist toggleModal={vi.fn()} />, state);
 
     expect(screen.getByText(title)).toBeInTheDocument();
   });
 
   it("renders instructions when playlist is empty", async () => {
-    render(<Playlist toggleModal={mockToggleModal} />, state2);
+    render(<Playlist toggleModal={vi.fn()} />, state2);
 
     expect(screen.queryByText(title)).not.toBeInTheDocument();
     expect(screen.queryByText(titleText)).toBeInTheDocument();
@@ -117,7 +118,7 @@ describe("Playlist", () => {
   });
 
   it("dispatches remove items action during select all", async () => {
-    render(<Playlist toggleModal={mockToggleModal} />, state);
+    render(<Playlist toggleModal={vi.fn()} />, state);
 
     await userEvent.keyboard("{Control>}a{/Control}");
     await userEvent.keyboard("{Backspace}");
@@ -127,5 +128,70 @@ describe("Playlist", () => {
         indexes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
       }),
     );
+  });
+
+  it("dispatches play index action", async () => {
+    render(<Playlist toggleModal={vi.fn()} />, state);
+
+    await userEvent.click(screen.getByText(title));
+    await userEvent.keyboard("{Enter}");
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        index: 0,
+      }),
+    );
+  });
+
+  it("dispatches remove items action during cut", async () => {
+    render(<Playlist toggleModal={vi.fn()} />, state);
+
+    await userEvent.click(screen.getByText(title2));
+    await userEvent.keyboard("{Control>}x{/Control}");
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        indexes: [2],
+      }),
+    );
+  });
+
+  it("dispatches paste to playlist action during copy + paste", async () => {
+    render(<Playlist toggleModal={vi.fn()} />, state);
+
+    await userEvent.click(screen.getByText(title2));
+    await userEvent.keyboard("{Control>}c{/Control}");
+    await userEvent.keyboard("{Control>}v{/Control}");
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        index: 2,
+        items: [artistFixture.albums[0].files[2]],
+      }),
+    );
+  });
+
+  it("dispatches paste to playlist action during duplicate", async () => {
+    render(<Playlist toggleModal={vi.fn()} />, state);
+
+    await userEvent.click(screen.getByText(title));
+    await userEvent.keyboard("{Control>}{Shift>}d{/Shift}{/Control}");
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        index: 0,
+        items: [artistFixture.albums[0].files[0]],
+      }),
+    );
+  });
+
+  it("calls toggle modal click handler", async () => {
+    render(<Playlist toggleModal={mockToggleModal} />, state);
+
+    await userEvent.click(screen.getAllByTestId("PlaylistItemEditButton")[0]);
+
+    expect(mockToggleModal).toHaveBeenCalledWith([
+      artistFixture.albums[0].files[0],
+    ]);
   });
 });
