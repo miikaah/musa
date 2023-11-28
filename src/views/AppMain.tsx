@@ -110,7 +110,11 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
   };
 
   return (
-    <Container onDragOver={onDragOver} onDrop={onDrop}>
+    <Container
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      data-testid="AppMainContainer"
+    >
       <Cover />
       <Playlist toggleModal={toggleModal} />
       {showModal && (
