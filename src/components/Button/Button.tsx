@@ -41,16 +41,23 @@ type ButtonProps = Partial<ButtonContainerProps> & {
   onClick: Function;
   className?: string;
   disabled?: boolean;
+  dataTestId?: string;
 };
 
-const Button = ({ className, children, onClick, ...rest }: ButtonProps) => {
+const Button = ({
+  className,
+  children,
+  onClick,
+  dataTestId,
+  ...rest
+}: ButtonProps) => {
   return (
     <ButtonContainer
       className={className}
       type="button"
       // @ts-expect-error onClick is completely generic
       onClick={onClick}
-      data-testid="ButtonContainer"
+      data-testid={dataTestId || "ButtonContainer"}
       {...rest}
     >
       {children}

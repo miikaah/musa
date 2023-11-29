@@ -392,10 +392,20 @@ const Search = ({
             )}
           </SearchInputContainer>
 
-          <RandomButton isPrimary isSmall onClick={findRandom}>
+          <RandomButton
+            isPrimary
+            isSmall
+            onClick={findRandom}
+            dataTestId="SearchRandomButton"
+          >
             {t("search.action.random")}
           </RandomButton>
-          <ClearButton isSecondary isSmall onClick={clear}>
+          <ClearButton
+            isSecondary
+            isSmall
+            onClick={clear}
+            dataTestId="SearchClearButton"
+          >
             {t("search.action.clear")}
           </ClearButton>
         </InputContainer>
@@ -432,6 +442,7 @@ const Search = ({
                   }),
                 );
               }}
+              data-testid="SearchAlbums"
             >
               {React.useMemo(
                 () =>
@@ -458,6 +469,7 @@ const Search = ({
                   }),
                 );
               }}
+              data-testid="SearchAudios"
             >
               {React.useMemo(
                 () =>

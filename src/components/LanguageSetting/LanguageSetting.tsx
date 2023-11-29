@@ -18,7 +18,11 @@ const LanguageSetting = ({ language, t }: LanguageSettingProps) => {
 
   return (
     <SettingSelect>
-      <select value={language} onChange={updateState}>
+      <select
+        value={language}
+        onChange={updateState}
+        data-testid="LanguageSettingSelect"
+      >
         {languages.map((lang) => (
           <option key={lang} value={lang}>
             {t(`settings.language.${lang}`)}

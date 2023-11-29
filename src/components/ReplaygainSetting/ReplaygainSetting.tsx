@@ -39,7 +39,11 @@ const ReplaygainSetting = ({ replaygainType, t }: ReplaygainSettingProps) => {
 
   return (
     <SettingSelect>
-      <select value={replaygainType} onChange={updateState}>
+      <select
+        value={replaygainType}
+        onChange={updateState}
+        data-testid="ReplaygainSettingSelect"
+      >
         <option value={REPLAYGAIN_TYPE.Track}>
           {t("settings.advanced.normalization.track")}
         </option>

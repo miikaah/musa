@@ -39,6 +39,7 @@ const PreAmpSetting = ({ isInit, preAmpDb, t }: PreAmpSettingProps) => {
         type="number"
         value={value}
         onChange={updateState}
+        data-testid="PreAmpSettingInput"
       />
     </>
   );
