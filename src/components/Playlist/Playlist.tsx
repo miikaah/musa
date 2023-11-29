@@ -397,6 +397,7 @@ const Playlist = ({
     }
   };
   useKeyPress(KEYS.d, duplicate);
+  useKeyPress(KEYS.D, duplicate);
 
   const paste = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;

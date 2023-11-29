@@ -13,6 +13,7 @@ export const KEYS = {
   a: "a",
   c: "c",
   d: "d",
+  D: "D",
   f: "f",
   F: "F",
   m: "m",
