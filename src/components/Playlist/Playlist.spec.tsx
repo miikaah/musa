@@ -185,6 +185,21 @@ describe("Playlist", () => {
     );
   });
 
+  // Small d does not work with Windows
+  it("dispatches paste to playlist action during duplicate with D key", async () => {
+    render(<Playlist toggleModal={vi.fn()} />, state);
+
+    await userEvent.click(screen.getByText(title));
+    await userEvent.keyboard("{Control>}{Shift>}D{/Shift}{/Control}");
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        index: 0,
+        items: [artistFixture.albums[0].files[0]],
+      }),
+    );
+  });
+
   it("calls toggle modal click handler", async () => {
     render(<Playlist toggleModal={mockToggleModal} />, state);
 
