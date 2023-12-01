@@ -374,7 +374,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
   }, []);
 
   useEffect(() => {
-    const onResize = (event: Event) => {
+    const onResize = () => {
       if (
         window.innerWidth < breakpoints.lg &&
         window.innerWidth >= breakpoints.md
