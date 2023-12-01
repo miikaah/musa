@@ -129,7 +129,6 @@ const contrast = (rgb1: RgbColor, rgb2: RgbColor) => {
 };
 
 const canvas = document.createElement("canvas");
-const canvasCtx = canvas.getContext("2d");
 
 type CoverProps = {
   currentItem: PlayerState["currentItem"];
@@ -147,6 +146,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLImageElement>(null);
   const dispatch = useDispatch();
+  const canvasCtx = canvas.getContext("2d");
 
   const calcMaxHeight = () => {
     const libraryWidth = Number(
@@ -350,7 +350,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
       const colors = calculateTheme(coverTarget);
 
       if (coverTarget.src && colors) {
-        Api.insertTheme({ id: coverTarget.src, colors }).then((theme) => {
+        await Api.insertTheme({ id: coverTarget.src, colors }).then((theme) => {
           dispatch(
             updateSettings({
               currentTheme: theme,
@@ -374,7 +374,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
   }, []);
 
   useEffect(() => {
-    const onResize = () => {
+    const onResize = (event: Event) => {
       if (
         window.innerWidth < breakpoints.lg &&
         window.innerWidth >= breakpoints.md
@@ -426,7 +426,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
     );
   }
 
-  const getColorFromImage = (event: React.MouseEvent) => {
+  const getColorFromImage = async (event: React.MouseEvent) => {
     if (!isEditing) {
       return;
     }
@@ -470,7 +470,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
       case "primary": {
         // Background color is used to calculate text colors
         colors = calculateTheme(img, {
-          bg: { rgb: c.bg as RgbColor },
+          bg: { rgb: c.bg },
         });
         colors.bg = c.bg;
         colors.primary = rgb;
@@ -481,7 +481,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
       case "secondary": {
         // Background color is used to calculate text colors
         colors = calculateTheme(img, {
-          bg: { rgb: c.bg as RgbColor },
+          bg: { rgb: c.bg },
         });
         colors.bg = c.bg;
         colors.primary = c.primary;
@@ -492,7 +492,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
       default: {
         // Background color is used to calculate text colors
         colors = calculateTheme(img, {
-          bg: { rgb: c.bg as RgbColor },
+          bg: { rgb: c.bg },
         });
       }
     }
@@ -512,7 +512,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
 
     updateCurrentTheme(colors);
 
-    Api.updateTheme({ id: img.src, colors }).then((theme) => {
+    await Api.updateTheme({ id: img.src, colors }).then((theme) => {
       dispatch(
         updateSettings({
           currentTheme: theme,
