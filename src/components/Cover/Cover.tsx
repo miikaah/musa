@@ -6,7 +6,7 @@ import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import styled from "styled-components";
 import Palette, { Swatch } from "../../img-palette/img-palette";
-import { updateCurrentTheme } from "../../util";
+import { getSrc, updateCurrentTheme } from "../../util";
 import { breakpoints } from "../../breakpoints";
 import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
 import { setCoverData, PlayerState } from "../../reducers/player.reducer";
@@ -534,6 +534,11 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
     setEditTarget(null);
   };
 
+  // HACK: To fix Electron mangling the beginning of the request url
+  const src = getSrc(
+    (currentItem?.coverUrl as string)?.replace("media:/", "media:///") || "",
+  );
+
   return (
     <Container ref={containerRef} isSmall={isSmall}>
       <Wrapper>
@@ -542,13 +547,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
             <>
               <Image
                 id="albumCover"
-                src={
-                  // HACK: To fix Electron mangling the beginning of the request url
-                  (currentItem?.coverUrl as string)?.replace(
-                    "media:/",
-                    "media:///",
-                  ) || ""
-                }
+                src={src}
                 ref={coverRef}
                 crossOrigin=""
                 maxHeight={coverData.maxHeight}

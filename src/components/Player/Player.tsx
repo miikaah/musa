@@ -13,7 +13,7 @@ import {
 import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
 import { setVisualizerData } from "../../reducers/visualizer.reducer";
 import { store } from "../../store";
-import { getReplaygainDb, dispatchToast } from "../../util";
+import { getReplaygainDb, dispatchToast, getSrc } from "../../util";
 import { KEYS, VOLUME_DEFAULT } from "../../config";
 import { useKeyPress, useAnimationFrame } from "../../hooks";
 import PlayerSeek from "./PlayerSeek";
@@ -389,7 +389,7 @@ const Player = ({
 
   useEffect(() => {
     // HACK: To fix Electron mangling the beginning of the request url
-    audioEl.src = src ? src.replace("media:/", "media:///") : "";
+    audioEl.src = getSrc(src ? src.replace("media:/", "media:///") : "");
   }, [src]);
 
   return (
