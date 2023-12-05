@@ -13,7 +13,7 @@ import { Settings } from "./reducers/settings.reducer";
 
 const { origin } = window.location;
 const isLan = origin.includes("192.168");
-const hardcodedBaseUrl = import.meta.env.VITE_API_BASE_URL;
+const hardcodedBaseUrl = import.meta.env.VITE_API_BASE_URL.split(" ")[0];
 const hardcodedLanUrl = import.meta.env.VITE_API_LAN_URL;
 const baseUrl = isLan ? origin : hardcodedBaseUrl;
 const defaultHeaders = {
