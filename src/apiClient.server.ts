@@ -11,7 +11,11 @@ import {
 } from "@miikaah/musa-core";
 import { Settings } from "./reducers/settings.reducer";
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+const { origin } = window.location;
+// If user wants to connect through LAN use that
+const baseUrl = origin.includes("192.168")
+  ? origin
+  : import.meta.env.VITE_API_BASE_URL;
 const defaultHeaders = {
   "Content-Type": "application/json",
 };
