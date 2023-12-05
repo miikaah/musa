@@ -12,10 +12,10 @@ import {
 import { Settings } from "./reducers/settings.reducer";
 
 const { origin } = window.location;
-// If user wants to connect through LAN use that
-const baseUrl = origin.includes("192.168")
-  ? origin
-  : import.meta.env.VITE_API_BASE_URL;
+const isLan = origin.includes("192.168");
+const hardcodedBaseUrl = import.meta.env.VITE_API_BASE_URL;
+const hardcodedLanUrl = import.meta.env.VITE_API_LAN_URL;
+const baseUrl = isLan ? origin : hardcodedBaseUrl;
 const defaultHeaders = {
   "Content-Type": "application/json",
 };
@@ -25,7 +25,11 @@ const get = async (path: string) => {
 };
 
 const getByUrl = async (url: string) => {
-  return fetch(url).then((response) => response.json());
+  const actualUrl = isLan
+    ? url.replace(hardcodedBaseUrl, hardcodedLanUrl)
+    : url;
+
+  return fetch(actualUrl).then((response) => response.json());
 };
 
 const post = async (
