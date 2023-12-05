@@ -116,3 +116,12 @@ export const getQueryStringAsObject = (url: string): QueryAsObject => {
     };
   }, {});
 };
+
+const { origin } = window.location;
+const isLan = origin.includes("192.168");
+const hardcodedBaseUrl = import.meta.env.VITE_API_BASE_URL;
+const hardcodedLanUrl = import.meta.env.VITE_API_LAN_URL;
+
+export const getSrc = (url: string) => {
+  return isLan ? url.replace(hardcodedBaseUrl, hardcodedLanUrl) : url;
+};

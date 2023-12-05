@@ -5,7 +5,7 @@ import {
 } from "@miikaah/musa-core";
 import React from "react";
 import styled, { css } from "styled-components";
-import { cleanUrl } from "../../util";
+import { cleanUrl, getSrc } from "../../util";
 import { fadeIn } from "../../animations";
 
 const Image = styled.img<{ animate: boolean }>`
@@ -67,7 +67,7 @@ const AlbumImage = ({ item, animate = true }: AlbumImageProps) => {
     ? "musa-placeholder-icon-flac.png"
     : "musa-placeholder-icon-ogg.png";
 
-  return <Image alt="" animate={animate} src={src} />;
+  return <Image alt="" animate={animate} src={getSrc(src)} />;
 };
 
 export default AlbumImage;
