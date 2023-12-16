@@ -6,6 +6,8 @@ import {
   REPLAYGAIN_TYPE,
   hardcodedBaseUrl,
   hardcodedLanUrl,
+  isHosted,
+  isLan,
   isLanOrHosted,
 } from "./config";
 
@@ -123,5 +125,11 @@ export const getQueryStringAsObject = (url: string): QueryAsObject => {
 };
 
 export const getSrc = (url: string) => {
-  return isLanOrHosted ? url.replace(hardcodedBaseUrl, hardcodedLanUrl) : url;
+  const maybeModifiedUrl = isLan
+    ? url.replace(hardcodedBaseUrl, hardcodedLanUrl)
+    : isHosted
+    ? url.replace(hardcodedBaseUrl, window.origin)
+    : url;
+
+  return maybeModifiedUrl;
 };
