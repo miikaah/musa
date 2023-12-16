@@ -14,12 +14,11 @@ let previousSettings: Partial<SettingsState>;
 let timerId: NodeJS.Timeout;
 store.subscribe(() => {
   const settings = { ...store.getState().settings } as Partial<SettingsState>;
-
+  // Delete functions because they can not be serialized to JSON
+  delete settings.t;
+  
   if (settings.isInit && !isEqual(previousSettings, settings)) {
     clearTimeout(timerId);
-
-    // Delete functions because they can not be serialized to JSON
-    delete settings.t;
 
     timerId = setTimeout(() => {
       Api.insertSettings({
