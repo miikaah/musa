@@ -2,7 +2,12 @@ import { AudioWithMetadata, Colors } from "@miikaah/musa-core";
 import { Dispatch } from "redux";
 import { addToast, removeToast } from "./reducers/toaster.reducer";
 import { ReplaygainType } from "./types";
-import { REPLAYGAIN_TYPE } from "./config";
+import {
+  REPLAYGAIN_TYPE,
+  hardcodedBaseUrl,
+  hardcodedLanUrl,
+  isLanOrHosted,
+} from "./config";
 
 export const getReplaygainDb = (
   replaygainType: ReplaygainType,
@@ -117,11 +122,6 @@ export const getQueryStringAsObject = (url: string): QueryAsObject => {
   }, {});
 };
 
-const { origin } = window.location;
-const isLan = origin.includes("192.168");
-const hardcodedBaseUrl = import.meta.env.VITE_API_BASE_URL;
-const hardcodedLanUrl = import.meta.env.VITE_API_LAN_URL;
-
 export const getSrc = (url: string) => {
-  return isLan ? url.replace(hardcodedBaseUrl, hardcodedLanUrl) : url;
+  return isLanOrHosted ? url.replace(hardcodedBaseUrl, hardcodedLanUrl) : url;
 };

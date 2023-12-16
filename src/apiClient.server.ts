@@ -10,12 +10,9 @@ import {
   Theme,
 } from "@miikaah/musa-core";
 import { Settings } from "./reducers/settings.reducer";
+import { hardcodedBaseUrl, hardcodedLanUrl, isLanOrHosted } from "./config";
 
-const { origin } = window.location;
-const isLan = origin.includes("192.168");
-const hardcodedBaseUrl = import.meta.env.VITE_API_BASE_URL;
-const hardcodedLanUrl = import.meta.env.VITE_API_LAN_URL;
-const baseUrl = isLan ? origin : hardcodedBaseUrl;
+const baseUrl = isLanOrHosted ? origin : hardcodedBaseUrl;
 const defaultHeaders = {
   "Content-Type": "application/json",
 };
@@ -25,7 +22,7 @@ const get = async (path: string) => {
 };
 
 const getByUrl = async (url: string) => {
-  const actualUrl = isLan
+  const actualUrl = isLanOrHosted
     ? url.replace(hardcodedBaseUrl, hardcodedLanUrl)
     : url;
 

@@ -2,6 +2,14 @@ import { Colors } from "@miikaah/musa-core";
 import { ReplaygainKey, ReplaygainType } from "./types";
 
 export const isElectron = import.meta.env.VITE_ENV === "electron";
+export const hardcodedBaseUrl = import.meta.env.VITE_API_BASE_URL;
+export const hardcodedLanUrl = import.meta.env.VITE_API_LAN_URL;
+
+const { origin } = window.location;
+const isLan = origin.includes("192.168");
+const isHosted = origin.includes("fly.dev");
+
+export const isLanOrHosted = isLan || isHosted;
 
 export const KEYS = {
   Backspace: "Backspace",
