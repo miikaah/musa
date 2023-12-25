@@ -5,9 +5,10 @@ export const isElectron = import.meta.env.VITE_ENV === "electron";
 export const hardcodedBaseUrl = import.meta.env.VITE_API_BASE_URL;
 export const hardcodedLanUrl = import.meta.env.VITE_API_LAN_URL;
 
-const { origin } = window.location;
+export const { origin } = window.location;
 export const isLan = origin.includes("192.168");
-export const isHosted = origin.includes("fly.dev") || origin.includes("0.0.0.0");
+export const isHosted =
+  origin.includes("fly.dev") || origin.includes("0.0.0.0");
 export const isLanOrHosted = isLan || isHosted;
 
 export const KEYS = {

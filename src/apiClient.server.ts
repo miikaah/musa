@@ -10,7 +10,8 @@ import {
   Theme,
 } from "@miikaah/musa-core";
 import { Settings } from "./reducers/settings.reducer";
-import { hardcodedBaseUrl, hardcodedLanUrl, isLanOrHosted } from "./config";
+import { hardcodedBaseUrl, isLanOrHosted, origin } from "./config";
+import { getSrc } from "./util";
 
 const baseUrl = isLanOrHosted ? origin : hardcodedBaseUrl;
 const defaultHeaders = {
@@ -22,11 +23,7 @@ const get = async (path: string) => {
 };
 
 const getByUrl = async (url: string) => {
-  const actualUrl = isLanOrHosted
-    ? url.replace(hardcodedBaseUrl, hardcodedLanUrl)
-    : url;
-
-  return fetch(actualUrl).then((response) => response.json());
+  return fetch(getSrc(url)).then((response) => response.json());
 };
 
 const post = async (

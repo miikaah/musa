@@ -8,7 +8,6 @@ import {
   hardcodedLanUrl,
   isHosted,
   isLan,
-  isLanOrHosted,
 } from "./config";
 
 export const getReplaygainDb = (
