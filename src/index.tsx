@@ -16,7 +16,7 @@ store.subscribe(() => {
   const settings = { ...store.getState().settings } as Partial<SettingsState>;
   // Delete functions because they can not be serialized to JSON
   delete settings.t;
-  
+
   if (settings.isInit && !isEqual(previousSettings, settings)) {
     clearTimeout(timerId);
 
@@ -25,7 +25,7 @@ store.subscribe(() => {
         ...settings,
         isInit: null,
       });
-    }, 2000);
+    }, 1000);
 
     previousSettings = settings;
   }
