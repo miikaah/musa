@@ -5,11 +5,11 @@ import isEqual from "lodash.isequal";
 import ErrorBoundary from "./ErrorBoundary";
 import App from "./App.jsx";
 import Api from "./apiClient";
+import { disableHeartbeat } from "./config";
 import { SettingsState } from "./reducers/settings.reducer";
-import { store } from "./store";
-
-import "./index.css";
 import { PlayerState } from "./reducers/player.reducer";
+import { store } from "./store";
+import "./index.css";
 
 let previousSettings: Partial<SettingsState> | undefined;
 let previousPlayer: Partial<PlayerState> | undefined;
@@ -23,6 +23,7 @@ store.subscribe(() => {
 
   // Turn on the heartbeat monitor when starting playing and close it in the opposite case
   if (
+    !disableHeartbeat &&
     origin.includes("fly.dev") &&
     !previousPlayer?.isPlaying &&
     player.isPlaying
@@ -31,6 +32,7 @@ store.subscribe(() => {
       await fetch(`${window.origin}/heartbeat`);
     }, 30_000);
   } else if (
+    !disableHeartbeat &&
     origin.includes("fly.dev") &&
     previousPlayer?.isPlaying &&
     !player.isPlaying
