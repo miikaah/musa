@@ -11,8 +11,8 @@ import { store } from "./store";
 import "./index.css";
 import { PlayerState } from "./reducers/player.reducer";
 
-let previousSettings: Partial<SettingsState>;
-let previousPlayer: Partial<PlayerState>;
+let previousSettings: Partial<SettingsState> | undefined;
+let previousPlayer: Partial<PlayerState> | undefined;
 let insertSettingsTimerId: NodeJS.Timeout;
 let heartbeatMonitorTimerId: NodeJS.Timeout;
 
@@ -24,7 +24,7 @@ store.subscribe(() => {
   // Turn on the heartbeat monitor when starting playing and close it in the opposite case
   if (
     origin.includes("fly.dev") &&
-    !previousPlayer.isPlaying &&
+    !previousPlayer?.isPlaying &&
     player.isPlaying
   ) {
     heartbeatMonitorTimerId = setInterval(async () => {
@@ -32,7 +32,7 @@ store.subscribe(() => {
     }, 30_000);
   } else if (
     origin.includes("fly.dev") &&
-    previousPlayer.isPlaying &&
+    previousPlayer?.isPlaying &&
     !player.isPlaying
   ) {
     clearInterval(heartbeatMonitorTimerId);
