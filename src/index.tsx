@@ -30,7 +30,7 @@ store.subscribe(() => {
   ) {
     heartbeatMonitorTimerId = setInterval(async () => {
       await fetch(`${window.origin}/heartbeat`);
-    }, 45_000);
+    }, 10_000);
   } else if (
     !disableHeartbeat &&
     origin.includes("fly.dev") &&
