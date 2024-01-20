@@ -29,7 +29,7 @@ store.subscribe(() => {
     player.isPlaying
   ) {
     heartbeatMonitorTimerId = setInterval(async () => {
-      await fetch(`${window.origin}/heartbeat`);
+      await fetch(`${window.origin}/heartbeat`, { method: 'HEAD' });
     }, 10_000);
   } else if (
     !disableHeartbeat &&
