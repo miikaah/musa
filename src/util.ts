@@ -127,7 +127,7 @@ export const getSrc = (url: string) => {
   const maybeModifiedUrl = isLan
     ? url.replace(hardcodedBaseUrl, hardcodedLanUrl)
     : isHosted
-    ? url.replace(hardcodedBaseUrl, window.origin)
+    ? url.replace(hardcodedBaseUrl, window.origin).replace(":80", '')
     : url;
 
   return maybeModifiedUrl;

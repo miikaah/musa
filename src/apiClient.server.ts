@@ -13,7 +13,7 @@ import { Settings } from "./reducers/settings.reducer";
 import { hardcodedBaseUrl, isLanOrHosted, origin } from "./config";
 import { getSrc } from "./util";
 
-const baseUrl = isLanOrHosted ? origin : hardcodedBaseUrl;
+const baseUrl = isLanOrHosted ? origin.replace(":80", '') : hardcodedBaseUrl;
 const defaultHeaders = {
   "Content-Type": "application/json",
 };
