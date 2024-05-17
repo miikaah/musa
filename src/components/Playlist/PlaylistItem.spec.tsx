@@ -65,7 +65,7 @@ describe("PlaylistItem", () => {
       state,
     );
 
-    expect(screen.getByRole("img")).toBeInTheDocument();
+    expect(screen.getByAltText("Album image")).toBeInTheDocument();
     expect(screen.getByText(title)).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemEditButton")).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButton")).toBeInTheDocument();

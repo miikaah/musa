@@ -67,7 +67,7 @@ const AlbumImage = ({ item, animate = true }: AlbumImageProps) => {
     ? "musa-placeholder-icon-flac.png"
     : "musa-placeholder-icon-ogg.png";
 
-  return <Image alt="" animate={animate} src={getSrc(src)} />;
+  return <Image alt="Album image" animate={animate} src={getSrc(src)} />;
 };
 
 export default AlbumImage;
