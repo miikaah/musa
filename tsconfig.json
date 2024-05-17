@@ -9,7 +9,11 @@
     "strict": true,
     "outDir": "dist",
     "jsx": "react",
-    "types": ["vitest/globals", "vitest-dom/extend-expect"],
+    "types": [
+      "vitest/globals",
+      "vitest-dom/extend-expect",
+      "@testing-library/jest-dom"
+    ],
     "skipLibCheck": true
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx", "./test/**/*.tsx"]
