@@ -19,7 +19,7 @@
       "automerge": true
     },
     {
-      "packageNames": ["react-redux", "redux"],
+      "matchPackageNames": ["react-redux", "redux"],
       "enabled": false
     }
   ]
