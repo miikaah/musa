@@ -15,7 +15,7 @@ jpeg, png and webp images.
 
 ### V4
 
-- feat: Remove adversarial characters ('"etc) from search queries
+- feat: Add normalization GUI
 - feat: Improve colors for blue slider track and red border on playlist (The Future cover)
 - fix: Prevent popping when changing FIR eq
 - feat: in year search only return artists who have albums or songs in that year
@@ -26,13 +26,12 @@ jpeg, png and webp images.
 - feat: Write tags from sratch
 - feat: Make library and tag updates work without refresh
 - feat: Bulk album tags editor + deduce tags from filename
-- feat: Add ReplayGain scanning
 - feat: Make navigation work with keyboard
 - feat: Create srcset of album covers
 - investigate: Script for downloading all impulse responses from AutoEQ repo?
 - investigate: How hard is it to write a rudimentary multiband compressor?
 - feat: Open mp3, flac and ogg files from filesystem
-- feat: Add Dynamic Range scanning
+- feat: Remove adversarial trash characters like ' from search terms
 
 #### Cross platform
 
