@@ -50,7 +50,7 @@
     "@vitejs/plugin-react-swc": "3.7.0",
     "@vitest/coverage-v8": "1.6.0",
     "env-cmd": "10.1.0",
-    "esbuild": "0.21.5",
+    "esbuild": "0.23.0",
     "esbuild-plugin-inline-image": "0.0.9",
     "eslint": "8.57.0",
     "eslint-config-react-app": "7.0.1",
