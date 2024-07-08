@@ -8,13 +8,15 @@ import {
   Theme,
   Tags,
   Playlist,
+  Unit,
+  Results,
 } from "@miikaah/musa-core";
 import * as ElectronApi from "./apiClient.electron";
 import * as ServerApi from "./apiClient.server";
 import { isElectron } from "./config";
 import { Settings } from "./reducers/settings.reducer";
 
-const getSettings = async (): Promise<Settings> => {
+export const getSettings = async (): Promise<Settings> => {
   if (isElectron) {
     return ElectronApi.getSettings();
   } else {
@@ -22,7 +24,7 @@ const getSettings = async (): Promise<Settings> => {
   }
 };
 
-const insertSettings = (settings: Partial<Settings>) => {
+export const insertSettings = (settings: Partial<Settings>) => {
   if (isElectron) {
     return ElectronApi.insertSettings(settings);
   } else {
@@ -30,7 +32,9 @@ const insertSettings = (settings: Partial<Settings>) => {
   }
 };
 
-const getAudioById = async (idOrUrl: string): Promise<AudioWithMetadata> => {
+export const getAudioById = async (
+  idOrUrl: string,
+): Promise<AudioWithMetadata> => {
   if (isElectron) {
     return ElectronApi.getAudioById(idOrUrl);
   } else {
@@ -38,7 +42,7 @@ const getAudioById = async (idOrUrl: string): Promise<AudioWithMetadata> => {
   }
 };
 
-const getArtists = async () => {
+export const getArtists = async () => {
   if (isElectron) {
     return ElectronApi.getArtists();
   } else {
@@ -46,7 +50,7 @@ const getArtists = async () => {
   }
 };
 
-const getArtistById = async (idOrUrl: string): Promise<Artist> => {
+export const getArtistById = async (idOrUrl: string): Promise<Artist> => {
   if (isElectron) {
     return ElectronApi.getArtistById(idOrUrl);
   } else {
@@ -54,7 +58,7 @@ const getArtistById = async (idOrUrl: string): Promise<Artist> => {
   }
 };
 
-const getArtistAlbums = async (
+export const getArtistAlbums = async (
   id: string,
 ): Promise<ArtistWithEnrichedAlbums> => {
   if (isElectron) {
@@ -64,7 +68,7 @@ const getArtistAlbums = async (
   }
 };
 
-const getAlbumById = async (
+export const getAlbumById = async (
   idOrUrl: string,
 ): Promise<AlbumWithFilesAndMetadata> => {
   if (isElectron) {
@@ -74,7 +78,7 @@ const getAlbumById = async (
   }
 };
 
-const getThemes = async (): Promise<Theme[]> => {
+export const getThemes = async (): Promise<Theme[]> => {
   if (isElectron) {
     return ElectronApi.getThemes();
   } else {
@@ -82,7 +86,7 @@ const getThemes = async (): Promise<Theme[]> => {
   }
 };
 
-const insertTheme = async ({
+export const insertTheme = async ({
   id,
   colors,
 }: {
@@ -96,7 +100,7 @@ const insertTheme = async ({
   }
 };
 
-const updateTheme = async ({
+export const updateTheme = async ({
   id,
   colors,
 }: {
@@ -110,7 +114,7 @@ const updateTheme = async ({
   }
 };
 
-const getThemeById = async ({ id }: { id: string }): Promise<Theme> => {
+export const getThemeById = async ({ id }: { id: string }): Promise<Theme> => {
   if (isElectron) {
     return ElectronApi.getThemeById({ id });
   } else {
@@ -118,7 +122,7 @@ const getThemeById = async ({ id }: { id: string }): Promise<Theme> => {
   }
 };
 
-const removeTheme = async ({ id }: { id: string }): Promise<void> => {
+export const removeTheme = async ({ id }: { id: string }): Promise<void> => {
   if (isElectron) {
     return ElectronApi.removeTheme({ id });
   } else {
@@ -126,7 +130,7 @@ const removeTheme = async ({ id }: { id: string }): Promise<void> => {
   }
 };
 
-const getAllGenres = async (): Promise<string[]> => {
+export const getAllGenres = async (): Promise<string[]> => {
   if (isElectron) {
     return ElectronApi.getAllGenres();
   } else {
@@ -134,7 +138,7 @@ const getAllGenres = async (): Promise<string[]> => {
   }
 };
 
-const find = async (queryToBackend: string): Promise<FindResult> => {
+export const find = async (queryToBackend: string): Promise<FindResult> => {
   if (isElectron) {
     return ElectronApi.find(queryToBackend);
   } else {
@@ -142,7 +146,7 @@ const find = async (queryToBackend: string): Promise<FindResult> => {
   }
 };
 
-const findRandom = async (): Promise<FindResult> => {
+export const findRandom = async (): Promise<FindResult> => {
   if (isElectron) {
     return ElectronApi.findRandom();
   } else {
@@ -150,7 +154,7 @@ const findRandom = async (): Promise<FindResult> => {
   }
 };
 
-const findRandomWithLockedSearchTerm = async (
+export const findRandomWithLockedSearchTerm = async (
   term: string,
 ): Promise<FindResult> => {
   if (isElectron) {
@@ -160,7 +164,7 @@ const findRandomWithLockedSearchTerm = async (
   }
 };
 
-const writeTags = async (
+export const writeTags = async (
   id: string,
   tags: Partial<Tags>,
 ): Promise<undefined | Error> => {
@@ -173,7 +177,7 @@ const writeTags = async (
 
 // Server specific APIs
 
-const insertPlaylist = async (pathIds: string[]): Promise<Playlist> => {
+export const insertPlaylist = async (pathIds: string[]): Promise<Playlist> => {
   if (isElectron) {
     throw new Error("Not implemented");
   } else {
@@ -181,14 +185,18 @@ const insertPlaylist = async (pathIds: string[]): Promise<Playlist> => {
   }
 };
 
-const getPlaylist = async (id: string): Promise<Playlist | undefined> => {
+export const getPlaylist = async (
+  id: string,
+): Promise<Playlist | undefined> => {
   if (isElectron) {
   } else {
     return ServerApi.getPlaylist({ id });
   }
 };
 
-const getPlaylistAudios = async (id: string): Promise<AudioWithMetadata[]> => {
+export const getPlaylistAudios = async (
+  id: string,
+): Promise<AudioWithMetadata[]> => {
   if (isElectron) {
     throw new Error("Not implemented");
   } else {
@@ -198,7 +206,7 @@ const getPlaylistAudios = async (id: string): Promise<AudioWithMetadata[]> => {
 
 // Electron specific APIs
 
-const addMusicLibraryPath = async (): Promise<string | undefined> => {
+export const addMusicLibraryPath = async (): Promise<string | undefined> => {
   if (!isElectron) {
     return;
   }
@@ -206,7 +214,7 @@ const addMusicLibraryPath = async (): Promise<string | undefined> => {
   return ElectronApi.addMusicLibraryPath();
 };
 
-const getPlatform = async (): Promise<string | undefined> => {
+export const getPlatform = async (): Promise<string | undefined> => {
   if (!isElectron) {
     return;
   }
@@ -214,7 +222,7 @@ const getPlatform = async (): Promise<string | undefined> => {
   return ElectronApi.getPlatform();
 };
 
-const minimizeWindow = async (): Promise<void> => {
+export const minimizeWindow = async (): Promise<void> => {
   if (!isElectron) {
     return;
   }
@@ -222,7 +230,7 @@ const minimizeWindow = async (): Promise<void> => {
   return ElectronApi.minimizeWindow();
 };
 
-const maximizeWindow = async (): Promise<void> => {
+export const maximizeWindow = async (): Promise<void> => {
   if (!isElectron) {
     return;
   }
@@ -230,7 +238,7 @@ const maximizeWindow = async (): Promise<void> => {
   return ElectronApi.maximizeWindow();
 };
 
-const unmaximizeWindow = async (): Promise<void> => {
+export const unmaximizeWindow = async (): Promise<void> => {
   if (!isElectron) {
     return;
   }
@@ -238,7 +246,7 @@ const unmaximizeWindow = async (): Promise<void> => {
   return ElectronApi.unmaximizeWindow();
 };
 
-const isWindowMaximized = async (): Promise<boolean | undefined> => {
+export const isWindowMaximized = async (): Promise<boolean | undefined> => {
   if (!isElectron) {
     return;
   }
@@ -246,7 +254,7 @@ const isWindowMaximized = async (): Promise<boolean | undefined> => {
   return ElectronApi.isWindowMaximized();
 };
 
-const closeWindow = async (): Promise<void> => {
+export const closeWindow = async (): Promise<void> => {
   if (!isElectron) {
     return;
   }
@@ -254,7 +262,7 @@ const closeWindow = async (): Promise<void> => {
   return ElectronApi.closeWindow();
 };
 
-const refreshLibrary = () => {
+export const refreshLibrary = () => {
   if (!isElectron) {
     return;
   }
@@ -262,7 +270,7 @@ const refreshLibrary = () => {
   return ElectronApi.refreshLibrary();
 };
 
-const onInit = async (): Promise<void> => {
+export const onInit = async (): Promise<void> => {
   if (!isElectron) {
     return;
   }
@@ -278,7 +286,7 @@ export type ScanStartListenerCallback = ({
   scanColor: string;
 }) => void;
 
-const addScanStartListener = (callback: ScanStartListenerCallback) => {
+export const addScanStartListener = (callback: ScanStartListenerCallback) => {
   if (!isElectron) {
     return;
   }
@@ -292,7 +300,7 @@ export type ScanUpdateListenerCallback = ({
   scannedLength: number;
 }) => void;
 
-const addScanUpdateListener = (callback: ScanUpdateListenerCallback) => {
+export const addScanUpdateListener = (callback: ScanUpdateListenerCallback) => {
   if (!isElectron) {
     return;
   }
@@ -302,7 +310,9 @@ const addScanUpdateListener = (callback: ScanUpdateListenerCallback) => {
 
 export type ScanEndCompleteListenerCallback = () => void;
 
-const addScanEndListener = (callback: ScanEndCompleteListenerCallback) => {
+export const addScanEndListener = (
+  callback: ScanEndCompleteListenerCallback,
+) => {
   if (!isElectron) {
     return;
   }
@@ -310,7 +320,9 @@ const addScanEndListener = (callback: ScanEndCompleteListenerCallback) => {
   return ElectronApi.addScanEndListener(callback);
 };
 
-const addScanCompleteListener = (callback: ScanEndCompleteListenerCallback) => {
+export const addScanCompleteListener = (
+  callback: ScanEndCompleteListenerCallback,
+) => {
   if (!isElectron) {
     return;
   }
@@ -318,7 +330,7 @@ const addScanCompleteListener = (callback: ScanEndCompleteListenerCallback) => {
   return ElectronApi.addScanCompleteListener(callback);
 };
 
-const getAudiosByFilepaths = (
+export const getAudiosByFilepaths = (
   paths: string[],
 ): Promise<AudioWithMetadata[]> => {
   if (!isElectron) {
@@ -328,40 +340,10 @@ const getAudiosByFilepaths = (
   return ElectronApi.getAudiosByFilepaths(paths);
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
-  getSettings,
-  insertSettings,
-  getAudioById,
-  getArtists,
-  getArtistById,
-  getArtistAlbums,
-  getAlbumById,
-  getThemes,
-  getThemeById,
-  insertTheme,
-  updateTheme,
-  removeTheme,
-  getAllGenres,
-  find,
-  findRandom,
-  findRandomWithLockedSearchTerm,
-  writeTags,
-  insertPlaylist,
-  getPlaylist,
-  getPlaylistAudios,
-  addMusicLibraryPath,
-  getPlatform,
-  minimizeWindow,
-  maximizeWindow,
-  unmaximizeWindow,
-  isWindowMaximized,
-  closeWindow,
-  refreshLibrary,
-  onInit,
-  addScanStartListener,
-  addScanUpdateListener,
-  addScanEndListener,
-  addScanCompleteListener,
-  getAudiosByFilepaths,
+export const normalizeMany = (units: Unit[]): Promise<Results> => {
+  if (!isElectron) {
+    throw new Error("Not implemented");
+  }
+
+  return ElectronApi.normalizeMany(units);
 };

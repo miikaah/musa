@@ -6,6 +6,7 @@ import {
   AudioWithMetadata,
   Colors,
   FindResult,
+  Results,
   Tags,
   Theme,
 } from "@miikaah/musa-core";
@@ -54,6 +55,9 @@ export type ElectronApi = {
   addScanCompleteListener: (
     callback: ScanEndCompleteListenerCallback,
   ) => Promise<void>;
+  normalizeMany: (
+    units: Unit[],
+  ) => Promise<Results>;
 };
 
 declare global {

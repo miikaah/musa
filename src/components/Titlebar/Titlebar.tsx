@@ -8,7 +8,7 @@ import { isCtrlDown, dispatchToast } from "../../util";
 import { KEYS, isElectron } from "../../config";
 import Library, { LibraryMode } from "../Library";
 import { breakpoints } from "../../breakpoints";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { PlayerState } from "../../reducers/player.reducer";
 import { TranslateFn } from "../../i18n";

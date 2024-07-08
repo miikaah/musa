@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { addToPlaylist } from "../../reducers/player.reducer";
 import { isElectron } from "../../config";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 import { breakpoints } from "../../breakpoints";
 
 const Container = styled.li`

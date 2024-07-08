@@ -5,7 +5,7 @@ import styled from "styled-components";
 import TagInput from "./TagInput";
 import TagTextarea from "./TagTextarea";
 import Button from "../Button";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 import { dispatchToast } from "../../util";
 import { ellipsisTextOverflow } from "../../common.styles";
 import { SettingsState } from "../../reducers/settings.reducer";

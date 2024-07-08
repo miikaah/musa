@@ -7,7 +7,7 @@ import { translate } from "../../i18n";
 import { render } from "../../../test/render";
 import { FALLBACK_THEME } from "../../config";
 import { updateCurrentTheme } from "../../util";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 
 const mockSetThemes = vi.fn();
 

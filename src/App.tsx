@@ -38,7 +38,7 @@ import {
   getQueryStringAsObject,
 } from "./util";
 import { breakpointsAsPixels } from "./breakpoints";
-import Api from "./apiClient";
+import * as Api from "./apiClient";
 import AppMain from "./views/AppMain";
 import Settings from "./views/Settings";
 import Search from "./views/Search";

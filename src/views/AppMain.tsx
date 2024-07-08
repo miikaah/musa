@@ -10,7 +10,7 @@ import Cover from "../components/Cover";
 import Modal from "../components/Modal";
 import TagEditor from "../components/TagEditor";
 import { isElectron } from "../config";
-import Api from "../apiClient";
+import * as Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
 
 const Container = styled.div`

@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import isEqual from "lodash.isequal";
 import ErrorBoundary from "./ErrorBoundary";
 import App from "./App.jsx";
-import Api from "./apiClient";
+import * as Api from "./apiClient";
 import { disableHeartbeat } from "./config";
 import { SettingsState } from "./reducers/settings.reducer";
 import { PlayerState } from "./reducers/player.reducer";
@@ -29,7 +29,7 @@ store.subscribe(() => {
     player.isPlaying
   ) {
     heartbeatMonitorTimerId = setInterval(async () => {
-      await fetch(`${window.origin}/heartbeat`, { method: 'HEAD' });
+      await fetch(`${window.origin}/heartbeat`, { method: "HEAD" });
     }, 10_000);
   } else if (
     !disableHeartbeat &&

@@ -9,7 +9,7 @@ import styled, { css } from "styled-components";
 import LibraryItem from "./LibraryItem";
 import AlbumCover from "../AlbumCover";
 import { isElectron } from "../../config";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 import {
   expandHeight,
   contractHeight,

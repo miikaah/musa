@@ -24,7 +24,7 @@ import Artist from "../components/Artist";
 import Button from "../components/Button";
 import Select from "../components/Select";
 import { isElectron } from "../config";
-import Api from "../apiClient";
+import * as Api from "../apiClient";
 import { ArrowDown as ArrowDownStyled } from "../common.styles";
 import { TranslateFn } from "../i18n";
 

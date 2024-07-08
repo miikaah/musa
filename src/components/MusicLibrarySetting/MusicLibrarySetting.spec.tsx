@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import MusicLibrarySetting from "./MusicLibrarySetting";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 
 const mockDispatch = vi.fn();
 vi.mock("react-redux", async () => ({

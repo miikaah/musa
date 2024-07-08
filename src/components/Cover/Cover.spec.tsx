@@ -9,7 +9,7 @@ import { translate } from "../../i18n";
 import { render } from "../../../test/render";
 import { FALLBACK_THEME } from "../../config";
 import { Swatch } from "../../img-palette/img-palette";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 import { setCoverData } from "../../reducers/player.reducer";
 import { updateSettings } from "../../reducers/settings.reducer";
 

@@ -6,7 +6,7 @@ import { audioFixture } from "../../fixtures/audio.fixture";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
 import { dispatchToast } from "../../util";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 
 const mockDispatch = vi.fn();
 vi.mock("react-redux", async () => ({

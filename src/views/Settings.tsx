@@ -11,7 +11,7 @@ import Button from "../components/Button";
 import BasePage from "../components/BasePage";
 import LanguageSetting from "../components/LanguageSetting";
 import { isElectron } from "../config";
-import Api from "../apiClient";
+import * as Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
 import { ProfileState } from "../reducers/profile.reducer";
 import { TranslateFn } from "../i18n";

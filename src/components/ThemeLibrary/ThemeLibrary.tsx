@@ -6,7 +6,7 @@ import { updateCurrentTheme } from "../../util";
 import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
 import ThemeBlock from "../ThemeBlock";
 import Button from "../Button";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 import { FALLBACK_THEME } from "../../config";
 import { TranslateFn } from "../../i18n";
 

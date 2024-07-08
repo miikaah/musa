@@ -13,7 +13,7 @@ import { setCoverData, PlayerState } from "../../reducers/player.reducer";
 import CoverInfo from "../CoverInfo";
 import ThemeBlock, { EditTarget } from "../ThemeBlock";
 import { rgb2hsl, hsl2rgb } from "../../colors";
-import Api from "../../apiClient";
+import * as Api from "../../apiClient";
 import { CoverData } from "../../types";
 
 type ColorsType = {
