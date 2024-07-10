@@ -18,8 +18,9 @@
       "enabled": false
     },
     {
-      "managers": ["nvm"],
-      "matchPackageNames": ["node"],
+      "fileMatch": ["(^|/)\\.nvmrc$"],
+      "versioning": "node",
+      "pinDigests": false,
       "automerge": true
     }
   ]
