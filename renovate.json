@@ -16,6 +16,11 @@
     {
       "matchPackageNames": ["eslint", "react-redux", "redux"],
       "enabled": false
+    },
+    {
+      "managers": ["nvm"],
+      "matchPackageNames": ["node"],
+      "automerge": true
     }
   ]
 }
