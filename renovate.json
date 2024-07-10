@@ -16,12 +16,6 @@
     {
       "matchPackageNames": ["eslint", "react-redux", "redux"],
       "enabled": false
-    },
-    {
-      "fileMatch": ["(^|/)\\.nvmrc$"],
-      "versioning": "node",
-      "pinDigests": false,
-      "automerge": true
     }
   ]
 }
