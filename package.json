@@ -3,6 +3,7 @@
   "version": "3.0.1",
   "private": true,
   "homepage": "./",
+  "type":"module",
   "scripts": {
     "setup": "shx mkdir build && shx mkdir build-server && shx cp .env.electron.ci.example .env.electron.prod && shx cp .env.server.ci.example .env.server.prod",
     "start:s": "vite --port 3667 --mode server",
