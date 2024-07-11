@@ -4,7 +4,6 @@ import {
   File as MusaFile,
   EnrichedAlbumFile,
 } from "@miikaah/musa-core";
-import isEmpty from "lodash.isempty";
 import { cleanUrl } from "../util";
 import { CoverData } from "../types";
 
@@ -163,7 +162,7 @@ const player = (state = initialState, action: PlayerAction) => {
       // * else take the first song in the playlist
       let newItem, newIndex;
 
-      if (!isEmpty(state.currentItem)) {
+      if (state.currentItem) {
         newItem = state.currentItem;
         newIndex = state.currentIndex;
       } else {
@@ -171,7 +170,7 @@ const player = (state = initialState, action: PlayerAction) => {
         newIndex = 0;
       }
 
-      if (!isEmpty(newItem)) {
+      if (newItem) {
         return {
           ...state,
           ...getPlayBase(newItem, newIndex),

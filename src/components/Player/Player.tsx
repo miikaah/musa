@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import isEmpty from "lodash.isempty";
 import styled, { css } from "styled-components";
 import {
   play,
@@ -150,7 +149,7 @@ const Player = ({
       event.preventDefault();
     }
     // PAUSE
-    if (isPlaying || isEmpty(playlist)) {
+    if (isPlaying || playlist.length < 1) {
       audioEl.pause();
       dispatch(pause());
       setCurrentTime(audioEl.currentTime || 0);
@@ -160,7 +159,7 @@ const Player = ({
     // Have to call resume because of Autoplay Policy. See: https://developer.chrome.com/blog/autoplay/#webaudio
     audioContext.resume();
 
-    if (!isEmpty(src)) {
+    if (src) {
       // BUGFIX: pause->play starting from beginning
       audioEl.currentTime = currentTime;
       audioEl.play();
