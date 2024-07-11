@@ -16,6 +16,7 @@ jpeg, png and webp images.
 ### V4
 
 - feat: Add normalization GUI
+- chore: Update eslint to v9
 - feat: Improve colors for blue slider track and red border on playlist (The Future cover)
 - fix: Prevent popping when changing FIR eq
 - feat: in year search only return artists who have albums or songs in that year
