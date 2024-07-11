@@ -1,7 +1,6 @@
 import { RgbColor } from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
-import defaultTo from "lodash.defaultto";
 import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import styled from "styled-components";
@@ -205,14 +204,16 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
     let ghostColor = Colors.TypographyGhost;
     let primaryColor = Colors.Typography;
     let secondaryColor = Colors.Typography;
+
+    const defaultSwatch = { population: 0 };
     let primarySwatches = [
-      defaultTo(palette.vibrantSwatch, {}),
-      defaultTo(palette.lightVibrantSwatch, {}),
-      defaultTo(palette.lightMutedSwatch, {}),
+      palette.vibrantSwatch ?? defaultSwatch,
+      palette.lightVibrantSwatch ?? defaultSwatch,
+      palette.lightMutedSwatch ?? defaultSwatch,
     ];
     let secondarySwatches = [
-      defaultTo(palette.mutedSwatch, {}),
-      defaultTo(palette.darkMutedSwatch, {}),
+      palette.mutedSwatch ?? defaultSwatch,
+      palette.darkMutedSwatch ?? defaultSwatch,
     ];
 
     // Set different colors for a light cover
@@ -222,12 +223,12 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
         ghostColor = Colors.TypographyGhostLight;
       }
       primarySwatches = [
-        defaultTo(palette.vibrantSwatch, {}),
-        defaultTo(palette.lightVibrantSwatch, {}),
+        palette.vibrantSwatch ?? defaultSwatch,
+        palette.lightVibrantSwatch ?? defaultSwatch,
       ];
       secondarySwatches = [
-        defaultTo(palette.lightVibrantSwatch, {}),
-        defaultTo(palette.lightMutedSwatch, {}),
+        palette.lightVibrantSwatch ?? defaultSwatch,
+        palette.lightMutedSwatch ?? defaultSwatch,
       ];
     }
 
@@ -235,7 +236,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
 
     const primaryPop = Math.max.apply(
       Math,
-      primarySwatches.map((s) => defaultTo(s.population, 0)),
+      primarySwatches.map((s) => s.population),
     );
     primary = swatchesByPopulationDesc.find((s) => s.population === primaryPop);
 
@@ -260,7 +261,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
 
     const secondaryPop = Math.max.apply(
       Math,
-      secondarySwatches.map((s) => defaultTo(s.population, 0)),
+      secondarySwatches.map((s) => s.population),
     );
     secondary = swatchesByPopulationDesc.find(
       (s) => s.population === secondaryPop,
@@ -308,13 +309,13 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
     }
 
     const colors = {
-      bg: defaultTo(bg.rgb, Colors.Bg),
-      primary: defaultTo(primary.rgb, Colors.PrimaryRgb),
-      secondary: defaultTo(secondary.rgb, Colors.SecondaryRgb),
-      typography: defaultTo(color, Colors.Typography),
-      typographyGhost: defaultTo(ghostColor, Colors.TypographyGhost),
-      typographyPrimary: defaultTo(primaryColor, Colors.Typography),
-      typographySecondary: defaultTo(secondaryColor, Colors.Typography),
+      bg: bg.rgb ?? Colors.Bg,
+      primary: primary.rgb ?? Colors.PrimaryRgb,
+      secondary: secondary.rgb ??  Colors.SecondaryRgb,
+      typography: color ?? Colors.Typography,
+      typographyGhost: ghostColor ?? Colors.TypographyGhost,
+      typographyPrimary: primaryColor ?? Colors.Typography,
+      typographySecondary: secondaryColor ?? Colors.Typography,
       slider: slider.rgb,
     };
 
@@ -507,8 +508,8 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
       secondaryColor = Colors.TypographyLight;
     }
 
-    colors.typographyPrimary = defaultTo(primaryColor, Colors.Typography);
-    colors.typographySecondary = defaultTo(secondaryColor, Colors.Typography);
+    colors.typographyPrimary = primaryColor ?? Colors.Typography;
+    colors.typographySecondary = secondaryColor ?? Colors.Typography;
 
     updateCurrentTheme(colors);
 

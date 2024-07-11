@@ -20,7 +20,6 @@
     "@fortawesome/fontawesome-svg-core": "6.5.2",
     "@fortawesome/free-solid-svg-icons": "6.5.2",
     "@fortawesome/react-fontawesome": "0.2.2",
-    "lodash.defaultto": "4.14.0",
     "lodash.isempty": "4.4.0",
     "lodash.isequal": "4.5.0",
     "lodash.sortby": "4.7.0",
