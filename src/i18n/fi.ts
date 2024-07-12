@@ -7,6 +7,7 @@ export default {
   "coverInfo.metadata.bitrate": "Bittinopeus",
   "coverInfo.metadata.sampleRate": "Näytteenottotaajuus",
   "library.filter.placeholder": "Suodata artisteja",
+  "modal.title.normalization": "Normalisaatio",
   "modal.closeButton": "Sulje",
   "playlist.instructions.title":
     "Raahaa tähän artisteja, albumeita ja kappaleita",

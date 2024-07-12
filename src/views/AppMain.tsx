@@ -8,10 +8,10 @@ import { addToPlaylist, pasteToPlaylist } from "../reducers/player.reducer";
 import Playlist from "../components/Playlist";
 import Cover from "../components/Cover";
 import Modal from "../components/Modal";
-import TagEditor from "../components/TagEditor";
 import { isElectron } from "../config";
 import * as Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
+import { NormalizationEditor } from "../components/NormalizationEditor";
 
 const Container = styled.div`
   padding: 0;
@@ -118,8 +118,11 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
       <Cover />
       <Playlist toggleModal={toggleModal} />
       {showModal && (
-        <Modal maxWidth={960} closeModal={closeModal}>
-          <TagEditor files={filesToEdit} />
+        <Modal
+          modalTitleTranslationKey="modal.title.normalization"
+          closeModal={closeModal}
+        >
+          <NormalizationEditor files={filesToEdit} />
         </Modal>
       )}
     </Container>

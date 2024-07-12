@@ -7,6 +7,7 @@ const en: Record<string, string | ((s: string) => string)> = {
   "coverInfo.metadata.bitrate": "Bitrate",
   "coverInfo.metadata.sampleRate": "Sample rate",
   "library.filter.placeholder": "Filter by artist",
+  "modal.title.normalization": "Normalization",
   "modal.closeButton": "Close",
   "playlist.instructions.title": "Drag and drop Artists, Albums and Songs here",
   "playlist.instructions.playControls": "Play controls",

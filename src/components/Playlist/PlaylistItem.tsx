@@ -10,6 +10,8 @@ import { ellipsisTextOverflow } from "../../common.styles";
 import AlbumImage from "../AlbumImage";
 import { breakpoints } from "../../breakpoints";
 
+const editButtonId = "PlaylistItemEditButton";
+
 const colorCss = css`
   background-color: var(--color-primary-highlight);
   color: var(--color-typography-primary);
@@ -196,6 +198,7 @@ export type MouseUpDownOptions = {
   index: number;
   isShiftDown: boolean;
   isCtrlDown: boolean;
+  isEditButtonPress: boolean;
 };
 
 type PlaylistItemProps = {
@@ -222,7 +225,6 @@ type PlaylistItemProps = {
     isCtrlDown,
   }: MouseUpDownOptions) => void;
   onScrollPlaylist: () => void;
-  toggleModal: (items: AudioWithMetadata[]) => void;
   removeItems: () => void;
 };
 
@@ -242,7 +244,6 @@ const PlaylistItem = ({
   onMouseDownItem,
   onMouseUpItem,
   onScrollPlaylist,
-  toggleModal,
   removeItems,
 }: PlaylistItemProps) => {
   const [lastTouchTime, setLastTouchTime] = useState(0);
@@ -322,11 +323,24 @@ const PlaylistItem = ({
     onSetActiveIndex(index);
   };
 
+  const checkIsEditButtonPress = (event: React.MouseEvent<HTMLLIElement>) => {
+    if (event.target instanceof Element) {
+      if (
+        event.target.id === editButtonId ||
+        event.target.parentElement?.id === editButtonId
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const handleMouseDown = (event: React.MouseEvent<HTMLLIElement>) => {
     onMouseDownItem({
       index,
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
+      isEditButtonPress: checkIsEditButtonPress(event),
     });
     event.stopPropagation();
   };
@@ -336,6 +350,7 @@ const PlaylistItem = ({
       index,
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
+      isEditButtonPress: checkIsEditButtonPress(event),
     });
     event.stopPropagation();
   };
@@ -399,10 +414,7 @@ const PlaylistItem = ({
         <FirstRow>
           <Title>{title}</Title>
           {!isMobile && (
-            <EditButton
-              onClick={() => toggleModal([item])}
-              data-testid="PlaylistItemEditButton"
-            >
+            <EditButton id={editButtonId} data-testid={editButtonId}>
               <div />
               <span />
               <span />

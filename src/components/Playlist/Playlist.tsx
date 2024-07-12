@@ -418,6 +418,14 @@ const Playlist = ({
   const onMouseDown = (options: MouseUpDownOptions) => {
     if (options.isShiftDown || options.isCtrlDown) return;
 
+    const sIndex = Math.min(startIndex, endIndex);
+    const eIndex = Math.max(startIndex, endIndex);
+    if (options.isEditButtonPress) {
+      const selectedItems = playlist.slice(sIndex, eIndex + 1);
+      toggleModal(selectedItems);
+      return;
+    }
+
     if (isMovingItems) {
       setIsMouseDown(false);
       setIsMovingItems(false);
@@ -582,6 +590,7 @@ const Playlist = ({
               : 0,
           isShiftDown: event.shiftKey,
           isCtrlDown: false,
+          isEditButtonPress: false,
         });
       }}
       onMouseUp={clearSelection}
@@ -604,7 +613,6 @@ const Playlist = ({
               onMouseDownItem={onMouseDown}
               onMouseUpItem={onMouseUp}
               onScrollPlaylist={scroll}
-              toggleModal={toggleModal}
               removeItems={removeItems}
               isMovingItems={isMovingItems}
             />
