@@ -13,7 +13,7 @@ const Container = styled.div<{ top?: number }>`
 `;
 
 const Wrapper = styled.div<{ top?: number }>`
-  width: 80vw;
+  width: 90vw;
   height: 60vh;
   padding: 64px 0 0;
   position: relative;

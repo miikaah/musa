@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const sharedCss = css`
   display: grid;
-  grid-template-columns: 4fr 10fr 10fr 14fr 34fr 10fr 10fr 8fr;
+  grid-template-columns: 4fr 10fr 10fr 14fr 28fr 16fr 10fr 8fr;
   font-size: var(--font-size-xxs);
   text-align: center;
 
@@ -28,7 +28,9 @@ const sharedCss = css`
     margin-left: 4px;
   }
 
-  > div:nth-of-type(5) {
+  > div:nth-of-type(5),
+  > div:nth-of-type(6),
+  > div:nth-of-type(7) {
     text-align: left;
   }
 `;
@@ -58,21 +60,16 @@ type NormalizationEditorProps = {
 
 export const NormalizationEditor = ({ files }: NormalizationEditorProps) => {
   const normalize = async () => {
-    console.log(files);
-    console.log([
-      {
-        album: "",
-        files: files.map((file) => file.fileUrl),
-      },
-    ]);
-    // console.log(
-    //   await Api.normalizeMany([
-    //     {
-    //       album: "",
-    //       files: files.map((file) => file.url),
-    //     },
-    //   ]),
-    // );
+    console.log(
+      await Api.normalizeMany([
+        {
+          album: "",
+          files: files
+            .map((file) => file.fileUrl)
+            .filter((url) => typeof url === "string"),
+        },
+      ]),
+    );
   };
 
   return (
@@ -94,9 +91,7 @@ export const NormalizationEditor = ({ files }: NormalizationEditorProps) => {
           <div>{file.metadata.replayGainAlbumGain?.dB ?? ""} dB</div>
           <div>
             <span>
-              {Number(file.metadata.replayGainTrackPeak?.ratio ?? "").toFixed(
-                5,
-              )}
+              {Number(file.metadata.replayGainTrackPeak?.ratio ?? 0).toFixed(5)}
             </span>
             <span>{` (${Number(file.metadata.replayGainTrackPeak?.dB ?? 0).toFixed(2)} dB)`}</span>
           </div>

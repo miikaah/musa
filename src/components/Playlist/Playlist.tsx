@@ -421,7 +421,10 @@ const Playlist = ({
     const sIndex = Math.min(startIndex, endIndex);
     const eIndex = Math.max(startIndex, endIndex);
     if (options.isEditButtonPress) {
-      const selectedItems = playlist.slice(sIndex, eIndex + 1);
+      const selectedItems =
+        !Number.isNaN(startIndex) && !Number.isNaN(endIndex) && endIndex > 0
+          ? playlist.slice(sIndex, eIndex + 1)
+          : playlist.slice(options.index, options.index + 1);
       toggleModal(selectedItems);
       return;
     }
