@@ -199,14 +199,4 @@ describe("Playlist", () => {
       }),
     );
   });
-
-  it("calls toggle modal click handler", async () => {
-    render(<Playlist toggleModal={mockToggleModal} />, state);
-
-    await userEvent.click(screen.getAllByTestId("PlaylistItemEditButton")[0]);
-
-    expect(mockToggleModal).toHaveBeenCalledWith([
-      artistFixture.albums[0].files[0],
-    ]);
-  });
 });

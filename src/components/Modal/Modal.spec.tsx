@@ -18,7 +18,7 @@ const state = {
 describe("Modal", () => {
   it("renders Modal component", async () => {
     render(
-      <Modal closeModal={mockCloseModal} maxWidth={420}>
+      <Modal modalTitleTranslationKey="foo" closeModal={mockCloseModal}>
         <p>{mockText}</p>
       </Modal>,
       state,
@@ -30,7 +30,7 @@ describe("Modal", () => {
 
   it("calls closeModal click handler", async () => {
     render(
-      <Modal closeModal={mockCloseModal} maxWidth={420}>
+      <Modal modalTitleTranslationKey="foo" closeModal={mockCloseModal}>
         <p>{mockText}</p>
       </Modal>,
       state,

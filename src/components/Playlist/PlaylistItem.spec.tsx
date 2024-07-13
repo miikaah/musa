@@ -15,7 +15,6 @@ vi.mock("react-redux", async () => ({
 }));
 
 const mockOnSetActiveIndex = vi.fn();
-const mockToggleModal = vi.fn();
 const mockRemoveItems = vi.fn();
 const mockOnMouseOverItem = vi.fn();
 const mockOnMouseDownItem = vi.fn();
@@ -59,7 +58,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={vi.fn()}
         onMouseUpItem={vi.fn()}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={vi.fn()}
       />,
       state,
@@ -93,7 +91,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={vi.fn()}
         onMouseUpItem={vi.fn()}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={vi.fn()}
       />,
       state2,
@@ -117,7 +114,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={vi.fn()}
         onMouseUpItem={vi.fn()}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={vi.fn()}
       />,
       state,
@@ -141,7 +137,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={vi.fn()}
         onMouseUpItem={vi.fn()}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={vi.fn()}
       />,
       state,
@@ -169,7 +164,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={vi.fn()}
         onMouseUpItem={vi.fn()}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={vi.fn()}
       />,
       state2,
@@ -196,7 +190,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={vi.fn()}
         onMouseUpItem={vi.fn()}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={vi.fn()}
       />,
       state,
@@ -222,7 +215,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={mockOnMouseDownItem}
         onMouseUpItem={vi.fn()}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={vi.fn()}
       />,
       state,
@@ -236,6 +228,7 @@ describe("PlaylistItem", () => {
       index: 0,
       isCtrlDown: true,
       isShiftDown: true,
+      isEditButtonPress: false,
     });
   });
 
@@ -254,7 +247,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={vi.fn()}
         onMouseUpItem={mockOnMouseUpItem}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={vi.fn()}
       />,
       state,
@@ -268,33 +260,8 @@ describe("PlaylistItem", () => {
       index: 0,
       isCtrlDown: true,
       isShiftDown: true,
+      isEditButtonPress: false,
     });
-  });
-
-  it("calls toggleModal on edit button click", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        toggleModal={mockToggleModal}
-        removeItems={vi.fn()}
-      />,
-      state,
-    );
-
-    await userEvent.click(screen.getByTestId("PlaylistItemEditButton"));
-
-    expect(mockToggleModal).toHaveBeenCalledWith([audioFixture]);
   });
 
   it("calls removeItems on remove button click", async () => {
@@ -312,7 +279,6 @@ describe("PlaylistItem", () => {
         onMouseDownItem={vi.fn()}
         onMouseUpItem={vi.fn()}
         onScrollPlaylist={vi.fn()}
-        toggleModal={vi.fn()}
         removeItems={mockRemoveItems}
       />,
       state,
