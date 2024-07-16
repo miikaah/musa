@@ -46,7 +46,7 @@
     "@types/react-dom": "18.3.0",
     "@types/react-redux": "7.1.33",
     "@vitejs/plugin-react-swc": "3.7.0",
-    "@vitest/coverage-v8": "2.0.2",
+    "@vitest/coverage-v8": "2.0.3",
     "env-cmd": "10.1.0",
     "esbuild": "0.23.0",
     "esbuild-plugin-inline-image": "0.0.9",
@@ -59,7 +59,7 @@
     "shx": "0.3.4",
     "typescript": "5.5.3",
     "vite": "5.3.3",
-    "vitest": "2.0.2",
+    "vitest": "2.0.3",
     "vitest-dom": "0.1.1"
   }
 }
