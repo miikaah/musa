@@ -60,6 +60,7 @@ type NormalizationEditorProps = {
 
 export const NormalizationEditor = ({ files }: NormalizationEditorProps) => {
   const normalize = async () => {
+    console.log("normalizeMany");
     console.log(
       await Api.normalizeMany([
         {
@@ -84,8 +85,8 @@ export const NormalizationEditor = ({ files }: NormalizationEditorProps) => {
         <div>Artist</div>
         <div>Year</div>
       </Header>
-      {files.map((file) => (
-        <Row key={file.id}>
+      {files.map((file, i) => (
+        <Row key={`${file.id}-${i}`}>
           <div>{file.metadata.track?.no ?? ""}</div>
           <div>{file.metadata.replayGainTrackGain?.dB ?? ""} dB</div>
           <div>{file.metadata.replayGainAlbumGain?.dB ?? ""} dB</div>
