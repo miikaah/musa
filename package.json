@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@emotion/is-prop-valid": "1.2.2",
-    "@fortawesome/fontawesome-svg-core": "6.5.2",
-    "@fortawesome/free-solid-svg-icons": "6.5.2",
+    "@fortawesome/fontawesome-svg-core": "6.6.0",
+    "@fortawesome/free-solid-svg-icons": "6.6.0",
     "@fortawesome/react-fontawesome": "0.2.2",
     "lodash.isequal": "4.5.0",
     "lodash.sortby": "4.7.0",
