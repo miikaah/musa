@@ -11,7 +11,7 @@ import Modal from "../components/Modal";
 import { isElectron } from "../config";
 import * as Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
-import { NormalizationEditor } from "../components/NormalizationEditor";
+import NormalizationEditor from "../components/NormalizationEditor";
 
 const Container = styled.div`
   padding: 0;

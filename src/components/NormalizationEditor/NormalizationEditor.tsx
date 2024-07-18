@@ -4,6 +4,9 @@ import styled, { css } from "styled-components";
 import Button from "../Button";
 import * as Api from "../../apiClient";
 import AlbumImage from "../AlbumImage";
+import { TranslateFn } from "../../i18n";
+import { connect } from "react-redux";
+import { SettingsState } from "../../reducers/settings.reducer";
 
 const Container = styled.div`
   width: 100%;
@@ -23,20 +26,18 @@ const AlbumContainer = styled.div`
 const AlbumWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 
-  > div:nth-of-type(4) {
-    margin-top: 10px;
-  }
-
-  > div:nth-of-type(4) {
-    font-size: var(--font-size-xxs);
+  > div:nth-of-type(2) {
+    margin: 10px 0 18px;
 
     > div {
       display: grid;
-      grid-template-columns: 45fr 55fr;
+      grid-template-columns: 40fr 60fr;
 
       > span:last-of-type {
         text-align: right;
+        font-family: Courier, "Lucida Console", Monaco, Consolas, monospace;
       }
     }
   }
@@ -44,22 +45,31 @@ const AlbumWrapper = styled.div`
 
 const sharedCss = css`
   display: grid;
-  grid-template-columns: 4fr 10fr 8fr 16fr 62fr;
-  font-size: var(--font-size-xxs);
+  grid-template-columns: 4fr 10fr 8fr 20fr 58fr;
   text-align: center;
 
   > div {
     width: 100%;
-    padding: 0 4px 4px;
   }
 
   > div:first-of-type {
     margin-left: 4px;
   }
 
-  > div:nth-of-type(5),
-  > div:nth-of-type(6),
-  > div:nth-of-type(7) {
+  > div:nth-of-type(2),
+  > div:nth-of-type(3) {
+    text-align: right;
+  }
+
+  > div:nth-of-type(2) {
+    padding-right: 4px;
+  }
+
+  > div:nth-of-type(3) {
+    padding-right: 14px;
+  }
+
+  > div:nth-of-type(5) {
     text-align: left;
   }
 `;
@@ -67,25 +77,33 @@ const sharedCss = css`
 const Header = styled.div`
   ${sharedCss}
   font-weight: 800;
+  margin-bottom: 4px;
+
+  > div:nth-of-type(4) {
+    text-align: center;
+  }
 `;
 
 const Row = styled.div`
   ${sharedCss}
+
+  > div {
+    font-family: Courier, "Lucida Console", Monaco, Consolas, monospace;
+  }
 `;
 
 const ActionsContainer = styled.div`
   display: flex;
   justify-content: right;
-  margin-top: 30px;
   position: absolute;
   bottom: 0;
   left: 0;
-  background: white;
+  background: rgba(255, 255, 255, 0.666);
   width: 100%;
 
   > button {
     max-width: 140px;
-    margin: 10px;
+    margin: 10px 20px 10px;
   }
 `;
 
@@ -104,7 +122,7 @@ const CoverWrapper = styled.div`
 `;
 
 const DataWrapper = styled.div`
-  padding-bottom: 30px;
+  padding-bottom: 40px;
 `;
 
 const resolveAlbums = (files: AudioWithMetadata[]) => {
@@ -115,6 +133,8 @@ const resolveAlbums = (files: AudioWithMetadata[]) => {
       album: string;
       year: string;
       coverUrl: string;
+      albumGainDb: string | number;
+      albumDynamicRangeDb: string | number;
       files: AudioWithMetadata[];
     }
   > = {};
@@ -128,10 +148,14 @@ const resolveAlbums = (files: AudioWithMetadata[]) => {
     const entry = albums[id] ?? {};
     const items = entry.files ?? [];
     albums[id] = {
-      artist: file.metadata.artist ?? "",
-      album: file.metadata.album ?? "",
-      year: `${file.metadata.year ?? ""}`,
-      coverUrl: file.coverUrl ?? "",
+      artist: file.metadata.artist ?? albums[id].artist ?? "",
+      album: file.metadata.album ?? albums[id].album ?? "",
+      year: `${file.metadata.year ?? albums[id].year ?? ""}`,
+      coverUrl: file.coverUrl ?? albums[id].coverUrl ?? "",
+      albumGainDb:
+        file.metadata.replayGainAlbumGain?.dB ?? albums[id].albumGainDb ?? "",
+      albumDynamicRangeDb:
+        file.metadata.dynamicRangeAlbum ?? albums[id].albumDynamicRangeDb ?? "",
       files: [...items, file],
     };
   }
@@ -141,9 +165,10 @@ const resolveAlbums = (files: AudioWithMetadata[]) => {
 
 type NormalizationEditorProps = {
   files: AudioWithMetadata[];
+  t: TranslateFn;
 };
 
-export const NormalizationEditor = ({ files }: NormalizationEditorProps) => {
+const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
   const [nAlbums, setNAlbums] = useState<NormalizationResults>({});
 
   const albums = resolveAlbums(files);
@@ -164,68 +189,99 @@ export const NormalizationEditor = ({ files }: NormalizationEditorProps) => {
   return (
     <>
       <Container>
-        {albums.map(([id, { artist, album, year, coverUrl, files }]) => (
-          <div key={id}>
-            <AlbumContainer>
-              <CoverWrapper>
-                <AlbumImage
-                  item={{ coverUrl } as AudioWithMetadata}
-                  animate={false}
-                />
-              </CoverWrapper>
-              <AlbumWrapper>
-                <div>{artist}</div>
-                <div>{album}</div>
-                <div>{year}</div>
-                <div>
-                  {nAlbums[id] && (
-                    <div>
-                      <span>Gain:</span>
-                      <span>{nAlbums[id]?.albumGainDb} dB</span>
-                    </div>
-                  )}
-                  {nAlbums[id] && (
-                    <div>
-                      <span>DR:</span>
-                      <span>{nAlbums[id]?.albumDynamicRangeDb} dB</span>
-                    </div>
-                  )}
-                </div>
-              </AlbumWrapper>
-            </AlbumContainer>
-            <DataWrapper>
-              <Header>
-                <div>#</div>
-                <div>Gain</div>
-                <div>DR</div>
-                <div>Peak</div>
-                <div>Name</div>
-              </Header>
-              {files.map((file, i) => (
-                <Row key={`${file.id}-${i}`}>
-                  <div>{file.metadata.track?.no ?? ""}</div>
-                  <div>{file.metadata.replayGainTrackGain?.dB ?? ""} dB</div>
-                  <div>{file.metadata.dynamicRange ?? ""} dB</div>
+        {albums.map(
+          ([
+            id,
+            {
+              artist,
+              album,
+              year,
+              coverUrl,
+              albumGainDb,
+              albumDynamicRangeDb,
+              files,
+            },
+          ]) => (
+            <div key={id}>
+              <AlbumContainer>
+                <CoverWrapper>
+                  <AlbumImage
+                    item={{ coverUrl } as AudioWithMetadata}
+                    animate={false}
+                  />
+                </CoverWrapper>
+                <AlbumWrapper>
                   <div>
-                    <span>
-                      {Number(
-                        file.metadata.replayGainTrackPeak?.ratio ?? 0,
-                      ).toFixed(5)}
-                    </span>
-                    <span>{` (${Number(file.metadata.replayGainTrackPeak?.dB ?? 0).toFixed(2)} dB)`}</span>
+                    <div>{artist}</div>
+                    <div>{album}</div>
+                    <div>{year}</div>
                   </div>
-                  <div>{file.name}</div>
-                </Row>
-              ))}
-            </DataWrapper>
-          </div>
-        ))}
+                  <div>
+                    {(albumGainDb !== "" || nAlbums[id]) && (
+                      <div>
+                        <span>{t("modal.normalization.gain")}</span>
+                        <span>
+                          {nAlbums[id]?.albumGainDb ?? albumGainDb} dB
+                        </span>
+                      </div>
+                    )}
+                    {(albumDynamicRangeDb !== "" || nAlbums[id]) && (
+                      <div>
+                        <span>{t("modal.normalization.dynamicRange")}</span>
+                        <span>
+                          {nAlbums[id]?.albumDynamicRangeDb ??
+                            albumDynamicRangeDb}{" "}
+                          dB
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </AlbumWrapper>
+              </AlbumContainer>
+              <DataWrapper>
+                <Header>
+                  <div>#</div>
+                  <div>{t("modal.normalization.gain")}</div>
+                  <div>{t("modal.normalization.dynamicRange")}</div>
+                  <div>{t("modal.normalization.peak")}</div>
+                  <div>{t("modal.normalization.name")}</div>
+                </Header>
+                {files.map((file, i) => (
+                  <Row key={`${file.id}-${i}`}>
+                    <div>{file.metadata.track?.no ?? ""}</div>
+                    <div>{file.metadata.replayGainTrackGain?.dB ?? ""} dB</div>
+                    <div>{file.metadata.dynamicRange ?? ""} dB</div>
+                    <div>
+                      <span>
+                        {Number(
+                          file.metadata.replayGainTrackPeak?.ratio ?? 0,
+                        ).toFixed(5)}
+                      </span>
+                      <span>{` (${
+                        file.metadata.replayGainTrackPeak?.dB
+                          .toString()
+                          .startsWith("-")
+                          ? ""
+                          : "+"
+                      }${Number(file.metadata.replayGainTrackPeak?.dB ?? 0).toFixed(2)} dB)`}</span>
+                    </div>
+                    <div>{file.name}</div>
+                  </Row>
+                ))}
+              </DataWrapper>
+            </div>
+          ),
+        )}
       </Container>
       <ActionsContainer>
         <Button isPrimary onClick={normalize}>
-          Normalize
+          {t("modal.normalization.normalizeButton")}
         </Button>
       </ActionsContainer>
     </>
   );
 };
+
+export default connect((state: { settings: SettingsState }) => ({
+  t: state.settings.t,
+}))(NormalizationEditor);

@@ -19,6 +19,8 @@ const Wrapper = styled.div<{ top?: number }>`
   position: relative;
   background: white;
   margin: auto;
+  max-width: 1080px;
+  max-height: 736px;
 `;
 
 const Title = styled.p`
@@ -38,8 +40,15 @@ const Title = styled.p`
 const CloseButton = styled.button`
   position: absolute;
   top: 20px;
-  right: 24px;
-  color: black;
+  right: 20px;
+  border-radius: 9px;
+  padding: 10px;
+  background-color: var(--color-secondary-highlight);
+  color: var(--color-typography-secondary);
+
+  > span:nth-of-type(2) {
+    margin: 0 8px;
+  }
 `;
 
 type ModalProps = {
@@ -65,7 +74,9 @@ const Modal = ({
         </Title>
         {closeModal && (
           <CloseButton onClick={closeModal}>
-            {t("modal.closeButton")}
+            <span>X</span>
+            <span>|</span>
+            <span>{t("modal.closeButton")}</span>
           </CloseButton>
         )}
         {children}

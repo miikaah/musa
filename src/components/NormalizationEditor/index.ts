@@ -1,1 +1,1 @@
-export { NormalizationEditor } from './NormalizationEditor'
+export { default } from "./NormalizationEditor";

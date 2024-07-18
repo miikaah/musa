@@ -9,6 +9,11 @@ export default {
   "library.filter.placeholder": "Suodata artisteja",
   "modal.title.normalization": "Normalisaatio",
   "modal.closeButton": "Sulje",
+  "modal.normalization.gain": "Vahvistus",
+  "modal.normalization.dynamicRange": "DA",
+  "modal.normalization.peak": "Maksimi",
+  "modal.normalization.name": "Nimi",
+  "modal.normalization.normalizeButton": "Normalisoi",
   "playlist.instructions.title":
     "Raahaa tähän artisteja, albumeita ja kappaleita",
   "playlist.instructions.playControls": "Toiston hallinta",

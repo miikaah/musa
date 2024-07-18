@@ -11,7 +11,7 @@ const ButtonContainer = styled.button<Partial<ButtonContainerProps>>`
   width: 100%;
   font-size: 1rem;
   padding: 12px;
-  border-radius: 3px;
+  border-radius: 9px;
   font-weight: bold;
 
   ${({ isSecondary }) =>
