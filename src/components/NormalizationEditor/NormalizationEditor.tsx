@@ -31,16 +31,24 @@ const AlbumWrapper = styled.div`
   > div:nth-of-type(2) {
     margin: 10px 0 18px;
 
-    > div {
-      display: grid;
-      grid-template-columns: 40fr 60fr;
+    > table {
+      font-family: Courier, "Lucida Console", Monaco, Consolas, monospace;
 
-      > span:last-of-type {
-        text-align: right;
-        font-family: Courier, "Lucida Console", Monaco, Consolas, monospace;
+      > tbody {
+        > tr {
+          > td:last-of-type {
+            padding-left: 8px;
+            text-align: right;
+          }
+        }
       }
     }
   }
+`;
+
+const DataWrapper = styled.div`
+  padding-bottom: 40px;
+  margin-left: 20px;
 `;
 
 const sharedCss = css`
@@ -50,10 +58,6 @@ const sharedCss = css`
 
   > div {
     width: 100%;
-  }
-
-  > div:first-of-type {
-    margin-left: 4px;
   }
 
   > div:nth-of-type(2),
@@ -98,7 +102,11 @@ const ActionsContainer = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  background: rgba(255, 255, 255, 0.666);
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
   width: 100%;
 
   > button {
@@ -119,10 +127,6 @@ const CoverWrapper = styled.div`
     height: 120px;
     object-fit: scale-down;
   }
-`;
-
-const DataWrapper = styled.div`
-  padding-bottom: 40px;
 `;
 
 const resolveAlbums = (files: AudioWithMetadata[]) => {
@@ -245,24 +249,28 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
                     <div>{year}</div>
                   </div>
                   <div>
-                    {(albumGainDb !== "" || nAlbums[id]) && (
-                      <div>
-                        <span>{t("modal.normalization.gain")}</span>
-                        <span>
-                          {nAlbums[id]?.albumGainDb ?? albumGainDb} dB
-                        </span>
-                      </div>
-                    )}
-                    {(albumDynamicRangeDb !== "" || nAlbums[id]) && (
-                      <div>
-                        <span>{t("modal.normalization.dynamicRange")}</span>
-                        <span>
-                          {nAlbums[id]?.albumDynamicRangeDb ??
-                            albumDynamicRangeDb}{" "}
-                          dB
-                        </span>
-                      </div>
-                    )}
+                    <table>
+                      <tbody>
+                        {(albumGainDb !== "" || nAlbums[id]) && (
+                          <tr>
+                            <td>{t("modal.normalization.gain")}</td>
+                            <td>
+                              {nAlbums[id]?.albumGainDb ?? albumGainDb} dB
+                            </td>
+                          </tr>
+                        )}
+                        {(albumDynamicRangeDb !== "" || nAlbums[id]) && (
+                          <tr>
+                            <td>{t("modal.normalization.dynamicRange")}</td>
+                            <td>
+                              {nAlbums[id]?.albumDynamicRangeDb ??
+                                albumDynamicRangeDb}{" "}
+                              dB
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 </AlbumWrapper>
               </AlbumContainer>
@@ -270,14 +278,14 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
                 <Header>
                   <div>#</div>
                   <div>{t("modal.normalization.gain")}</div>
-                  <div>{t("modal.normalization.dynamicRange")}</div>
+                  <div>{t("modal.normalization.dr")}</div>
                   <div>{t("modal.normalization.peak")}</div>
                   <div>{t("modal.normalization.name")}</div>
                 </Header>
                 {resolveFiles(files, nAlbums[id]?.files).map((file, i) => (
                   <Row key={`${file.filepath}-${i}`}>
                     <div>{file.track ?? ""}</div>
-                    <div>{file.gainDb ?? ""} dB</div>
+                    <div>{file.gainDb?.toFixed(2) ?? ""} dB</div>
                     <div>{file.dynamicRangeDb ?? ""} dB</div>
                     <div>
                       <span>{Number(file.samplePeak ?? 0).toFixed(5)}</span>

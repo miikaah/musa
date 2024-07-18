@@ -79,3 +79,12 @@ textarea {
   font-size: var(--font-size-md);
   font-family: Arial, sans-serif;
 }
+
+table,
+th,
+td {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  border-collapse: collapse;
+}
