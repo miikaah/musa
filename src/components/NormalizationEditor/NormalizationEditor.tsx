@@ -163,6 +163,34 @@ const resolveAlbums = (files: AudioWithMetadata[]) => {
   return Object.entries(albums);
 };
 
+const isFilesystemFiles = (
+  files: NormalizationResults[string]["files"] | AudioWithMetadata[],
+): files is AudioWithMetadata[] => "metadata" in files[0];
+
+const resolveFiles = (
+  files: AudioWithMetadata[],
+  nAlbumFiles?: NormalizationResults[string]["files"],
+) => {
+  return files.map((file) => {
+    const aFile = nAlbumFiles?.find((f) => f.filepath === file.fileUrl);
+    return {
+      name: file.name,
+      track: file.track,
+      filepath: file.fileUrl ?? "",
+      targetLevelDb: aFile?.targetLevelDb ?? -18,
+      gainDb: aFile?.gainDb ?? file.metadata.replayGainTrackGain?.dB,
+      samplePeak:
+        aFile?.samplePeak ??
+        Number(file.metadata.replayGainTrackPeak?.ratio ?? 0),
+      samplePeakDb:
+        aFile?.samplePeakDb ??
+        Number(file.metadata.replayGainTrackPeak?.dB ?? 0),
+      dynamicRangeDb:
+        aFile?.dynamicRangeDb ?? Number(file.metadata.dynamicRange ?? 0),
+    };
+  });
+};
+
 type NormalizationEditorProps = {
   files: AudioWithMetadata[];
   t: TranslateFn;
@@ -246,24 +274,16 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
                   <div>{t("modal.normalization.peak")}</div>
                   <div>{t("modal.normalization.name")}</div>
                 </Header>
-                {files.map((file, i) => (
-                  <Row key={`${file.id}-${i}`}>
-                    <div>{file.metadata.track?.no ?? ""}</div>
-                    <div>{file.metadata.replayGainTrackGain?.dB ?? ""} dB</div>
-                    <div>{file.metadata.dynamicRange ?? ""} dB</div>
+                {resolveFiles(files, nAlbums[id]?.files).map((file, i) => (
+                  <Row key={`${file.filepath}-${i}`}>
+                    <div>{file.track ?? ""}</div>
+                    <div>{file.gainDb ?? ""} dB</div>
+                    <div>{file.dynamicRangeDb ?? ""} dB</div>
                     <div>
-                      <span>
-                        {Number(
-                          file.metadata.replayGainTrackPeak?.ratio ?? 0,
-                        ).toFixed(5)}
-                      </span>
+                      <span>{Number(file.samplePeak ?? 0).toFixed(5)}</span>
                       <span>{` (${
-                        file.metadata.replayGainTrackPeak?.dB
-                          .toString()
-                          .startsWith("-")
-                          ? ""
-                          : "+"
-                      }${Number(file.metadata.replayGainTrackPeak?.dB ?? 0).toFixed(2)} dB)`}</span>
+                        file.samplePeakDb.toString().startsWith("-") ? "" : "+"
+                      }${file.samplePeakDb.toFixed(2)} dB)`}</span>
                     </div>
                     <div>{file.name}</div>
                   </Row>
