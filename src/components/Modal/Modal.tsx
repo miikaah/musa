@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 
@@ -14,7 +14,7 @@ const Container = styled.div<{ top?: number }>`
 
 const Wrapper = styled.div<{ top?: number }>`
   width: 90vw;
-  height: 60vh;
+  height: 70vh;
   padding: 64px 0 0;
   position: relative;
   background: white;

@@ -6,10 +6,10 @@ import {
   AudioWithMetadata,
   Colors,
   FindResult,
-  Results,
+  NormalizationResults,
   Tags,
   Theme,
-  Unit,
+  NormalizationUnit,
 } from "@miikaah/musa-core";
 import {
   ScanEndCompleteListenerCallback,
@@ -173,6 +173,8 @@ export const getAudiosByFilepaths = async (
   return window.electron.getAudiosByFilepaths(paths);
 };
 
-export const normalizeMany = async (units: Unit[]): Promise<Results> => {
+export const normalizeMany = async (
+  units: NormalizationUnit[],
+): Promise<NormalizationResults> => {
   return window.electron.normalizeMany(units);
 };

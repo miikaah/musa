@@ -8,8 +8,8 @@ import {
   Theme,
   Tags,
   Playlist,
-  Unit,
-  Results,
+  NormalizationUnit,
+  NormalizationResults,
 } from "@miikaah/musa-core";
 import * as ElectronApi from "./apiClient.electron";
 import * as ServerApi from "./apiClient.server";
@@ -340,7 +340,9 @@ export const getAudiosByFilepaths = (
   return ElectronApi.getAudiosByFilepaths(paths);
 };
 
-export const normalizeMany = (units: Unit[]): Promise<Results> => {
+export const normalizeMany = (
+  units: NormalizationUnit[],
+): Promise<NormalizationResults> => {
   if (!isElectron) {
     throw new Error("Not implemented");
   }

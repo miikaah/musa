@@ -6,10 +6,10 @@ import {
   AudioWithMetadata,
   Colors,
   FindResult,
-  Results,
+  NormalizationResults,
   Tags,
   Theme,
-  Unit,
+  NormalizationUnit,
 } from "@miikaah/musa-core";
 import { Settings } from "./reducers/settings.reducer";
 import {
@@ -56,9 +56,7 @@ export type ElectronApi = {
   addScanCompleteListener: (
     callback: ScanEndCompleteListenerCallback,
   ) => Promise<void>;
-  normalizeMany: (
-    units: Unit[],
-  ) => Promise<Results>;
+  normalizeMany: (units: NormalizationUnit[]) => Promise<NormalizationResults>;
 };
 
 declare global {
