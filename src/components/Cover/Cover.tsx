@@ -5,7 +5,7 @@ import sortBy from "lodash.sortby";
 import isEqual from "lodash.isequal";
 import styled from "styled-components";
 import Palette, { Swatch } from "../../img-palette/img-palette";
-import { getSrc, updateCurrentTheme } from "../../util";
+import { cleanUrl, getSrc, updateCurrentTheme } from "../../util";
 import { breakpoints } from "../../breakpoints";
 import { SettingsState, updateSettings } from "../../reducers/settings.reducer";
 import { setCoverData, PlayerState } from "../../reducers/player.reducer";
@@ -311,7 +311,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
     const colors = {
       bg: bg.rgb ?? Colors.Bg,
       primary: primary.rgb ?? Colors.PrimaryRgb,
-      secondary: secondary.rgb ??  Colors.SecondaryRgb,
+      secondary: secondary.rgb ?? Colors.SecondaryRgb,
       typography: color ?? Colors.Typography,
       typographyGhost: ghostColor ?? Colors.TypographyGhost,
       typographyPrimary: primaryColor ?? Colors.Typography,
@@ -548,7 +548,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
             <>
               <Image
                 id="albumCover"
-                src={src}
+                src={cleanUrl(src)}
                 ref={coverRef}
                 crossOrigin=""
                 maxHeight={coverData.maxHeight}

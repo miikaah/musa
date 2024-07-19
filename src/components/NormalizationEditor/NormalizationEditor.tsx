@@ -167,10 +167,6 @@ const resolveAlbums = (files: AudioWithMetadata[]) => {
   return Object.entries(albums);
 };
 
-const isFilesystemFiles = (
-  files: NormalizationResults[string]["files"] | AudioWithMetadata[],
-): files is AudioWithMetadata[] => "metadata" in files[0];
-
 const resolveFiles = (
   files: AudioWithMetadata[],
   nAlbumFiles?: NormalizationResults[string]["files"],

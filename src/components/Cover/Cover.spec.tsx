@@ -12,11 +12,17 @@ import { Swatch } from "../../img-palette/img-palette";
 import * as Api from "../../apiClient";
 import { setCoverData } from "../../reducers/player.reducer";
 import { updateSettings } from "../../reducers/settings.reducer";
+import { cleanUrl } from "../../util";
 
 const mockDispatch = vi.fn();
 vi.mock("react-redux", async () => ({
   ...(await vi.importActual<Record<string, unknown>>("react-redux")),
   useDispatch: () => mockDispatch,
+}));
+
+vi.mock("../../util", async () => ({
+  ...(await vi.importActual("../../util")),
+  cleanUrl: vi.fn().mockImplementation((url) => url),
 }));
 
 vi.mock("../../apiClient");
@@ -101,6 +107,7 @@ describe("Cover", () => {
     expect(screen.getByTestId<HTMLImageElement>("CoverImage").src).toBe(
       "media:///CMX/Aurinko/Aurinko.jpg",
     );
+    expect(cleanUrl).toHaveBeenCalledWith("media:///CMX/Aurinko/Aurinko.jpg");
   });
 
   it("renders Theme component when clicking edit button", async () => {
