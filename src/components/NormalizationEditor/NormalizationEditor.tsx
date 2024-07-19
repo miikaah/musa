@@ -13,7 +13,7 @@ const Container = styled.div`
   background: white;
   color: black;
   font-size: var(--font-size-xs);
-  overflow: scroll;
+  overflow: auto;
   max-height: 100%;
   position: relative;
   padding-bottom: 80px;
