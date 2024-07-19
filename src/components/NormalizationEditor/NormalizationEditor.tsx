@@ -70,7 +70,7 @@ const sharedCss = css`
   }
 
   > div:nth-of-type(3) {
-    padding-right: 14px;
+    padding-right: 24px;
   }
 
   > div:nth-of-type(5) {
