@@ -70,10 +70,6 @@ const sharedCss = css`
     padding-right: 4px;
   }
 
-  > div:nth-of-type(3) {
-    padding-right: 24px;
-  }
-
   > div:nth-of-type(5) {
     text-align: left;
   }
@@ -83,6 +79,10 @@ const Header = styled.div`
   ${sharedCss}
   font-weight: 800;
   margin-bottom: 4px;
+
+  > div:nth-of-type(3) {
+    padding-right: 20px;
+  }
 
   > div:nth-of-type(4) {
     text-align: center;
@@ -94,6 +94,10 @@ const Row = styled.div`
 
   > div {
     font-family: Courier, "Lucida Console", Monaco, Consolas, monospace;
+  }
+
+  > div:nth-of-type(3) {
+    padding-right: 10px;
   }
 `;
 
