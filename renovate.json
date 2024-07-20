@@ -16,6 +16,10 @@
     {
       "matchPackageNames": ["eslint", "react-redux", "redux"],
       "enabled": false
+    },
+    {
+      "packageNames": ["node"],
+      "enabled": false
     }
   ]
 }
