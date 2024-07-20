@@ -324,7 +324,7 @@ const Search = ({
 
   const artistToRender = artists.length
     ? artists
-    : (Object.values(listingWithLabels).flat(
+    : (Object.values(listingWithLabels ?? {}).flat(
         Infinity,
       ) as unknown as ArtistWithEnrichedAlbums[]); // Cast because the subset fits
 

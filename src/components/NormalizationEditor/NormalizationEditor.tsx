@@ -7,6 +7,7 @@ import AlbumImage from "../AlbumImage";
 import { TranslateFn } from "../../i18n";
 import { connect } from "react-redux";
 import { SettingsState } from "../../reducers/settings.reducer";
+import { cleanUrl } from "../../util";
 
 const Container = styled.div`
   width: 100%;
@@ -205,7 +206,7 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
     const albumsToNormalize = albums.map(([id, { files }]) => ({
       album: id,
       files: files
-        .map((file) => file.fileUrl)
+        .map((file) => cleanUrl(file.fileUrl))
         .filter((url) => typeof url === "string"),
     }));
     console.log("normalizeMany", albumsToNormalize);
