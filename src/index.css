@@ -6,6 +6,7 @@
   --toolbar-height: 80px;
   --titlebar-height: 36px;
   --library-width: 505px; /* 5px extra for borders */
+  --border-radius: 7px;
   --color-white: #fbfbfb;
   --color-black: #000;
   --color-slider-track: #424a56;

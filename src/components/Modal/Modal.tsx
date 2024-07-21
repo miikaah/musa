@@ -21,7 +21,7 @@ const Wrapper = styled.div<{ top?: number }>`
   margin: auto;
   max-width: 1080px;
   max-height: 736px;
-  border-radius: 9px;
+  border-radius: var(--border-radius);
 
   box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.333);
 `;
@@ -44,7 +44,7 @@ const CloseButton = styled.button`
   position: absolute;
   top: 20px;
   right: 20px;
-  border-radius: 9px;
+  border-radius: var(--border-radius);
   padding: 10px;
   background-color: var(--color-secondary-highlight);
   color: var(--color-typography-secondary);
