@@ -21,6 +21,7 @@ const Wrapper = styled.div<{ top?: number }>`
   margin: auto;
   max-width: 1080px;
   max-height: 736px;
+  border-radius: 9px;
 
   box-shadow: 0 4px 8px 2px rgba(0, 0, 0, 0.333);
 `;

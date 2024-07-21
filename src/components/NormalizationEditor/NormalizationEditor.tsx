@@ -113,6 +113,7 @@ const ActionsContainer = styled.div`
     rgba(255, 255, 255, 0)
   );
   width: 100%;
+  border-radius: 9px;
 
   > button {
     max-width: 140px;
