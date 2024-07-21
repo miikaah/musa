@@ -48,7 +48,7 @@ const AlbumWrapper = styled.div`
 `;
 
 const DataWrapper = styled.div`
-  padding-bottom: 40px;
+  padding-bottom: 26px;
   margin-left: 20px;
 `;
 
