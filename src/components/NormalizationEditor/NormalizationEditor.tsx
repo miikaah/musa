@@ -157,14 +157,14 @@ const resolveAlbums = (files: AudioWithMetadata[]) => {
     const entry = albums[id] ?? {};
     const items = entry.files ?? [];
     albums[id] = {
-      artist: file.metadata.artist ?? albums[id].artist ?? "",
-      album: file.metadata.album ?? albums[id].album ?? "",
-      year: `${file.metadata.year ?? albums[id].year ?? ""}`,
-      coverUrl: file.coverUrl ?? albums[id].coverUrl ?? "",
+      artist: file.metadata.artist ?? entry.artist ?? "",
+      album: file.metadata.album ?? entry.album ?? "",
+      year: `${file.metadata.year ?? entry.year ?? ""}`,
+      coverUrl: file.coverUrl ?? entry.coverUrl ?? "",
       albumGainDb:
-        file.metadata.replayGainAlbumGain?.dB ?? albums[id].albumGainDb ?? "",
+        file.metadata.replayGainAlbumGain?.dB ?? entry.albumGainDb ?? "",
       albumDynamicRangeDb:
-        file.metadata.dynamicRangeAlbum ?? albums[id].albumDynamicRangeDb ?? "",
+        file.metadata.dynamicRangeAlbum ?? entry.albumDynamicRangeDb ?? "",
       files: [...items, file],
     };
   }
@@ -286,7 +286,7 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
                 {resolveFiles(files, nAlbums[id]?.files).map((file, i) => (
                   <Row key={`${file.filepath}-${i}`}>
                     <div>{file.track ?? ""}</div>
-                    <div>{file.gainDb?.toFixed(2) ?? ""} dB</div>
+                    <div>{Number(file.gainDb ?? 0).toFixed(2)} dB</div>
                     <div>{file.dynamicRangeDb ?? ""} dB</div>
                     <div>
                       <span>{Number(file.samplePeak ?? 0).toFixed(5)}</span>

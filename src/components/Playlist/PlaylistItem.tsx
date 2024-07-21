@@ -132,7 +132,7 @@ const Title = styled.span`
 const shadow = css`
   background-color: rgb(255, 255, 255, 0.333);
   border-radius: 50%;
-  box-shadow: 0 0 0 5px rgb(255, 255, 255, 0.333);
+  box-shadow: 0 0 0 8px rgb(255, 255, 255, 0.333);
 `;
 
 const ActionButton = styled.button`
@@ -140,6 +140,8 @@ const ActionButton = styled.button`
   border: 1px solid transparent;
   position: relative;
   height: 100%;
+  max-width: 21px;
+  min-width: 21px;
 
   &:hover {
     ${shadow}
@@ -167,13 +169,10 @@ const ActionButton = styled.button`
 `;
 
 const DeleteButton = styled(ActionButton)`
-  min-width: 20px;
   margin-left: 4px;
 `;
 
-const EditButton = styled(ActionButton)`
-  min-width: 21px;
-`;
+const EditButton = styled(ActionButton)``;
 
 const Duration = styled.span`
   font-size: var(--font-size-xs);

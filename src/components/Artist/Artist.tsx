@@ -34,7 +34,7 @@ type ArtistProps = {
 const Artist = ({ item: artist }: ArtistProps) => {
   const dispatch = useDispatch();
 
-  if (!artist) {
+  if (!artist || !Object.keys(artist).length) {
     return null;
   }
 
