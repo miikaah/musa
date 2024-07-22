@@ -5,7 +5,7 @@ import {
   VOLUME_DEFAULT,
   firFileMap,
 } from "../config";
-import { translate } from "../i18n";
+import { SupportedLanguages, translate } from "../i18n";
 import { ReplaygainType } from "../types";
 
 export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS";
@@ -47,7 +47,7 @@ export type SettingsState = {
   firFiles: Record<string, { name: string; makeUpGain: number }>;
   volume: number;
   musicLibraryPath?: string;
-  language: string;
+  language: SupportedLanguages;
   t: any;
 };
 

@@ -15,6 +15,7 @@ export default {
   "modal.normalization.peak": "Maksimi",
   "modal.normalization.name": "Nimi",
   "modal.normalization.normalizeButton": "Normalisoi",
+  "modal.normalization.calculating": "Lasketaan...",
   "playlist.instructions.title":
     "Raahaa tähän artisteja, albumeita ja kappaleita",
   "playlist.instructions.playControls": "Toiston hallinta",

@@ -18,7 +18,7 @@ describe("i18n", () => {
   it("returns 'Translation not found' as fallback", () => {
     const t = translate("en");
 
-    expect(t("test.notExists")).toBe("Translation not found");
+    expect(t("test.notExists" as any)).toBe("Translation not found");
   });
 
   it("has the same keys in all language dictionaries", () => {

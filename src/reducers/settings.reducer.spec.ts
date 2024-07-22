@@ -14,7 +14,7 @@ describe("Settings reducer", () => {
 
   it("changes language", () => {
     const settings = {
-      language: "fi",
+      language: "fi" as const,
     };
 
     const result = reducer(initialState, updateSettings(settings));

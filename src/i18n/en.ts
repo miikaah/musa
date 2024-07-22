@@ -1,4 +1,4 @@
-const en: Record<string, string | ((s: string) => string)> = {
+export default {
   "coverInfo.metadata.genre": "Genre",
   "coverInfo.metadata.normalization.track": "Normalization track",
   "coverInfo.metadata.normalization.album": "Normalization album",
@@ -15,6 +15,7 @@ const en: Record<string, string | ((s: string) => string)> = {
   "modal.normalization.peak": "Peak",
   "modal.normalization.name": "Name",
   "modal.normalization.normalizeButton": "Normalize",
+  "modal.normalization.calculating": "Calculating...",
   "playlist.instructions.title": "Drag and drop Artists, Albums and Songs here",
   "playlist.instructions.playControls": "Play controls",
   "playlist.instructions.playPause": "Play / Pause",
@@ -94,5 +95,3 @@ const en: Record<string, string | ((s: string) => string)> = {
   "toast.succeededToUpdateTags": "Tags updated",
   "test.onlyExistsInEnglish": "mock",
 };
-
-export default en;

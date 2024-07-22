@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { SettingsState } from "../../reducers/settings.reducer";
-import { TranslateFn } from "../../i18n";
+import { TranslateFn, TranslationKeys } from "../../i18n";
 
 const Container = styled.div<{ top?: number }>`
   width: 100%;
@@ -55,7 +55,7 @@ const CloseButton = styled.button`
 `;
 
 type ModalProps = {
-  modalTitleTranslationKey: string;
+  modalTitleTranslationKey: TranslationKeys;
   closeModal: () => void;
   children: React.ReactNode;
   t: TranslateFn;

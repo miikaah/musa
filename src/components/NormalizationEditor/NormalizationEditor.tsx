@@ -1,5 +1,5 @@
 import { AudioWithMetadata, NormalizationResults } from "@miikaah/musa-core";
-import React, { useState } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import Button from "../Button";
 import * as Api from "../../apiClient";
@@ -8,6 +8,7 @@ import { TranslateFn } from "../../i18n";
 import { connect } from "react-redux";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { cleanUrl } from "../../util";
+import { useMemoizedApiCall } from "../../hooks/useMemoizedApiCall";
 
 const Container = styled.div`
   width: 100%;
@@ -103,7 +104,7 @@ const Row = styled.div`
 
 const ActionsContainer = styled.div`
   display: flex;
-  justify-content: right;
+  justify-content: space-between;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -115,9 +116,17 @@ const ActionsContainer = styled.div`
   width: 100%;
   border-radius: var(--border-radius);
 
+  > div {
+    display: flex;
+    align-items: center;
+    margin: 20px 20px 0;
+    color: grey;
+    font-size: var(--font-size-xs);
+  }
+
   > button {
     max-width: 140px;
-    margin: 10px 20px 10px;
+    margin: 10px 20px;
   }
 `;
 
@@ -135,19 +144,21 @@ const CoverWrapper = styled.div`
   }
 `;
 
+type AlbumsById = Record<
+  string,
+  {
+    artist: string;
+    album: string;
+    year: string;
+    coverUrl: string;
+    albumGainDb: string | number;
+    albumDynamicRangeDb: string | number;
+    files: AudioWithMetadata[];
+  }
+>;
+
 const resolveAlbums = (files: AudioWithMetadata[]) => {
-  const albums: Record<
-    string,
-    {
-      artist: string;
-      album: string;
-      year: string;
-      coverUrl: string;
-      albumGainDb: string | number;
-      albumDynamicRangeDb: string | number;
-      files: AudioWithMetadata[];
-    }
-  > = {};
+  const albums: AlbumsById = {};
 
   for (const file of files) {
     const id =
@@ -203,22 +214,23 @@ type NormalizationEditorProps = {
 };
 
 const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
-  const [nAlbums, setNAlbums] = useState<NormalizationResults>({});
-
   const albums = resolveAlbums(files);
+  const albumsToNormalize = albums.map(([id, { files }]) => ({
+    album: id,
+    files: files
+      .map((file) => cleanUrl(file.fileUrl))
+      .filter((url) => typeof url === "string"),
+  }));
+  const hash = albumsToNormalize.map((a) => a.album).join("");
 
-  const normalize = async () => {
-    const albumsToNormalize = albums.map(([id, { files }]) => ({
-      album: id,
-      files: files
-        .map((file) => cleanUrl(file.fileUrl))
-        .filter((url) => typeof url === "string"),
-    }));
-    console.log("normalizeMany", albumsToNormalize);
-    const normalizedAlbums = await Api.normalizeMany(albumsToNormalize);
-    console.log(normalizedAlbums);
-    setNAlbums(normalizedAlbums);
-  };
+  const {
+    currentData: nAlbums,
+    isLoading,
+    error,
+    fetchData,
+  } = useMemoizedApiCall<NormalizationResults>(hash, async () =>
+    Api.normalizeMany(albumsToNormalize),
+  );
 
   return (
     <>
@@ -253,19 +265,19 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
                   <div>
                     <table>
                       <tbody>
-                        {(albumGainDb !== "" || nAlbums[id]) && (
+                        {(albumGainDb !== "" || nAlbums?.[id]) && (
                           <tr>
                             <td>{t("modal.normalization.gain")}</td>
                             <td>
-                              {nAlbums[id]?.albumGainDb ?? albumGainDb} dB
+                              {nAlbums?.[id]?.albumGainDb ?? albumGainDb} dB
                             </td>
                           </tr>
                         )}
-                        {(albumDynamicRangeDb !== "" || nAlbums[id]) && (
+                        {(albumDynamicRangeDb !== "" || nAlbums?.[id]) && (
                           <tr>
                             <td>{t("modal.normalization.dynamicRange")}</td>
                             <td>
-                              {nAlbums[id]?.albumDynamicRangeDb ??
+                              {nAlbums?.[id]?.albumDynamicRangeDb ??
                                 albumDynamicRangeDb}{" "}
                               dB
                             </td>
@@ -284,7 +296,7 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
                   <div>{t("modal.normalization.peak")}</div>
                   <div>{t("modal.normalization.name")}</div>
                 </Header>
-                {resolveFiles(files, nAlbums[id]?.files).map((file, i) => (
+                {resolveFiles(files, nAlbums?.[id]?.files).map((file, i) => (
                   <Row key={`${file.filepath}-${i}`}>
                     <div>{file.track ?? ""}</div>
                     <div>{Number(file.gainDb ?? 0).toFixed(2)} dB</div>
@@ -304,7 +316,13 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
         )}
       </Container>
       <ActionsContainer>
-        <Button isPrimary onClick={normalize}>
+        <div>
+          <span>
+            {isLoading ? t("modal.normalization.calculating") : ""}{" "}
+            {error ? error : ""}
+          </span>
+        </div>
+        <Button isPrimary onClick={fetchData}>
           {t("modal.normalization.normalizeButton")}
         </Button>
       </ActionsContainer>
