@@ -18,6 +18,8 @@ import { breakpoints } from "../../breakpoints";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import PlaylistItem, { MouseUpDownOptions } from "./PlaylistItem";
+import ContextMenu, { ContextMenuCoordinates } from "../ContextMenu";
+import { EditorMode } from "../../types";
 
 const commonCss = css<{ isSmall: boolean }>`
   padding: 14px 0;
@@ -38,6 +40,7 @@ const Container = styled.ul<{ isSmall: boolean; hideOverflow: boolean }>`
   width: ${({ isSmall }) => (isSmall ? "auto" : "100%")};
   display: flex;
   flex-direction: column;
+  position: relative;
 
   ${({ theme }) => theme.breakpoints.down("md")} {
     margin: 0 auto;
@@ -121,6 +124,8 @@ const ControlsInstruction = styled.div`
   }
 `;
 
+let closeContextMenuTimeout: NodeJS.Timeout | undefined;
+
 const PLAYLIST_CLASSNAME = "playlist";
 
 type PlaylistProps = {
@@ -153,9 +158,11 @@ const Playlist = ({
   );
   const [clipboard, setClipboard] = useState<AudioWithMetadata[]>([]);
   const [hideOverflow, setHideOverflow] = useState(false);
+  const [contextMenuCoordinates, setContextMenuCoordinates] =
+    useState<ContextMenuCoordinates | null>(null);
   const dispatch = useDispatch();
 
-  const ref = useRef<HTMLUListElement | null>(null);
+  const playlistRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     const onResize = () => {
@@ -421,20 +428,42 @@ const Playlist = ({
   const onMouseDown = (options: MouseUpDownOptions) => {
     if (options.isShiftDown || options.isCtrlDown) return;
 
-    const sIndex = Math.min(startIndex, endIndex);
-    const eIndex = Math.max(startIndex, endIndex);
-    if (options.isEditButtonPress) {
-      const selectedItems =
-        !Number.isNaN(startIndex) && !Number.isNaN(endIndex) && endIndex > 0
-          ? playlist.slice(sIndex, eIndex + 1)
-          : playlist.slice(options.index, options.index + 1);
-      toggleModal("metadata", selectedItems);
+    // Set timeout to close context menu because this function gets called on right click
+    // twice on macos.
+    if (!options.isContextMenuPress) {
+      closeContextMenuTimeout = setTimeout(
+        () => setContextMenuCoordinates(null),
+        300,
+      );
+    }
+
+    if (
+      options.isContextMenuPress &&
+      options.clientX !== undefined &&
+      options.clientX > -1 &&
+      options.clientY !== undefined &&
+      options.clientY > -1
+    ) {
+      // Clear timeout so that context menu doesn't close when it's supposed to stay open
+      clearTimeout(closeContextMenuTimeout);
+      const rect = playlistRef.current?.getBoundingClientRect();
+      if (!rect) {
+        throw new Error("Playlist rect x not defined. Should not happen.");
+      }
+
+      const xFudgeFactor = 60;
+      const yFudgeFactor = 20;
+      setContextMenuCoordinates({
+        x: options.clientX - rect?.x - xFudgeFactor,
+        y: options.clientY - yFudgeFactor,
+      });
       return;
     }
 
     if (isMovingItems) {
       setIsMouseDown(false);
       setIsMovingItems(false);
+      setContextMenuCoordinates(null);
       setStartIndex(NaN);
       setEndIndex(NaN);
       setActiveIndex(options.index);
@@ -488,12 +517,17 @@ const Playlist = ({
 
   const scroll = () => {
     setHideOverflow(true);
-    ref.current &&
-      ref.current.scrollTo({
-        top: ref.current.scrollTop + 300,
+    playlistRef.current &&
+      playlistRef.current.scrollTo({
+        top: playlistRef.current.scrollTop + 300,
         behavior: "smooth",
       });
     setTimeout(() => setHideOverflow(false), 500);
+  };
+
+  const handleOpenEditor = (mode: EditorMode) => {
+    toggleModal(mode, playlist);
+    setContextMenuCoordinates(null);
   };
 
   if (playlist.length < 1) {
@@ -585,7 +619,7 @@ const Playlist = ({
 
   return (
     <Container
-      ref={ref}
+      ref={playlistRef}
       isSmall={isSmall}
       className={PLAYLIST_CLASSNAME}
       onMouseDown={(event: React.MouseEvent<HTMLUListElement>) => {
@@ -596,13 +630,19 @@ const Playlist = ({
               : 0,
           isShiftDown: event.shiftKey,
           isCtrlDown: false,
-          isEditButtonPress: false,
+          isContextMenuPress: false,
         });
       }}
       onMouseUp={clearSelection}
       hideOverflow={hideOverflow}
       data-testid="PlaylistContainer"
     >
+      {contextMenuCoordinates && (
+        <ContextMenu
+          coordinates={contextMenuCoordinates}
+          openEditor={handleOpenEditor}
+        />
+      )}
       {playlist.map(
         (item, index) =>
           item && (

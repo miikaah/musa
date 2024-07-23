@@ -225,10 +225,12 @@ describe("PlaylistItem", () => {
     await user.click(screen.getByTestId("PlaylistItemContainer"));
 
     expect(mockOnMouseDownItem).toHaveBeenCalledWith({
+      clientX: 0,
+      clientY: 0,
       index: 0,
       isCtrlDown: true,
       isShiftDown: true,
-      isEditButtonPress: false,
+      isContextMenuPress: false,
     });
   });
 
@@ -260,7 +262,7 @@ describe("PlaylistItem", () => {
       index: 0,
       isCtrlDown: true,
       isShiftDown: true,
-      isEditButtonPress: false,
+      isContextMenuPress: false,
     });
   });
 

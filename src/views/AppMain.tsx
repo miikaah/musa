@@ -13,6 +13,7 @@ import * as Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
 import NormalizationEditor from "../components/NormalizationEditor";
 import MetadataEditor from "../components/MetadataEditor";
+import { EditorMode } from "../types";
 
 const Container = styled.div`
   padding: 0;
@@ -30,9 +31,7 @@ interface CustomFile extends File {
   path: string;
 }
 
-type ModalMode = "normalization" | "metadata";
-
-const getModalTitle = (mode: ModalMode) => {
+const getModalTitle = (mode: EditorMode) => {
   switch (mode) {
     case "normalization":
       return "modal.normalization.title";
@@ -45,7 +44,7 @@ const getModalTitle = (mode: ModalMode) => {
 };
 
 const getModalChildren = (
-  mode: ModalMode,
+  mode: EditorMode,
   filesToEdit: AudioWithMetadata[],
 ) => {
   switch (mode) {
@@ -68,7 +67,7 @@ type AppMainProps = {
 const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
   const [showModal, setShowModal] = useState(false);
   const [filesToEdit, setFilesToBeEdited] = useState<AudioWithMetadata[]>([]);
-  const [modalMode, setModalMode] = useState<ModalMode>("normalization");
+  const [modalMode, setModalMode] = useState<EditorMode>("normalization");
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) =>
     event.preventDefault();
@@ -128,7 +127,7 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
     setShowModal(false);
   };
 
-  const toggleModal = (mode: ModalMode, items: AudioWithMetadata[]) => {
+  const toggleModal = (mode: EditorMode, items: AudioWithMetadata[]) => {
     const itemsIds = items.map(({ id }) => id);
     const currentFilesIds = filesToEdit.map(({ id }) => id);
     const hasSameFiles = itemsIds.every((id) => currentFilesIds.includes(id));

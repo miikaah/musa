@@ -1,4 +1,6 @@
 export default {
+  "contextMenu.playlist.metadataEditorButton": "Tiedot",
+  "contextMenu.playlist.normalizationEditorButton": "Normalisaatio",
   "coverInfo.metadata.genre": "Genre",
   "coverInfo.metadata.normalization.track": "Normalisaatio kappale",
   "coverInfo.metadata.normalization.album": "Normalisaatio albumi",

@@ -1,4 +1,6 @@
 export default {
+  "contextMenu.playlist.metadataEditorButton": "Details",
+  "contextMenu.playlist.normalizationEditorButton": "Normalization",
   "coverInfo.metadata.genre": "Genre",
   "coverInfo.metadata.normalization.track": "Normalization track",
   "coverInfo.metadata.normalization.album": "Normalization album",

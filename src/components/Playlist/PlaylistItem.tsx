@@ -197,7 +197,9 @@ export type MouseUpDownOptions = {
   index: number;
   isShiftDown: boolean;
   isCtrlDown: boolean;
-  isEditButtonPress: boolean;
+  isContextMenuPress: boolean;
+  clientX?: number;
+  clientY?: number;
 };
 
 type PlaylistItemProps = {
@@ -322,7 +324,7 @@ const PlaylistItem = ({
     onSetActiveIndex(index);
   };
 
-  const checkIsEditButtonPress = (event: React.MouseEvent<HTMLLIElement>) => {
+  const checkIsContextMenuPress = (event: React.MouseEvent<HTMLLIElement>) => {
     if (event.target instanceof Element) {
       if (
         event.target.id === editButtonId ||
@@ -334,12 +336,17 @@ const PlaylistItem = ({
     return false;
   };
 
-  const handleMouseDown = (event: React.MouseEvent<HTMLLIElement>) => {
+  const handleMouseDown = (
+    event: React.MouseEvent<HTMLLIElement>,
+    isContextMenuPress = false,
+  ) => {
     onMouseDownItem({
       index,
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
-      isEditButtonPress: checkIsEditButtonPress(event),
+      isContextMenuPress: isContextMenuPress || checkIsContextMenuPress(event),
+      clientX: event.clientX,
+      clientY: event.clientY,
     });
     event.stopPropagation();
   };
@@ -349,7 +356,7 @@ const PlaylistItem = ({
       index,
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
-      isEditButtonPress: checkIsEditButtonPress(event),
+      isContextMenuPress: checkIsContextMenuPress(event),
     });
     event.stopPropagation();
   };
@@ -403,6 +410,7 @@ const PlaylistItem = ({
       onMouseOver={() => onMouseOverItem(index)}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
+      onContextMenu={(event) => handleMouseDown(event, true)}
       data-testid="PlaylistItemContainer"
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
