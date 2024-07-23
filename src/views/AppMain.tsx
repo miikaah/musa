@@ -119,7 +119,7 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
       <Playlist toggleModal={toggleModal} />
       {showModal && (
         <Modal
-          modalTitleTranslationKey="modal.title.normalization"
+          modalTitleTranslationKey="modal.normalization.title"
           closeModal={closeModal}
         >
           <NormalizationEditor files={filesToEdit} />

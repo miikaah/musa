@@ -19,7 +19,7 @@ describe("Modal", () => {
   it("renders Modal component", async () => {
     render(
       <Modal
-        modalTitleTranslationKey="modal.closeButton"
+        modalTitleTranslationKey="modal.normalization.title"
         closeModal={mockCloseModal}
       >
         <p>{mockText}</p>
@@ -34,7 +34,7 @@ describe("Modal", () => {
   it("calls closeModal click handler", async () => {
     render(
       <Modal
-        modalTitleTranslationKey="modal.closeButton"
+        modalTitleTranslationKey="modal.normalization.title"
         closeModal={mockCloseModal}
       >
         <p>{mockText}</p>
