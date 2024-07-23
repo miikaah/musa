@@ -183,8 +183,8 @@ const MetadataEditor = ({ files = [], offset = 0, t }: MetadataEditorProps) => {
           !(file?.metadata?.codec || "").toLowerCase().startsWith("flac");
 
         return (
-          <>
-            <Wrapper key={file.id}>
+          <div key={file.id}>
+            <Wrapper>
               <span>{t("modal.metadata.tag.artist")}</span>
               <EditorInput
                 field={file?.metadata?.artist || ""}
@@ -269,7 +269,7 @@ const MetadataEditor = ({ files = [], offset = 0, t }: MetadataEditorProps) => {
                 {t("modal.metadata.nextButton")}
               </Button>
             </StyledActionsContainer>
-          </>
+          </div>
         );
       })}
     </Container>

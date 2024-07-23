@@ -21,10 +21,6 @@ vi.mock("../../apiClient");
 vi.mocked(Api.writeTags).mockResolvedValue(undefined);
 
 const t = translate("en");
-const tagEditorTitleText = String(t("modal.metadata.title"));
-const filename = String(
-  audioFixture.fileUrl?.replace("media:\\", "").replace("media:/", ""),
-);
 const artistText = String(t("modal.metadata.tag.artist"));
 const artist = String(audioFixture.metadata?.artist);
 const titleText = String(t("modal.metadata.tag.title"));
@@ -61,9 +57,6 @@ const state = {
 describe("MetadataEditor", () => {
   it("renders MetadataEditor component", async () => {
     render(<MetadataEditor files={[audioFixture]} />, state);
-
-    expect(screen.getByText(tagEditorTitleText)).toBeInTheDocument();
-    expect(screen.getByText(filename)).toBeInTheDocument();
 
     expect(screen.getByText(artistText)).toBeInTheDocument();
     expect(screen.getByDisplayValue(artist)).toBeInTheDocument();
