@@ -1,12 +1,13 @@
 import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import TagEditor, { getCodecInfo } from "./TagEditor";
+import MetadataEditor from "./MetadataEditor";
 import { audioFixture } from "../../fixtures/audio.fixture";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
 import { dispatchToast } from "../../util";
 import * as Api from "../../apiClient";
+import { getCodecInfo } from "./getCodecInfo";
 
 const mockDispatch = vi.fn();
 vi.mock("react-redux", async () => ({
@@ -20,35 +21,35 @@ vi.mock("../../apiClient");
 vi.mocked(Api.writeTags).mockResolvedValue(undefined);
 
 const t = translate("en");
-const tagEditorTitleText = String(t("tagEditor.title"));
+const tagEditorTitleText = String(t("modal.metadata.title"));
 const filename = String(
   audioFixture.fileUrl?.replace("media:\\", "").replace("media:/", ""),
 );
-const artistText = String(t("tagEditor.tag.artist"));
+const artistText = String(t("modal.metadata.tag.artist"));
 const artist = String(audioFixture.metadata?.artist);
-const titleText = String(t("tagEditor.tag.title"));
+const titleText = String(t("modal.metadata.tag.title"));
 const title = String(audioFixture.metadata?.title);
-const albumText = String(t("tagEditor.tag.album"));
+const albumText = String(t("modal.metadata.tag.album"));
 const album = String(audioFixture.metadata?.album);
-const yearText = String(t("tagEditor.tag.year"));
+const yearText = String(t("modal.metadata.tag.year"));
 const year = String(audioFixture.metadata?.year);
-const trackText = String(t("tagEditor.tag.track"));
+const trackText = String(t("modal.metadata.tag.track"));
 const track = String(audioFixture.metadata?.track?.no);
-const tracksText = String(t("tagEditor.tag.tracks"));
+const tracksText = String(t("modal.metadata.tag.tracks"));
 const tracks = String(audioFixture.metadata?.track?.of);
-const diskText = String(t("tagEditor.tag.disk"));
+const diskText = String(t("modal.metadata.tag.disk"));
 const disk = String(audioFixture.metadata?.disk?.no);
-const disksText = String(t("tagEditor.tag.disks"));
+const disksText = String(t("modal.metadata.tag.disks"));
 const disks = String(audioFixture.metadata?.disk?.of);
-const genreText = String(t("tagEditor.tag.genre"));
+const genreText = String(t("modal.metadata.tag.genre"));
 const genre = String(audioFixture.metadata?.genre);
-const composerText = String(t("tagEditor.tag.composer"));
+const composerText = String(t("modal.metadata.tag.composer"));
 const composer = String(audioFixture.metadata?.composer);
-const codecText = String(t("tagEditor.tag.codec"));
+const codecText = String(t("modal.metadata.tag.codec"));
 const codec = getCodecInfo(audioFixture);
-const commentText = String(t("tagEditor.tag.comment"));
+const commentText = String(t("modal.metadata.tag.comment"));
 const comment = String(audioFixture.metadata?.comment);
-const saveButtonText = String(t("tagEditor.saveButton"));
+const saveButtonText = String(t("modal.metadata.saveButton"));
 
 const tagUpdateSuccessText = String(t("toast.succeededToUpdateTags"));
 const tagUpdateFailureText = String(t("toast.failedToUpdateTags"));
@@ -57,9 +58,9 @@ const state = {
   settings: { t },
 };
 
-describe("TagEditor", () => {
-  it("renders TagEditor component", async () => {
-    render(<TagEditor files={[audioFixture]} />, state);
+describe("MetadataEditor", () => {
+  it("renders MetadataEditor component", async () => {
+    render(<MetadataEditor files={[audioFixture]} />, state);
 
     expect(screen.getByText(tagEditorTitleText)).toBeInTheDocument();
     expect(screen.getByText(filename)).toBeInTheDocument();
@@ -106,7 +107,7 @@ describe("TagEditor", () => {
   });
 
   it("calls api with updated tags and dispatches toast on success", async () => {
-    render(<TagEditor files={[audioFixture]} />, state);
+    render(<MetadataEditor files={[audioFixture]} />, state);
 
     const editedArtist = `${artist} edit`;
     const artistElement = screen.getByDisplayValue(artist);
@@ -128,7 +129,7 @@ describe("TagEditor", () => {
   it("calls api with updated tags and dispatches toast on failure", async () => {
     vi.mocked(Api.writeTags).mockResolvedValueOnce(new Error("err"));
 
-    render(<TagEditor files={[audioFixture]} />, state);
+    render(<MetadataEditor files={[audioFixture]} />, state);
 
     await userEvent.click(screen.getByText(saveButtonText));
 

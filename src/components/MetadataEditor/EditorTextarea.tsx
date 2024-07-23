@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const Textarea = styled.textarea`
-  resize: none;
-`;
-
-type TagTextareaProps = {
+type EditorTextareaProps = {
   field: string;
   isDisabled: boolean;
   updateValue: (s: string) => void;
 };
 
-const TagTextarea = ({ field, isDisabled, updateValue }: TagTextareaProps) => {
+const EditorTextarea = ({
+  field,
+  isDisabled,
+  updateValue,
+}: EditorTextareaProps) => {
   const [value, setValue] = useState(field || "");
 
   const update = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -20,8 +20,8 @@ const TagTextarea = ({ field, isDisabled, updateValue }: TagTextareaProps) => {
   };
 
   return (
-    <Textarea value={value} onChange={update} disabled={isDisabled} rows={4} />
+    <textarea value={value} onChange={update} disabled={isDisabled} rows={4} />
   );
 };
 
-export default TagTextarea;
+export default EditorTextarea;

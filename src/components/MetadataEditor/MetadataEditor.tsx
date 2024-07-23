@@ -2,47 +2,83 @@ import { AudioWithMetadata, Tags } from "@miikaah/musa-core";
 import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import styled from "styled-components";
-import TagInput from "./TagInput";
-import TagTextarea from "./TagTextarea";
+import EditorInput from "./EditorInput";
+import EditorTextarea from "./EditorTextarea";
 import Button from "../Button";
 import * as Api from "../../apiClient";
 import { dispatchToast } from "../../util";
-import { ellipsisTextOverflow } from "../../common.styles";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
+import { ActionsContainer } from "../Modal/ActionsContainer";
+import { getCodecInfo } from "./getCodecInfo";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const Filename = styled.div`
-  margin-bottom: 20px;
-  ${ellipsisTextOverflow}
+  overflow: auto;
+  max-height: 100%;
+  padding-bottom: 80px;
 `;
 
 const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto;
   grid-template-columns: 1fr 9fr;
+  font-size: var(--font-size-xs);
+  margin: 10px auto;
+  max-width: 600px;
 
   > span {
     align-self: center;
-    padding-right: 20px;
+    padding: 0 20px;
+    color: black;
   }
 
   > span:nth-of-type(1) {
     grid-row: 1;
   }
 
-  > input {
-    width: 100%;
-    border-style: solid;
+  > input,
+  > textarea {
+    width: 97.5%;
+    border-radius: 0;
+    border-width: 1px 0 2px 0;
+    border-top-color: transparent;
+    border-bottom-color: var(--color-primary-highlight);
+    font-size: var(--font-size-xs);
+    padding: 10px;
+    outline: none;
+  }
+
+  > input::selection,
+  > textarea::selection {
+    background: var(--color-primary-highlight);
+    color: var(--color-typography-primary);
+  }
+
+  > input:focus,
+  > textarea:focus {
+    border-bottom-color: red;
+  }
+
+  > textarea {
+    resize: none;
   }
 
   > input:disabled,
   > textarea:disabled {
     background-color: #f2f2f2;
+    border-bottom-color: #f2f2f2;
+  }
+`;
+
+const StyledActionsContainer = styled(ActionsContainer)`
+  > button:first-of-type,
+  > button:last-of-type {
+    padding: 0;
+    max-width: 120px;
+    margin-top: 16px;
+    font-weight: normal;
   }
 `;
 
@@ -52,31 +88,13 @@ const SaveButton = styled(Button)`
   margin-top: 10px;
 `;
 
-export const getCodecInfo = (file: AudioWithMetadata) => {
-  const { codec, codecProfile, container } = file?.metadata || {};
-
-  let str = "";
-  if (codec) {
-    str += codec;
-    str += ", ";
-  }
-  if (codecProfile) {
-    str += codecProfile;
-    str += ", ";
-  }
-  if (container) {
-    str += container;
-  }
-
-  return str;
-};
-
-type TagEditorProps = {
+type MetadataEditorProps = {
   files: AudioWithMetadata[];
+  offset?: number;
   t: TranslateFn;
 };
 
-const TagEditor = ({ files = [], t }: TagEditorProps) => {
+const MetadataEditor = ({ files = [], offset = 0, t }: MetadataEditorProps) => {
   const [artist, setArtist] = useState<string>();
   const [title, setTitle] = useState<string>();
   const [album, setAlbum] = useState<string>();
@@ -89,6 +107,7 @@ const TagEditor = ({ files = [], t }: TagEditorProps) => {
   const [composer, setComposer] = useState<string>();
   const [comment, setComment] = useState<string>();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [index, setIndex] = useState<number>(0);
   const dispatch = useDispatch();
 
   const saveTags = async (
@@ -157,102 +176,106 @@ const TagEditor = ({ files = [], t }: TagEditorProps) => {
   };
 
   return (
-    <>
-      <h3>{t("tagEditor.title")}</h3>
-      {files.map((file) => {
+    <Container>
+      {files.slice(index, 1).map((file) => {
         const isDisabled =
           !(file?.metadata?.codec || "").toLowerCase().startsWith("mpeg") &&
           !(file?.metadata?.codec || "").toLowerCase().startsWith("flac");
 
         return (
-          <Container key={file.id}>
-            <Filename>
-              {file.fileUrl?.replace("media:\\", "").replace("media:/", "")}
-            </Filename>
-            <Wrapper>
-              <span>{t("tagEditor.tag.artist")}</span>
-              <TagInput
+          <>
+            <Wrapper key={file.id}>
+              <span>{t("modal.metadata.tag.artist")}</span>
+              <EditorInput
                 field={file?.metadata?.artist || ""}
                 updateValue={setArtist}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.title")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.title")}</span>
+              <EditorInput
                 field={file?.metadata?.title || ""}
                 updateValue={setTitle}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.album")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.album")}</span>
+              <EditorInput
                 field={file?.metadata?.album || ""}
                 updateValue={setAlbum}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.year")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.year")}</span>
+              <EditorInput
                 field={file?.metadata?.year || ""}
                 updateValue={setYear}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.track")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.track")}</span>
+              <EditorInput
                 field={file?.metadata?.track?.no || ""}
                 updateValue={setTrack}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.tracks")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.tracks")}</span>
+              <EditorInput
                 field={file?.metadata?.track?.of || ""}
                 updateValue={setTracks}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.disk")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.disk")}</span>
+              <EditorInput
                 field={file?.metadata?.disk?.no || ""}
                 updateValue={setDisk}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.disks")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.disks")}</span>
+              <EditorInput
                 field={file?.metadata?.disk?.of || ""}
                 updateValue={setDisks}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.genre")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.genre")}</span>
+              <EditorInput
                 field={(file?.metadata?.genre || []).join(", ")}
                 updateValue={setGenre}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.composer")}</span>
-              <TagInput
+              <span>{t("modal.metadata.tag.composer")}</span>
+              <EditorInput
                 field={(file?.metadata?.composer || []).join(", ")}
                 updateValue={setComposer}
                 isDisabled={isDisabled}
               />
-              <span>{t("tagEditor.tag.codec")}</span>
-              <TagInput field={getCodecInfo(file)} isDisabled />
-              <span>{t("tagEditor.tag.comment")}</span>
-              <TagTextarea
+              <span>{t("modal.metadata.tag.codec")}</span>
+              <EditorInput field={getCodecInfo(file)} isDisabled />
+              <span>{t("modal.metadata.tag.comment")}</span>
+              <EditorTextarea
                 field={(file?.metadata?.comment || []).join(" ")}
                 updateValue={setComment}
                 isDisabled={isDisabled}
               />
             </Wrapper>
-            <SaveButton
-              onClick={(event: React.MouseEvent) => saveTags(event, file)}
-              isPrimary
-              disabled={isUpdating}
-            >
-              {t("tagEditor.saveButton")}
-            </SaveButton>
-          </Container>
+            <StyledActionsContainer>
+              <Button isSmall isSecondary onClick={() => undefined}>
+                {t("modal.metadata.previousButton")}
+              </Button>
+              <SaveButton
+                onClick={(event: React.MouseEvent) => saveTags(event, file)}
+                isPrimary
+                disabled={isUpdating}
+              >
+                {t("modal.metadata.saveButton")}
+              </SaveButton>
+              <Button isSmall isSecondary onClick={() => undefined}>
+                {t("modal.metadata.nextButton")}
+              </Button>
+            </StyledActionsContainer>
+          </>
         );
       })}
-    </>
+    </Container>
   );
 };
 
 export default connect((state: { settings: SettingsState }) => ({
   t: state.settings.t,
-}))(TagEditor);
+}))(MetadataEditor);

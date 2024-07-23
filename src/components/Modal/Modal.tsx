@@ -73,7 +73,9 @@ const Modal = ({
       <Wrapper>
         <Title>
           <span>{t(modalTitleTranslationKey)} </span>
-          <span>(EBU R128)</span>
+          {modalTitleTranslationKey.includes(".normalization.") ? (
+            <span>(EBU R128)</span>
+          ) : null}
         </Title>
         {closeModal && (
           <CloseButton onClick={closeModal}>

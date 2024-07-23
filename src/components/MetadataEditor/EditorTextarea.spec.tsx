@@ -1,15 +1,15 @@
 import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import TagTextarea from "./TagTextarea";
+import EditorTextarea from "./EditorTextarea";
 import { render } from "../../../test/render";
 
 const mockUpdateValue = vi.fn();
 
-describe("TagTextarea", () => {
-  it("renders TagTextarea component", async () => {
+describe("EditorTextarea", () => {
+  it("renders EditorTextarea component", async () => {
     render(
-      <TagTextarea
+      <EditorTextarea
         field="mock"
         isDisabled={false}
         updateValue={mockUpdateValue}
@@ -22,7 +22,7 @@ describe("TagTextarea", () => {
 
   it("calls updateValue change handler", async () => {
     render(
-      <TagTextarea
+      <EditorTextarea
         field="mock"
         isDisabled={false}
         updateValue={mockUpdateValue}

@@ -12,6 +12,7 @@ import { isElectron } from "../config";
 import * as Api from "../apiClient";
 import { SettingsState } from "../reducers/settings.reducer";
 import NormalizationEditor from "../components/NormalizationEditor";
+import MetadataEditor from "../components/MetadataEditor";
 
 const Container = styled.div`
   padding: 0;
@@ -29,6 +30,35 @@ interface CustomFile extends File {
   path: string;
 }
 
+type ModalMode = "normalization" | "metadata";
+
+const getModalTitle = (mode: ModalMode) => {
+  switch (mode) {
+    case "normalization":
+      return "modal.normalization.title";
+    case "metadata":
+      return "modal.metadata.title";
+    default:
+      mode satisfies never;
+      throw new Error(`Unsupported modal mode: ${mode}`);
+  }
+};
+
+const getModalChildren = (
+  mode: ModalMode,
+  filesToEdit: AudioWithMetadata[],
+) => {
+  switch (mode) {
+    case "normalization":
+      return <NormalizationEditor files={filesToEdit} />;
+    case "metadata":
+      return <MetadataEditor files={filesToEdit} />;
+    default:
+      mode satisfies never;
+      throw new Error(`Unsupported modal mode: ${mode}`);
+  }
+};
+
 type AppMainProps = {
   isInit: SettingsState["isInit"];
   musicLibraryPath: SettingsState["musicLibraryPath"];
@@ -38,6 +68,7 @@ type AppMainProps = {
 const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
   const [showModal, setShowModal] = useState(false);
   const [filesToEdit, setFilesToBeEdited] = useState<AudioWithMetadata[]>([]);
+  const [modalMode, setModalMode] = useState<ModalMode>("normalization");
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) =>
     event.preventDefault();
@@ -97,11 +128,12 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
     setShowModal(false);
   };
 
-  const toggleModal = (items: AudioWithMetadata[]) => {
+  const toggleModal = (mode: ModalMode, items: AudioWithMetadata[]) => {
     const itemsIds = items.map(({ id }) => id);
     const currentFilesIds = filesToEdit.map(({ id }) => id);
     const hasSameFiles = itemsIds.every((id) => currentFilesIds.includes(id));
 
+    setModalMode(mode);
     if (hasSameFiles) {
       closeModal();
     } else {
@@ -119,10 +151,10 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
       <Playlist toggleModal={toggleModal} />
       {showModal && (
         <Modal
-          modalTitleTranslationKey="modal.normalization.title"
+          modalTitleTranslationKey={getModalTitle(modalMode)}
           closeModal={closeModal}
         >
-          <NormalizationEditor files={filesToEdit} />
+          {getModalChildren(modalMode, filesToEdit)}
         </Modal>
       )}
     </Container>

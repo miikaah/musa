@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-type TagInputProps = {
+type EditorInputProps = {
   field: string | number;
   isDisabled: boolean;
   updateValue?: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
-const TagInput = ({ field, isDisabled, updateValue }: TagInputProps) => {
+const EditorInput = ({ field, isDisabled, updateValue }: EditorInputProps) => {
   const [value, setValue] = useState(field || "");
 
   const update = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,4 +20,4 @@ const TagInput = ({ field, isDisabled, updateValue }: TagInputProps) => {
   return <input value={value} onChange={update} disabled={isDisabled} />;
 };
 
-export default TagInput;
+export default EditorInput;

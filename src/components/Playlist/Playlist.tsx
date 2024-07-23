@@ -127,7 +127,10 @@ type PlaylistProps = {
   playlist: PlayerState["items"];
   currentItem: PlayerState["currentItem"];
   currentIndex: PlayerState["currentIndex"];
-  toggleModal: (items: AudioWithMetadata[]) => void;
+  toggleModal: (
+    mode: "normalization" | "metadata",
+    items: AudioWithMetadata[],
+  ) => void;
   t: TranslateFn;
 };
 
@@ -425,7 +428,7 @@ const Playlist = ({
         !Number.isNaN(startIndex) && !Number.isNaN(endIndex) && endIndex > 0
           ? playlist.slice(sIndex, eIndex + 1)
           : playlist.slice(options.index, options.index + 1);
-      toggleModal(selectedItems);
+      toggleModal("metadata", selectedItems);
       return;
     }
 

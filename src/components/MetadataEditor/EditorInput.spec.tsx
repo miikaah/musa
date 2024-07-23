@@ -1,21 +1,21 @@
 import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import TagInput from "./TagInput";
+import EditorInput from "./EditorInput";
 import { render } from "../../../test/render";
 
 const mockUpdateValue = vi.fn();
 
-describe("TagInput", () => {
-  it("renders TagInput component", async () => {
-    render(<TagInput field="mock" isDisabled={false} />, {});
+describe("EditorInput", () => {
+  it("renders EditorInput component", async () => {
+    render(<EditorInput field="mock" isDisabled={false} />, {});
 
     expect(screen.getByRole("textbox")).toBeInTheDocument();
   });
 
   it("calls updateValue change handler", async () => {
     render(
-      <TagInput
+      <EditorInput
         field="mock"
         isDisabled={false}
         updateValue={mockUpdateValue}
