@@ -666,7 +666,11 @@ const Playlist = ({
 
   const handleOpenEditor = (mode: EditorMode) => {
     console.log("handleOpenEditor");
-    toggleModal(mode, activeIndex, playlist.slice(startIndex, endIndex + 1));
+    if (mode === "metadata") {
+      toggleModal(mode, activeIndex, playlist);
+    } else {
+      toggleModal(mode, activeIndex, playlist.slice(startIndex, endIndex + 1));
+    }
     setContextMenuCoordinates(null);
   };
 
