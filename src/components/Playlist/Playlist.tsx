@@ -140,7 +140,7 @@ type MoveMarkerCoordinates = {
 
 const MoveMarker = styled.div<{ coordinates: MoveMarkerCoordinates }>`
   width: 100%;
-  height: 2px;
+  height: 4px;
   background: var(--color-typography);
   position: absolute;
   top: ${({ coordinates }) => coordinates.y}px;
@@ -219,14 +219,14 @@ const Playlist = ({
   };
 
   const getContinuousSelData = (getSelected?: boolean) => {
-    const sIndex = Math.min(startIndex, endIndex);
-    const eIndex = Math.max(startIndex, endIndex);
+    const startIdx = Math.min(startIndex, endIndex);
+    const endIdx = Math.max(startIndex, endIndex);
     const selectedItems = getSelected
-      ? playlist.filter((_, index) => index >= sIndex && index <= eIndex)
+      ? playlist.filter((_, index) => index >= startIdx && index <= endIdx)
       : clipboard;
     const indexes = [];
 
-    for (let i = sIndex; i <= eIndex; i++) {
+    for (let i = startIdx; i <= endIdx; i++) {
       indexes.push(i);
     }
 
@@ -519,7 +519,8 @@ const Playlist = ({
       index: newIndex,
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
-      isMultiSelect: endIndex - startIndex > 1 || selectedIndexes.size > 1,
+      isMultiSelect:
+        Math.abs(endIndex - startIndex) > 1 || selectedIndexes.size > 1,
       isRightClick: event.button === 2,
       isContextMenuButtonClick,
       stopPropagation: isContextMenuItemClick,
@@ -563,18 +564,16 @@ const Playlist = ({
 
     if (options.isMultiSelect) {
       if (options.index > -1 && options.isRightClick) {
+        const startIdx = Math.min(startIndex, endIndex);
+        const endIdx = Math.max(startIndex, endIndex);
         if (
-          (options.index >= startIndex && options.index <= endIndex) ||
+          (options.index >= startIdx && options.index <= endIdx) ||
           selectedIndexes.has(options.index)
         ) {
           setIsMouseDown(true);
           setActiveIndex(options.index);
           return;
         }
-      }
-      if (options.index === -1) {
-        clearSelection();
-        return;
       }
     }
 
@@ -619,6 +618,11 @@ const Playlist = ({
       return;
     }
 
+    if (options.index === -1) {
+      clearSelection();
+      return;
+    }
+
     setIsMouseDown(false);
     setStartIndex(startIndex);
     setEndIndex(options.index);
@@ -657,7 +661,7 @@ const Playlist = ({
   const handleOpenEditor = (mode: EditorMode) => {
     console.log("handleOpenEditor");
     const files = isContinuousSelection()
-      ? playlist.slice(startIndex, endIndex + 1)
+      ? getContinuousSelData(true).selectedItems
       : getIndexesSelData(true).selectedItems;
     const filesIndex =
       mode === "metadata"
@@ -687,7 +691,12 @@ const Playlist = ({
       setMoveMarkerCoordinates({ x: options.clientX, y });
       return;
     }
-    setEndIndex(options.index);
+    setStartIndex(startIndex === -1 ? options.index : startIndex);
+    setEndIndex(
+      startIndex === -1 && options.index === playlist.length - 1
+        ? playlist.length - 1
+        : options.index,
+    );
   };
 
   if (playlist.length < 1) {
