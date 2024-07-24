@@ -5,7 +5,7 @@ import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import { EditorMode } from "../../types";
 
-const metadataEditorButttonId = "metadataEditorButttonId";
+export const contextMenuId = "contextMenuId";
 
 const Container = styled.div<{ coordinates: ContextMenuCoordinates }>`
   background: white;
@@ -67,11 +67,8 @@ const ContextMenu = ({ coordinates, openEditor, t }: ContextMenuProps) => {
     openEditor(mode);
   };
   return (
-    <Container coordinates={coordinates}>
-      <RowButton
-        id={metadataEditorButttonId}
-        onClick={(event) => onClick(event, "metadata")}
-      >
+    <Container id={contextMenuId} coordinates={coordinates}>
+      <RowButton onClick={(event) => onClick(event, "metadata")}>
         {t("contextMenu.playlist.metadataEditorButton")}
       </RowButton>
       <RowButton onClick={(event) => onClick(event, "normalization")}>

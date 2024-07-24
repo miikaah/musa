@@ -17,12 +17,21 @@ import { listOverflow } from "../../common.styles";
 import { breakpoints } from "../../breakpoints";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
-import PlaylistItem, { MouseUpDownOptions } from "./PlaylistItem";
-import ContextMenu, { ContextMenuCoordinates } from "../ContextMenu";
+import PlaylistItem, {
+  ContextMenuOptions,
+  MouseUpDownOptions,
+  playlistItemMaxHeight,
+} from "./PlaylistItem";
+import ContextMenu, {
+  ContextMenuCoordinates,
+  contextMenuId,
+} from "../ContextMenu";
 import { EditorMode } from "../../types";
 
+const playlistPaddingTop = 14;
+
 const commonCss = css<{ isSmall: boolean }>`
-  padding: 14px 0;
+  padding: ${playlistPaddingTop}px 0;
   margin: 0;
   border: 0 solid var(--color-primary-highlight);
   border-left-width: 1px;
@@ -124,9 +133,9 @@ const ControlsInstruction = styled.div`
   }
 `;
 
-let closeContextMenuTimeout: NodeJS.Timeout | undefined;
+// let closeContextMenuTimeout: NodeJS.Timeout | undefined;
 
-const PLAYLIST_CLASSNAME = "playlist";
+const playlistClassName = "playlist";
 
 type PlaylistProps = {
   playlist: PlayerState["items"];
@@ -134,6 +143,7 @@ type PlaylistProps = {
   currentIndex: PlayerState["currentIndex"];
   toggleModal: (
     mode: "normalization" | "metadata",
+    activeIndex: number,
     items: AudioWithMetadata[],
   ) => void;
   t: TranslateFn;
@@ -420,59 +430,164 @@ const Playlist = ({
   };
   useKeyPress(KEYS.v, paste);
 
-  const updateEndIndex = (endIndex: number) => {
-    if (!isMouseDown) return;
-    setEndIndex(endIndex);
-  };
+  // Playlist mouse events
 
-  const onMouseDown = (options: MouseUpDownOptions) => {
-    if (options.isShiftDown || options.isCtrlDown) return;
-
-    // Set timeout to close context menu because this function gets called on right click
-    // twice on macos.
-    if (!options.isContextMenuPress) {
-      closeContextMenuTimeout = setTimeout(
-        () => setContextMenuCoordinates(null),
-        300,
+  const resolvePlaylistBoundingClientRect = () => {
+    const rect = playlistRef.current?.getBoundingClientRect();
+    if (!rect) {
+      throw new Error(
+        "Playlist bounding client rect not defined. Should not happen.",
       );
     }
 
-    if (
-      options.isContextMenuPress &&
-      options.clientX !== undefined &&
-      options.clientX > -1 &&
-      options.clientY !== undefined &&
-      options.clientY > -1
-    ) {
-      // Clear timeout so that context menu doesn't close when it's supposed to stay open
-      clearTimeout(closeContextMenuTimeout);
-      const rect = playlistRef.current?.getBoundingClientRect();
-      if (!rect) {
-        throw new Error("Playlist rect x not defined. Should not happen.");
-      }
+    return rect;
+  };
 
-      const xFudgeFactor = 60;
-      const yFudgeFactor = 20;
-      setContextMenuCoordinates({
-        x: options.clientX - rect?.x - xFudgeFactor,
-        y: options.clientY - yFudgeFactor,
-      });
+  const resolvePlaylistItemIndex = (
+    event: React.MouseEvent<HTMLUListElement>,
+  ) => {
+    const rect = resolvePlaylistBoundingClientRect();
+    const y = event.clientY - rect.y - playlistPaddingTop + 1;
+    const playlistItemIndex = Math.trunc(y / playlistItemMaxHeight);
+
+    return playlistItemIndex;
+  };
+
+  const resolveContextMenuBoundingClientRect = () => {
+    return document.getElementById(contextMenuId)?.getBoundingClientRect();
+  };
+
+  const resolveIsContextMenuItemClick = (
+    clientX: number,
+    clientY: number,
+    rect?: DOMRect,
+  ) => {
+    if (!rect) {
+      return false;
+    }
+    return (
+      clientX >= rect.left &&
+      clientX <= rect.right &&
+      clientY >= rect.top &&
+      clientY <= rect.bottom
+    );
+  };
+
+  const resolveMouseOptions = (
+    event: React.MouseEvent<HTMLUListElement>,
+  ): MouseUpDownOptions => {
+    console.log("resolveMouseOptions", {
+      startIndex,
+      endIndex,
+      activeIndex,
+    });
+    const { clientX, clientY } = event;
+    const contextMenuRect = resolveContextMenuBoundingClientRect();
+    // console.log("contextMenuRect", contextMenuRect);
+    // console.log("x", clientX, "y", clientY);
+    const isContextMenuItemClick = resolveIsContextMenuItemClick(
+      clientX,
+      clientY,
+      contextMenuRect,
+    );
+    console.log("isContextMenuItemClick", isContextMenuItemClick);
+    const isClearSelectionClick = (
+      event.target as HTMLElement
+    ).className.includes(playlistClassName);
+
+    return {
+      index: isClearSelectionClick ? -1 : resolvePlaylistItemIndex(event),
+      isShiftDown: event.shiftKey,
+      isCtrlDown: event.ctrlKey || event.metaKey,
+      isMultiSelect: endIndex - startIndex > 1,
+      stopPropagation: isContextMenuItemClick,
+    };
+  };
+
+  const clearSelection = (options: MouseUpDownOptions) => {
+    // if (startIndex === endIndex && !options.isShiftDown) {
+    //   setIsMouseDown(false);
+    //   setActiveIndex(-1);
+    //   setEndIndex(NaN);
+    //   setSelectedIndexes(new Set());
+    // } else {
+    //   setIsMouseDown(false);
+    //   setActiveIndex(-1);
+    // }
+    setIsMouseDown(false);
+    setActiveIndex(-1);
+    setStartIndex(NaN);
+    setEndIndex(NaN);
+    setSelectedIndexes(new Set());
+  };
+
+  const onMouseDown = (options: MouseUpDownOptions) => {
+    console.log("mousedown", options);
+    if (options.stopPropagation) {
       return;
     }
 
-    if (isMovingItems) {
-      setIsMouseDown(false);
-      setIsMovingItems(false);
-      setContextMenuCoordinates(null);
-      setStartIndex(NaN);
-      setEndIndex(NaN);
-      setActiveIndex(options.index);
-      setSelectedIndexes(new Set());
-
-      const selectedItem = playlist[startIndex];
-      dispatch(removeIndexesFromPlaylist([startIndex]));
-      dispatch(pasteToPlaylist([selectedItem], options.index - 1));
+    setContextMenuCoordinates(null);
+    if (options.isShiftDown || options.isCtrlDown) {
       return;
+    }
+
+    // Set timeout to close context menu because this function gets called on right click
+    // twice on macos.
+    // if (!options.isContextMenuPress) {
+    //   closeContextMenuTimeout = setTimeout(
+    //     () => setContextMenuCoordinates(null),
+    //     300,
+    //   );
+    // }
+
+    // if (
+    //   options.isContextMenuPress &&
+    //   options.clientX !== undefined &&
+    //   options.clientX > -1 &&
+    //   options.clientY !== undefined &&
+    //   options.clientY > -1
+    // ) {
+    //   // Clear timeout so that context menu doesn't close when it's supposed to stay open
+    //   clearTimeout(closeContextMenuTimeout);
+    //   const rect = playlistRef.current?.getBoundingClientRect();
+    //   if (!rect) {
+    //     throw new Error("Playlist rect x not defined. Should not happen.");
+    //   }
+
+    //   const xFudgeFactor = 60;
+    //   const yFudgeFactor = 20;
+    //   setContextMenuCoordinates({
+    //     x: options.clientX - rect?.x - xFudgeFactor,
+    //     y: options.clientY - yFudgeFactor,
+    //   });
+    //   return;
+    // }
+
+    // if (isMovingItems) {
+    //   setIsMouseDown(false);
+    //   setIsMovingItems(false);
+    //   setContextMenuCoordinates(null);
+    //   setStartIndex(NaN);
+    //   setEndIndex(NaN);
+    //   setActiveIndex(options.index);
+    //   setSelectedIndexes(new Set());
+
+    //   const selectedItem = playlist[startIndex];
+    //   dispatch(removeIndexesFromPlaylist([startIndex]));
+    //   dispatch(pasteToPlaylist([selectedItem], options.index - 1));
+    //   return;
+    // }
+
+    if (options.isMultiSelect) {
+      if (options.index > -1) {
+        setIsMouseDown(true);
+        setActiveIndex(options.index);
+        return;
+      } else {
+        clearSelection(options);
+        return;
+      }
     }
 
     setIsMouseDown(true);
@@ -480,40 +595,64 @@ const Playlist = ({
     setEndIndex(options.index);
     setActiveIndex(options.index);
     setSelectedIndexes(new Set([options.index]));
-    setPressStartedAt(Date.now());
+    // setPressStartedAt(Date.now());
+    console.log({
+      startIndex,
+      endIndex,
+      activeIndex,
+    });
+    console.log("selected", selectedIndexes);
   };
 
   const onMouseUp = (options: MouseUpDownOptions) => {
-    const isLongPressOnItem =
-      Date.now() - pressStartedAt > 500 && startIndex === options.index;
-    setPressStartedAt(0);
-    if (isLongPressOnItem) {
-      setIsMovingItems(true);
-      setIsMouseDown(false);
+    console.log("mouseup", options);
+    if (options.stopPropagation) {
       return;
     }
+    // const isLongPressOnItem =
+    //   Date.now() - pressStartedAt > 500 && startIndex === options.index;
+    // setPressStartedAt(0);
+    // if (isLongPressOnItem) {
+    //   setIsMovingItems(true);
+    //   setIsMouseDown(false);
+    //   return;
+    // }
     if (options.isCtrlDown) {
       setIsMouseDown(false);
       setActiveIndex(-1);
       setSelectedIndexes(new Set([...selectedIndexes, options.index]));
       return;
     }
+
+    if (options.isMultiSelect) {
+      setIsMouseDown(false);
+      setActiveIndex(options.index);
+      return;
+    }
+
     setIsMouseDown(false);
     setStartIndex(startIndex);
     setEndIndex(options.index);
+    console.log({
+      startIndex,
+      endIndex,
+      activeIndex,
+    });
+    console.log("selected", selectedIndexes);
   };
 
-  const clearSelection = (event: React.MouseEvent<HTMLUListElement>) => {
-    if (startIndex === endIndex && !event.shiftKey) {
-      setIsMouseDown(false);
-      setActiveIndex(-1);
-      setEndIndex(NaN);
-      setSelectedIndexes(new Set());
-    } else {
-      setIsMouseDown(false);
-      setActiveIndex(-1);
-    }
+  const onContextMenu = (options: ContextMenuOptions) => {
+    console.log("contextmenu");
+    const rect = resolvePlaylistBoundingClientRect();
+    const xFudgeFactor = 60;
+    const yFudgeFactor = 20;
+    setContextMenuCoordinates({
+      x: options.clientX - rect.x - xFudgeFactor,
+      y: options.clientY - yFudgeFactor,
+    });
   };
+
+  // Misc
 
   const scroll = () => {
     setHideOverflow(true);
@@ -526,8 +665,14 @@ const Playlist = ({
   };
 
   const handleOpenEditor = (mode: EditorMode) => {
-    toggleModal(mode, playlist);
+    console.log("handleOpenEditor");
+    toggleModal(mode, activeIndex, playlist.slice(startIndex, endIndex + 1));
     setContextMenuCoordinates(null);
+  };
+
+  const updateEndIndex = (endIndex: number) => {
+    if (!isMouseDown) return;
+    setEndIndex(endIndex);
   };
 
   if (playlist.length < 1) {
@@ -621,19 +766,13 @@ const Playlist = ({
     <Container
       ref={playlistRef}
       isSmall={isSmall}
-      className={PLAYLIST_CLASSNAME}
+      className={playlistClassName}
       onMouseDown={(event: React.MouseEvent<HTMLUListElement>) => {
-        onMouseDown({
-          index:
-            (event.target as HTMLElement).className === PLAYLIST_CLASSNAME
-              ? playlist.length - 1
-              : 0,
-          isShiftDown: event.shiftKey,
-          isCtrlDown: false,
-          isContextMenuPress: false,
-        });
+        onMouseDown(resolveMouseOptions(event));
       }}
-      onMouseUp={clearSelection}
+      onMouseUp={(event: React.MouseEvent<HTMLUListElement>) => {
+        onMouseUp(resolveMouseOptions(event));
+      }}
       hideOverflow={hideOverflow}
       data-testid="PlaylistContainer"
     >
@@ -658,6 +797,7 @@ const Playlist = ({
               onMouseOverItem={updateEndIndex}
               onMouseDownItem={onMouseDown}
               onMouseUpItem={onMouseUp}
+              onContextMenu={onContextMenu}
               onScrollPlaylist={scroll}
               removeItems={removeItems}
               isMovingItems={isMovingItems}

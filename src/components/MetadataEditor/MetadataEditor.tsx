@@ -89,12 +89,16 @@ const SaveButton = styled(Button)`
 `;
 
 type MetadataEditorProps = {
+  activeIndex: number;
   files: AudioWithMetadata[];
-  offset?: number;
   t: TranslateFn;
 };
 
-const MetadataEditor = ({ files = [], offset = 0, t }: MetadataEditorProps) => {
+const MetadataEditor = ({
+  activeIndex,
+  files = [],
+  t,
+}: MetadataEditorProps) => {
   const [artist, setArtist] = useState<string>();
   const [title, setTitle] = useState<string>();
   const [album, setAlbum] = useState<string>();
@@ -107,7 +111,7 @@ const MetadataEditor = ({ files = [], offset = 0, t }: MetadataEditorProps) => {
   const [composer, setComposer] = useState<string>();
   const [comment, setComment] = useState<string>();
   const [isUpdating, setIsUpdating] = useState(false);
-  const [index, setIndex] = useState<number>(0);
+  const [index, setIndex] = useState<number>(activeIndex);
   const dispatch = useDispatch();
 
   const saveTags = async (
@@ -175,9 +179,17 @@ const MetadataEditor = ({ files = [], offset = 0, t }: MetadataEditorProps) => {
     }
   };
 
+  const previous = () => {
+    setIndex(index - 1);
+  };
+
+  const next = () => {
+    setIndex(index + 1);
+  };
+
   return (
     <Container>
-      {files.slice(index, 1).map((file) => {
+      {files.slice(index, index + 1).map((file) => {
         const isDisabled =
           !(file?.metadata?.codec || "").toLowerCase().startsWith("mpeg") &&
           !(file?.metadata?.codec || "").toLowerCase().startsWith("flac");
@@ -255,7 +267,12 @@ const MetadataEditor = ({ files = [], offset = 0, t }: MetadataEditorProps) => {
               />
             </Wrapper>
             <StyledActionsContainer>
-              <Button isSmall isSecondary onClick={() => undefined}>
+              <Button
+                isSmall
+                isSecondary
+                onClick={previous}
+                disabled={index < 1}
+              >
                 {t("modal.metadata.previousButton")}
               </Button>
               <SaveButton
@@ -265,7 +282,12 @@ const MetadataEditor = ({ files = [], offset = 0, t }: MetadataEditorProps) => {
               >
                 {t("modal.metadata.saveButton")}
               </SaveButton>
-              <Button isSmall isSecondary onClick={() => undefined}>
+              <Button
+                isSmall
+                isSecondary
+                onClick={next}
+                disabled={index >= files.length - 1}
+              >
                 {t("modal.metadata.nextButton")}
               </Button>
             </StyledActionsContainer>
