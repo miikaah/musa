@@ -19,7 +19,6 @@ import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import PlaylistItem, {
   ContextMenuOptions,
-  MouseUpDownOptions,
   playlistItemMaxHeight,
 } from "./PlaylistItem";
 import ContextMenu, {
@@ -136,6 +135,15 @@ const ControlsInstruction = styled.div`
 // let closeContextMenuTimeout: NodeJS.Timeout | undefined;
 
 const playlistClassName = "playlist";
+
+type MouseUpDownOptions = {
+  index: number;
+  isShiftDown: boolean;
+  isCtrlDown: boolean;
+  isMultiSelect: boolean;
+  isRightClick: boolean;
+  stopPropagation: boolean;
+};
 
 type PlaylistProps = {
   playlist: PlayerState["items"];
@@ -494,6 +502,7 @@ const Playlist = ({
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
       isMultiSelect: endIndex - startIndex > 1 || selectedIndexes.size > 1,
+      isRightClick: event.button === 2,
       stopPropagation: isContextMenuItemClick,
     };
   };
@@ -574,7 +583,7 @@ const Playlist = ({
     // }
 
     if (options.isMultiSelect) {
-      if (options.index > -1) {
+      if (options.index > -1 && options.isRightClick) {
         if (
           (options.index >= startIndex && options.index <= endIndex) ||
           selectedIndexes.has(options.index)
@@ -742,10 +751,10 @@ const Playlist = ({
               <div>{t("playlist.instructions.duplicateSelection")}</div>
               <div>Ctrl / Cmd + Shift + D</div>
             </ControlsInstruction>
-            <ControlsInstruction>
+            {/* <ControlsInstruction>
               <div>{t("playlist.instructions.moveItemWithPointer")}</div>
               <div>{t("playlist.instructions.longPress")}</div>
-            </ControlsInstruction>
+            </ControlsInstruction> */}
             <ControlsInstruction>
               <div>{t("playlist.instructions.moveUp")}</div>
               <div>{t("playlist.instructions.upArrow")}</div>
@@ -805,8 +814,6 @@ const Playlist = ({
               onSetActiveIndex={setActiveIndex}
               isSelected={selectedIndexes.has(index)}
               onMouseOverItem={updateEndIndex}
-              onMouseDownItem={onMouseDown}
-              onMouseUpItem={onMouseUp}
               onContextMenu={onContextMenu}
               onScrollPlaylist={scroll}
               removeItems={removeItems}

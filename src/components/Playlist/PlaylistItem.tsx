@@ -195,14 +195,6 @@ const SecondRowItem = styled.span<{ hasMargins?: boolean }>`
 
 let touchTimeout: NodeJS.Timeout;
 
-export type MouseUpDownOptions = {
-  index: number;
-  isShiftDown: boolean;
-  isCtrlDown: boolean;
-  isMultiSelect: boolean;
-  stopPropagation: boolean;
-};
-
 export type ContextMenuOptions = {
   clientX: number;
   clientY: number;
@@ -221,8 +213,6 @@ type PlaylistItemProps = {
   isMovingItems: boolean;
   onSetActiveIndex: (index: number) => void;
   onMouseOverItem: (index: number) => void;
-  onMouseDownItem: (options: MouseUpDownOptions) => void;
-  onMouseUpItem: (options: MouseUpDownOptions) => void;
   onContextMenu: (options: ContextMenuOptions) => void;
   onScrollPlaylist: () => void;
   removeItems: () => void;
@@ -241,8 +231,6 @@ const PlaylistItem = ({
   isMovingItems,
   onSetActiveIndex,
   onMouseOverItem,
-  onMouseDownItem,
-  onMouseUpItem,
   onContextMenu,
   onScrollPlaylist,
   removeItems,
