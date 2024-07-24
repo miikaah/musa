@@ -668,15 +668,15 @@ const Playlist = ({
 
   const handleOpenEditor = (mode: EditorMode) => {
     console.log("handleOpenEditor");
-    if (mode === "metadata") {
-      toggleModal(mode, activeIndex, playlist);
-    } else {
-      const files = isContinuousSelection()
-        ? playlist.slice(startIndex, endIndex + 1)
-        : getIndexesSelData(true).selectedItems;
+    const files = isContinuousSelection()
+      ? playlist.slice(startIndex, endIndex + 1)
+      : getIndexesSelData(true).selectedItems;
+    const filesIndex =
+      mode === "metadata"
+        ? files.findIndex((file) => file === playlist[activeIndex])
+        : -1;
 
-      toggleModal(mode, activeIndex, files);
-    }
+    toggleModal(mode, filesIndex, files);
     setContextMenuCoordinates(null);
   };
 
