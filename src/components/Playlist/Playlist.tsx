@@ -18,7 +18,7 @@ import { breakpoints } from "../../breakpoints";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import PlaylistItem, {
-  ContextMenuOptions,
+  PlaylistItemOptions,
   playlistItemMaxHeight,
 } from "./PlaylistItem";
 import ContextMenu, {
@@ -132,6 +132,20 @@ const ControlsInstruction = styled.div`
   }
 `;
 
+type MoveMarkerCoordinates = {
+  x: number;
+  y: number;
+};
+
+const MoveMarker = styled.div<{ coordinates: MoveMarkerCoordinates }>`
+  width: 100%;
+  height: 2px;
+  background: var(--color-typography);
+  position: absolute;
+  top: ${({ coordinates }) => coordinates.y}px;
+  left: 0;
+`;
+
 // let closeContextMenuTimeout: NodeJS.Timeout | undefined;
 
 const playlistClassName = "playlist";
@@ -167,7 +181,6 @@ const Playlist = ({
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMovingItems, setIsMovingItems] = useState(false);
-  const [pressStartedAt, setPressStartedAt] = useState(0);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [startIndex, setStartIndex] = useState(NaN);
   const [endIndex, setEndIndex] = useState(NaN);
@@ -178,6 +191,8 @@ const Playlist = ({
   const [hideOverflow, setHideOverflow] = useState(false);
   const [contextMenuCoordinates, setContextMenuCoordinates] =
     useState<ContextMenuCoordinates | null>(null);
+  const [moveMarkerCoordinates, setMoveMarkerCoordinates] =
+    useState<MoveMarkerCoordinates | null>(null);
   const dispatch = useDispatch();
 
   const playlistRef = useRef<HTMLUListElement | null>(null);
@@ -451,11 +466,9 @@ const Playlist = ({
     return rect;
   };
 
-  const resolvePlaylistItemIndex = (
-    event: React.MouseEvent<HTMLUListElement>,
-  ) => {
+  const resolvePlaylistItemIndex = (clientY: number) => {
     const rect = resolvePlaylistBoundingClientRect();
-    const y = event.clientY - rect.y - playlistPaddingTop + 1;
+    const y = clientY - rect.y - playlistPaddingTop + 1;
     const playlistItemIndex = Math.trunc(y / playlistItemMaxHeight);
 
     return playlistItemIndex;
@@ -496,9 +509,12 @@ const Playlist = ({
     const isClearSelectionClick = (
       event.target as HTMLElement
     ).className.includes(playlistClassName);
+    const newIndex = isClearSelectionClick
+      ? -1
+      : resolvePlaylistItemIndex(event.clientY);
 
     return {
-      index: isClearSelectionClick ? -1 : resolvePlaylistItemIndex(event),
+      index: newIndex,
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
       isMultiSelect: endIndex - startIndex > 1 || selectedIndexes.size > 1,
@@ -507,7 +523,7 @@ const Playlist = ({
     };
   };
 
-  const clearSelection = (options: MouseUpDownOptions) => {
+  const clearSelection = () => {
     // if (startIndex === endIndex && !options.isShiftDown) {
     //   setIsMouseDown(false);
     //   setActiveIndex(-1);
@@ -522,15 +538,27 @@ const Playlist = ({
     setStartIndex(NaN);
     setEndIndex(NaN);
     setSelectedIndexes(new Set());
+    setIsMovingItems(false);
   };
 
   const onMouseDown = (options: MouseUpDownOptions) => {
     console.log("mousedown", options);
+    setIsMovingItems(false);
+    setMoveMarkerCoordinates(null);
     if (options.stopPropagation) {
       return;
     }
-
     setContextMenuCoordinates(null);
+
+    const isActiveIndexClick =
+      options.index > -1 && activeIndex === options.index;
+    console.log("isActiveIndexClick", isActiveIndexClick);
+    if (isActiveIndexClick && startIndex === endIndex) {
+      setIsMouseDown(true);
+      setIsMovingItems(true);
+      return;
+    }
+
     if (options.isShiftDown || options.isCtrlDown) {
       return;
     }
@@ -594,7 +622,7 @@ const Playlist = ({
         }
       }
       if (options.index === -1) {
-        clearSelection(options);
+        clearSelection();
         return;
       }
     }
@@ -617,6 +645,13 @@ const Playlist = ({
 
   const onMouseUp = (options: MouseUpDownOptions) => {
     console.log("mouseup", options);
+    if (isMovingItems) {
+      setIsMouseDown(false);
+      setIsMovingItems(false);
+      // TODO: Move items in playlist
+      return;
+    }
+
     if (options.stopPropagation) {
       return;
     }
@@ -644,6 +679,7 @@ const Playlist = ({
     setIsMouseDown(false);
     setStartIndex(startIndex);
     setEndIndex(options.index);
+    setMoveMarkerCoordinates(null);
     console.log({
       startIndex,
       endIndex,
@@ -652,7 +688,7 @@ const Playlist = ({
     console.log("selected", selectedIndexes);
   };
 
-  const onContextMenu = (options: ContextMenuOptions) => {
+  const onContextMenu = (options: PlaylistItemOptions) => {
     console.log("contextmenu");
     const rect = resolvePlaylistBoundingClientRect();
     const xFudgeFactor = 60;
@@ -689,9 +725,32 @@ const Playlist = ({
     setContextMenuCoordinates(null);
   };
 
-  const updateEndIndex = (index: number) => {
-    if (!isMouseDown) return;
-    setEndIndex(index);
+  const updateEndIndex = (options: PlaylistItemOptions) => {
+    if (!isMouseDown || options.index === undefined) {
+      return;
+    }
+    if (isMovingItems) {
+      const playlistItemIndex = resolvePlaylistItemIndex(options.clientY);
+      console.log("playlistItemIndex", playlistItemIndex);
+      // const y =
+      //   playlistItemIndex === 0 &&
+      //   options.clientY < playlistItemMaxHeight + 5 + playlistPaddingTop
+      //     ? playlistPaddingTop
+      //     : (playlistItemIndex + 1) * playlistItemMaxHeight +
+      //       playlistPaddingTop;
+      const y =
+        playlistItemIndex === playlist.length - 1 &&
+        options.clientY >
+          (playlistItemIndex + 1) * playlistItemMaxHeight +
+            5 +
+            playlistPaddingTop
+          ? (playlistItemIndex + 1) * playlistItemMaxHeight + playlistPaddingTop
+          : playlistItemIndex * playlistItemMaxHeight + playlistPaddingTop;
+      console.log("y", y);
+      setMoveMarkerCoordinates({ x: options.clientX, y });
+      return;
+    }
+    setEndIndex(options.index);
   };
 
   if (playlist.length < 1) {
@@ -795,6 +854,9 @@ const Playlist = ({
       hideOverflow={hideOverflow}
       data-testid="PlaylistContainer"
     >
+      {moveMarkerCoordinates && (
+        <MoveMarker coordinates={moveMarkerCoordinates} />
+      )}
       {contextMenuCoordinates && (
         <ContextMenu
           coordinates={contextMenuCoordinates}

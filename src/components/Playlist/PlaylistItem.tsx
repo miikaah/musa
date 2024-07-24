@@ -195,7 +195,8 @@ const SecondRowItem = styled.span<{ hasMargins?: boolean }>`
 
 let touchTimeout: NodeJS.Timeout;
 
-export type ContextMenuOptions = {
+export type PlaylistItemOptions = {
+  index?: number;
   clientX: number;
   clientY: number;
 };
@@ -212,8 +213,8 @@ type PlaylistItemProps = {
   isSelected: boolean;
   isMovingItems: boolean;
   onSetActiveIndex: (index: number) => void;
-  onMouseOverItem: (index: number) => void;
-  onContextMenu: (options: ContextMenuOptions) => void;
+  onMouseOverItem: (options: PlaylistItemOptions) => void;
+  onContextMenu: (options: PlaylistItemOptions) => void;
   onScrollPlaylist: () => void;
   removeItems: () => void;
 };
@@ -360,6 +361,26 @@ const PlaylistItem = ({
     event.stopPropagation();
   };
 
+  const handleTouchEnd = () => {
+    const now = Date.now();
+    if (now - lastTouchTime < 500) {
+      clearTimeout(touchTimeout);
+      handleDoubleClick();
+    } else {
+      touchTimeout = setTimeout(() => {}, 500);
+    }
+    setLastTouchTime(now);
+  };
+
+  const handleMouseOver = (event: React.MouseEvent<HTMLLIElement>) => {
+    onMouseOverItem({
+      index,
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+    event.stopPropagation();
+  };
+
   const renderPlayOrPauseIcon = () => {
     if (!isIndexCurrentIndex() || !hasEqualItemAndCurrentItem()) return;
     return isPlaying ? (
@@ -382,17 +403,6 @@ const PlaylistItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
-  const handleTouchEnd = () => {
-    const now = Date.now();
-    if (now - lastTouchTime < 500) {
-      clearTimeout(touchTimeout);
-      handleDoubleClick();
-    } else {
-      touchTimeout = setTimeout(() => {}, 500);
-    }
-    setLastTouchTime(now);
-  };
-
   const artist = item?.metadata?.artist || item.artistName || "";
   const album = item?.metadata?.album || item.albumName || "";
   const title = item?.metadata?.title || item.name || "";
@@ -405,9 +415,9 @@ const PlaylistItem = ({
       isActiveOrSelected={isActiveOrSelected()}
       isMovingItems={false}
       onDoubleClick={handleDoubleClick}
-      onTouchEnd={handleTouchEnd}
-      onMouseOver={() => onMouseOverItem(index)}
       onContextMenu={handleContextMenu}
+      onTouchEnd={handleTouchEnd}
+      onMouseOver={handleMouseOver}
       data-testid="PlaylistItemContainer"
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
