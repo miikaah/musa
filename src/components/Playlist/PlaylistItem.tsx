@@ -416,6 +416,7 @@ const PlaylistItem = ({
       isMovingItems={false}
       onDoubleClick={handleDoubleClick}
       onTouchEnd={handleTouchEnd}
+      onMouseOver={() => onMouseOverItem(index)}
       onContextMenu={handleContextMenu}
       data-testid="PlaylistItemContainer"
     >

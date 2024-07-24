@@ -580,11 +580,16 @@ const Playlist = ({
     // }
 
     if (options.isMultiSelect) {
-      if (options.index > -1) {
+      if (
+        options.index > -1 &&
+        options.index >= startIndex &&
+        options.index <= endIndex
+      ) {
         setIsMouseDown(true);
         setActiveIndex(options.index);
         return;
-      } else {
+      }
+      if (options.index === -1) {
         clearSelection(options);
         return;
       }
@@ -674,9 +679,9 @@ const Playlist = ({
     setContextMenuCoordinates(null);
   };
 
-  const updateEndIndex = (endIndex: number) => {
+  const updateEndIndex = (index: number) => {
     if (!isMouseDown) return;
-    setEndIndex(endIndex);
+    setEndIndex(index);
   };
 
   if (playlist.length < 1) {
