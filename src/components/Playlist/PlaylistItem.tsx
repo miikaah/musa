@@ -10,7 +10,7 @@ import { ellipsisTextOverflow } from "../../common.styles";
 import AlbumImage from "../AlbumImage";
 import { breakpoints } from "../../breakpoints";
 
-const editButtonId = "PlaylistItemEditButton";
+const contextMenuButtonId = "PlaylistItemContextMenuButton";
 
 export const playlistItemMaxHeight = 60;
 
@@ -174,7 +174,7 @@ const DeleteButton = styled(ActionButton)`
   margin-left: 4px;
 `;
 
-const EditButton = styled(ActionButton)``;
+const ContextMenuButton = styled(ActionButton)``;
 
 const Duration = styled.span`
   font-size: var(--font-size-xs);
@@ -362,7 +362,9 @@ const PlaylistItem = ({
   //   event.stopPropagation();
   // };
 
-  const handleContextMenu = (event: React.MouseEvent<HTMLLIElement>) => {
+  const handleContextMenu = (
+    event: React.MouseEvent<HTMLLIElement | HTMLButtonElement>,
+  ) => {
     onContextMenu({
       clientX: event.clientX,
       clientY: event.clientY,
@@ -428,12 +430,16 @@ const PlaylistItem = ({
         <FirstRow>
           <Title>{title}</Title>
           {!isMobile && (
-            <EditButton id={editButtonId} data-testid={editButtonId}>
+            <ContextMenuButton
+              id={contextMenuButtonId}
+              data-testid={contextMenuButtonId}
+              onClick={handleContextMenu}
+            >
               <div />
               <span />
               <span />
               <span />
-            </EditButton>
+            </ContextMenuButton>
           )}
           <div />
           <DeleteButton
