@@ -10,7 +10,7 @@ import { ellipsisTextOverflow } from "../../common.styles";
 import AlbumImage from "../AlbumImage";
 import { breakpoints } from "../../breakpoints";
 
-const contextMenuButtonId = "PlaylistItemContextMenuButton";
+export const contextMenuButtonId = "PlaylistItemContextMenuButton";
 
 export const playlistItemMaxHeight = 60;
 
@@ -313,48 +313,11 @@ const PlaylistItem = ({
     onSetActiveIndex(index);
   };
 
-  // const checkIsContextMenuPress = (event: React.MouseEvent<HTMLLIElement>) => {
-  //   if (event.target instanceof Element) {
-  //     if (
-  //       event.target.id === editButtonId ||
-  //       event.target.parentElement?.id === editButtonId
-  //     ) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // };
-
-  // const handleMouseDown = (
-  //   event: React.MouseEvent<HTMLLIElement>,
-  //   isContextMenuPress = false,
-  // ) => {
-  //   onMouseDownItem({
-  //     index,
-  //     isShiftDown: event.shiftKey,
-  //     isCtrlDown: event.ctrlKey || event.metaKey,
-  //     isContextMenuPress: isContextMenuPress || checkIsContextMenuPress(event),
-  //     clientX: event.clientX,
-  //     clientY: event.clientY,
-  //   });
-  //   event.stopPropagation();
-  // };
-
-  // const handleMouseUp = (event: React.MouseEvent<HTMLLIElement>) => {
-  //   console.log("mup", event);
-  //   onMouseUpItem({
-  //     index,
-  //     isShiftDown: event.shiftKey,
-  //     isCtrlDown: event.ctrlKey || event.metaKey,
-  //     isContextMenuPress: checkIsContextMenuPress(event),
-  //   });
-  //   event.stopPropagation();
-  // };
-
   const handleContextMenu = (
     event: React.MouseEvent<HTMLLIElement | HTMLButtonElement>,
   ) => {
     onContextMenu({
+      index,
       clientX: event.clientX,
       clientY: event.clientY,
     });
@@ -429,8 +392,8 @@ const PlaylistItem = ({
           <Title>{title}</Title>
           {!isMobile && (
             <ContextMenuButton
-              id={contextMenuButtonId}
-              data-testid={contextMenuButtonId}
+              id={`${contextMenuButtonId}-${index}`}
+              data-testid={`${contextMenuButtonId}-${index}`}
               onClick={handleContextMenu}
             >
               <div />

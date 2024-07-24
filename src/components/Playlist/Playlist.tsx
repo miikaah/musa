@@ -19,6 +19,7 @@ import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import PlaylistItem, {
   PlaylistItemOptions,
+  contextMenuButtonId,
   playlistItemMaxHeight,
 } from "./PlaylistItem";
 import ContextMenu, {
@@ -146,8 +147,6 @@ const MoveMarker = styled.div<{ coordinates: MoveMarkerCoordinates }>`
   left: 0;
 `;
 
-// let closeContextMenuTimeout: NodeJS.Timeout | undefined;
-
 const playlistClassName = "playlist";
 
 type MouseUpDownOptions = {
@@ -156,6 +155,7 @@ type MouseUpDownOptions = {
   isCtrlDown: boolean;
   isMultiSelect: boolean;
   isRightClick: boolean;
+  isContextMenuButtonClick: boolean;
   stopPropagation: boolean;
 };
 
@@ -499,8 +499,6 @@ const Playlist = ({
   ): MouseUpDownOptions => {
     const { clientX, clientY } = event;
     const contextMenuRect = resolveContextMenuBoundingClientRect();
-    // console.log("contextMenuRect", contextMenuRect);
-    // console.log("x", clientX, "y", clientY);
     const isContextMenuItemClick = resolveIsContextMenuItemClick(
       clientX,
       clientY,
@@ -512,6 +510,10 @@ const Playlist = ({
     const newIndex = isClearSelectionClick
       ? -1
       : resolvePlaylistItemIndex(event.clientY);
+    const id = `${contextMenuButtonId}-${newIndex}`;
+    const target = event.target as HTMLElement;
+    const isContextMenuButtonClick =
+      target?.id === id || target.parentElement?.id === id;
 
     return {
       index: newIndex,
@@ -519,20 +521,12 @@ const Playlist = ({
       isCtrlDown: event.ctrlKey || event.metaKey,
       isMultiSelect: endIndex - startIndex > 1 || selectedIndexes.size > 1,
       isRightClick: event.button === 2,
+      isContextMenuButtonClick,
       stopPropagation: isContextMenuItemClick,
     };
   };
 
   const clearSelection = () => {
-    // if (startIndex === endIndex && !options.isShiftDown) {
-    //   setIsMouseDown(false);
-    //   setActiveIndex(-1);
-    //   setEndIndex(NaN);
-    //   setSelectedIndexes(new Set());
-    // } else {
-    //   setIsMouseDown(false);
-    //   setActiveIndex(-1);
-    // }
     setIsMouseDown(false);
     setActiveIndex(-1);
     setStartIndex(NaN);
@@ -546,6 +540,10 @@ const Playlist = ({
     setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
     if (options.stopPropagation) {
+      return;
+    }
+    if (options.isContextMenuButtonClick) {
+      setActiveIndex(options.index);
       return;
     }
     setContextMenuCoordinates(null);
@@ -562,53 +560,6 @@ const Playlist = ({
     if (options.isShiftDown || options.isCtrlDown) {
       return;
     }
-
-    // Set timeout to close context menu because this function gets called on right click
-    // twice on macos.
-    // if (!options.isContextMenuPress) {
-    //   closeContextMenuTimeout = setTimeout(
-    //     () => setContextMenuCoordinates(null),
-    //     300,
-    //   );
-    // }
-
-    // if (
-    //   options.isContextMenuPress &&
-    //   options.clientX !== undefined &&
-    //   options.clientX > -1 &&
-    //   options.clientY !== undefined &&
-    //   options.clientY > -1
-    // ) {
-    //   // Clear timeout so that context menu doesn't close when it's supposed to stay open
-    //   clearTimeout(closeContextMenuTimeout);
-    //   const rect = playlistRef.current?.getBoundingClientRect();
-    //   if (!rect) {
-    //     throw new Error("Playlist rect x not defined. Should not happen.");
-    //   }
-
-    //   const xFudgeFactor = 60;
-    //   const yFudgeFactor = 20;
-    //   setContextMenuCoordinates({
-    //     x: options.clientX - rect?.x - xFudgeFactor,
-    //     y: options.clientY - yFudgeFactor,
-    //   });
-    //   return;
-    // }
-
-    // if (isMovingItems) {
-    //   setIsMouseDown(false);
-    //   setIsMovingItems(false);
-    //   setContextMenuCoordinates(null);
-    //   setStartIndex(NaN);
-    //   setEndIndex(NaN);
-    //   setActiveIndex(options.index);
-    //   setSelectedIndexes(new Set());
-
-    //   const selectedItem = playlist[startIndex];
-    //   dispatch(removeIndexesFromPlaylist([startIndex]));
-    //   dispatch(pasteToPlaylist([selectedItem], options.index - 1));
-    //   return;
-    // }
 
     if (options.isMultiSelect) {
       if (options.index > -1 && options.isRightClick) {
@@ -634,7 +585,6 @@ const Playlist = ({
     setSelectedIndexes(
       options.index > -1 ? new Set([options.index]) : new Set(),
     );
-    // setPressStartedAt(Date.now());
     console.log({
       startIndex,
       endIndex,
@@ -655,14 +605,7 @@ const Playlist = ({
     if (options.stopPropagation) {
       return;
     }
-    // const isLongPressOnItem =
-    //   Date.now() - pressStartedAt > 500 && startIndex === options.index;
-    // setPressStartedAt(0);
-    // if (isLongPressOnItem) {
-    //   setIsMovingItems(true);
-    //   setIsMouseDown(false);
-    //   return;
-    // }
+
     if (options.isCtrlDown) {
       setIsMouseDown(false);
       setActiveIndex(-1);
@@ -732,12 +675,6 @@ const Playlist = ({
     if (isMovingItems) {
       const playlistItemIndex = resolvePlaylistItemIndex(options.clientY);
       console.log("playlistItemIndex", playlistItemIndex);
-      // const y =
-      //   playlistItemIndex === 0 &&
-      //   options.clientY < playlistItemMaxHeight + 5 + playlistPaddingTop
-      //     ? playlistPaddingTop
-      //     : (playlistItemIndex + 1) * playlistItemMaxHeight +
-      //       playlistPaddingTop;
       const y =
         playlistItemIndex === playlist.length - 1 &&
         options.clientY >
@@ -810,10 +747,10 @@ const Playlist = ({
               <div>{t("playlist.instructions.duplicateSelection")}</div>
               <div>Ctrl / Cmd + Shift + D</div>
             </ControlsInstruction>
-            {/* <ControlsInstruction>
+            <ControlsInstruction>
               <div>{t("playlist.instructions.moveItemWithPointer")}</div>
               <div>{t("playlist.instructions.longPress")}</div>
-            </ControlsInstruction> */}
+            </ControlsInstruction>
             <ControlsInstruction>
               <div>{t("playlist.instructions.moveUp")}</div>
               <div>{t("playlist.instructions.upArrow")}</div>
