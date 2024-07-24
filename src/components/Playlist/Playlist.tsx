@@ -476,11 +476,6 @@ const Playlist = ({
   const resolveMouseOptions = (
     event: React.MouseEvent<HTMLUListElement>,
   ): MouseUpDownOptions => {
-    console.log("resolveMouseOptions", {
-      startIndex,
-      endIndex,
-      activeIndex,
-    });
     const { clientX, clientY } = event;
     const contextMenuRect = resolveContextMenuBoundingClientRect();
     // console.log("contextMenuRect", contextMenuRect);
@@ -490,7 +485,6 @@ const Playlist = ({
       clientY,
       contextMenuRect,
     );
-    console.log("isContextMenuItemClick", isContextMenuItemClick);
     const isClearSelectionClick = (
       event.target as HTMLElement
     ).className.includes(playlistClassName);
@@ -499,7 +493,7 @@ const Playlist = ({
       index: isClearSelectionClick ? -1 : resolvePlaylistItemIndex(event),
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
-      isMultiSelect: endIndex - startIndex > 1,
+      isMultiSelect: endIndex - startIndex > 1 || selectedIndexes.size > 1,
       stopPropagation: isContextMenuItemClick,
     };
   };
@@ -580,14 +574,15 @@ const Playlist = ({
     // }
 
     if (options.isMultiSelect) {
-      if (
-        options.index > -1 &&
-        options.index >= startIndex &&
-        options.index <= endIndex
-      ) {
-        setIsMouseDown(true);
-        setActiveIndex(options.index);
-        return;
+      if (options.index > -1) {
+        if (
+          (options.index >= startIndex && options.index <= endIndex) ||
+          selectedIndexes.has(options.index)
+        ) {
+          setIsMouseDown(true);
+          setActiveIndex(options.index);
+          return;
+        }
       }
       if (options.index === -1) {
         clearSelection(options);
@@ -599,7 +594,9 @@ const Playlist = ({
     setStartIndex(options.index);
     setEndIndex(options.index);
     setActiveIndex(options.index);
-    setSelectedIndexes(new Set([options.index]));
+    setSelectedIndexes(
+      options.index > -1 ? new Set([options.index]) : new Set(),
+    );
     // setPressStartedAt(Date.now());
     console.log({
       startIndex,
@@ -674,7 +671,11 @@ const Playlist = ({
     if (mode === "metadata") {
       toggleModal(mode, activeIndex, playlist);
     } else {
-      toggleModal(mode, activeIndex, playlist.slice(startIndex, endIndex + 1));
+      const files = isContinuousSelection()
+        ? playlist.slice(startIndex, endIndex + 1)
+        : getIndexesSelData(true).selectedItems;
+
+      toggleModal(mode, activeIndex, files);
     }
     setContextMenuCoordinates(null);
   };
