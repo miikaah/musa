@@ -62,15 +62,6 @@ const Container = styled.ul<{ isSmall: boolean; hideOverflow: boolean }>`
   }
 `;
 
-const Backdrop = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-`;
-
 const Instructions = styled.div<{ isSmall: boolean }>`
   ${commonCss}
   ${listOverflow}
@@ -157,6 +148,8 @@ const MoveMarker = styled.div<{ coordinates: MoveMarkerCoordinates }>`
   top: ${({ coordinates }) => coordinates.y}px;
   left: 0;
 `;
+
+let moveTimeout: NodeJS.Timeout;
 
 const playlistClassName = "playlist";
 
@@ -279,8 +272,8 @@ const Playlist = ({
   useKeyPress(KEYS.Enter, playOrReplay);
 
   const removeItems = () => {
-    dispatch(removeIndexesFromPlaylist(getSelectedIndexes()));
     setClipboard(getSelectedItems());
+    dispatch(removeIndexesFromPlaylist(getSelectedIndexes()));
     setSelectedIndexes(new Set());
   };
   useKeyPress(KEYS.Backspace, removeItems);
@@ -305,15 +298,16 @@ const Playlist = ({
   useKeyPress(KEYS.d, duplicate);
   useKeyPress(KEYS.D, duplicate);
 
+  const pasteItems = (activeIndex: number, items = clipboard) => {
+    console.log("paste", activeIndex, items);
+    dispatch(
+      pasteToPlaylist(items, activeIndex < 0 ? playlist.length : activeIndex),
+    );
+  };
+
   const paste = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;
-    const activeIndex = getActiveIndex(true);
-    dispatch(
-      pasteToPlaylist(
-        clipboard,
-        activeIndex < 0 ? playlist.length : activeIndex,
-      ),
-    );
+    pasteItems(getActiveIndex(true));
   };
   useKeyPress(KEYS.v, paste);
 
@@ -381,7 +375,6 @@ const Playlist = ({
       contextMenuRect,
     );
     const isClearSelectionClick = resolveIsClearSelectionClick(event.clientY);
-    // console.log("isClearSelectionClick", isClearSelectionClick);
     const newIndex = isClearSelectionClick
       ? -1
       : resolvePlaylistItemIndex(event.clientY);
@@ -394,7 +387,7 @@ const Playlist = ({
       index: newIndex,
       isShiftDown: event.shiftKey,
       isCtrlDown: event.ctrlKey || event.metaKey,
-      isMultiSelect: selectedIndexes.size > 1,
+      isMultiSelect: selectedIndexes.size > 1 && selectedIndexes.has(newIndex),
       isRightClick: event.button === 2,
       isContextMenuButtonClick,
       stopPropagation: isContextMenuItemClick,
@@ -418,17 +411,16 @@ const Playlist = ({
     });
     console.log("selected", selectedIndexes);
     setPointerStartY(event.clientY);
+    setIsMouseDown(true);
     setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
-
-    setIsMouseDown(true);
-    setStartIndex(options.index);
-    setEndIndex(NaN);
 
     if (options.stopPropagation) {
       return;
     }
     if (options.isContextMenuButtonClick) {
+      setStartIndex(options.index);
+      setEndIndex(options.index);
       setSelectedIndexes(
         options.index > -1 ? new Set([options.index]) : new Set(),
       );
@@ -440,35 +432,46 @@ const Playlist = ({
       return;
     }
 
-    if (options.isMultiSelect) {
-      if (options.index > -1) {
-        // if (options.index > -1 && options.isRightClick) {
-        const startIdx = Math.min(startIndex, endIndex);
-        const endIdx = Math.max(startIndex, endIndex);
-        // console.log("startIdx", startIdx, "endIdx", endIdx);
-        const isSelectedIndexClick =
-          (options.index >= startIdx && options.index <= endIdx) ||
-          selectedIndexes.has(options.index);
+    if (options.index < 0) {
+      setStartIndex(options.index);
+      setEndIndex(options.index);
+      setSelectedIndexes(new Set());
+      return;
+    }
 
-        if (isSelectedIndexClick) {
-          setIsMovingItems(true);
-          return;
-        }
+    if (options.isMultiSelect) {
+      const startIdx = Math.min(startIndex, endIndex);
+      const endIdx = Math.max(startIndex, endIndex);
+      const isSelectedIndexClick =
+        (options.index >= startIdx && options.index <= endIdx) ||
+        selectedIndexes.has(options.index);
+
+      if (isSelectedIndexClick) {
+        setIsMovingItems(true);
+        moveTimeout = setTimeout(() => {
+          setStartIndex(options.index);
+          setEndIndex(options.index);
+          setSelectedIndexes(new Set([options.index]));
+          setIsMovingItems(false);
+          setIsMouseDown(false);
+          setMoveMarkerCoordinates(null);
+        }, 200);
+        return;
       }
+      return;
     }
 
     const activeIndex = getActiveIndex();
-    const isActiveIndexClick =
-      options.index > -1 && activeIndex === options.index;
-    // console.log("isActiveIndexClick", isActiveIndexClick);
+    const isActiveIndexClick = activeIndex === options.index;
+    console.log("isActiveIndexClick", isActiveIndexClick, startIndex, endIndex);
     if (isActiveIndexClick && startIndex === endIndex) {
       setIsMovingItems(true);
       return;
     }
 
-    setSelectedIndexes(
-      options.index > -1 ? new Set([options.index]) : new Set(),
-    );
+    setStartIndex(options.index);
+    setEndIndex(options.index);
+    setSelectedIndexes(new Set([options.index]));
   };
 
   const onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
@@ -481,19 +484,54 @@ const Playlist = ({
     console.log("selected", selectedIndexes);
     setPointerStartY(null);
     setIsMouseDown(false);
-    setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
-    // if (isMovingItems) {
-    //   setIsMouseDown(false);
-    //   setIsMovingItems(false);
-    //   // TODO: Move items in playlist
-    //   return;
-    // }
+    console.log("isMovingItems", isMovingItems);
+    if (isMovingItems) {
+      console.log(startIndex, options.index);
+      const selectedItems = getSelectedItems();
+      const constant =
+        startIndex < options.index ? selectedItems.length + 1 : 1;
+      const activeIndex = Math.max(0, options.index - constant);
+      removeItems();
+      dispatch(
+        pasteToPlaylist(
+          selectedItems,
+          activeIndex < 0 ? playlist.length : activeIndex,
+        ),
+      );
+      clearSelection();
+      setStartIndex(options.index);
+      console.log("activeIndex", activeIndex);
+
+      const newSelectedIndexes = new Set<number>();
+      for (
+        let i = activeIndex + 1;
+        i <= activeIndex + selectedItems.length;
+        i++
+      ) {
+        newSelectedIndexes.add(i);
+      }
+      setSelectedIndexes(newSelectedIndexes);
+      return;
+    }
 
     if (options.stopPropagation) {
       return;
     }
     if (options.isContextMenuButtonClick) {
+      return;
+    }
+
+    if (options.isShiftDown) {
+      const startIdx = Math.min(startIndex, options.index);
+      const endIdx = Math.max(startIndex, options.index);
+      const newSelectedIndexes = new Set<number>();
+
+      for (let i = startIdx; i <= endIdx; i++) {
+        newSelectedIndexes.add(i);
+      }
+
+      setSelectedIndexes(newSelectedIndexes);
       return;
     }
 
@@ -506,7 +544,6 @@ const Playlist = ({
       if (options.isRightClick) {
         return;
       }
-      console.log("multi", options.index);
       if (startIndex === options.index) {
         // Deselect multiselect to one row
         setStartIndex(options.index);
@@ -517,7 +554,7 @@ const Playlist = ({
     }
 
     // Must come after multiselect check
-    if (options.index === -1) {
+    if (options.index < 0) {
       clearSelection();
       return;
     }
@@ -534,7 +571,6 @@ const Playlist = ({
   };
 
   const onContextMenu = (options: PlaylistItemOptions) => {
-    console.log("contextmenu");
     const rect = resolvePlaylistBoundingClientRect();
     const xFudgeFactor = 60;
     const yFudgeFactor = 20;
@@ -548,7 +584,8 @@ const Playlist = ({
     if (!isMouseDown || options.index === undefined) {
       return;
     }
-    // console.log("updateEndIndex", isMovingItems, options.index);
+    clearTimeout(moveTimeout);
+    console.log("updateEndIndex", isMovingItems);
     if (isMovingItems) {
       const playlistItemIndex = resolvePlaylistItemIndex(options.clientY);
       const y =
@@ -563,7 +600,6 @@ const Playlist = ({
       return;
     }
 
-    // console.log("updateEndIndex", options.index);
     setStartIndex(startIndex === -1 ? options.index : startIndex);
     setEndIndex(
       startIndex === -1 && options.index === playlist.length - 1
@@ -581,19 +617,13 @@ const Playlist = ({
       options.clientY >
       playlistRowsStartY + playlistItemMaxHeight * playlist.length - 10;
     const isClientYUnderBound = options.clientY < playlistRowsStartY + 10;
-    // console.log(
-    //   isClientYOverBound && isPointerStartYOverBound,
-    //   isClientYUnderBound && isPointerStartYUnderBound,
-    // );
 
     if (
       (isClientYOverBound && isPointerStartYOverBound) ||
       (isClientYUnderBound && isPointerStartYUnderBound)
     ) {
-      console.log("yup");
       setSelectedIndexes(new Set());
     } else if (options.index > -1) {
-      // console.log("start", startIndex, "end", endIndex);
       const startIdx = Math.min(startIndex, options.index);
       const endIdx = Math.max(startIndex, options.index);
       const newSelectedIndexes = new Set<number>();
@@ -740,11 +770,6 @@ const Playlist = ({
       onMouseMove={onMouseOver}
       data-testid="PlaylistContainer"
     >
-      {/* <Backdrop
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onMouseMove={onMouseOver}
-        /> */}
       {moveMarkerCoordinates && (
         <MoveMarker coordinates={moveMarkerCoordinates} />
       )}
