@@ -185,7 +185,7 @@ const SecondRowItem = styled.span<{ hasMargins?: boolean }>`
 let touchTimeout: NodeJS.Timeout;
 
 export type PlaylistItemOptions = {
-  index?: number;
+  index: number;
   clientX: number;
   clientY: number;
 };

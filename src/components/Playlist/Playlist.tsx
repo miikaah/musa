@@ -429,6 +429,9 @@ const Playlist = ({
       return;
     }
     if (options.isContextMenuButtonClick) {
+      setSelectedIndexes(
+        options.index > -1 ? new Set([options.index]) : new Set(),
+      );
       return;
     }
     setContextMenuCoordinates(null);
@@ -541,18 +544,6 @@ const Playlist = ({
     });
   };
 
-  // Misc
-
-  const scroll = () => {
-    setHideOverflow(true);
-    playlistRef.current &&
-      playlistRef.current.scrollTo({
-        top: playlistRef.current.scrollTop + 300,
-        behavior: "smooth",
-      });
-    setTimeout(() => setHideOverflow(false), 500);
-  };
-
   const updateEndIndex = (options: PlaylistItemOptions) => {
     if (!isMouseDown || options.index === undefined) {
       return;
@@ -617,6 +608,27 @@ const Playlist = ({
     }
   };
 
+  const onMouseOver = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    updateEndIndex({
+      index: resolvePlaylistItemIndex(event.clientY),
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+  };
+
+  // Side-effect handlers
+
+  const scroll = () => {
+    setHideOverflow(true);
+    playlistRef.current &&
+      playlistRef.current.scrollTo({
+        top: playlistRef.current.scrollTop + 300,
+        behavior: "smooth",
+      });
+    setTimeout(() => setHideOverflow(false), 500);
+  };
+
   const handleOpenEditor = (mode: EditorMode) => {
     console.log("handleOpenEditor");
     const files = getSelectedItems();
@@ -628,15 +640,6 @@ const Playlist = ({
 
     toggleModal(mode, filesIndex, files);
     setContextMenuCoordinates(null);
-  };
-
-  const onMouseOver = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    updateEndIndex({
-      index: resolvePlaylistItemIndex(event.clientY),
-      clientX: event.clientX,
-      clientY: event.clientY,
-    });
   };
 
   if (playlist.length < 1) {
