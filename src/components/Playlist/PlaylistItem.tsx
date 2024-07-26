@@ -68,14 +68,6 @@ const PlaylistItemContainer = styled.li<{
     }
   }
 
-  &:hover {
-    ${({ isMovingItems }) =>
-      !isMovingItems &&
-      `
-      // border-color: var(--color-primary-highlight);
-    `}
-  }
-
   ${({ isSelected }) =>
     isSelected &&
     `

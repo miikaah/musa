@@ -34,7 +34,7 @@ const playlistPaddingTop = 14;
 const playlistRowsStartY = titleBarHeight + playlistPaddingTop;
 
 const commonCss = css<{ isSmall: boolean }>`
-  padding: ${playlistPaddingTop}px 0;
+  padding: ${playlistPaddingTop}px 0 100px;
   margin: 0;
   border: 0 solid var(--color-primary-highlight);
   border-left-width: 1px;
@@ -322,9 +322,14 @@ const Playlist = ({
     return rect;
   };
 
+  const resolveTrueClientY = (clientY: number) => {
+    const playlistScrollTop = playlistRef.current?.scrollTop ?? 0;
+    return clientY + playlistScrollTop;
+  };
+
   const resolvePlaylistItemIndex = (clientY: number) => {
     const rect = resolvePlaylistBoundingClientRect();
-    const y = clientY - rect.y - playlistPaddingTop + 1;
+    const y = resolveTrueClientY(clientY) - rect.y - playlistPaddingTop + 1;
     const index = Math.trunc(y / playlistItemMaxHeight);
     const playlistItemIndex = Object.is(index, -0)
       ? 0
@@ -356,9 +361,10 @@ const Playlist = ({
   };
 
   const resolveIsClearSelectionClick = (clientY: number) => {
+    const trueClientY = resolveTrueClientY(clientY);
     return (
-      clientY < playlistRowsStartY ||
-      clientY > playlistRowsStartY + playlistItemMaxHeight * playlist.length
+      trueClientY < playlistRowsStartY ||
+      trueClientY > playlistRowsStartY + playlistItemMaxHeight * playlist.length
     );
   };
 
@@ -373,6 +379,7 @@ const Playlist = ({
       contextMenuRect,
     );
     const isClearSelectionClick = resolveIsClearSelectionClick(event.clientY);
+    console.log("isClearSelectionClick", isClearSelectionClick);
     const newIndex = isClearSelectionClick
       ? -1
       : resolvePlaylistItemIndex(event.clientY);
