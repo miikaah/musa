@@ -9,6 +9,7 @@ import {
   playIndex,
   replay,
   PlayerState,
+  pasteToPlaylistHead,
 } from "../../reducers/player.reducer";
 import { isCtrlDown } from "../../util";
 import { KEYS } from "../../config";
@@ -404,12 +405,13 @@ const Playlist = ({
 
   const onMouseDown = (event: React.MouseEvent<HTMLElement>) => {
     const options = resolveMouseOptions(event);
-    console.log("mousedown", options);
-    console.log({
-      startIndex,
-      endIndex,
-    });
-    console.log("selected", selectedIndexes);
+    console.log("mousedown");
+    // console.log("mousedown", options);
+    // console.log({
+    //   startIndex,
+    //   endIndex,
+    // });
+    // console.log("selected", selectedIndexes);
     setPointerStartY(event.clientY);
     setIsMouseDown(true);
     setIsMovingItems(false);
@@ -463,7 +465,7 @@ const Playlist = ({
 
     const activeIndex = getActiveIndex();
     const isActiveIndexClick = activeIndex === options.index;
-    console.log("isActiveIndexClick", isActiveIndexClick, startIndex, endIndex);
+    // console.log("isActiveIndexClick", isActiveIndexClick, startIndex, endIndex);
     if (isActiveIndexClick && startIndex === endIndex) {
       setIsMovingItems(true);
       return;
@@ -476,39 +478,44 @@ const Playlist = ({
 
   const onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
     const options = resolveMouseOptions(event);
-    console.log("mouseup", options);
-    console.log({
-      startIndex,
-      endIndex,
-    });
-    console.log("selected", selectedIndexes);
+    console.log("mouseup");
+    // console.log("mouseup", options);
+    // console.log({
+    //   startIndex,
+    //   endIndex,
+    // });
+    // console.log("selected", selectedIndexes);
     setPointerStartY(null);
     setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
-    console.log("isMovingItems", isMovingItems);
+    console.log("up isMovingItems", isMovingItems);
     if (isMovingItems) {
-      console.log(startIndex, options.index);
+      const selectedIdx = getSelectedIndexes();
       const selectedItems = getSelectedItems();
-      const constant =
-        startIndex < options.index ? selectedItems.length + 1 : 1;
-      const activeIndex = Math.max(0, options.index - constant);
+      const indexesBelowTarget = selectedIdx.filter((i) => i < options.index);
+      const insertIndex = options.index - 1 - indexesBelowTarget.length;
+
       removeItems();
       dispatch(
-        pasteToPlaylist(
-          selectedItems,
-          activeIndex < 0 ? playlist.length : activeIndex,
-        ),
+        // The playlist head index is 0 => -1
+        insertIndex === -1
+          ? pasteToPlaylistHead(selectedItems)
+          : // and playlist tail is conveniently out of bounds -1 => -2
+            insertIndex === -2
+            ? pasteToPlaylist(selectedItems, playlist.length - 1)
+            : pasteToPlaylist(selectedItems, insertIndex),
       );
       clearSelection();
       setStartIndex(options.index);
-      console.log("activeIndex", activeIndex);
 
+      let i =
+        // When pasting to tail we have to backtrack the length of the selection
+        insertIndex === -2
+          ? playlist.length - selectedItems.length
+          : insertIndex + 1;
+      const condition = i + selectedItems.length;
       const newSelectedIndexes = new Set<number>();
-      for (
-        let i = activeIndex + 1;
-        i <= activeIndex + selectedItems.length;
-        i++
-      ) {
+      for (; i < condition; i++) {
         newSelectedIndexes.add(i);
       }
       setSelectedIndexes(newSelectedIndexes);
@@ -585,14 +592,14 @@ const Playlist = ({
       return;
     }
     clearTimeout(moveTimeout);
-    console.log("updateEndIndex", isMovingItems);
+    // console.log("updateEndIndex isMovingItems", isMovingItems);
     if (isMovingItems) {
       const playlistItemIndex = resolvePlaylistItemIndex(options.clientY);
       const y =
         playlistItemIndex === playlist.length - 1 &&
         options.clientY >
           (playlistItemIndex + 1) * playlistItemMaxHeight +
-            5 +
+            40 +
             playlistPaddingTop
           ? (playlistItemIndex + 1) * playlistItemMaxHeight + playlistPaddingTop
           : playlistItemIndex * playlistItemMaxHeight + playlistPaddingTop;

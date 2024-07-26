@@ -78,6 +78,19 @@ export const pasteToPlaylist = (
   index,
 });
 
+export const PASTE_TO_PLAYLIST_HEAD = "MUSA/PLAYER/PASTE_TO_PLAYLIST_HEAD";
+export type PasteToPlaylistTailAction = {
+  type: typeof PASTE_TO_PLAYLIST_HEAD;
+  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[];
+  index?: number;
+};
+export const pasteToPlaylistHead = (
+  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
+): PasteToPlaylistTailAction => ({
+  type: PASTE_TO_PLAYLIST_HEAD,
+  items,
+});
+
 export const REMOVE_INDEXES_FROM_PLAYLIST =
   "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST";
 export type RemoveIndexesFromPlaylistAction = {
@@ -145,6 +158,7 @@ type PlayerAction =
   | PauseAction
   | AddToPlaylistAction
   | PasteToPlaylistAction
+  | PasteToPlaylistTailAction
   | RemoveIndexesFromPlaylistAction
   | EmptyPlaylistAction
   | SetCoverDataAction;
@@ -274,6 +288,11 @@ const player = (state = initialState, action: PlayerAction) => {
       }
 
       return getStateByPlaylistChange(state, newItems, newIndex);
+    }
+    case PASTE_TO_PLAYLIST_HEAD: {
+      const newItems = [...action.items, ...state.items] as AudioWithMetadata[];
+
+      return getStateByPlaylistChange(state, newItems, state.currentIndex);
     }
     case REMOVE_INDEXES_FROM_PLAYLIST: {
       const newItems = state.items.filter(
