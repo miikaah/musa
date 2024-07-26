@@ -161,7 +161,7 @@ type MouseUpDownOptions = {
   isMultiSelect: boolean;
   isRightClick: boolean;
   isContextMenuButtonClick: boolean;
-  stopPropagation: boolean;
+  isContextMenuItemClick: boolean;
 };
 
 type PlaylistProps = {
@@ -263,10 +263,8 @@ const Playlist = ({
       isEqual(currentItem, playlist[activeIndex]);
 
     if (shouldReplay) {
-      console.log("replay", activeIndex);
       dispatch(replay(true));
     } else {
-      console.log("play", activeIndex);
       dispatch(playIndex(activeIndex));
     }
   };
@@ -300,7 +298,6 @@ const Playlist = ({
   useKeyPress(KEYS.D, duplicate);
 
   const pasteItems = (activeIndex: number, items = clipboard) => {
-    console.log("paste", activeIndex, items);
     dispatch(
       pasteToPlaylist(items, activeIndex < 0 ? playlist.length : activeIndex),
     );
@@ -391,7 +388,7 @@ const Playlist = ({
       isMultiSelect: selectedIndexes.size > 1 && selectedIndexes.has(newIndex),
       isRightClick: event.button === 2,
       isContextMenuButtonClick,
-      stopPropagation: isContextMenuItemClick,
+      isContextMenuItemClick,
     };
   };
 
@@ -405,27 +402,27 @@ const Playlist = ({
 
   const onMouseDown = (event: React.MouseEvent<HTMLElement>) => {
     const options = resolveMouseOptions(event);
-    console.log("mousedown");
-    // console.log("mousedown", options);
-    // console.log({
-    //   startIndex,
-    //   endIndex,
-    // });
+    console.log("mousedown", options);
+    console.log({
+      startIndex,
+      endIndex,
+    });
     // console.log("selected", selectedIndexes);
     setPointerStartY(event.clientY);
     setIsMouseDown(true);
     setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
 
-    if (options.stopPropagation) {
+    if (options.isContextMenuItemClick) {
       return;
     }
+
     if (options.isContextMenuButtonClick) {
-      setStartIndex(options.index);
-      setEndIndex(options.index);
-      setSelectedIndexes(
-        options.index > -1 ? new Set([options.index]) : new Set(),
-      );
+      // setStartIndex(options.index);
+      // setEndIndex(options.index);
+      // setSelectedIndexes(
+      //   options.index > -1 ? new Set([options.index]) : new Set(),
+      // );
       return;
     }
     setContextMenuCoordinates(null);
@@ -442,6 +439,9 @@ const Playlist = ({
     }
 
     if (options.isMultiSelect) {
+      if (options.isRightClick) {
+        return;
+      }
       const startIdx = Math.min(startIndex, endIndex);
       const endIdx = Math.max(startIndex, endIndex);
       const isSelectedIndexClick =
@@ -478,16 +478,23 @@ const Playlist = ({
 
   const onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
     const options = resolveMouseOptions(event);
-    console.log("mouseup");
-    // console.log("mouseup", options);
-    // console.log({
-    //   startIndex,
-    //   endIndex,
-    // });
+    console.log("mouseup", options);
+    console.log({
+      startIndex,
+      endIndex,
+    });
     // console.log("selected", selectedIndexes);
     setPointerStartY(null);
     setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
+
+    if (options.isContextMenuItemClick) {
+      return;
+    }
+    if (options.isContextMenuButtonClick) {
+      return;
+    }
+
     console.log("up isMovingItems", isMovingItems);
     if (isMovingItems) {
       const selectedIdx = getSelectedIndexes();
@@ -524,13 +531,6 @@ const Playlist = ({
       }
       setSelectedIndexes(newSelectedIndexes);
       setStartIndex(options.index);
-      return;
-    }
-
-    if (options.stopPropagation) {
-      return;
-    }
-    if (options.isContextMenuButtonClick) {
       return;
     }
 

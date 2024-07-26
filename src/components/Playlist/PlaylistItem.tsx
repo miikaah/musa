@@ -72,7 +72,7 @@ const PlaylistItemContainer = styled.li<{
     ${({ isMovingItems }) =>
       !isMovingItems &&
       `
-      ${colorCss}
+      // border-color: var(--color-primary-highlight);
     `}
   }
 
