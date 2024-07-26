@@ -150,8 +150,6 @@ const MoveMarker = styled.div<{ coordinates: MoveMarkerCoordinates }>`
   left: 0;
 `;
 
-let moveTimeout: NodeJS.Timeout;
-
 const playlistClassName = "playlist";
 
 type MouseUpDownOptions = {
@@ -186,6 +184,7 @@ const Playlist = ({
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMovingItems, setIsMovingItems] = useState(false);
+  const [pointerStartX, setPointerStartX] = useState<number | null>(null);
   const [pointerStartY, setPointerStartY] = useState<number | null>(null);
   const [startIndex, setStartIndex] = useState(NaN);
   const [endIndex, setEndIndex] = useState(NaN);
@@ -379,7 +378,6 @@ const Playlist = ({
       contextMenuRect,
     );
     const isClearSelectionClick = resolveIsClearSelectionClick(event.clientY);
-    console.log("isClearSelectionClick", isClearSelectionClick);
     const newIndex = isClearSelectionClick
       ? -1
       : resolvePlaylistItemIndex(event.clientY);
@@ -414,7 +412,8 @@ const Playlist = ({
       startIndex,
       endIndex,
     });
-    // console.log("selected", selectedIndexes);
+    console.log("selected", selectedIndexes);
+    setPointerStartX(event.clientX);
     setPointerStartY(event.clientY);
     setIsMouseDown(true);
     setIsMovingItems(false);
@@ -457,14 +456,6 @@ const Playlist = ({
 
       if (isSelectedIndexClick) {
         setIsMovingItems(true);
-        moveTimeout = setTimeout(() => {
-          setStartIndex(options.index);
-          setEndIndex(options.index);
-          setSelectedIndexes(new Set([options.index]));
-          setIsMovingItems(false);
-          setIsMouseDown(false);
-          setMoveMarkerCoordinates(null);
-        }, 200);
         return;
       }
       return;
@@ -472,7 +463,7 @@ const Playlist = ({
 
     const activeIndex = getActiveIndex();
     const isActiveIndexClick = activeIndex === options.index;
-    // console.log("isActiveIndexClick", isActiveIndexClick, startIndex, endIndex);
+    console.log("isActiveIndexClick", isActiveIndexClick, startIndex, endIndex);
     if (isActiveIndexClick && startIndex === endIndex) {
       setIsMovingItems(true);
       return;
@@ -490,8 +481,9 @@ const Playlist = ({
       startIndex,
       endIndex,
     });
-    // console.log("selected", selectedIndexes);
+    console.log("selected", selectedIndexes);
     setPointerStartY(null);
+    setPointerStartX(null);
     setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
 
@@ -504,6 +496,13 @@ const Playlist = ({
 
     console.log("up isMovingItems", isMovingItems);
     if (isMovingItems) {
+      if (pointerStartX === event.clientX && pointerStartY === event.clientY) {
+        // Deselect to one row
+        setStartIndex(options.index);
+        setEndIndex(options.index);
+        setSelectedIndexes(new Set([options.index]));
+        return;
+      }
       const selectedIdx = getSelectedIndexes();
       const selectedItems = getSelectedItems();
       const indexesBelowTarget = selectedIdx.filter((i) => i < options.index);
@@ -536,8 +535,10 @@ const Playlist = ({
       for (; i < condition; i++) {
         newSelectedIndexes.add(i);
       }
+      const arr = Array.from(newSelectedIndexes.values()).sort();
+      setStartIndex(arr[0]);
+      setEndIndex(arr[arr.length - 1]);
       setSelectedIndexes(newSelectedIndexes);
-      setStartIndex(options.index);
       return;
     }
 
@@ -603,8 +604,6 @@ const Playlist = ({
     if (!isMouseDown || options.index === undefined) {
       return;
     }
-    clearTimeout(moveTimeout);
-    // console.log("updateEndIndex isMovingItems", isMovingItems);
     if (isMovingItems) {
       const playlistItemIndex = resolvePlaylistItemIndex(options.clientY);
       const y =
