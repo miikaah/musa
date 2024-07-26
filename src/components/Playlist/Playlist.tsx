@@ -425,11 +425,11 @@ const Playlist = ({
     }
 
     if (options.isContextMenuButtonClick) {
-      // setStartIndex(options.index);
-      // setEndIndex(options.index);
-      // setSelectedIndexes(
-      //   options.index > -1 ? new Set([options.index]) : new Set(),
-      // );
+      if (selectedIndexes.size < 1) {
+        setStartIndex(options.index);
+        setEndIndex(options.index);
+        setSelectedIndexes(new Set([options.index]));
+      }
       return;
     }
     setContextMenuCoordinates(null);
