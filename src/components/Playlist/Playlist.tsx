@@ -20,7 +20,7 @@ import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import PlaylistItem, {
   PlaylistItemOptions,
-  contextMenuButtonId,
+  playlistItemContextMenuButton,
   playlistItemMaxHeight,
 } from "./PlaylistItem";
 import ContextMenu, {
@@ -31,7 +31,7 @@ import { EditorMode } from "../../types";
 
 const titleBarHeight = 36;
 const playlistPaddingTop = 14;
-const playlistRowsStartY = titleBarHeight + playlistPaddingTop;
+export const playlistRowsStartY = titleBarHeight + playlistPaddingTop;
 
 const commonCss = css<{ isSmall: boolean }>`
   padding: ${playlistPaddingTop}px 0 100px;
@@ -381,7 +381,7 @@ const Playlist = ({
     const newIndex = isClearSelectionClick
       ? -1
       : resolvePlaylistItemIndex(event.clientY);
-    const id = `${contextMenuButtonId}-${newIndex}`;
+    const id = `${playlistItemContextMenuButton}-${newIndex}`;
     const target = event.target as HTMLElement;
     const isContextMenuButtonClick =
       target?.id === id || target.parentElement?.id === id;
@@ -654,7 +654,6 @@ const Playlist = ({
   };
 
   const handleOpenEditor = (mode: EditorMode) => {
-    console.log("handleOpenEditor");
     const files = getSelectedItems();
     const activeIndex = getActiveIndex();
     const filesIndex =
