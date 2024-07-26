@@ -407,12 +407,6 @@ const Playlist = ({
 
   const onMouseDown = (event: React.MouseEvent<HTMLElement>) => {
     const options = resolveMouseOptions(event);
-    console.log("mousedown", options);
-    console.log({
-      startIndex,
-      endIndex,
-    });
-    console.log("selected", selectedIndexes);
     setPointerStartX(event.clientX);
     setPointerStartY(event.clientY);
     setIsMouseDown(true);
@@ -463,7 +457,6 @@ const Playlist = ({
 
     const activeIndex = getActiveIndex();
     const isActiveIndexClick = activeIndex === options.index;
-    console.log("isActiveIndexClick", isActiveIndexClick, startIndex, endIndex);
     if (isActiveIndexClick && startIndex === endIndex) {
       setIsMovingItems(true);
       return;
@@ -476,12 +469,6 @@ const Playlist = ({
 
   const onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
     const options = resolveMouseOptions(event);
-    console.log("mouseup", options);
-    console.log({
-      startIndex,
-      endIndex,
-    });
-    console.log("selected", selectedIndexes);
     setPointerStartY(null);
     setPointerStartX(null);
     setIsMouseDown(false);
@@ -494,7 +481,6 @@ const Playlist = ({
       return;
     }
 
-    console.log("up isMovingItems", isMovingItems);
     if (isMovingItems) {
       if (pointerStartX === event.clientX && pointerStartY === event.clientY) {
         // Deselect to one row
@@ -574,20 +560,10 @@ const Playlist = ({
     }
 
     // Must come after multiselect check
-    if (options.index < 0) {
+    if (options.index < 0 && selectedIndexes.size < playlist.length) {
       clearSelection();
       return;
     }
-
-    const startIdx = Math.min(startIndex, options.index);
-    const endIdx = Math.max(startIndex, options.index);
-    const newSelectedIndexes = new Set<number>();
-    setStartIndex(startIdx);
-    setEndIndex(endIdx);
-    for (let i = startIdx; i <= endIdx; i++) {
-      newSelectedIndexes.add(i);
-    }
-    setSelectedIndexes(newSelectedIndexes);
   };
 
   const onContextMenu = (options: PlaylistItemOptions) => {
