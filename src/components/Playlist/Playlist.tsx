@@ -794,6 +794,7 @@ const Playlist = ({
               item={item}
               index={index}
               isSelected={selectedIndexes.has(index)}
+              isMovingItems={isMovingItems}
               onDoubleClick={playOrReplay}
               onContextMenu={onContextMenu}
               onScrollPlaylist={scroll}

@@ -42,6 +42,7 @@ const colorCss = css`
 
 const PlaylistItemContainer = styled.li<{
   isSelected: boolean;
+  isMovingItems: boolean;
 }>`
   cursor: pointer;
   display: flex;
@@ -68,7 +69,11 @@ const PlaylistItemContainer = styled.li<{
   }
 
   &:hover {
-    ${colorCss}
+    ${({ isMovingItems }) =>
+      !isMovingItems &&
+      `
+      ${colorCss}
+    `}
   }
 
   ${({ isSelected }) =>
@@ -197,6 +202,7 @@ type PlaylistItemProps = {
   item: AudioWithMetadata;
   index: number;
   isSelected: boolean;
+  isMovingItems: boolean;
   onDoubleClick: () => void;
   onContextMenu: (options: PlaylistItemOptions) => void;
   onScrollPlaylist: () => void;
@@ -210,6 +216,7 @@ const PlaylistItem = ({
   item,
   index,
   isSelected,
+  isMovingItems,
   onDoubleClick,
   onContextMenu,
   onScrollPlaylist,
@@ -294,6 +301,7 @@ const PlaylistItem = ({
     <PlaylistItemContainer
       ref={playlistItemRef}
       isSelected={isSelected}
+      isMovingItems={isMovingItems}
       onDoubleClick={onDoubleClick}
       onContextMenu={handleContextMenu}
       onTouchEnd={handleTouchEnd}
