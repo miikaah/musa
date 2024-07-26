@@ -1,16 +1,18 @@
 import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useEffect, useRef, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components";
-import { PlayerState, playIndex, replay } from "../../reducers/player.reducer";
+import { PlayerState } from "../../reducers/player.reducer";
 import { formatDuration } from "../../util";
 import { ellipsisTextOverflow } from "../../common.styles";
 import AlbumImage from "../AlbumImage";
 import { breakpoints } from "../../breakpoints";
 
-const editButtonId = "PlaylistItemEditButton";
+export const playlistItemContextMenuButton = "PlaylistItemContextMenuButton";
+
+export const playlistItemMaxHeight = 60;
 
 const colorCss = css`
   background-color: var(--color-primary-highlight);
@@ -39,12 +41,12 @@ const colorCss = css`
 `;
 
 const PlaylistItemContainer = styled.li<{
-  isMovingItems?: boolean;
-  isActiveOrSelected?: boolean;
+  isSelected: boolean;
+  isMovingItems: boolean;
 }>`
   cursor: pointer;
   display: flex;
-  max-height: 60px;
+  max-height: ${playlistItemMaxHeight}px;
   border-top-width: 2px;
   border-top-style: solid;
   border-top-color: transparent;
@@ -66,22 +68,8 @@ const PlaylistItemContainer = styled.li<{
     }
   }
 
-  &:hover {
-    ${({ isMovingItems }) =>
-      isMovingItems
-        ? `
-      border-top-color: #f00;
-      border-bottom-color: #f00;
-      `
-        : `
-      border-top-color: transparent;
-      border-bottom-color: transparent;
-      `};
-    ${colorCss}
-  }
-
-  ${({ isActiveOrSelected }) =>
-    isActiveOrSelected &&
+  ${({ isSelected }) =>
+    isSelected &&
     `
     ${colorCss}
   `}
@@ -172,7 +160,7 @@ const DeleteButton = styled(ActionButton)`
   margin-left: 4px;
 `;
 
-const EditButton = styled(ActionButton)``;
+const ContextMenuButton = styled(ActionButton)``;
 
 const Duration = styled.span`
   font-size: var(--font-size-xs);
@@ -193,13 +181,10 @@ const SecondRowItem = styled.span<{ hasMargins?: boolean }>`
 
 let touchTimeout: NodeJS.Timeout;
 
-export type MouseUpDownOptions = {
+export type PlaylistItemOptions = {
   index: number;
-  isShiftDown: boolean;
-  isCtrlDown: boolean;
-  isContextMenuPress: boolean;
-  clientX?: number;
-  clientY?: number;
+  clientX: number;
+  clientY: number;
 };
 
 type PlaylistItemProps = {
@@ -208,23 +193,10 @@ type PlaylistItemProps = {
   isPlaying: PlayerState["isPlaying"];
   item: AudioWithMetadata;
   index: number;
-  activeIndex: number;
-  startIndex: number;
-  endIndex: number;
   isSelected: boolean;
   isMovingItems: boolean;
-  onSetActiveIndex: (index: number) => void;
-  onMouseOverItem: (index: number) => void;
-  onMouseDownItem: ({
-    index,
-    isShiftDown,
-    isCtrlDown,
-  }: MouseUpDownOptions) => void;
-  onMouseUpItem: ({
-    index,
-    isShiftDown,
-    isCtrlDown,
-  }: MouseUpDownOptions) => void;
+  onDoubleClick: () => void;
+  onContextMenu: (options: PlaylistItemOptions) => void;
   onScrollPlaylist: () => void;
   removeItems: () => void;
 };
@@ -235,23 +207,17 @@ const PlaylistItem = ({
   isPlaying,
   item,
   index,
-  activeIndex,
-  startIndex,
-  endIndex,
   isSelected,
   isMovingItems,
-  onSetActiveIndex,
-  onMouseOverItem,
-  onMouseDownItem,
-  onMouseUpItem,
+  onDoubleClick,
+  onContextMenu,
   onScrollPlaylist,
   removeItems,
 }: PlaylistItemProps) => {
   const [lastTouchTime, setLastTouchTime] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
-  const dispatch = useDispatch();
 
-  const elRef = useRef<HTMLLIElement | null>(null);
+  const playlistItemRef = useRef<HTMLLIElement | null>(null);
 
   useEffect(() => {
     const onResize = () => {
@@ -265,44 +231,6 @@ const PlaylistItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getIsActiveOrSelected = ({
-    index,
-    activeIndex,
-    startIndex,
-    endIndex,
-    isSelected,
-  }: {
-    index: number;
-    activeIndex: number;
-    startIndex: number;
-    endIndex: number;
-    isSelected: boolean;
-  }) => {
-    if (isMovingItems) return;
-
-    const start = Math.min(startIndex, endIndex);
-    const end = Math.max(startIndex, endIndex);
-    if (index === activeIndex) return true;
-    if (
-      (!Number.isNaN(startIndex) &&
-        !Number.isNaN(endIndex) &&
-        index >= start &&
-        index <= end) ||
-      isSelected
-    )
-      return true;
-    return false;
-  };
-
-  const isActiveOrSelected = () =>
-    getIsActiveOrSelected({
-      index,
-      activeIndex,
-      startIndex,
-      endIndex,
-      isSelected,
-    });
-
   const isIndexCurrentIndex = () => {
     return index === currentIndex;
   };
@@ -311,54 +239,26 @@ const PlaylistItem = ({
     return isEqual(item, currentItem);
   };
 
-  const shouldReplaySong = () => {
-    return isIndexCurrentIndex() && hasEqualItemAndCurrentItem();
-  };
-
-  const handleDoubleClick = () => {
-    if (shouldReplaySong()) {
-      dispatch(replay(true));
-      return;
-    }
-    dispatch(playIndex(index));
-    onSetActiveIndex(index);
-  };
-
-  const checkIsContextMenuPress = (event: React.MouseEvent<HTMLLIElement>) => {
-    if (event.target instanceof Element) {
-      if (
-        event.target.id === editButtonId ||
-        event.target.parentElement?.id === editButtonId
-      ) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const handleMouseDown = (
-    event: React.MouseEvent<HTMLLIElement>,
-    isContextMenuPress = false,
+  const handleContextMenu = (
+    event: React.MouseEvent<HTMLLIElement | HTMLButtonElement>,
   ) => {
-    onMouseDownItem({
+    event.stopPropagation();
+    onContextMenu({
       index,
-      isShiftDown: event.shiftKey,
-      isCtrlDown: event.ctrlKey || event.metaKey,
-      isContextMenuPress: isContextMenuPress || checkIsContextMenuPress(event),
       clientX: event.clientX,
       clientY: event.clientY,
     });
-    event.stopPropagation();
   };
 
-  const handleMouseUp = (event: React.MouseEvent<HTMLLIElement>) => {
-    onMouseUpItem({
-      index,
-      isShiftDown: event.shiftKey,
-      isCtrlDown: event.ctrlKey || event.metaKey,
-      isContextMenuPress: checkIsContextMenuPress(event),
-    });
-    event.stopPropagation();
+  const handleTouchEnd = () => {
+    const now = Date.now();
+    if (now - lastTouchTime < 500) {
+      clearTimeout(touchTimeout);
+      onDoubleClick();
+    } else {
+      touchTimeout = setTimeout(() => {}, 500);
+    }
+    setLastTouchTime(now);
   };
 
   const renderPlayOrPauseIcon = () => {
@@ -371,28 +271,17 @@ const PlaylistItem = ({
   };
 
   useEffect(() => {
-    if (!isIndexCurrentIndex() || !elRef.current) {
+    if (!isIndexCurrentIndex() || !playlistItemRef.current) {
       return;
     }
 
-    const elRect = elRef.current.getBoundingClientRect();
+    const elRect = playlistItemRef.current.getBoundingClientRect();
     if (elRect.bottom > window.innerHeight - 1) {
-      elRef.current.scrollIntoView(false); // Scrolls to correct song
+      playlistItemRef.current.scrollIntoView(false); // Scrolls to correct song
       onScrollPlaylist(); // Scrolls a little bit down so current song isn't at bottom of view
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
-
-  const handleTouchEnd = () => {
-    const now = Date.now();
-    if (now - lastTouchTime < 500) {
-      clearTimeout(touchTimeout);
-      handleDoubleClick();
-    } else {
-      touchTimeout = setTimeout(() => {}, 500);
-    }
-    setLastTouchTime(now);
-  };
 
   const artist = item?.metadata?.artist || item.artistName || "";
   const album = item?.metadata?.album || item.albumName || "";
@@ -402,15 +291,12 @@ const PlaylistItem = ({
 
   return (
     <PlaylistItemContainer
-      ref={elRef}
-      isActiveOrSelected={isActiveOrSelected()}
+      ref={playlistItemRef}
+      isSelected={isSelected}
       isMovingItems={isMovingItems}
-      onDoubleClick={handleDoubleClick}
+      onDoubleClick={onDoubleClick}
+      onContextMenu={handleContextMenu}
       onTouchEnd={handleTouchEnd}
-      onMouseOver={() => onMouseOverItem(index)}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onContextMenu={(event) => handleMouseDown(event, true)}
       data-testid="PlaylistItemContainer"
     >
       <Icon>{renderPlayOrPauseIcon()}</Icon>
@@ -421,12 +307,16 @@ const PlaylistItem = ({
         <FirstRow>
           <Title>{title}</Title>
           {!isMobile && (
-            <EditButton id={editButtonId} data-testid={editButtonId}>
+            <ContextMenuButton
+              id={`${playlistItemContextMenuButton}-${index}`}
+              data-testid={`${playlistItemContextMenuButton}-${index}`}
+              onClick={handleContextMenu}
+            >
               <div />
               <span />
               <span />
               <span />
-            </EditButton>
+            </ContextMenuButton>
           )}
           <div />
           <DeleteButton

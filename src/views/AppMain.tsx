@@ -45,13 +45,14 @@ const getModalTitle = (mode: EditorMode) => {
 
 const getModalChildren = (
   mode: EditorMode,
+  activeIndex: number,
   filesToEdit: AudioWithMetadata[],
 ) => {
   switch (mode) {
     case "normalization":
       return <NormalizationEditor files={filesToEdit} />;
     case "metadata":
-      return <MetadataEditor files={filesToEdit} />;
+      return <MetadataEditor activeIndex={activeIndex} files={filesToEdit} />;
     default:
       mode satisfies never;
       throw new Error(`Unsupported modal mode: ${mode}`);
@@ -66,7 +67,8 @@ type AppMainProps = {
 
 const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [filesToEdit, setFilesToBeEdited] = useState<AudioWithMetadata[]>([]);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [filesToEdit, setFilesToEdit] = useState<AudioWithMetadata[]>([]);
   const [modalMode, setModalMode] = useState<EditorMode>("normalization");
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) =>
@@ -118,22 +120,23 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
   }
 
   const openModal = (items: AudioWithMetadata[]) => {
-    setFilesToBeEdited(items);
+    setFilesToEdit(items);
     setShowModal(true);
   };
 
   const closeModal = () => {
-    setFilesToBeEdited([]);
+    setFilesToEdit([]);
     setShowModal(false);
   };
 
-  const toggleModal = (mode: EditorMode, items: AudioWithMetadata[]) => {
-    const itemsIds = items.map(({ id }) => id);
-    const currentFilesIds = filesToEdit.map(({ id }) => id);
-    const hasSameFiles = itemsIds.every((id) => currentFilesIds.includes(id));
-
+  const toggleModal = (
+    mode: EditorMode,
+    index: number,
+    items: AudioWithMetadata[],
+  ) => {
+    setActiveIndex(index);
     setModalMode(mode);
-    if (hasSameFiles) {
+    if (showModal) {
       closeModal();
     } else {
       openModal(items);
@@ -153,7 +156,7 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
           modalTitleTranslationKey={getModalTitle(modalMode)}
           closeModal={closeModal}
         >
-          {getModalChildren(modalMode, filesToEdit)}
+          {getModalChildren(modalMode, activeIndex, filesToEdit)}
         </Modal>
       )}
     </Container>

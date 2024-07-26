@@ -9,6 +9,7 @@ import {
   playIndex,
   replay,
   PlayerState,
+  pasteToPlaylistHead,
 } from "../../reducers/player.reducer";
 import { isCtrlDown } from "../../util";
 import { KEYS } from "../../config";
@@ -17,12 +18,23 @@ import { listOverflow } from "../../common.styles";
 import { breakpoints } from "../../breakpoints";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
-import PlaylistItem, { MouseUpDownOptions } from "./PlaylistItem";
-import ContextMenu, { ContextMenuCoordinates } from "../ContextMenu";
+import PlaylistItem, {
+  PlaylistItemOptions,
+  playlistItemContextMenuButton,
+  playlistItemMaxHeight,
+} from "./PlaylistItem";
+import ContextMenu, {
+  ContextMenuCoordinates,
+  contextMenuId,
+} from "../ContextMenu";
 import { EditorMode } from "../../types";
 
+const titleBarHeight = 36;
+const playlistPaddingTop = 14;
+export const playlistRowsStartY = titleBarHeight + playlistPaddingTop;
+
 const commonCss = css<{ isSmall: boolean }>`
-  padding: 14px 0;
+  padding: ${playlistPaddingTop}px 0 100px;
   margin: 0;
   border: 0 solid var(--color-primary-highlight);
   border-left-width: 1px;
@@ -124,9 +136,31 @@ const ControlsInstruction = styled.div`
   }
 `;
 
-let closeContextMenuTimeout: NodeJS.Timeout | undefined;
+type MoveMarkerCoordinates = {
+  x: number;
+  y: number;
+};
 
-const PLAYLIST_CLASSNAME = "playlist";
+const MoveMarker = styled.div<{ coordinates: MoveMarkerCoordinates }>`
+  width: 100%;
+  height: 4px;
+  background: var(--color-typography);
+  position: absolute;
+  top: ${({ coordinates }) => coordinates.y}px;
+  left: 0;
+`;
+
+const playlistClassName = "playlist";
+
+type MouseUpDownOptions = {
+  index: number;
+  isShiftDown: boolean;
+  isCtrlDown: boolean;
+  isMultiSelect: boolean;
+  isRightClick: boolean;
+  isContextMenuButtonClick: boolean;
+  isContextMenuItemClick: boolean;
+};
 
 type PlaylistProps = {
   playlist: PlayerState["items"];
@@ -134,6 +168,7 @@ type PlaylistProps = {
   currentIndex: PlayerState["currentIndex"];
   toggleModal: (
     mode: "normalization" | "metadata",
+    activeIndex: number,
     items: AudioWithMetadata[],
   ) => void;
   t: TranslateFn;
@@ -149,8 +184,8 @@ const Playlist = ({
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMovingItems, setIsMovingItems] = useState(false);
-  const [pressStartedAt, setPressStartedAt] = useState(0);
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const [pointerStartX, setPointerStartX] = useState<number | null>(null);
+  const [pointerStartY, setPointerStartY] = useState<number | null>(null);
   const [startIndex, setStartIndex] = useState(NaN);
   const [endIndex, setEndIndex] = useState(NaN);
   const [selectedIndexes, setSelectedIndexes] = useState<Set<number>>(
@@ -160,6 +195,8 @@ const Playlist = ({
   const [hideOverflow, setHideOverflow] = useState(false);
   const [contextMenuCoordinates, setContextMenuCoordinates] =
     useState<ContextMenuCoordinates | null>(null);
+  const [moveMarkerCoordinates, setMoveMarkerCoordinates] =
+    useState<MoveMarkerCoordinates | null>(null);
   const dispatch = useDispatch();
 
   const playlistRef = useRef<HTMLUListElement | null>(null);
@@ -176,344 +213,435 @@ const Playlist = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const isContinuousSelection = () => {
-    return (
-      !Number.isNaN(startIndex) &&
-      !Number.isNaN(endIndex) &&
-      startIndex !== endIndex &&
-      selectedIndexes.size < 2
-    );
+  const getSelectedIndexes = () => {
+    return Array.from(selectedIndexes.values()).sort();
   };
 
-  const getContinuousSelData = (getSelected?: boolean) => {
-    const sIndex = Math.min(startIndex, endIndex);
-    const eIndex = Math.max(startIndex, endIndex);
-    const selectedItems = getSelected
-      ? playlist.filter((_, index) => index >= sIndex && index <= eIndex)
-      : clipboard;
-    const indexes = [];
-
-    for (let i = sIndex; i <= eIndex; i++) {
-      indexes.push(i);
-    }
-
-    return { indexes, selectedItems };
+  const getSelectedItems = () => {
+    return getSelectedIndexes().map((i) => playlist[i]);
   };
 
-  const handleContinuousSelection = ({
-    type,
-    getSelected = true,
-  }: {
-    type: "remove" | "copy" | "duplicate";
-    getSelected?: boolean;
-  }) => {
-    const { indexes, selectedItems } = getContinuousSelData(getSelected);
-
-    switch (type) {
-      case "remove": {
-        dispatch(removeIndexesFromPlaylist(indexes));
-        setSelectedIndexes(new Set());
-        setStartIndex(NaN);
-        setEndIndex(NaN);
-        setClipboard(selectedItems);
-        setActiveIndex(-1);
-        return;
-      }
-
-      case "duplicate": {
-        dispatch(pasteToPlaylist(selectedItems, activeIndex));
-        return;
-      }
-
-      default: {
-        setClipboard(selectedItems);
-      }
-    }
-  };
-
-  const isIndexesSelection = () => {
-    return activeIndex > -1 || selectedIndexes.size > 0;
-  };
-
-  const getIndexesSelData = (getSelected?: boolean) => {
-    const indexes =
-      selectedIndexes.size > 0
-        ? Array.from(selectedIndexes.values())
-        : [activeIndex];
-    const selectedItems = getSelected
-      ? indexes.map((i) => playlist[i])
-      : clipboard;
-    return { indexes, selectedItems };
-  };
-
-  const handleIndexesSelection = ({
-    type,
-    getSelected = true,
-  }: {
-    type: "remove" | "copy" | "duplicate";
-    getSelected?: boolean;
-  }) => {
-    const { indexes, selectedItems } = getIndexesSelData(getSelected);
-
-    switch (type) {
-      case "remove": {
-        dispatch(removeIndexesFromPlaylist(indexes));
-        setSelectedIndexes(new Set());
-        setStartIndex(NaN);
-        setEndIndex(NaN);
-        setClipboard(selectedItems);
-        setActiveIndex(selectedIndexes.size > 1 ? -1 : activeIndex);
-        return;
-      }
-
-      case "duplicate": {
-        dispatch(pasteToPlaylist(selectedItems, activeIndex));
-        return;
-      }
-
-      default: {
-        setClipboard(selectedItems);
-      }
-    }
-  };
-
-  const setNewIndexes = (event: KeyboardEvent, newActiveIndex: number) => {
-    if (event.shiftKey) {
-      setStartIndex(!Number.isNaN(startIndex) ? startIndex : activeIndex);
-      setEndIndex(newActiveIndex);
-      setActiveIndex(newActiveIndex);
-      return;
-    }
-    setStartIndex(NaN);
-    setEndIndex(NaN);
-    setActiveIndex(newActiveIndex);
-    setSelectedIndexes(new Set());
+  const getActiveIndex = (tail = false) => {
+    const arr = getSelectedIndexes();
+    const index = tail ? arr.pop() : arr[0];
+    return index !== undefined && index > -1 ? index : -1;
   };
 
   const selectAll = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;
-    setStartIndex(0);
-    setEndIndex(playlist.length - 1);
+    setSelectedIndexes(new Set(playlist.map((_, i) => i)));
   };
   useKeyPress(KEYS.a, selectAll);
 
   const moveUp = (event: KeyboardEvent) => {
     event.preventDefault();
-    if (activeIndex - 1 > -1) return setNewIndexes(event, activeIndex - 1);
-    if (playlist.length) return setActiveIndex(playlist.length - 1);
+    const activeIndex = getActiveIndex();
+    if (activeIndex > -1) {
+      setSelectedIndexes(new Set([activeIndex - 1]));
+    } else {
+      setSelectedIndexes(new Set([playlist.length - 1]));
+    }
   };
   useKeyPress(KEYS.Up, moveUp);
 
   const moveDown = (event: KeyboardEvent) => {
     event.preventDefault();
-    if (activeIndex + 1 < playlist.length)
-      return setNewIndexes(event, activeIndex + 1);
-    if (playlist.length) return setActiveIndex(0);
+    const activeIndex = getActiveIndex();
+    if (activeIndex + 1 < playlist.length) {
+      setSelectedIndexes(new Set([activeIndex + 1]));
+    } else {
+      setSelectedIndexes(new Set([0]));
+    }
   };
   useKeyPress(KEYS.Down, moveDown);
 
-  const shouldReplaySong = () => {
-    if (
+  const playOrReplay = () => {
+    const activeIndex = getActiveIndex();
+    const shouldReplay =
       activeIndex === currentIndex &&
-      isEqual(currentItem, playlist[activeIndex])
-    ) {
-      return true;
-    }
+      isEqual(currentItem, playlist[activeIndex]);
 
-    if (isIndexesSelection()) {
-      const idx = Math.min(...Array.from(selectedIndexes.values()));
-
-      return idx === currentIndex && isEqual(currentItem, playlist[idx]);
-    }
-
-    if (isContinuousSelection()) {
-      const idx = Math.min(startIndex, endIndex);
-
-      return idx === currentIndex && isEqual(currentItem, playlist[idx]);
-    }
-
-    return false;
-  };
-
-  const playOrReplayActiveItem = () => {
-    if (shouldReplaySong()) {
+    if (shouldReplay) {
       dispatch(replay(true));
-      return;
+    } else {
+      dispatch(playIndex(activeIndex));
     }
-
-    const indices = [activeIndex, startIndex, endIndex].filter(
-      (idx) => typeof idx === "number" && isFinite(idx) && idx > -1,
-    );
-
-    dispatch(
-      playIndex(Math.min(...indices, ...Array.from(selectedIndexes.values()))),
-    );
   };
-  useKeyPress(KEYS.Enter, playOrReplayActiveItem);
+  useKeyPress(KEYS.Enter, playOrReplay);
 
   const removeItems = () => {
-    if (isContinuousSelection()) {
-      handleContinuousSelection({
-        type: "remove",
-        getSelected: false,
-      });
-      return;
-    }
-    if (isIndexesSelection()) {
-      handleIndexesSelection({ type: "remove", getSelected: false });
-      return;
-    }
+    setClipboard(getSelectedItems());
+    dispatch(removeIndexesFromPlaylist(getSelectedIndexes()));
+    setSelectedIndexes(new Set());
   };
   useKeyPress(KEYS.Backspace, removeItems);
   useKeyPress(KEYS.Delete, removeItems);
 
   const cut = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;
-    if (isContinuousSelection()) {
-      handleContinuousSelection({ type: "remove" });
-      return;
-    }
-    if (isIndexesSelection()) {
-      handleIndexesSelection({ type: "remove" });
-      return;
-    }
+    removeItems();
   };
   useKeyPress(KEYS.x, cut);
 
   const copy = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;
-    if (isContinuousSelection()) {
-      handleContinuousSelection({ type: "copy" });
-      return;
-    }
-    if (isIndexesSelection()) {
-      handleIndexesSelection({ type: "copy" });
-      return;
-    }
+    setClipboard(getSelectedItems());
   };
   useKeyPress(KEYS.c, copy);
 
   const duplicate = (event: KeyboardEvent) => {
     if (!isCtrlDown(event) || !event.shiftKey) return;
-    if (isContinuousSelection()) {
-      handleContinuousSelection({ type: "duplicate" });
-      event.preventDefault();
-      return;
-    }
-    if (isIndexesSelection()) {
-      handleIndexesSelection({ type: "duplicate" });
-      event.preventDefault();
-      return;
-    }
+    dispatch(pasteToPlaylist(getSelectedItems(), getActiveIndex(true)));
   };
   useKeyPress(KEYS.d, duplicate);
   useKeyPress(KEYS.D, duplicate);
 
+  const pasteItems = (activeIndex: number, items = clipboard) => {
+    dispatch(
+      pasteToPlaylist(items, activeIndex < 0 ? playlist.length : activeIndex),
+    );
+  };
+
   const paste = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;
-    dispatch(
-      pasteToPlaylist(
-        clipboard,
-        activeIndex < 0 ? playlist.length : activeIndex,
-      ),
-    );
+    pasteItems(getActiveIndex(true));
   };
   useKeyPress(KEYS.v, paste);
 
-  const updateEndIndex = (endIndex: number) => {
-    if (!isMouseDown) return;
-    setEndIndex(endIndex);
-  };
+  // Playlist mouse events
 
-  const onMouseDown = (options: MouseUpDownOptions) => {
-    if (options.isShiftDown || options.isCtrlDown) return;
-
-    // Set timeout to close context menu because this function gets called on right click
-    // twice on macos.
-    if (!options.isContextMenuPress) {
-      closeContextMenuTimeout = setTimeout(
-        () => setContextMenuCoordinates(null),
-        300,
+  const resolvePlaylistBoundingClientRect = () => {
+    const rect = playlistRef.current?.getBoundingClientRect();
+    if (!rect) {
+      throw new Error(
+        "Playlist bounding client rect not defined. Should not happen.",
       );
     }
 
-    if (
-      options.isContextMenuPress &&
-      options.clientX !== undefined &&
-      options.clientX > -1 &&
-      options.clientY !== undefined &&
-      options.clientY > -1
-    ) {
-      // Clear timeout so that context menu doesn't close when it's supposed to stay open
-      clearTimeout(closeContextMenuTimeout);
-      const rect = playlistRef.current?.getBoundingClientRect();
-      if (!rect) {
-        throw new Error("Playlist rect x not defined. Should not happen.");
-      }
+    return rect;
+  };
 
-      const xFudgeFactor = 60;
-      const yFudgeFactor = 20;
-      setContextMenuCoordinates({
-        x: options.clientX - rect?.x - xFudgeFactor,
-        y: options.clientY - yFudgeFactor,
-      });
+  const resolveTrueClientY = (clientY: number) => {
+    const playlistScrollTop = playlistRef.current?.scrollTop ?? 0;
+    return clientY + playlistScrollTop;
+  };
+
+  const resolvePlaylistItemIndex = (clientY: number) => {
+    const rect = resolvePlaylistBoundingClientRect();
+    const y = resolveTrueClientY(clientY) - rect.y - playlistPaddingTop + 1;
+    const index = Math.trunc(y / playlistItemMaxHeight);
+    const playlistItemIndex = Object.is(index, -0)
+      ? 0
+      : index > playlist.length - 1
+        ? playlist.length - 1
+        : index;
+
+    return playlistItemIndex;
+  };
+
+  const resolveContextMenuBoundingClientRect = () => {
+    return document.getElementById(contextMenuId)?.getBoundingClientRect();
+  };
+
+  const resolveIsContextMenuItemClick = (
+    clientX: number,
+    clientY: number,
+    rect?: DOMRect,
+  ) => {
+    if (!rect) {
+      return false;
+    }
+    return (
+      clientX >= rect.left &&
+      clientX <= rect.right &&
+      clientY >= rect.top &&
+      clientY <= rect.bottom
+    );
+  };
+
+  const resolveIsClearSelectionClick = (clientY: number) => {
+    const trueClientY = resolveTrueClientY(clientY);
+    return (
+      trueClientY < playlistRowsStartY ||
+      trueClientY > playlistRowsStartY + playlistItemMaxHeight * playlist.length
+    );
+  };
+
+  const resolveMouseOptions = (
+    event: React.MouseEvent<HTMLElement>,
+  ): MouseUpDownOptions => {
+    const { clientX, clientY } = event;
+    const contextMenuRect = resolveContextMenuBoundingClientRect();
+    const isContextMenuItemClick = resolveIsContextMenuItemClick(
+      clientX,
+      clientY,
+      contextMenuRect,
+    );
+    const isClearSelectionClick = resolveIsClearSelectionClick(event.clientY);
+    const newIndex = isClearSelectionClick
+      ? -1
+      : resolvePlaylistItemIndex(event.clientY);
+    const id = `${playlistItemContextMenuButton}-${newIndex}`;
+    const target = event.target as HTMLElement;
+    const isContextMenuButtonClick =
+      target?.id === id || target.parentElement?.id === id;
+
+    return {
+      index: newIndex,
+      isShiftDown: event.shiftKey,
+      isCtrlDown: event.ctrlKey || event.metaKey,
+      isMultiSelect: selectedIndexes.size > 1 && selectedIndexes.has(newIndex),
+      isRightClick: event.button === 2,
+      isContextMenuButtonClick,
+      isContextMenuItemClick,
+    };
+  };
+
+  const clearSelection = () => {
+    setIsMouseDown(false);
+    setStartIndex(NaN);
+    setEndIndex(NaN);
+    setSelectedIndexes(new Set());
+    setIsMovingItems(false);
+  };
+
+  const onMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+    const options = resolveMouseOptions(event);
+    setPointerStartX(event.clientX);
+    setPointerStartY(event.clientY);
+    setIsMouseDown(true);
+    setIsMovingItems(false);
+    setMoveMarkerCoordinates(null);
+
+    if (options.isContextMenuItemClick) {
+      return;
+    }
+
+    if (options.isContextMenuButtonClick) {
+      if (selectedIndexes.size < 1) {
+        setStartIndex(options.index);
+        setEndIndex(options.index);
+        setSelectedIndexes(new Set([options.index]));
+      }
+      return;
+    }
+    setContextMenuCoordinates(null);
+
+    if (options.isShiftDown || options.isCtrlDown) {
+      return;
+    }
+
+    if (options.index < 0) {
+      setStartIndex(options.index);
+      setEndIndex(options.index);
+      setSelectedIndexes(new Set());
+      return;
+    }
+
+    if (options.isMultiSelect) {
+      if (options.isRightClick) {
+        return;
+      }
+      const startIdx = Math.min(startIndex, endIndex);
+      const endIdx = Math.max(startIndex, endIndex);
+      const isSelectedIndexClick =
+        (options.index >= startIdx && options.index <= endIdx) ||
+        selectedIndexes.has(options.index);
+
+      if (isSelectedIndexClick) {
+        setIsMovingItems(true);
+        return;
+      }
+      return;
+    }
+
+    const activeIndex = getActiveIndex();
+    const isActiveIndexClick = activeIndex === options.index;
+    if (isActiveIndexClick && startIndex === endIndex) {
+      setIsMovingItems(true);
+      return;
+    }
+
+    setStartIndex(options.index);
+    setEndIndex(options.index);
+    setSelectedIndexes(new Set([options.index]));
+  };
+
+  const onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+    const options = resolveMouseOptions(event);
+    setPointerStartY(null);
+    setPointerStartX(null);
+    setIsMouseDown(false);
+    setMoveMarkerCoordinates(null);
+
+    if (options.isContextMenuItemClick) {
+      return;
+    }
+    if (options.isContextMenuButtonClick) {
       return;
     }
 
     if (isMovingItems) {
-      setIsMouseDown(false);
-      setIsMovingItems(false);
-      setContextMenuCoordinates(null);
-      setStartIndex(NaN);
-      setEndIndex(NaN);
-      setActiveIndex(options.index);
-      setSelectedIndexes(new Set());
+      if (pointerStartX === event.clientX && pointerStartY === event.clientY) {
+        // Deselect to one row
+        setStartIndex(options.index);
+        setEndIndex(options.index);
+        setSelectedIndexes(new Set([options.index]));
+        return;
+      }
+      const selectedIdx = getSelectedIndexes();
+      const selectedItems = getSelectedItems();
+      const indexesBelowTarget = selectedIdx.filter((i) => i < options.index);
+      const isClientYUnderBound = event.clientY < playlistRowsStartY;
+      const insertIndex =
+        options.index -
+        1 -
+        indexesBelowTarget.length +
+        (isClientYUnderBound ? 1 : 0);
 
-      const selectedItem = playlist[startIndex];
-      dispatch(removeIndexesFromPlaylist([startIndex]));
-      dispatch(pasteToPlaylist([selectedItem], options.index - 1));
+      removeItems();
+      dispatch(
+        // The playlist head index is 0 => -1
+        insertIndex === -1
+          ? pasteToPlaylistHead(selectedItems)
+          : // and playlist tail is conveniently out of bounds -1 => -2
+            insertIndex === -2
+            ? pasteToPlaylist(selectedItems, playlist.length - 1)
+            : pasteToPlaylist(selectedItems, insertIndex),
+      );
+      clearSelection();
+
+      let i =
+        // When pasting to tail we have to backtrack the length of the selection
+        insertIndex === -2
+          ? playlist.length - selectedItems.length
+          : insertIndex + 1;
+      const condition = i + selectedItems.length;
+      const newSelectedIndexes = new Set<number>();
+      for (; i < condition; i++) {
+        newSelectedIndexes.add(i);
+      }
+      const arr = Array.from(newSelectedIndexes.values()).sort();
+      setStartIndex(arr[0]);
+      setEndIndex(arr[arr.length - 1]);
+      setSelectedIndexes(newSelectedIndexes);
       return;
     }
 
-    setIsMouseDown(true);
-    setStartIndex(options.index);
-    setEndIndex(options.index);
-    setActiveIndex(options.index);
-    setSelectedIndexes(new Set([options.index]));
-    setPressStartedAt(Date.now());
-  };
+    if (options.isShiftDown) {
+      const startIdx = Math.min(startIndex, options.index);
+      const endIdx = Math.max(startIndex, options.index);
+      const newSelectedIndexes = new Set<number>();
 
-  const onMouseUp = (options: MouseUpDownOptions) => {
-    const isLongPressOnItem =
-      Date.now() - pressStartedAt > 500 && startIndex === options.index;
-    setPressStartedAt(0);
-    if (isLongPressOnItem) {
-      setIsMovingItems(true);
-      setIsMouseDown(false);
+      for (let i = startIdx; i <= endIdx; i++) {
+        newSelectedIndexes.add(i);
+      }
+
+      setSelectedIndexes(newSelectedIndexes);
       return;
     }
+
     if (options.isCtrlDown) {
-      setIsMouseDown(false);
-      setActiveIndex(-1);
       setSelectedIndexes(new Set([...selectedIndexes, options.index]));
       return;
     }
-    setIsMouseDown(false);
-    setStartIndex(startIndex);
-    setEndIndex(options.index);
-  };
 
-  const clearSelection = (event: React.MouseEvent<HTMLUListElement>) => {
-    if (startIndex === endIndex && !event.shiftKey) {
-      setIsMouseDown(false);
-      setActiveIndex(-1);
-      setEndIndex(NaN);
-      setSelectedIndexes(new Set());
-    } else {
-      setIsMouseDown(false);
-      setActiveIndex(-1);
+    if (options.isMultiSelect) {
+      if (options.isRightClick) {
+        return;
+      }
+      if (startIndex === options.index) {
+        // Deselect multiselect to one row
+        setStartIndex(options.index);
+        setEndIndex(options.index);
+        setSelectedIndexes(new Set([options.index]));
+      }
+      return;
+    }
+
+    // Must come after multiselect check
+    if (options.index < 0 && selectedIndexes.size < playlist.length) {
+      clearSelection();
+      return;
     }
   };
+
+  const onContextMenu = (options: PlaylistItemOptions) => {
+    const rect = resolvePlaylistBoundingClientRect();
+    const xFudgeFactor = 60;
+    const yFudgeFactor = 20;
+    setContextMenuCoordinates({
+      x: options.clientX - rect.x - xFudgeFactor,
+      y: options.clientY - yFudgeFactor,
+    });
+  };
+
+  const updateEndIndex = (options: PlaylistItemOptions) => {
+    if (!isMouseDown || options.index === undefined) {
+      return;
+    }
+    if (isMovingItems) {
+      const playlistItemIndex = resolvePlaylistItemIndex(options.clientY);
+      const y =
+        playlistItemIndex === playlist.length - 1 &&
+        options.clientY >
+          (playlistItemIndex + 1) * playlistItemMaxHeight +
+            40 +
+            playlistPaddingTop
+          ? (playlistItemIndex + 1) * playlistItemMaxHeight + playlistPaddingTop
+          : playlistItemIndex * playlistItemMaxHeight + playlistPaddingTop;
+      setMoveMarkerCoordinates({ x: options.clientX, y });
+      return;
+    }
+
+    setStartIndex(startIndex === -1 ? options.index : startIndex);
+    setEndIndex(
+      startIndex === -1 && options.index === playlist.length - 1
+        ? playlist.length - 1
+        : options.index,
+    );
+
+    const isPointerStartYOverBound =
+      pointerStartY &&
+      pointerStartY >
+        playlistRowsStartY + playlistItemMaxHeight * playlist.length;
+    const isPointerStartYUnderBound =
+      pointerStartY && pointerStartY < playlistRowsStartY;
+    const isClientYOverBound =
+      options.clientY >
+      playlistRowsStartY + playlistItemMaxHeight * playlist.length - 10;
+    const isClientYUnderBound = options.clientY < playlistRowsStartY + 10;
+
+    if (
+      (isClientYOverBound && isPointerStartYOverBound) ||
+      (isClientYUnderBound && isPointerStartYUnderBound)
+    ) {
+      setSelectedIndexes(new Set());
+    } else if (options.index > -1) {
+      const startIdx = Math.min(startIndex, options.index);
+      const endIdx = Math.max(startIndex, options.index);
+      const newSelectedIndexes = new Set<number>();
+
+      let i = startIndex === -1 ? endIdx : startIdx;
+      for (; i <= endIdx; i++) {
+        if (i > -1 && i < playlist.length) {
+          newSelectedIndexes.add(i);
+        }
+      }
+      setSelectedIndexes(newSelectedIndexes);
+    }
+  };
+
+  const onMouseOver = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    updateEndIndex({
+      index: resolvePlaylistItemIndex(event.clientY),
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+  };
+
+  // Side-effect handlers
 
   const scroll = () => {
     setHideOverflow(true);
@@ -526,7 +654,14 @@ const Playlist = ({
   };
 
   const handleOpenEditor = (mode: EditorMode) => {
-    toggleModal(mode, playlist);
+    const files = getSelectedItems();
+    const activeIndex = getActiveIndex();
+    const filesIndex =
+      mode === "metadata"
+        ? files.findIndex((file) => file === playlist[activeIndex])
+        : -1;
+
+    toggleModal(mode, filesIndex, files);
     setContextMenuCoordinates(null);
   };
 
@@ -621,22 +756,16 @@ const Playlist = ({
     <Container
       ref={playlistRef}
       isSmall={isSmall}
-      className={PLAYLIST_CLASSNAME}
-      onMouseDown={(event: React.MouseEvent<HTMLUListElement>) => {
-        onMouseDown({
-          index:
-            (event.target as HTMLElement).className === PLAYLIST_CLASSNAME
-              ? playlist.length - 1
-              : 0,
-          isShiftDown: event.shiftKey,
-          isCtrlDown: false,
-          isContextMenuPress: false,
-        });
-      }}
-      onMouseUp={clearSelection}
+      className={playlistClassName}
       hideOverflow={hideOverflow}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseMove={onMouseOver}
       data-testid="PlaylistContainer"
     >
+      {moveMarkerCoordinates && (
+        <MoveMarker coordinates={moveMarkerCoordinates} />
+      )}
       {contextMenuCoordinates && (
         <ContextMenu
           coordinates={contextMenuCoordinates}
@@ -650,17 +779,12 @@ const Playlist = ({
               key={`${item.name}-${index}`}
               item={item}
               index={index}
-              activeIndex={activeIndex}
-              startIndex={startIndex}
-              endIndex={endIndex}
-              onSetActiveIndex={setActiveIndex}
               isSelected={selectedIndexes.has(index)}
-              onMouseOverItem={updateEndIndex}
-              onMouseDownItem={onMouseDown}
-              onMouseUpItem={onMouseUp}
+              isMovingItems={isMovingItems}
+              onDoubleClick={playOrReplay}
+              onContextMenu={onContextMenu}
               onScrollPlaylist={scroll}
               removeItems={removeItems}
-              isMovingItems={isMovingItems}
             />
           ),
       )}

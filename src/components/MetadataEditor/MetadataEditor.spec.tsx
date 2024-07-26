@@ -56,7 +56,7 @@ const state = {
 
 describe("MetadataEditor", () => {
   it("renders MetadataEditor component", async () => {
-    render(<MetadataEditor files={[audioFixture]} />, state);
+    render(<MetadataEditor activeIndex={0} files={[audioFixture]} />, state);
 
     expect(screen.getByText(artistText)).toBeInTheDocument();
     expect(screen.getByDisplayValue(artist)).toBeInTheDocument();
@@ -100,7 +100,7 @@ describe("MetadataEditor", () => {
   });
 
   it("calls api with updated tags and dispatches toast on success", async () => {
-    render(<MetadataEditor files={[audioFixture]} />, state);
+    render(<MetadataEditor activeIndex={0} files={[audioFixture]} />, state);
 
     const editedArtist = `${artist} edit`;
     const artistElement = screen.getByDisplayValue(artist);
@@ -122,7 +122,7 @@ describe("MetadataEditor", () => {
   it("calls api with updated tags and dispatches toast on failure", async () => {
     vi.mocked(Api.writeTags).mockResolvedValueOnce(new Error("err"));
 
-    render(<MetadataEditor files={[audioFixture]} />, state);
+    render(<MetadataEditor activeIndex={0} files={[audioFixture]} />, state);
 
     await userEvent.click(screen.getByText(saveButtonText));
 

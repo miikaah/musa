@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import PlaylistItem from "./PlaylistItem";
+import PlaylistItem, { playlistItemContextMenuButton } from "./PlaylistItem";
 import { audioFixture } from "../../fixtures/audio.fixture";
 import { albumFixture } from "../../fixtures/album.fixture";
 import { render } from "../../../test/render";
@@ -42,30 +42,31 @@ const state2 = {
   },
 };
 
+const renderComponent = (state: any, options?: any) => {
+  render(
+    <PlaylistItem
+      item={audioFixture}
+      index={0}
+      isSelected={false}
+      isMovingItems={false}
+      onScrollPlaylist={vi.fn()}
+      onContextMenu={vi.fn()}
+      onDoubleClick={vi.fn()}
+      removeItems={options?.mockRemoveItems ?? vi.fn()}
+    />,
+    state,
+  );
+};
+
 describe("PlaylistItem", () => {
   it("renders PlaylistItem component", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        removeItems={vi.fn()}
-      />,
-      state,
-    );
+    renderComponent(state);
 
     expect(screen.getByAltText("Album image")).toBeInTheDocument();
     expect(screen.getByText(title)).toBeInTheDocument();
-    expect(screen.getByTestId("PlaylistItemEditButton")).toBeInTheDocument();
+    expect(
+      screen.getByTestId(`${playlistItemContextMenuButton}-0`),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButton")).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButtonIcon")).toHaveClass(
       "fa-xmark",
@@ -77,214 +78,19 @@ describe("PlaylistItem", () => {
   });
 
   it("renders play icon when isPlaying", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        removeItems={vi.fn()}
-      />,
-      state2,
-    );
+    renderComponent(state2);
 
     expect(screen.getByTestId("PlaylistItemPlayIcon")).toHaveClass("fa-play");
   });
 
   it("renders pause icon when not isPlaying", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        removeItems={vi.fn()}
-      />,
-      state,
-    );
+    renderComponent(state);
 
     expect(screen.getByTestId("PlaylistItemPauseIcon")).toHaveClass("fa-pause");
   });
 
-  it("calls dispatch with replay action", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        removeItems={vi.fn()}
-      />,
-      state,
-    );
-
-    await userEvent.dblClick(screen.getByTestId("PlaylistItemContainer"));
-
-    expect(mockDispatch).toHaveBeenCalledWith(
-      expect.objectContaining({ replay: true }),
-    );
-  });
-
-  it("calls dispatch and onSetActiveIndex on double click", async () => {
-    render(
-      <PlaylistItem
-        item={albumFixture.files[0] as any}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={mockOnSetActiveIndex}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        removeItems={vi.fn()}
-      />,
-      state2,
-    );
-
-    await userEvent.dblClick(screen.getByTestId("PlaylistItemContainer"));
-
-    expect(mockDispatch).toHaveBeenCalledWith(playIndex(0));
-    expect(mockOnSetActiveIndex).toHaveBeenCalledWith(0);
-  });
-
-  it("calls onMouseOverItem when mouse over playlist item", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={mockOnMouseOverItem}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        removeItems={vi.fn()}
-      />,
-      state,
-    );
-
-    fireEvent.mouseOver(screen.getByTestId("PlaylistItemContainer"));
-
-    expect(mockOnMouseOverItem).toHaveBeenCalledWith(0);
-  });
-
-  it("calls onMouseDownItem when presses mouse down on playlist item", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={mockOnMouseDownItem}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        removeItems={vi.fn()}
-      />,
-      state,
-    );
-
-    const user = userEvent.setup();
-    await user.keyboard("{Control>}{Shift>}");
-    await user.click(screen.getByTestId("PlaylistItemContainer"));
-
-    expect(mockOnMouseDownItem).toHaveBeenCalledWith({
-      clientX: 0,
-      clientY: 0,
-      index: 0,
-      isCtrlDown: true,
-      isShiftDown: true,
-      isContextMenuPress: false,
-    });
-  });
-
-  it("calls onMouseUpItem when presses mouse up on playlist item", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={mockOnMouseUpItem}
-        onScrollPlaylist={vi.fn()}
-        removeItems={vi.fn()}
-      />,
-      state,
-    );
-
-    const user = userEvent.setup();
-    await user.keyboard("{Control>}{Shift>}");
-    await user.click(screen.getByTestId("PlaylistItemContainer"));
-
-    expect(mockOnMouseUpItem).toHaveBeenCalledWith({
-      index: 0,
-      isCtrlDown: true,
-      isShiftDown: true,
-      isContextMenuPress: false,
-    });
-  });
-
   it("calls removeItems on remove button click", async () => {
-    render(
-      <PlaylistItem
-        item={audioFixture}
-        index={0}
-        activeIndex={0}
-        startIndex={0}
-        endIndex={0}
-        isSelected={false}
-        isMovingItems={false}
-        onSetActiveIndex={vi.fn()}
-        onMouseOverItem={vi.fn()}
-        onMouseDownItem={vi.fn()}
-        onMouseUpItem={vi.fn()}
-        onScrollPlaylist={vi.fn()}
-        removeItems={mockRemoveItems}
-      />,
-      state,
-    );
+    renderComponent(state, { mockRemoveItems });
 
     await userEvent.click(screen.getByTestId("PlaylistItemDeleteButton"));
 

@@ -1,18 +1,17 @@
 import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Playlist from "./Playlist";
+import Playlist, { playlistRowsStartY } from "./Playlist";
 import { artistFixture } from "../../fixtures/artist.fixture";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
+import { playlistItemMaxHeight } from "./PlaylistItem";
 
 const mockDispatch = vi.fn();
 vi.mock("react-redux", async () => ({
   ...(await vi.importActual<Record<string, unknown>>("react-redux")),
   useDispatch: () => mockDispatch,
 }));
-
-const mockToggleModal = vi.fn();
 
 const t = translate("en");
 const title = String(artistFixture.albums[0].files[0].metadata?.title);
@@ -70,6 +69,14 @@ const state2 = {
   settings: { t },
 };
 
+// The coordinates and dimensions of playlist are all 0
+// so this function fakes clientY resolving to make tests work
+const injectClientYToMouseEvent = (index: number) => {
+  Object.defineProperty(screen.getByTestId("PlaylistContainer"), "scrollTop", {
+    get: vi.fn(() => playlistRowsStartY + playlistItemMaxHeight * index),
+  });
+};
+
 describe("Playlist", () => {
   it("renders Playlist component", async () => {
     render(<Playlist toggleModal={vi.fn()} />, state);
@@ -125,13 +132,14 @@ describe("Playlist", () => {
 
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
-        indexes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        indexes: [0, 1, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9],
       }),
     );
   });
 
   it("dispatches play index action", async () => {
     render(<Playlist toggleModal={vi.fn()} />, state);
+    injectClientYToMouseEvent(0);
 
     await userEvent.click(screen.getByText(title));
     await userEvent.keyboard("{Enter}");
@@ -145,6 +153,7 @@ describe("Playlist", () => {
 
   it("dispatches remove items action during cut", async () => {
     render(<Playlist toggleModal={vi.fn()} />, state);
+    injectClientYToMouseEvent(2);
 
     await userEvent.click(screen.getByText(title2));
     await userEvent.keyboard("{Control>}x{/Control}");
@@ -158,6 +167,7 @@ describe("Playlist", () => {
 
   it("dispatches paste to playlist action during copy + paste", async () => {
     render(<Playlist toggleModal={vi.fn()} />, state);
+    injectClientYToMouseEvent(2);
 
     await userEvent.click(screen.getByText(title2));
     await userEvent.keyboard("{Control>}c{/Control}");
@@ -173,6 +183,7 @@ describe("Playlist", () => {
 
   it("dispatches paste to playlist action during duplicate", async () => {
     render(<Playlist toggleModal={vi.fn()} />, state);
+    injectClientYToMouseEvent(0);
 
     await userEvent.click(screen.getByText(title));
     await userEvent.keyboard("{Control>}{Shift>}d{/Shift}{/Control}");
@@ -188,6 +199,7 @@ describe("Playlist", () => {
   // Small d does not work with Windows
   it("dispatches paste to playlist action during duplicate with D key", async () => {
     render(<Playlist toggleModal={vi.fn()} />, state);
+    injectClientYToMouseEvent(0);
 
     await userEvent.click(screen.getByText(title));
     await userEvent.keyboard("{Control>}{Shift>}D{/Shift}{/Control}");
