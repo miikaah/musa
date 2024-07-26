@@ -493,7 +493,12 @@ const Playlist = ({
       const selectedIdx = getSelectedIndexes();
       const selectedItems = getSelectedItems();
       const indexesBelowTarget = selectedIdx.filter((i) => i < options.index);
-      const insertIndex = options.index - 1 - indexesBelowTarget.length;
+      const isClientYUnderBound = event.clientY < playlistRowsStartY;
+      const insertIndex =
+        options.index -
+        1 -
+        indexesBelowTarget.length +
+        (isClientYUnderBound ? 1 : 0);
 
       removeItems();
       dispatch(
@@ -506,7 +511,6 @@ const Playlist = ({
             : pasteToPlaylist(selectedItems, insertIndex),
       );
       clearSelection();
-      setStartIndex(options.index);
 
       let i =
         // When pasting to tail we have to backtrack the length of the selection
@@ -519,6 +523,7 @@ const Playlist = ({
         newSelectedIndexes.add(i);
       }
       setSelectedIndexes(newSelectedIndexes);
+      setStartIndex(options.index);
       return;
     }
 
