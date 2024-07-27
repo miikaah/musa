@@ -244,8 +244,8 @@ const Playlist = ({
   };
   useKeyPress(KEYS.Up, moveUp);
 
-  const moveDown = (event?: KeyboardEvent) => {
-    event?.preventDefault();
+  const moveDown = (event: KeyboardEvent) => {
+    event.preventDefault();
     const index = getActiveIndex();
     const activeIndex = index > -1 ? index : startIndex - 1;
     const newIndex = activeIndex + 1 < playlist.length ? activeIndex + 1 : 0;
