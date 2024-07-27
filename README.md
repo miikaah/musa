@@ -11,28 +11,55 @@ jpeg, png and webp images.
 2. `npm run start:electron`
 3. Start musa-electron
 
-## Todo
+## Roadmap
 
 ### V4
 
+#### Playlist
+
+- feat: Allow in-bound-to-out-bound select with pointer
+- feat: Maintain play status icon in playlist during cut + paste
+- feat: Allow deleting many-in-series playlist items with long delete press
+
+#### Normalization
+
 - feat: Add normalization GUI
-- chore: Update eslint to v9
-- feat: Improve colors for blue slider track and red border on playlist (The Future cover)
-- fix: Prevent popping when changing FIR eq
+
+#### Tagging
+
+- feat: Bulk album tags editor
+- feat: Update ogg tags
+- feat: Write tags from scratch
+- feat: Deduce tags from filename
+- feat: Make library and tag updates work without refresh
+- feat: View for seeing files with missing tags / covers
+
+#### Search - improvements
+
+- feat: Remove adversarial trash characters like ' from search terms
+
+#### Search - new features
+
 - feat: in year search only return artists who have albums or songs in that year
 - feat: year dropdown in search bar
 - feat: artist-album-song tree filtering via backend
-- feat: Update ogg tags
-- feat: View for seeing files with missing tags / covers
-- feat: Write tags from sratch
-- feat: Make library and tag updates work without refresh
-- feat: Bulk album tags editor + deduce tags from filename
-- feat: Make navigation work with keyboard
+
+#### Native + Perf + DX + a11y
+
+- feat: Improve colors for blue slider track (The Future cover)
+- fix: Prevent popping when changing FIR eq
+- feat: Open mp3, flac and ogg files from filesystem
 - feat: Create srcset of album covers
+- chore: Update eslint to v9
+- feat: Make navigation work with keyboard
+
+### V5
+
+#### DSP
+
 - investigate: Script for downloading all impulse responses from AutoEQ repo?
 - investigate: How hard is it to write a rudimentary multiband compressor?
-- feat: Open mp3, flac and ogg files from filesystem
-- feat: Remove adversarial trash characters like ' from search terms
+- feat: EQ
 
 #### Cross platform
 
