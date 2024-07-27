@@ -214,7 +214,7 @@ const Playlist = ({
   }, []);
 
   const getSelectedIndexes = () => {
-    return Array.from(selectedIndexes.values()).sort();
+    return Array.from(selectedIndexes.values()).sort((a, b) => a - b);
   };
 
   const getSelectedItems = () => {
@@ -482,8 +482,8 @@ const Playlist = ({
 
   const onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
     const options = resolveMouseOptions(event);
-    setPointerStartY(null);
     setPointerStartX(null);
+    setPointerStartY(null);
     setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
 
@@ -558,7 +558,7 @@ const Playlist = ({
       for (; i < condition; i++) {
         newSelectedIndexes.add(i);
       }
-      const arr = Array.from(newSelectedIndexes.values()).sort();
+      const arr = Array.from(newSelectedIndexes.values()).sort((a, b) => a - b);
       setStartIndex(arr[0]);
       setEndIndex(arr[arr.length - 1]);
       setSelectedIndexes(newSelectedIndexes);
