@@ -1,10 +1,8 @@
 import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useEffect, useRef, useState } from "react";
-import { connect } from "react-redux";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled, { css } from "styled-components";
-import { PlayerState } from "../../reducers/player.reducer";
 import { formatDuration } from "../../util";
 import { ellipsisTextOverflow } from "../../common.styles";
 import AlbumImage from "../AlbumImage";
@@ -68,6 +66,10 @@ const PlaylistItemContainer = styled.li<{
     }
   }
 
+  &:hover {
+    color: var(--color-typography);
+  }
+
   ${({ isSelected }) =>
     isSelected &&
     `
@@ -80,6 +82,7 @@ const CoverWrapper = styled.div`
   align-items: center;
   min-width: 50px;
   min-height: 50px;
+  margin-left: 30px;
 
   > img {
     width: 50px;
@@ -102,13 +105,6 @@ const FirstRow = styled.div`
   ${({ theme }) => theme.breakpoints.down("md")} {
     grid-template-columns: 84fr 1fr 3fr 12fr;
   }
-`;
-
-const Icon = styled.span`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 30px;
 `;
 
 const Title = styled.span`
@@ -187,8 +183,6 @@ export type PlaylistItemOptions = {
 };
 
 type PlaylistItemProps = {
-  currentIndex: PlayerState["currentIndex"];
-  isPlaying: PlayerState["isPlaying"];
   item: AudioWithMetadata;
   isSelected: boolean;
   onDoubleClick: () => void;
@@ -198,13 +192,10 @@ type PlaylistItemProps = {
 };
 
 const PlaylistItem = ({
-  currentIndex,
-  isPlaying,
   item,
   isSelected,
   onDoubleClick,
   onContextMenu,
-  onScrollPlaylist,
   onRemoveItems,
 }: PlaylistItemProps) => {
   const [lastTouchTime, setLastTouchTime] = useState(0);
@@ -245,30 +236,6 @@ const PlaylistItem = ({
     setLastTouchTime(now);
   };
 
-  const renderPlayOrPauseIcon = () => {
-    return null;
-    // if (index !== currentIndex) {
-    //   return;
-    // }
-    // return isPlaying ? (
-    //   <FontAwesomeIcon icon="play" data-testid="PlaylistItemPlayIcon" />
-    // ) : (
-    //   <FontAwesomeIcon icon="pause" data-testid="PlaylistItemPauseIcon" />
-    // );
-  };
-
-  // useEffect(() => {
-  //   if (index !== currentIndex || !playlistItemRef.current) {
-  //     return;
-  //   }
-  //   const elRect = playlistItemRef.current.getBoundingClientRect();
-  //   if (elRect.bottom > window.innerHeight - 1) {
-  //     playlistItemRef.current.scrollIntoView(false); // Scrolls to correct song
-  //     onScrollPlaylist(); // Scrolls a little bit down so current song isn't at bottom of view
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [currentIndex]);
-
   const artist = item?.metadata?.artist || item.artistName || "";
   const album = item?.metadata?.album || item.albumName || "";
   const title = item?.metadata?.title || item.name || "";
@@ -277,6 +244,7 @@ const PlaylistItem = ({
 
   return (
     <PlaylistItemContainer
+      id={item.id}
       ref={playlistItemRef}
       isSelected={isSelected}
       onDoubleClick={onDoubleClick}
@@ -284,7 +252,6 @@ const PlaylistItem = ({
       onTouchEnd={handleTouchEnd}
       data-testid="PlaylistItemContainer"
     >
-      <Icon>{renderPlayOrPauseIcon()}</Icon>
       <CoverWrapper>
         <AlbumImage item={item} animate={false} />
       </CoverWrapper>
@@ -336,20 +303,13 @@ const MemoizedPlaylistItem = React.memo(
   (prevProps, nextProps) => {
     return isEqual(
       {
-        currentIndex: prevProps.currentIndex,
-        isPlaying: prevProps.isPlaying,
         isSelected: prevProps.isSelected,
       },
       {
-        currentIndex: nextProps.currentIndex,
-        isPlaying: nextProps.isPlaying,
         isSelected: nextProps.isSelected,
       },
     );
   },
 );
 
-export default connect((state: { player: PlayerState }) => ({
-  currentIndex: state.player.currentIndex,
-  isPlaying: state.player.isPlaying,
-}))(MemoizedPlaylistItem);
+export default MemoizedPlaylistItem;

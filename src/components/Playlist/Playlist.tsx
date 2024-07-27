@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useState, useRef, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
@@ -44,10 +45,9 @@ const commonCss = css<{ isSmall: boolean }>`
   max-width: ${({ isSmall }) => (isSmall ? "600px" : "10000px")};
 `;
 
-const Container = styled.ul<{ isSmall: boolean; hideOverflow: boolean }>`
+const Container = styled.ul<{ isSmall: boolean }>`
   ${commonCss}
   ${listOverflow}
-  overflow-y: ${({ hideOverflow }) => (hideOverflow ? "hidden" : "auto")};
   overflow-x: hidden;
   width: ${({ isSmall }) => (isSmall ? "auto" : "100%")};
   display: flex;
@@ -150,6 +150,21 @@ const MoveMarker = styled.div<{ coordinates: MoveMarkerCoordinates }>`
   left: 0;
 `;
 
+const Icon = styled.span<{ index: number; isSelected: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 30px;
+  position: absolute;
+  left: 0;
+  top: ${({ index }) =>
+    (index < 0 ? -100 : index * playlistItemMaxHeight) +
+    playlistRowsStartY -
+    15}px;
+
+  ${({ isSelected }) => isSelected && `color: var(--color-typography-primary);`}
+`;
+
 const playlistClassName = "playlist";
 
 type MouseUpDownOptions = {
@@ -166,6 +181,7 @@ type PlaylistProps = {
   playlist: PlayerState["items"];
   currentItem: PlayerState["currentItem"];
   currentIndex: PlayerState["currentIndex"];
+  isPlaying: PlayerState["isPlaying"];
   toggleModal: (
     mode: "normalization" | "metadata",
     activeIndex: number,
@@ -178,6 +194,7 @@ const Playlist = ({
   playlist,
   currentItem,
   currentIndex,
+  isPlaying,
   toggleModal,
   t,
 }: PlaylistProps) => {
@@ -192,7 +209,6 @@ const Playlist = ({
     new Set(),
   );
   const [clipboard, setClipboard] = useState<AudioWithMetadata[]>([]);
-  const [hideOverflow, setHideOverflow] = useState(false);
   const [contextMenuCoordinates, setContextMenuCoordinates] =
     useState<ContextMenuCoordinates | null>(null);
   const [moveMarkerCoordinates, setMoveMarkerCoordinates] =
@@ -212,6 +228,19 @@ const Playlist = ({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const playlistItemEl = document.getElementById(currentItem?.id ?? "");
+    if (!playlistItemEl) {
+      return;
+    }
+    const elRect = playlistItemEl.getBoundingClientRect();
+    if (elRect.bottom > window.innerHeight - 1) {
+      playlistItemEl.scrollIntoView(false); // Scrolls to correct song
+      scroll(); // Scrolls a little bit down so current song isn't at bottom of view
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentItem]);
 
   const getSelectedIndexes = () => {
     return Array.from(selectedIndexes.values()).sort((a, b) => a - b);
@@ -438,7 +467,6 @@ const Playlist = ({
       }
       return;
     }
-    setContextMenuCoordinates(null);
 
     if (options.isShiftDown || options.isCtrlDown) {
       return;
@@ -486,6 +514,7 @@ const Playlist = ({
     setPointerStartY(null);
     setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
+    setContextMenuCoordinates(null);
 
     if (options.isContextMenuItemClick) {
       return;
@@ -595,13 +624,11 @@ const Playlist = ({
     }
   };
 
-  const onContextMenu = (options: PlaylistItemOptions) => {
+  const openContextMenu = (options: PlaylistItemOptions) => {
     const rect = resolvePlaylistBoundingClientRect();
-    const xFudgeFactor = 60;
-    const yFudgeFactor = 20;
     setContextMenuCoordinates({
-      x: options.clientX - rect.x - xFudgeFactor,
-      y: options.clientY - yFudgeFactor,
+      x: options.clientX - rect.x - 60,
+      y: resolveTrueClientY(options.clientY) - 20,
     });
   };
 
@@ -678,13 +705,11 @@ const Playlist = ({
   // Side-effect handlers
 
   const scroll = () => {
-    setHideOverflow(true);
     playlistRef.current &&
       playlistRef.current.scrollTo({
-        top: playlistRef.current.scrollTop + 300,
+        top: playlistRef.current.scrollTop + 400,
         behavior: "smooth",
       });
-    setTimeout(() => setHideOverflow(false), 500);
   };
 
   const handleOpenEditor = (mode: EditorMode) => {
@@ -791,12 +816,18 @@ const Playlist = ({
       ref={playlistRef}
       isSmall={isSmall}
       className={playlistClassName}
-      hideOverflow={hideOverflow}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onMouseMove={onMouseMove}
       data-testid="PlaylistContainer"
     >
+      <Icon index={currentIndex} isSelected={selectedIndexes.has(currentIndex)}>
+        {isPlaying ? (
+          <FontAwesomeIcon icon="play" data-testid="PlaylistItemPlayIcon" />
+        ) : (
+          <FontAwesomeIcon icon="pause" data-testid="PlaylistItemPauseIcon" />
+        )}
+      </Icon>
       {moveMarkerCoordinates && (
         <MoveMarker coordinates={moveMarkerCoordinates} />
       )}
@@ -814,7 +845,7 @@ const Playlist = ({
               item={item}
               isSelected={selectedIndexes.has(index)}
               onDoubleClick={playOrReplay}
-              onContextMenu={onContextMenu}
+              onContextMenu={openContextMenu}
               onScrollPlaylist={scroll}
               onRemoveItems={removeItems}
             />
@@ -829,6 +860,7 @@ export default connect(
     playlist: state.player.items,
     currentItem: state.player.currentItem,
     currentIndex: state.player.currentIndex,
+    isPlaying: state.player.isPlaying,
     t: state.settings.t,
   }),
 )(Playlist);
