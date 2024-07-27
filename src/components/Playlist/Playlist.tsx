@@ -244,8 +244,8 @@ const Playlist = ({
   };
   useKeyPress(KEYS.Up, moveUp);
 
-  const moveDown = (event: KeyboardEvent) => {
-    event.preventDefault();
+  const moveDown = (event?: KeyboardEvent) => {
+    event?.preventDefault();
     const index = getActiveIndex();
     const activeIndex = index > -1 ? index : startIndex - 1;
     const newIndex = activeIndex + 1 < playlist.length ? activeIndex + 1 : 0;
@@ -278,12 +278,21 @@ const Playlist = ({
     }
     setSelectedIndexes(new Set());
   };
-  useKeyPress(KEYS.Backspace, removeItems);
-  useKeyPress(KEYS.Delete, removeItems);
+
+  const removeItemsAndMoveDown = () => {
+    removeItems();
+    setStartIndex(startIndex);
+    setEndIndex(startIndex);
+    if (startIndex < playlist.length - 1) {
+      setSelectedIndexes(new Set([startIndex]));
+    }
+  };
+  useKeyPress(KEYS.Backspace, removeItemsAndMoveDown);
+  useKeyPress(KEYS.Delete, removeItemsAndMoveDown);
 
   const cut = (event: KeyboardEvent) => {
     if (!isCtrlDown(event)) return;
-    removeItems();
+    removeItemsAndMoveDown();
   };
   useKeyPress(KEYS.x, cut);
 
