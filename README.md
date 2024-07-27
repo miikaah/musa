@@ -18,7 +18,6 @@ jpeg, png and webp images.
 #### Playlist
 
 - feat: Allow in-bound-to-out-bound select with pointer
-- feat: Maintain play status icon in playlist during cut + paste
 - feat: Allow deleting many-in-series playlist items with long delete press
 
 #### Normalization

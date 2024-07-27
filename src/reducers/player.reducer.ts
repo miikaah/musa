@@ -233,13 +233,13 @@ const player = (state = initialState, action: PlayerAction) => {
         ...action.items,
         ...playlistEnd,
       ] as AudioWithMetadata[];
+
+      // Try to find the index by currentItem.
       let newIndex =
         action.index < state.currentIndex
           ? action.items.length + state.currentIndex
           : state.currentIndex;
-
       // If the index is -1 playback has not yet begun or it's out of sync.
-      // Try to find the index by currentItem.
       if (newIndex < 0) {
         newIndex = newItems.findIndex((item) => item === state.currentItem);
       }
@@ -248,8 +248,13 @@ const player = (state = initialState, action: PlayerAction) => {
     }
     case PASTE_TO_PLAYLIST_HEAD: {
       const newItems = [...action.items, ...state.items] as AudioWithMetadata[];
+      const newIndex = newItems.findIndex((item) => item === state.currentItem);
 
-      return getStateByPlaylistChange(state, newItems, state.currentIndex);
+      return getStateByPlaylistChange(
+        state,
+        newItems,
+        newIndex > -1 ? newIndex : 0,
+      );
     }
     case REMOVE_INDEXES_FROM_PLAYLIST: {
       const newItems = state.items.filter(
