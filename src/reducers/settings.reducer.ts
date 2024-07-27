@@ -8,14 +8,8 @@ import {
 import { SupportedLanguages, translate } from "../i18n";
 import { ReplaygainType } from "../types";
 
-export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS";
-export type UpdateSettingsAction = {
-  type: typeof UPDATE_SETTINGS;
-  props: Partial<SettingsState>;
-};
-export const updateSettings = (
-  props: Partial<SettingsState>,
-): UpdateSettingsAction => ({
+export const UPDATE_SETTINGS = "MUSA/SETTINGS/UPDATE_SETTINGS" as const;
+export const updateSettings = (props: Partial<SettingsState>) => ({
   type: UPDATE_SETTINGS,
   props,
 });
@@ -72,7 +66,7 @@ export const initialState: SettingsState = {
   t: translate("en"),
 };
 
-type SettingsAction = UpdateSettingsAction;
+type SettingsAction = ReturnType<typeof updateSettings>;
 
 const settings = (state = initialState, action: SettingsAction) => {
   switch (action.type) {

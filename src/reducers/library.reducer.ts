@@ -1,14 +1,9 @@
 import { ArtistObject } from "@miikaah/musa-core";
 import { scanColor } from "../config";
 
-export const SET_LISTING_WITH_LABELS = "MUSA/LIBRARY/SET_LISTING_WITH_LABELS";
-export type SetListingWithLabelsAction = {
-  type: typeof SET_LISTING_WITH_LABELS;
-  listingWithLabels: ArtistObject;
-};
-export const setListingWithLabels = (
-  listingWithLabels: ArtistObject,
-): SetListingWithLabelsAction => ({
+export const SET_LISTING_WITH_LABELS =
+  "MUSA/LIBRARY/SET_LISTING_WITH_LABELS" as const;
+export const setListingWithLabels = (listingWithLabels: ArtistObject) => ({
   type: SET_LISTING_WITH_LABELS,
   listingWithLabels,
 });
@@ -20,16 +15,13 @@ type ScanProps = {
   reset: boolean;
 };
 
-export const SET_SCAN_PROPS = "MUSA/LIBRARY/SET_SCAN_PROPS";
-export type SetScanPropsAction = Partial<ScanProps> & {
-  type: typeof SET_SCAN_PROPS;
-};
+export const SET_SCAN_PROPS = "MUSA/LIBRARY/SET_SCAN_PROPS" as const;
 export const setScanProps = ({
   scanLength,
   scannedLength,
   scanColor,
   reset,
-}: Partial<ScanProps>): SetScanPropsAction => ({
+}: Partial<ScanProps>) => ({
   type: SET_SCAN_PROPS,
   scanLength,
   scannedLength,
@@ -51,7 +43,9 @@ const initialState: LibraryState = {
   scanColor: scanColor.INSERT_FILES,
 };
 
-type LibraryAction = SetListingWithLabelsAction | SetScanPropsAction;
+type LibraryAction =
+  | ReturnType<typeof setListingWithLabels>
+  | ReturnType<typeof setScanProps>;
 
 const library = (state = initialState, action: LibraryAction) => {
   switch (action.type) {

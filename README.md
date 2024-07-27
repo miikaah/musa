@@ -55,6 +55,10 @@ jpeg, png and webp images.
 
 ### V5
 
+#### Playlist
+
+- feat: Scroll down-up on long press select
+
 #### DSP
 
 - investigate: Script for downloading all impulse responses from AutoEQ repo?

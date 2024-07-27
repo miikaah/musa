@@ -1,11 +1,6 @@
-export const UPDATE_CURRENT_PROFILE = "MUSA/PROFILE/UPDATE_CURRENT_PROFILE";
-export type UpdateCurrentProfileAction = {
-  type: typeof UPDATE_CURRENT_PROFILE;
-  profile?: string;
-};
-export const updateCurrentProfile = (
-  profile?: string,
-): UpdateCurrentProfileAction => ({
+export const UPDATE_CURRENT_PROFILE =
+  "MUSA/PROFILE/UPDATE_CURRENT_PROFILE" as const;
+export const updateCurrentProfile = (profile?: string) => ({
   type: UPDATE_CURRENT_PROFILE,
   profile,
 });
@@ -18,7 +13,10 @@ const initialState: ProfileState = {
   currentProfile: "",
 };
 
-const profile = (state = initialState, action: UpdateCurrentProfileAction) => {
+const profile = (
+  state = initialState,
+  action: ReturnType<typeof updateCurrentProfile>,
+) => {
   switch (action.type) {
     case UPDATE_CURRENT_PROFILE: {
       return {

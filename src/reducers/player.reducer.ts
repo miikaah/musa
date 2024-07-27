@@ -7,117 +7,74 @@ import {
 import { cleanUrl } from "../util";
 import { CoverData } from "../types";
 
-export const PLAY = "MUSA/PLAYER/PLAY";
-export type PlayAction = {
-  type: typeof PLAY;
-};
-export const play = (): PlayAction => ({
+export const PLAY = "MUSA/PLAYER/PLAY" as const;
+export const play = () => ({
   type: PLAY,
 });
 
-export const PLAY_INDEX = "MUSA/PLAYER/PLAY_INDEX";
-export type PlayIndexAction = {
-  type: typeof PLAY_INDEX;
-  index: number;
-};
-export const playIndex = (index: number): PlayIndexAction => ({
+export const PLAY_INDEX = "MUSA/PLAYER/PLAY_INDEX" as const;
+export const playIndex = (index: number) => ({
   type: PLAY_INDEX,
   index,
 });
 
-export const PLAY_NEXT = "MUSA/PLAYER/PLAY_NEXT";
-export type PlayNextAction = {
-  type: typeof PLAY_NEXT;
-};
-export const playNext = (): PlayNextAction => ({
+export const PLAY_NEXT = "MUSA/PLAYER/PLAY_NEXT" as const;
+export const playNext = () => ({
   type: PLAY_NEXT,
 });
 
-export const REPLAY = "MUSA/PLAYER/REPLAY";
-export type ReplayAction = {
-  type: typeof REPLAY;
-  replay: boolean;
-};
-export const replay = (replay: boolean): ReplayAction => ({
+export const REPLAY = "MUSA/PLAYER/REPLAY" as const;
+export const replay = (replay: boolean) => ({
   type: REPLAY,
   replay,
 });
 
-export const PAUSE = "MUSA/PLAYER/PAUSE";
-export type PauseAction = {
-  type: typeof PAUSE;
-};
-export const pause = (): PauseAction => ({
+export const PAUSE = "MUSA/PLAYER/PAUSE" as const;
+export const pause = () => ({
   type: PAUSE,
 });
 
-export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD";
-export type AddToPlaylistAction = {
-  type: typeof ADD_TO_PLAYLIST;
-  item: AudioWithMetadata | EnrichedAlbumFile | Artist["albums"][0];
-};
+export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD" as const;
 export const addToPlaylist = (
   item: AudioWithMetadata | EnrichedAlbumFile | Artist["albums"][0],
-): AddToPlaylistAction => ({
+) => ({
   type: ADD_TO_PLAYLIST,
   item,
 });
 
-export const PASTE_TO_PLAYLIST = "MUSA/PLAYER/PASTE_TO_PLAYLIST";
-export type PasteToPlaylistAction = {
-  type: typeof PASTE_TO_PLAYLIST;
-  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[];
-  index?: number;
-};
+export const PASTE_TO_PLAYLIST = "MUSA/PLAYER/PASTE_TO_PLAYLIST" as const;
 export const pasteToPlaylist = (
   items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
   index?: number,
-): PasteToPlaylistAction => ({
+) => ({
   type: PASTE_TO_PLAYLIST,
   items,
   index,
 });
 
-export const PASTE_TO_PLAYLIST_HEAD = "MUSA/PLAYER/PASTE_TO_PLAYLIST_HEAD";
-export type PasteToPlaylistTailAction = {
-  type: typeof PASTE_TO_PLAYLIST_HEAD;
-  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[];
-  index?: number;
-};
+export const PASTE_TO_PLAYLIST_HEAD =
+  "MUSA/PLAYER/PASTE_TO_PLAYLIST_HEAD" as const;
 export const pasteToPlaylistHead = (
   items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
-): PasteToPlaylistTailAction => ({
+) => ({
   type: PASTE_TO_PLAYLIST_HEAD,
   items,
 });
 
 export const REMOVE_INDEXES_FROM_PLAYLIST =
-  "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST";
-export type RemoveIndexesFromPlaylistAction = {
-  type: typeof REMOVE_INDEXES_FROM_PLAYLIST;
-  indexes: number[];
-};
-export const removeIndexesFromPlaylist = (
-  indexes: number[],
-): RemoveIndexesFromPlaylistAction => ({
+  "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST" as const;
+export const removeIndexesFromPlaylist = (indexes: number[]) => ({
   type: REMOVE_INDEXES_FROM_PLAYLIST,
   indexes,
 });
 
-export const EMPTY_PLAYLIST = "MUSA/PLAYER/EMPTY_PLAYLIST";
-export type EmptyPlaylistAction = {
-  type: typeof EMPTY_PLAYLIST;
-};
-export const emptyPlaylist = (): EmptyPlaylistAction => ({
+export const EMPTY_PLAYLIST = "MUSA/PLAYER/EMPTY_PLAYLIST" as const;
+export const emptyPlaylist = () => ({
   type: EMPTY_PLAYLIST,
 });
 
-export const SET_COVER_DATA = "MUSA/PLAYER/SET_COVER_DATA";
-export type SetCoverDataAction = {
-  type: typeof SET_COVER_DATA;
-  coverData: CoverData;
-};
-export const setCoverData = (coverData: CoverData): SetCoverDataAction => ({
+export const SET_COVER_DATA = "MUSA/PLAYER/SET_COVER_DATA" as const;
+export const setCoverData = (coverData: CoverData) => ({
   type: SET_COVER_DATA,
   coverData,
 });
@@ -151,21 +108,21 @@ export const initialState: PlayerState = {
 };
 
 type PlayerAction =
-  | PlayAction
-  | PlayIndexAction
-  | PlayNextAction
-  | ReplayAction
-  | PauseAction
-  | AddToPlaylistAction
-  | PasteToPlaylistAction
-  | PasteToPlaylistTailAction
-  | RemoveIndexesFromPlaylistAction
-  | EmptyPlaylistAction
-  | SetCoverDataAction;
+  | ReturnType<typeof play>
+  | ReturnType<typeof playIndex>
+  | ReturnType<typeof playNext>
+  | ReturnType<typeof replay>
+  | ReturnType<typeof pause>
+  | ReturnType<typeof addToPlaylist>
+  | ReturnType<typeof pasteToPlaylist>
+  | ReturnType<typeof pasteToPlaylistHead>
+  | ReturnType<typeof removeIndexesFromPlaylist>
+  | ReturnType<typeof emptyPlaylist>
+  | ReturnType<typeof setCoverData>;
 
 const hasIndex = (
-  action: PlayIndexAction | PlayNextAction,
-): action is PlayIndexAction => {
+  action: ReturnType<typeof playIndex> | ReturnType<typeof playNext>,
+): action is ReturnType<typeof playIndex> => {
   return "index" in action && typeof action.index === "number";
 };
 

@@ -4,74 +4,43 @@ import {
   AudioWithMetadata,
 } from "@miikaah/musa-core";
 
-export const SET_QUERY = "MUSA/SEARCH/SET_QUERY";
-export type SetQueryAction = {
-  type: typeof SET_QUERY;
-  query: string;
-};
-export const setQuery = (query: string): SetQueryAction => ({
+export const SET_QUERY = "MUSA/SEARCH/SET_QUERY" as const;
+export const setQuery = (query: string) => ({
   type: SET_QUERY,
   query,
 });
 
-export const SET_FILTER = "MUSA/SEARCH/SET_FILTER";
-export type SetFilterAction = {
-  type: typeof SET_FILTER;
-  filter: string;
-};
-export const setFilter = (filter: string): SetFilterAction => ({
+export const SET_FILTER = "MUSA/SEARCH/SET_FILTER" as const;
+export const setFilter = (filter: string) => ({
   type: SET_FILTER,
   filter,
 });
 
-export const SET_IS_RANDOM = "MUSA/SEARCH/SET_IS_RANDOM";
-export type SetIsSearchRandomAction = {
-  type: typeof SET_IS_RANDOM;
-  isRandom: boolean;
-};
-export const setIsSearchRandom = (
-  isRandom: boolean,
-): SetIsSearchRandomAction => ({
+export const SET_IS_RANDOM = "MUSA/SEARCH/SET_IS_RANDOM" as const;
+export const setIsSearchRandom = (isRandom: boolean) => ({
   type: SET_IS_RANDOM,
   isRandom,
 });
 
 export const SET_IS_SEARCH_TERM_LOCKED =
-  "MUSA/SEARCH/SET_IS_SEARCH_TERM_LOCKED";
-export type SetIsSearchTermLockedAction = {
-  type: typeof SET_IS_SEARCH_TERM_LOCKED;
-  isSearchTermLocked: boolean;
-};
-export const setIsSearchTermLocked = (
-  isSearchTermLocked: boolean,
-): SetIsSearchTermLockedAction => ({
+  "MUSA/SEARCH/SET_IS_SEARCH_TERM_LOCKED" as const;
+export const setIsSearchTermLocked = (isSearchTermLocked: boolean) => ({
   type: SET_IS_SEARCH_TERM_LOCKED,
   isSearchTermLocked,
 });
 
-type SearchResult = {
+export const SET_SEARCH_RESULTS = "MUSA/SEARCH/SET_SEARCH_RESULTS" as const;
+export const setSearchResults = (result: {
   artists: ArtistWithEnrichedAlbums[];
   albums: AlbumWithFilesAndMetadata[];
   audios: AudioWithMetadata[];
-};
-
-export const SET_SEARCH_RESULTS = "MUSA/SEARCH/SET_SEARCH_RESULTS";
-export type SetSearchResultsAction = {
-  type: typeof SET_SEARCH_RESULTS;
-  result: SearchResult;
-};
-export const setSearchResults = (
-  result: SearchResult,
-): SetSearchResultsAction => ({
+}) => ({
   type: SET_SEARCH_RESULTS,
   result,
 });
 
-export const CLEAR_SEARCH = "MUSA/SEARCH/CLEAR_SEARCH";
-export type ClearSearchAction = {
-  type: typeof CLEAR_SEARCH;
-};
-export const clearSearch = (): ClearSearchAction => ({
+export const CLEAR_SEARCH = "MUSA/SEARCH/CLEAR_SEARCH" as const;
+export const clearSearch = () => ({
   type: CLEAR_SEARCH,
 });
 
@@ -81,14 +50,9 @@ export type ScrollPos = {
   audios: number;
 };
 
-export const UPDATE_SCROLL_POSITION = "MUSA/SEARCH/UPDATE_SCROLL_POSITION";
-export type UpdateScrollPositionAction = {
-  type: typeof UPDATE_SCROLL_POSITION;
-  props: Partial<ScrollPos>;
-};
-export const updateScrollPosition = (
-  props: Partial<ScrollPos>,
-): UpdateScrollPositionAction => ({
+export const UPDATE_SCROLL_POSITION =
+  "MUSA/SEARCH/UPDATE_SCROLL_POSITION" as const;
+export const updateScrollPosition = (props: Partial<ScrollPos>) => ({
   type: UPDATE_SCROLL_POSITION,
   props,
 });
@@ -120,13 +84,13 @@ export const initialState: SearchState = {
 };
 
 type SearchAction =
-  | SetQueryAction
-  | SetFilterAction
-  | SetIsSearchRandomAction
-  | SetIsSearchTermLockedAction
-  | SetSearchResultsAction
-  | ClearSearchAction
-  | UpdateScrollPositionAction;
+  | ReturnType<typeof setQuery>
+  | ReturnType<typeof setFilter>
+  | ReturnType<typeof setIsSearchRandom>
+  | ReturnType<typeof setIsSearchTermLocked>
+  | ReturnType<typeof setSearchResults>
+  | ReturnType<typeof clearSearch>
+  | ReturnType<typeof updateScrollPosition>;
 
 const search = (state = initialState, action: SearchAction) => {
   switch (action.type) {

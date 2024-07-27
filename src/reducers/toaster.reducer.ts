@@ -1,21 +1,12 @@
-export const ADD_TOAST = "MUSA/TOASTER/ADD_TOAST";
-export type AddToastAction = {
-  type: typeof ADD_TOAST;
-  message: string;
-  key: string;
-};
-export const addToast = (message: string, key: string): AddToastAction => ({
+export const ADD_TOAST = "MUSA/TOASTER/ADD_TOAST" as const;
+export const addToast = (message: string, key: string) => ({
   type: ADD_TOAST,
   message,
   key,
 });
 
-export const REMOVE_TOAST = "MUSA/TOASTER/REMOVE_TOAST";
-export type RemoveToastAction = {
-  type: typeof REMOVE_TOAST;
-  key: string;
-};
-export const removeToast = (key: string): RemoveToastAction => ({
+export const REMOVE_TOAST = "MUSA/TOASTER/REMOVE_TOAST" as const;
+export const removeToast = (key: string) => ({
   type: REMOVE_TOAST,
   key,
 });
@@ -28,7 +19,9 @@ const initialState: ToasterState = {
   messages: {},
 };
 
-type ToasterAction = AddToastAction | RemoveToastAction;
+type ToasterAction =
+  | ReturnType<typeof addToast>
+  | ReturnType<typeof removeToast>;
 
 const toaster = (state = initialState, action: ToasterAction) => {
   switch (action.type) {
