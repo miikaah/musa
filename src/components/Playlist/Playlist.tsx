@@ -481,6 +481,30 @@ const Playlist = ({
       return;
     }
 
+    if (options.isShiftDown) {
+      const startIdx = Math.min(startIndex, options.index);
+      const endIdx = Math.max(startIndex, options.index);
+      const newSelectedIndexes = new Set<number>();
+
+      for (let i = startIdx; i <= endIdx; i++) {
+        newSelectedIndexes.add(i);
+      }
+
+      setSelectedIndexes(newSelectedIndexes);
+      return;
+    }
+
+    if (options.isCtrlDown) {
+      if (selectedIndexes.has(options.index)) {
+        setSelectedIndexes(
+          new Set([...selectedIndexes].filter((i) => i !== options.index)),
+        );
+      } else {
+        setSelectedIndexes(new Set([...selectedIndexes, options.index]));
+      }
+      return;
+    }
+
     if (isMovingItems) {
       if (pointerStartX === event.clientX && pointerStartY === event.clientY) {
         // Deselect to one row
@@ -525,24 +549,6 @@ const Playlist = ({
       setStartIndex(arr[0]);
       setEndIndex(arr[arr.length - 1]);
       setSelectedIndexes(newSelectedIndexes);
-      return;
-    }
-
-    if (options.isShiftDown) {
-      const startIdx = Math.min(startIndex, options.index);
-      const endIdx = Math.max(startIndex, options.index);
-      const newSelectedIndexes = new Set<number>();
-
-      for (let i = startIdx; i <= endIdx; i++) {
-        newSelectedIndexes.add(i);
-      }
-
-      setSelectedIndexes(newSelectedIndexes);
-      return;
-    }
-
-    if (options.isCtrlDown) {
-      setSelectedIndexes(new Set([...selectedIndexes, options.index]));
       return;
     }
 
@@ -632,8 +638,13 @@ const Playlist = ({
     }
   };
 
-  const onMouseOver = (event: React.MouseEvent<HTMLElement>) => {
+  const onMouseMove = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
+
+    if (event.shiftKey || event.ctrlKey || event.metaKey) {
+      return;
+    }
+
     updateEndIndex({
       index: resolvePlaylistItemIndex(event.clientY),
       clientX: event.clientX,
@@ -760,7 +771,7 @@ const Playlist = ({
       hideOverflow={hideOverflow}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
-      onMouseMove={onMouseOver}
+      onMouseMove={onMouseMove}
       data-testid="PlaylistContainer"
     >
       {moveMarkerCoordinates && (
