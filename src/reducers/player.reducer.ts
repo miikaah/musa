@@ -36,7 +36,7 @@ export const pause = () => ({
 
 export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD" as const;
 export const addToPlaylist = (
-  item: AudioWithMetadata | EnrichedAlbumFile | Artist["albums"][0],
+  item: AudioWithMetadata | EnrichedAlbumFile | Artist["albums"][number],
 ) => ({
   type: ADD_TO_PLAYLIST,
   item,
@@ -80,7 +80,7 @@ export const setCoverData = (coverData: CoverData) => ({
 });
 
 export type PlayerState = {
-  items: AudioWithMetadata[];
+  items: (AudioWithMetadata & { id: string })[];
   currentItem: AudioWithMetadata | undefined;
   currentIndex: number;
   src: string;
@@ -126,7 +126,7 @@ const hasIndex = (
   return "index" in action && typeof action.index === "number";
 };
 
-const player = (state = initialState, action: PlayerAction) => {
+const player = (state = initialState, action: PlayerAction): PlayerState => {
   switch (action.type) {
     case PLAY: {
       // * If play is paused and playlist has items resume playback
@@ -208,17 +208,19 @@ const player = (state = initialState, action: PlayerAction) => {
         isPlaying: false,
       };
     case ADD_TO_PLAYLIST:
+      // TODO: Remove any
       return {
         ...state,
-        items: [...state.items, action.item],
+        items: [...state.items, toItemWithId(action.item)] as any,
       };
     case PASTE_TO_PLAYLIST: {
       // The action doesn't have index set so append items to the end of the playlist
       if (!action.index && action.index !== 0) {
+        // TODO: Remove any
         const newItems = [
           ...state.items,
-          ...action.items,
-        ] as AudioWithMetadata[];
+          ...action.items.map(toItemWithId),
+        ] as any;
 
         return getStateByPlaylistChange(state, newItems, state.currentIndex);
       }
@@ -228,11 +230,12 @@ const player = (state = initialState, action: PlayerAction) => {
         action.index + 1,
         state.items.length,
       );
+      // TODO: Remove any
       const newItems = [
         ...playlistStart,
-        ...action.items,
+        ...action.items.map(toItemWithId),
         ...playlistEnd,
-      ] as AudioWithMetadata[];
+      ] as any;
 
       // Try to find the index by currentItem.
       let newIndex =
@@ -240,15 +243,25 @@ const player = (state = initialState, action: PlayerAction) => {
           ? action.items.length + state.currentIndex
           : state.currentIndex;
       // If the index is -1 playback has not yet begun or it's out of sync.
+      // TODO: Remove any
       if (newIndex < 0) {
-        newIndex = newItems.findIndex((item) => item === state.currentItem);
+        newIndex = newItems.findIndex(
+          (item: any) => item === state.currentItem,
+        );
       }
 
       return getStateByPlaylistChange(state, newItems, newIndex);
     }
     case PASTE_TO_PLAYLIST_HEAD: {
-      const newItems = [...action.items, ...state.items] as AudioWithMetadata[];
-      const newIndex = newItems.findIndex((item) => item === state.currentItem);
+      // TODO: Remove any
+      const newItems = [
+        ...action.items.map(toItemWithId),
+        ...state.items,
+      ] as any;
+      // TODO: Remove any
+      const newIndex = newItems.findIndex(
+        (item: any) => item === state.currentItem,
+      );
 
       return getStateByPlaylistChange(
         state,
@@ -293,10 +306,7 @@ const player = (state = initialState, action: PlayerAction) => {
   }
 };
 
-function getPlayBase(
-  newItem: AudioWithMetadata | Record<string, unknown>,
-  newIndex: number,
-) {
+function getPlayBase(newItem: AudioWithMetadata, newIndex: number) {
   return {
     currentItem: newItem,
     currentIndex: newIndex,
@@ -316,6 +326,24 @@ function getStateByPlaylistChange(
     items: newItems,
     currentIndex,
   };
+}
+
+// TODO: Remove any
+function toItemWithId(item: any) {
+  return { ...item, id: genId() };
+}
+
+function genId() {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
+  const charactersLength = characters.length;
+
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * charactersLength);
+    result += characters.charAt(randomIndex);
+  }
+
+  return result;
 }
 
 export default player;

@@ -182,7 +182,6 @@ const SecondRowItem = styled.span<{ hasMargins?: boolean }>`
 let touchTimeout: NodeJS.Timeout;
 
 export type PlaylistItemOptions = {
-  index: number;
   clientX: number;
   clientY: number;
 };
@@ -191,7 +190,6 @@ type PlaylistItemProps = {
   currentIndex: PlayerState["currentIndex"];
   isPlaying: PlayerState["isPlaying"];
   item: AudioWithMetadata;
-  index: number;
   isSelected: boolean;
   onDoubleClick: () => void;
   onContextMenu: (options: PlaylistItemOptions) => void;
@@ -203,7 +201,6 @@ const PlaylistItem = ({
   currentIndex,
   isPlaying,
   item,
-  index,
   isSelected,
   onDoubleClick,
   onContextMenu,
@@ -232,7 +229,6 @@ const PlaylistItem = ({
   ) => {
     event.stopPropagation();
     onContextMenu({
-      index,
       clientX: event.clientX,
       clientY: event.clientY,
     });
@@ -250,27 +246,28 @@ const PlaylistItem = ({
   };
 
   const renderPlayOrPauseIcon = () => {
-    if (index !== currentIndex) {
-      return;
-    }
-    return isPlaying ? (
-      <FontAwesomeIcon icon="play" data-testid="PlaylistItemPlayIcon" />
-    ) : (
-      <FontAwesomeIcon icon="pause" data-testid="PlaylistItemPauseIcon" />
-    );
+    return null;
+    // if (index !== currentIndex) {
+    //   return;
+    // }
+    // return isPlaying ? (
+    //   <FontAwesomeIcon icon="play" data-testid="PlaylistItemPlayIcon" />
+    // ) : (
+    //   <FontAwesomeIcon icon="pause" data-testid="PlaylistItemPauseIcon" />
+    // );
   };
 
-  useEffect(() => {
-    if (index !== currentIndex || !playlistItemRef.current) {
-      return;
-    }
-    const elRect = playlistItemRef.current.getBoundingClientRect();
-    if (elRect.bottom > window.innerHeight - 1) {
-      playlistItemRef.current.scrollIntoView(false); // Scrolls to correct song
-      onScrollPlaylist(); // Scrolls a little bit down so current song isn't at bottom of view
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex]);
+  // useEffect(() => {
+  //   if (index !== currentIndex || !playlistItemRef.current) {
+  //     return;
+  //   }
+  //   const elRect = playlistItemRef.current.getBoundingClientRect();
+  //   if (elRect.bottom > window.innerHeight - 1) {
+  //     playlistItemRef.current.scrollIntoView(false); // Scrolls to correct song
+  //     onScrollPlaylist(); // Scrolls a little bit down so current song isn't at bottom of view
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [currentIndex]);
 
   const artist = item?.metadata?.artist || item.artistName || "";
   const album = item?.metadata?.album || item.albumName || "";
@@ -296,8 +293,8 @@ const PlaylistItem = ({
           <Title>{title}</Title>
           {!isMobile && (
             <ContextMenuButton
-              id={`${playlistItemContextMenuButtonId}-${index}`}
-              data-testid={`${playlistItemContextMenuButtonId}-${index}`}
+              id={playlistItemContextMenuButtonId}
+              data-testid={playlistItemContextMenuButtonId}
               onClick={handleContextMenu}
             >
               <div />

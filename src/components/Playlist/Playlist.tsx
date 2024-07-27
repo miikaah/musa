@@ -605,8 +605,8 @@ const Playlist = ({
     });
   };
 
-  const updateEndIndex = (options: PlaylistItemOptions) => {
-    if (!isMouseDown || options.index === undefined) {
+  const updateEndIndex = (options: PlaylistItemOptions & { index: number }) => {
+    if (!isMouseDown) {
       return;
     }
     if (isMovingItems) {
@@ -810,9 +810,8 @@ const Playlist = ({
         (item, index) =>
           item && (
             <PlaylistItem
-              key={`${item.name}-${index}`}
+              key={item.id}
               item={item}
-              index={index}
               isSelected={selectedIndexes.has(index)}
               onDoubleClick={playOrReplay}
               onContextMenu={onContextMenu}
