@@ -8,14 +8,12 @@ jpeg, png and webp images.
 ## Development
 
 1. `npm install`
-2. `npm run start:electron`
+2. `npm run start:e`
 3. Start musa-electron
 
 ## Roadmap
 
-### V4
-
-#### Tagging
+### Tagging
 
 - feat: Bulk album tags editor
 - feat: Update ogg tags
@@ -24,18 +22,19 @@ jpeg, png and webp images.
 - feat: Make library and tag updates work without refresh
 - feat: View for seeing files with missing tags / covers
 
-#### Search - improvements
+### Search - improvements
 
 - feat: Remove adversarial trash characters like ' from search terms
 
-#### Search - new features
+### Search - new features
 
 - feat: in year search only return artists who have albums or songs in that year
 - feat: year dropdown in search bar
 - feat: artist-album-song tree filtering via backend
 
-#### Native + Perf + DX + a11y
+### Native + Perf + DX + a11y
 
+- fix: Native drag and drop
 - feat: Improve colors for blue slider track (The Future cover)
 - fix: Prevent popping when changing FIR eq
 - feat: Open mp3, flac and ogg files from filesystem
@@ -43,19 +42,17 @@ jpeg, png and webp images.
 - chore: Update eslint to v9
 - feat: Make navigation work with keyboard
 
-### V5
-
-#### Playlist
+### Playlist
 
 - feat: Scroll down-up on long press select
 
-#### DSP
+### DSP
 
 - investigate: Script for downloading all impulse responses from AutoEQ repo?
 - investigate: How hard is it to write a rudimentary multiband compressor?
-- feat: EQ
+- investigate: EQ
 
-#### Cross platform
+### Cross platform
 
 - feat: Make sure everything works on Linux
 
