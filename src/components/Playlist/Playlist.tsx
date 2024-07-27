@@ -235,23 +235,23 @@ const Playlist = ({
 
   const moveUp = (event: KeyboardEvent) => {
     event.preventDefault();
-    const activeIndex = getActiveIndex();
-    if (activeIndex > -1) {
-      setSelectedIndexes(new Set([activeIndex - 1]));
-    } else {
-      setSelectedIndexes(new Set([playlist.length - 1]));
-    }
+    const index = getActiveIndex();
+    const activeIndex = index > -1 ? index : startIndex;
+    const newIndex = activeIndex > 0 ? activeIndex - 1 : playlist.length - 1;
+    setStartIndex(newIndex);
+    setEndIndex(newIndex);
+    setSelectedIndexes(new Set([newIndex]));
   };
   useKeyPress(KEYS.Up, moveUp);
 
   const moveDown = (event: KeyboardEvent) => {
     event.preventDefault();
-    const activeIndex = getActiveIndex();
-    if (activeIndex + 1 < playlist.length) {
-      setSelectedIndexes(new Set([activeIndex + 1]));
-    } else {
-      setSelectedIndexes(new Set([0]));
-    }
+    const index = getActiveIndex();
+    const activeIndex = index > -1 ? index : startIndex - 1;
+    const newIndex = activeIndex + 1 < playlist.length ? activeIndex + 1 : 0;
+    setStartIndex(newIndex);
+    setEndIndex(newIndex);
+    setSelectedIndexes(new Set([newIndex]));
   };
   useKeyPress(KEYS.Down, moveDown);
 
@@ -271,7 +271,7 @@ const Playlist = ({
 
   const removeItems = () => {
     setClipboard(getSelectedItems());
-    if (selectedIndexes.size > 1) {
+    if (selectedIndexes.size > 0) {
       dispatch(removeIndexesFromPlaylist(getSelectedIndexes()));
     } else if (startIndex < playlist.length) {
       dispatch(removeIndexesFromPlaylist([startIndex]));
