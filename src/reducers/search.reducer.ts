@@ -149,6 +149,7 @@ const search = (state = initialState, action: SearchAction) => {
       };
     }
     default:
+      action satisfies never;
       return state;
   }
 };

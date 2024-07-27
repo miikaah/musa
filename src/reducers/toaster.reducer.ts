@@ -43,6 +43,7 @@ const toaster = (state = initialState, action: ToasterAction) => {
       };
     }
     default:
+      action satisfies never;
       return state;
   }
 };

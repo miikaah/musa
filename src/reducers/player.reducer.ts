@@ -283,6 +283,7 @@ const player = (state = initialState, action: PlayerAction) => {
       };
     }
     default:
+      action satisfies never;
       return state;
   }
 };

@@ -72,6 +72,7 @@ const library = (state = initialState, action: LibraryAction) => {
       };
     }
     default:
+      action satisfies never;
       return state;
   }
 };
