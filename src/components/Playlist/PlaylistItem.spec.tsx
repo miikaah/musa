@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import PlaylistItem, { playlistItemContextMenuButton } from "./PlaylistItem";
+import PlaylistItem, { playlistItemContextMenuButtonId } from "./PlaylistItem";
 import { audioFixture } from "../../fixtures/audio.fixture";
 import { albumFixture } from "../../fixtures/album.fixture";
 import { render } from "../../../test/render";
@@ -48,11 +48,10 @@ const renderComponent = (state: any, options?: any) => {
       item={audioFixture}
       index={0}
       isSelected={false}
-      isMovingItems={false}
       onScrollPlaylist={vi.fn()}
       onContextMenu={vi.fn()}
       onDoubleClick={vi.fn()}
-      removeItems={options?.mockRemoveItems ?? vi.fn()}
+      onRemoveItems={options?.mockRemoveItems ?? vi.fn()}
     />,
     state,
   );
@@ -65,7 +64,7 @@ describe("PlaylistItem", () => {
     expect(screen.getByAltText("Album image")).toBeInTheDocument();
     expect(screen.getByText(title)).toBeInTheDocument();
     expect(
-      screen.getByTestId(`${playlistItemContextMenuButton}-0`),
+      screen.getByTestId(`${playlistItemContextMenuButtonId}-0`),
     ).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButton")).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButtonIcon")).toHaveClass(

@@ -10,7 +10,8 @@ import { ellipsisTextOverflow } from "../../common.styles";
 import AlbumImage from "../AlbumImage";
 import { breakpoints } from "../../breakpoints";
 
-export const playlistItemContextMenuButton = "PlaylistItemContextMenuButton";
+export const playlistItemContextMenuButtonId =
+  "playlistItemContextMenuButtonId";
 
 export const playlistItemMaxHeight = 60;
 
@@ -42,7 +43,6 @@ const colorCss = css`
 
 const PlaylistItemContainer = styled.li<{
   isSelected: boolean;
-  isMovingItems: boolean;
 }>`
   cursor: pointer;
   display: flex;
@@ -188,31 +188,27 @@ export type PlaylistItemOptions = {
 };
 
 type PlaylistItemProps = {
-  currentItem: PlayerState["currentItem"];
   currentIndex: PlayerState["currentIndex"];
   isPlaying: PlayerState["isPlaying"];
   item: AudioWithMetadata;
   index: number;
   isSelected: boolean;
-  isMovingItems: boolean;
   onDoubleClick: () => void;
   onContextMenu: (options: PlaylistItemOptions) => void;
   onScrollPlaylist: () => void;
-  removeItems: () => void;
+  onRemoveItems: () => void;
 };
 
 const PlaylistItem = ({
-  currentItem,
   currentIndex,
   isPlaying,
   item,
   index,
   isSelected,
-  isMovingItems,
   onDoubleClick,
   onContextMenu,
   onScrollPlaylist,
-  removeItems,
+  onRemoveItems,
 }: PlaylistItemProps) => {
   const [lastTouchTime, setLastTouchTime] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoints.md);
@@ -230,14 +226,6 @@ const PlaylistItem = ({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const isIndexCurrentIndex = () => {
-    return index === currentIndex;
-  };
-
-  const hasEqualItemAndCurrentItem = () => {
-    return isEqual(item, currentItem);
-  };
 
   const handleContextMenu = (
     event: React.MouseEvent<HTMLLIElement | HTMLButtonElement>,
@@ -262,7 +250,9 @@ const PlaylistItem = ({
   };
 
   const renderPlayOrPauseIcon = () => {
-    if (!isIndexCurrentIndex() || !hasEqualItemAndCurrentItem()) return;
+    if (index !== currentIndex) {
+      return;
+    }
     return isPlaying ? (
       <FontAwesomeIcon icon="play" data-testid="PlaylistItemPlayIcon" />
     ) : (
@@ -271,10 +261,9 @@ const PlaylistItem = ({
   };
 
   useEffect(() => {
-    if (!isIndexCurrentIndex() || !playlistItemRef.current) {
+    if (index !== currentIndex || !playlistItemRef.current) {
       return;
     }
-
     const elRect = playlistItemRef.current.getBoundingClientRect();
     if (elRect.bottom > window.innerHeight - 1) {
       playlistItemRef.current.scrollIntoView(false); // Scrolls to correct song
@@ -293,7 +282,6 @@ const PlaylistItem = ({
     <PlaylistItemContainer
       ref={playlistItemRef}
       isSelected={isSelected}
-      isMovingItems={isMovingItems}
       onDoubleClick={onDoubleClick}
       onContextMenu={handleContextMenu}
       onTouchEnd={handleTouchEnd}
@@ -308,8 +296,8 @@ const PlaylistItem = ({
           <Title>{title}</Title>
           {!isMobile && (
             <ContextMenuButton
-              id={`${playlistItemContextMenuButton}-${index}`}
-              data-testid={`${playlistItemContextMenuButton}-${index}`}
+              id={`${playlistItemContextMenuButtonId}-${index}`}
+              data-testid={`${playlistItemContextMenuButtonId}-${index}`}
               onClick={handleContextMenu}
             >
               <div />
@@ -320,7 +308,7 @@ const PlaylistItem = ({
           )}
           <div />
           <DeleteButton
-            onClick={removeItems}
+            onClick={onRemoveItems}
             data-testid="PlaylistItemDeleteButton"
           >
             <FontAwesomeIcon
@@ -346,8 +334,25 @@ const PlaylistItem = ({
   );
 };
 
+const MemoizedPlaylistItem = React.memo(
+  PlaylistItem,
+  (prevProps, nextProps) => {
+    return isEqual(
+      {
+        currentIndex: prevProps.currentIndex,
+        isPlaying: prevProps.isPlaying,
+        isSelected: prevProps.isSelected,
+      },
+      {
+        currentIndex: nextProps.currentIndex,
+        isPlaying: nextProps.isPlaying,
+        isSelected: nextProps.isSelected,
+      },
+    );
+  },
+);
+
 export default connect((state: { player: PlayerState }) => ({
-  currentItem: state.player.currentItem,
   currentIndex: state.player.currentIndex,
   isPlaying: state.player.isPlaying,
-}))(PlaylistItem);
+}))(MemoizedPlaylistItem);

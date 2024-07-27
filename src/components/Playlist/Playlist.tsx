@@ -20,7 +20,7 @@ import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import PlaylistItem, {
   PlaylistItemOptions,
-  playlistItemContextMenuButton,
+  playlistItemContextMenuButtonId,
   playlistItemMaxHeight,
 } from "./PlaylistItem";
 import ContextMenu, {
@@ -394,7 +394,7 @@ const Playlist = ({
     const newIndex = isClearSelectionClick
       ? -1
       : resolvePlaylistItemIndex(event.clientY);
-    const id = `${playlistItemContextMenuButton}-${newIndex}`;
+    const id = `${playlistItemContextMenuButtonId}-${newIndex}`;
     const target = event.target as HTMLElement;
     const isContextMenuButtonClick =
       target?.id === id || target.parentElement?.id === id;
@@ -814,11 +814,10 @@ const Playlist = ({
               item={item}
               index={index}
               isSelected={selectedIndexes.has(index)}
-              isMovingItems={isMovingItems}
               onDoubleClick={playOrReplay}
               onContextMenu={onContextMenu}
               onScrollPlaylist={scroll}
-              removeItems={removeItems}
+              onRemoveItems={removeItems}
             />
           ),
       )}
