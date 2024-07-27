@@ -15,14 +15,6 @@ jpeg, png and webp images.
 
 ### V4
 
-#### Playlist
-
-- feat: Allow in-bound-to-out-bound select with pointer
-
-#### Normalization
-
-- feat: Add normalization GUI
-
 #### Tagging
 
 - feat: Bulk album tags editor

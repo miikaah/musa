@@ -579,7 +579,17 @@ const Playlist = ({
     }
 
     // Must come after multiselect check
-    if (options.index < 0 && selectedIndexes.size < playlist.length) {
+    const isPointerStartYUnderBound =
+      pointerStartY && pointerStartY < playlistRowsStartY;
+    const isPointerStartYOverBound =
+      pointerStartY &&
+      pointerStartY >
+        playlistRowsStartY + playlistItemMaxHeight * playlist.length;
+    if (
+      options.index < 0 &&
+      selectedIndexes.size < playlist.length &&
+      (isPointerStartYUnderBound || isPointerStartYOverBound)
+    ) {
       clearSelection();
       return;
     }
@@ -620,20 +630,20 @@ const Playlist = ({
         : options.index,
     );
 
+    const isPointerStartYUnderBound =
+      pointerStartY && pointerStartY < playlistRowsStartY;
     const isPointerStartYOverBound =
       pointerStartY &&
       pointerStartY >
         playlistRowsStartY + playlistItemMaxHeight * playlist.length;
-    const isPointerStartYUnderBound =
-      pointerStartY && pointerStartY < playlistRowsStartY;
+    const isClientYUnderBound = options.clientY < playlistRowsStartY + 10;
     const isClientYOverBound =
       options.clientY >
       playlistRowsStartY + playlistItemMaxHeight * playlist.length - 10;
-    const isClientYUnderBound = options.clientY < playlistRowsStartY + 10;
 
     if (
-      (isClientYOverBound && isPointerStartYOverBound) ||
-      (isClientYUnderBound && isPointerStartYUnderBound)
+      (isClientYUnderBound && isPointerStartYUnderBound) ||
+      (isClientYOverBound && isPointerStartYOverBound)
     ) {
       setSelectedIndexes(new Set());
     } else if (options.index > -1) {
