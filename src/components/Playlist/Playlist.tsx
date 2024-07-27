@@ -271,7 +271,11 @@ const Playlist = ({
 
   const removeItems = () => {
     setClipboard(getSelectedItems());
-    dispatch(removeIndexesFromPlaylist(getSelectedIndexes()));
+    if (selectedIndexes.size > 1) {
+      dispatch(removeIndexesFromPlaylist(getSelectedIndexes()));
+    } else if (startIndex < playlist.length) {
+      dispatch(removeIndexesFromPlaylist([startIndex]));
+    }
     setSelectedIndexes(new Set());
   };
   useKeyPress(KEYS.Backspace, removeItems);
