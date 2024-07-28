@@ -10,7 +10,6 @@ import {
   playIndex,
   replay,
   PlayerState,
-  pasteToPlaylistHead,
 } from "../../reducers/player.reducer";
 import { isCtrlDown } from "../../util";
 import { KEYS } from "../../config";
@@ -568,12 +567,10 @@ const Playlist = ({
       removeItems();
       dispatch(
         // The playlist head index is 0 => -1
-        insertIndex === -1
-          ? pasteToPlaylistHead(selectedItems)
-          : // and playlist tail is conveniently out of bounds -1 => -2
-            insertIndex === -2
-            ? pasteToPlaylist(selectedItems, playlist.length - 1)
-            : pasteToPlaylist(selectedItems, insertIndex),
+        // and playlist tail is conveniently out of bounds -1 => -2
+        insertIndex === -2
+          ? pasteToPlaylist(selectedItems, playlist.length - 1)
+          : pasteToPlaylist(selectedItems, insertIndex),
       );
       clearSelection();
 

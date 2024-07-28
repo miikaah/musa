@@ -52,15 +52,6 @@ export const pasteToPlaylist = (
   index,
 });
 
-export const PASTE_TO_PLAYLIST_HEAD =
-  "MUSA/PLAYER/PASTE_TO_PLAYLIST_HEAD" as const;
-export const pasteToPlaylistHead = (
-  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
-) => ({
-  type: PASTE_TO_PLAYLIST_HEAD,
-  items,
-});
-
 export const REMOVE_INDEXES_FROM_PLAYLIST =
   "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST" as const;
 export const removeIndexesFromPlaylist = (indexes: number[]) => ({
@@ -115,7 +106,6 @@ type PlayerAction =
   | ReturnType<typeof pause>
   | ReturnType<typeof addToPlaylist>
   | ReturnType<typeof pasteToPlaylist>
-  | ReturnType<typeof pasteToPlaylistHead>
   | ReturnType<typeof removeIndexesFromPlaylist>
   | ReturnType<typeof emptyPlaylist>
   | ReturnType<typeof setCoverData>;
@@ -214,8 +204,26 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
         items: [...state.items, toItemWithId(action.item)] as any,
       };
     case PASTE_TO_PLAYLIST: {
-      // The action doesn't have index set so append items to the end of the playlist
-      if (!action.index && action.index !== 0) {
+      // prepend
+      if (action.index === -1) {
+        // TODO: Remove any
+        const curItemIndex = action.items.findIndex(
+          (it) => it.id === state.currentItem?.id,
+        );
+        const newItems = [
+          ...action.items.map(toItemWithId),
+          ...state.items,
+        ] as any;
+        const newIndex =
+          curItemIndex > -1
+            ? curItemIndex
+            : state.currentIndex + action.items.length;
+        newItems[newIndex] = state.currentItem;
+
+        return getStateByPlaylistChange(state, newItems, newIndex);
+      }
+      // append: only use this to append items without the current item
+      if (action.index === undefined) {
         // TODO: Remove any
         const newItems = [
           ...state.items,
@@ -224,11 +232,14 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
 
         return getStateByPlaylistChange(state, newItems, state.currentIndex);
       }
-
+      // interpend
       const playlistStart = state.items.slice(0, action.index + 1);
       const playlistEnd = state.items.slice(
         action.index + 1,
         state.items.length,
+      );
+      const curItemIndex = action.items.findIndex(
+        (it) => it.id === state.currentItem?.id,
       );
       // TODO: Remove any
       const newItems = [
@@ -237,37 +248,26 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
         ...playlistEnd,
       ] as any;
 
-      // Try to find the index by currentItem.
-      let newIndex =
-        action.index < state.currentIndex
-          ? action.items.length + state.currentIndex
-          : state.currentIndex;
-      // If the index is -1 playback has not yet begun or it's out of sync.
-      // TODO: Remove any
-      if (newIndex < 0) {
-        newIndex = newItems.findIndex(
-          (item: any) => item === state.currentItem,
-        );
+      let newIndex = state.currentIndex;
+      if (curItemIndex > -1) {
+        const isCurrentItemInPlaylist =
+          newItems.findIndex((it: any) => it.id === state.currentItem?.id) > -1;
+
+        if (!isCurrentItemInPlaylist) {
+          newIndex =
+            curItemIndex > -1
+              ? playlistStart.length - 1 + curItemIndex + 1
+              : state.currentIndex;
+          newItems[newIndex] = state.currentItem;
+        }
+      } else {
+        newIndex =
+          action.index < state.currentIndex
+            ? action.items.length + state.currentIndex
+            : state.currentIndex;
       }
 
       return getStateByPlaylistChange(state, newItems, newIndex);
-    }
-    case PASTE_TO_PLAYLIST_HEAD: {
-      // TODO: Remove any
-      const newItems = [
-        ...action.items.map(toItemWithId),
-        ...state.items,
-      ] as any;
-      // TODO: Remove any
-      const newIndex = newItems.findIndex(
-        (item: any) => item === state.currentItem,
-      );
-
-      return getStateByPlaylistChange(
-        state,
-        newItems,
-        newIndex > -1 ? newIndex : 0,
-      );
     }
     case REMOVE_INDEXES_FROM_PLAYLIST: {
       const newItems = state.items.filter(
@@ -335,11 +335,10 @@ function toItemWithId(item: any) {
 
 function genId() {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let result = "";
-  const charactersLength = characters.length;
 
+  let result = "";
   for (let i = 0; i < 5; i++) {
-    const randomIndex = Math.floor(Math.random() * charactersLength);
+    const randomIndex = Math.floor(Math.random() * characters.length);
     result += characters.charAt(randomIndex);
   }
 
