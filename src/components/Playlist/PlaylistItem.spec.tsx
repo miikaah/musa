@@ -46,7 +46,6 @@ const renderComponent = (state: any, options?: any) => {
   render(
     <PlaylistItem
       item={audioFixture}
-      index={0}
       isSelected={false}
       onScrollPlaylist={vi.fn()}
       onContextMenu={vi.fn()}
@@ -64,7 +63,7 @@ describe("PlaylistItem", () => {
     expect(screen.getByAltText("Album image")).toBeInTheDocument();
     expect(screen.getByText(title)).toBeInTheDocument();
     expect(
-      screen.getByTestId(`${playlistItemContextMenuButtonId}-0`),
+      screen.getByTestId(playlistItemContextMenuButtonId),
     ).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButton")).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButtonIcon")).toHaveClass(
@@ -74,18 +73,6 @@ describe("PlaylistItem", () => {
     expect(screen.getByText(artist)).toBeInTheDocument();
     expect(screen.getByText(track)).toBeInTheDocument();
     expect(screen.getByText(duration)).toBeInTheDocument();
-  });
-
-  it("renders play icon when isPlaying", async () => {
-    renderComponent(state2);
-
-    expect(screen.getByTestId("PlaylistItemPlayIcon")).toHaveClass("fa-play");
-  });
-
-  it("renders pause icon when not isPlaying", async () => {
-    renderComponent(state);
-
-    expect(screen.getByTestId("PlaylistItemPauseIcon")).toHaveClass("fa-pause");
   });
 
   it("calls removeItems on remove button click", async () => {

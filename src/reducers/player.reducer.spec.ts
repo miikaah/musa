@@ -146,7 +146,10 @@ describe("Player reducer", () => {
         ),
       ).toEqual({
         ...initialState,
-        items: [playlist[0], playlist[1]],
+        items: [playlist[0], playlist[1]].map((it) => ({
+          ...it,
+          id: expect.any(String),
+        })),
       });
     });
   });
@@ -160,7 +163,10 @@ describe("Player reducer", () => {
         ),
       ).toEqual({
         ...initialState,
-        items: [playlist[0], playlist[1], playlist[2]],
+        items: [playlist[0], playlist[1], playlist[2]].map((it) => ({
+          ...it,
+          id: expect.any(String),
+        })),
       });
     });
 
@@ -172,7 +178,10 @@ describe("Player reducer", () => {
         ),
       ).toEqual({
         ...initialState,
-        items: [playlist[0], playlist[2], playlist[1]],
+        items: [playlist[0], playlist[2], playlist[1]].map((it) => ({
+          ...it,
+          id: expect.any(String),
+        })),
       });
     });
 
@@ -188,7 +197,10 @@ describe("Player reducer", () => {
         ),
       ).toEqual({
         ...initialState,
-        items: [playlist[0], playlist[2], playlist[1]],
+        items: [playlist[0], playlist[2], playlist[1]].map((it) => ({
+          ...it,
+          id: expect.any(String),
+        })),
         currentIndex: 2,
       });
     });

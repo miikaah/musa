@@ -56,6 +56,7 @@ const state = {
     items: artistFixture.albums[0].files,
     currenItem: artistFixture.albums[0].files[0],
     currentIndex: 0,
+    isPlaying: true,
   },
   settings: { t },
 };
@@ -65,6 +66,7 @@ const state2 = {
     items: [],
     currenItem: undefined,
     currentIndex: 0,
+    isPlaying: false,
   },
   settings: { t },
 };
@@ -122,6 +124,24 @@ describe("Playlist", () => {
     expect(screen.getByText(touchControlsText)).toBeInTheDocument();
     expect(screen.getByText(doubleTapText)).toBeInTheDocument();
     expect(screen.getByText(addFromLibraryText)).toBeInTheDocument();
+  });
+
+  it("renders play icon when isPlaying", async () => {
+    render(<Playlist toggleModal={vi.fn()} />, state);
+
+    expect(screen.getByTestId("PlaylistItemPlayIcon")).toHaveClass("fa-play");
+  });
+
+  it("renders pause icon when not isPlaying", async () => {
+    render(<Playlist toggleModal={vi.fn()} />, {
+      ...state,
+      player: {
+        ...state.player,
+        isPlaying: false,
+      },
+    });
+
+    expect(screen.getByTestId("PlaylistItemPauseIcon")).toHaveClass("fa-pause");
   });
 
   it("dispatches remove items action during select all", async () => {
