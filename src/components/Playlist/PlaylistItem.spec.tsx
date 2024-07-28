@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import PlaylistItem, { playlistItemContextMenuButtonId } from "./PlaylistItem";
+import PlaylistItem, { playlistItemContextMenuClassName } from "./PlaylistItem";
 import { audioFixture } from "../../fixtures/audio.fixture";
 import { albumFixture } from "../../fixtures/album.fixture";
 import { render } from "../../../test/render";
@@ -63,7 +63,7 @@ describe("PlaylistItem", () => {
     expect(screen.getByAltText("Album image")).toBeInTheDocument();
     expect(screen.getByText(title)).toBeInTheDocument();
     expect(
-      screen.getByTestId(playlistItemContextMenuButtonId),
+      screen.getByTestId(playlistItemContextMenuClassName),
     ).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButton")).toBeInTheDocument();
     expect(screen.getByTestId("PlaylistItemDeleteButtonIcon")).toHaveClass(

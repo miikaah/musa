@@ -8,8 +8,8 @@ import { ellipsisTextOverflow } from "../../common.styles";
 import AlbumImage from "../AlbumImage";
 import { breakpoints } from "../../breakpoints";
 
-export const playlistItemContextMenuButtonId =
-  "playlistItemContextMenuButtonId";
+export const playlistItemContextMenuClassName =
+  "playlistItemContextMenuClassName";
 
 export const playlistItemMaxHeight = 60;
 
@@ -260,8 +260,8 @@ const PlaylistItem = ({
           <Title>{title}</Title>
           {!isMobile && (
             <ContextMenuButton
-              id={playlistItemContextMenuButtonId}
-              data-testid={playlistItemContextMenuButtonId}
+              className={playlistItemContextMenuClassName}
+              data-testid={playlistItemContextMenuClassName}
               onClick={handleContextMenu}
             >
               <div />

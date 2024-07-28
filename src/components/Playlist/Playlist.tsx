@@ -20,7 +20,7 @@ import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import PlaylistItem, {
   PlaylistItemOptions,
-  playlistItemContextMenuButtonId,
+  playlistItemContextMenuClassName,
   playlistItemMaxHeight,
 } from "./PlaylistItem";
 import ContextMenu, {
@@ -426,10 +426,12 @@ const Playlist = ({
     const newIndex = isClearSelectionClick
       ? -1
       : resolvePlaylistItemIndex(event.clientY);
-    const id = `${playlistItemContextMenuButtonId}-${newIndex}`;
+    const id = playlistItemContextMenuClassName;
     const target = event.target as HTMLElement;
     const isContextMenuButtonClick =
-      target?.id === id || target.parentElement?.id === id;
+      target?.className.includes(id) ||
+      target.parentElement?.className.includes(id) ||
+      false;
 
     return {
       index: newIndex,
@@ -519,7 +521,6 @@ const Playlist = ({
     setPointerStartY(null);
     setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
-    setContextMenuCoordinates(null);
     setActiveIndex(options.index);
 
     if (options.isContextMenuItemClick) {
@@ -528,6 +529,7 @@ const Playlist = ({
     if (options.isContextMenuButtonClick) {
       return;
     }
+    setContextMenuCoordinates(null);
 
     if (options.isShiftDown) {
       const startIdx = Math.min(startIndex, options.index);
@@ -719,7 +721,6 @@ const Playlist = ({
 
   const handleOpenEditor = (mode: EditorMode) => {
     const files = getSelectedItems();
-    const activeIndex = getActiveIndex();
     const filesIndex =
       mode === "metadata"
         ? files.findIndex((file) => file === playlist[activeIndex])
