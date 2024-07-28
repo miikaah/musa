@@ -204,6 +204,7 @@ const Playlist = ({
   const [pointerStartY, setPointerStartY] = useState<number | null>(null);
   const [startIndex, setStartIndex] = useState(NaN);
   const [endIndex, setEndIndex] = useState(NaN);
+  const [activeIndex, setActiveIndex] = useState(NaN);
   const [selectedIndexes, setSelectedIndexes] = useState<Set<number>>(
     new Set(),
   );
@@ -261,25 +262,28 @@ const Playlist = ({
   };
   useKeyPress(KEYS.a, selectAll);
 
+  const resolveIndexes = (event: KeyboardEvent, newIndex: number) => {
+    if (event.shiftKey) {
+      setSelectedIndexes(new Set([newIndex, ...getSelectedIndexes()]));
+    } else {
+      setSelectedIndexes(new Set([newIndex]));
+    }
+    setActiveIndex(newIndex);
+    setStartIndex(getSelectedIndexes()[0]);
+    setEndIndex(getSelectedIndexes().pop()!);
+  };
+
   const moveUp = (event: KeyboardEvent) => {
     event.preventDefault();
-    const index = getActiveIndex();
-    const activeIndex = index > -1 ? index : startIndex;
     const newIndex = activeIndex > 0 ? activeIndex - 1 : playlist.length - 1;
-    setStartIndex(newIndex);
-    setEndIndex(newIndex);
-    setSelectedIndexes(new Set([newIndex]));
+    resolveIndexes(event, newIndex);
   };
   useKeyPress(KEYS.Up, moveUp);
 
   const moveDown = (event: KeyboardEvent) => {
     event.preventDefault();
-    const index = getActiveIndex();
-    const activeIndex = index > -1 ? index : startIndex - 1;
     const newIndex = activeIndex + 1 < playlist.length ? activeIndex + 1 : 0;
-    setStartIndex(newIndex);
-    setEndIndex(newIndex);
-    setSelectedIndexes(new Set([newIndex]));
+    resolveIndexes(event, newIndex);
   };
   useKeyPress(KEYS.Down, moveDown);
 
@@ -442,6 +446,7 @@ const Playlist = ({
     setIsMouseDown(false);
     setStartIndex(NaN);
     setEndIndex(NaN);
+    setActiveIndex(-1);
     setSelectedIndexes(new Set());
     setIsMovingItems(false);
   };
@@ -453,6 +458,7 @@ const Playlist = ({
     setIsMouseDown(true);
     setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
+    setActiveIndex(options.index);
 
     if (options.isContextMenuItemClick) {
       return;
@@ -514,6 +520,7 @@ const Playlist = ({
     setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
     setContextMenuCoordinates(null);
+    setActiveIndex(options.index);
 
     if (options.isContextMenuItemClick) {
       return;
@@ -588,6 +595,7 @@ const Playlist = ({
       setStartIndex(arr[0]);
       setEndIndex(arr[arr.length - 1]);
       setSelectedIndexes(newSelectedIndexes);
+      setActiveIndex(arr[arr.length - 1]);
       return;
     }
 
