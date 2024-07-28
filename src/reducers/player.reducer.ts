@@ -217,7 +217,9 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
         const newIndex =
           curItemIndex > -1
             ? curItemIndex
-            : state.currentIndex + action.items.length;
+            : state.currentIndex > -1
+              ? state.currentIndex + action.items.length
+              : -1;
         newItems[newIndex] = state.currentItem;
 
         return getStateByPlaylistChange(state, newItems, newIndex);
