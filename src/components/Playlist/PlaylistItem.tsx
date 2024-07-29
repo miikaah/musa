@@ -218,6 +218,7 @@ const PlaylistItem = ({
   const handleContextMenu = (
     event: React.MouseEvent<HTMLLIElement | HTMLButtonElement>,
   ) => {
+    event.preventDefault();
     event.stopPropagation();
     onContextMenu({
       clientX: event.clientX,
