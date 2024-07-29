@@ -728,7 +728,7 @@ const Playlist = ({
     const files = getSelectedItems();
     const filesIndex =
       mode === "metadata"
-        ? files.findIndex((file) => file === playlist[startIndex])
+        ? files.findIndex((file) => file === playlist[getActiveIndex()])
         : -1;
 
     toggleModal(mode, filesIndex, files);
