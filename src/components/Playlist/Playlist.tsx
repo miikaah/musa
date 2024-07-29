@@ -464,9 +464,12 @@ const Playlist = ({
     const options = resolveMouseOptions(event);
     setPointerStartX(event.clientX);
     setPointerStartY(event.clientY);
-    setIsMouseDown(true);
     setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
+
+    if (!options.isRightClick) {
+      setIsMouseDown(true);
+    }
 
     if (options.isContextMenuItemClick) {
       return;
