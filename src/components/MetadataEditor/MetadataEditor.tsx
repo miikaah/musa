@@ -73,32 +73,52 @@ const Wrapper = styled.div`
 `;
 
 const StyledActionsContainer = styled(ActionsContainer)`
-  > button:first-of-type,
-  > button:last-of-type {
-    padding: 0;
-    max-width: 120px;
-    margin-top: 16px;
-    font-weight: normal;
+  > div {
+    > button:nth-of-type(1),
+    > button:nth-of-type(2) {
+      max-width: 120px;
+      margin: 0 10px 10px 0;
+      font-weight: normal;
+    }
   }
 `;
 
 const SaveButton = styled(Button)`
-  align-self: flex-end;
-  max-width: 170px !important;
-  margin-top: 10px;
+  min-width: 170px !important;
+  margin-bottom: 10px;
+`;
+
+const AllDetails = styled.div`
+  color: black;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+
+  > span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  > span:first-of-type {
+    min-width: 140px;
+  }
 `;
 
 const getFieldValuesString = (fieldValues: (string | number)[]) =>
-  `${fieldValues.length > 1 ? `(${fieldValues.length})` : ""} ${fieldValues.join(";")}`;
+  `${fieldValues.length > 1 ? `(${fieldValues.length}) ` : ""}${fieldValues.join(";")}`;
 
 const resolveNumberOfMultiField = (
+  combine: boolean,
   files: AudioWithMetadata[],
   index: number,
   fieldName: "track" | "disk",
   type: "no" | "of",
 ) => {
   const metadata = files[index].metadata;
-  if (files.length === 1) {
+  if (!combine || files.length === 1) {
     return metadata[fieldName]?.[type] ?? "";
   }
   const fieldValues = Array.from(
@@ -110,12 +130,13 @@ const resolveNumberOfMultiField = (
 };
 
 const resolveArrayMultiField = (
+  combine: boolean,
   files: AudioWithMetadata[],
   index: number,
   fieldName: "genre" | "composer" | "comment",
 ) => {
   const metadata = files[index].metadata;
-  if (files.length === 1) {
+  if (!combine || files.length === 1) {
     return (metadata[fieldName] ?? []).join(", ");
   }
   const fieldValues = Array.from(
@@ -127,12 +148,13 @@ const resolveArrayMultiField = (
 };
 
 const resolveMultiField = (
+  combine: boolean,
   files: AudioWithMetadata[],
   index: number,
   fieldName: "artist" | "title" | "album" | "year",
 ) => {
   const metadata = files[index].metadata;
-  if (files.length === 1) {
+  if (!combine || files.length === 1) {
     return metadata[fieldName]?.toString() ?? "";
   }
   const fieldValues = Array.from(
@@ -165,6 +187,7 @@ const MetadataEditor = ({
   const [comment, setComment] = useState<string>();
   const [isUpdating, setIsUpdating] = useState(false);
   const [index, setIndex] = useState<number>(activeIndex);
+  const [combine, setCombine] = useState(files.length > 1);
   const dispatch = useDispatch();
 
   const saveTags = async (
@@ -242,7 +265,7 @@ const MetadataEditor = ({
 
   return (
     <Container>
-      {files.slice(index, index + 1).map((file, idx) => {
+      {files.slice(index, index + 1).map((file) => {
         const isDisabled =
           !(file?.metadata?.codec || "").toLowerCase().startsWith("mpeg") &&
           !(file?.metadata?.codec || "").toLowerCase().startsWith("flac");
@@ -252,61 +275,90 @@ const MetadataEditor = ({
             <Wrapper>
               <span>{t("modal.metadata.tag.artist")}</span>
               <EditorInput
-                field={resolveMultiField(files, idx, "artist")}
+                field={resolveMultiField(combine, files, index, "artist")}
                 updateValue={setArtist}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.title")}</span>
               <EditorInput
-                field={resolveMultiField(files, idx, "title")}
+                field={resolveMultiField(combine, files, index, "title")}
                 updateValue={setTitle}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.album")}</span>
               <EditorInput
-                field={resolveMultiField(files, idx, "album")}
+                field={resolveMultiField(combine, files, index, "album")}
                 updateValue={setAlbum}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.year")}</span>
               <EditorInput
-                field={resolveMultiField(files, idx, "year")}
+                field={resolveMultiField(combine, files, index, "year")}
                 updateValue={setYear}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.track")}</span>
               <EditorInput
-                field={resolveNumberOfMultiField(files, idx, "track", "no")}
+                field={resolveNumberOfMultiField(
+                  combine,
+                  files,
+                  index,
+                  "track",
+                  "no",
+                )}
                 updateValue={setTrack}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.tracks")}</span>
               <EditorInput
-                field={resolveNumberOfMultiField(files, idx, "track", "of")}
+                field={resolveNumberOfMultiField(
+                  combine,
+                  files,
+                  index,
+                  "track",
+                  "of",
+                )}
                 updateValue={setTracks}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.disk")}</span>
               <EditorInput
-                field={resolveNumberOfMultiField(files, idx, "disk", "no")}
+                field={resolveNumberOfMultiField(
+                  combine,
+                  files,
+                  index,
+                  "disk",
+                  "no",
+                )}
                 updateValue={setDisk}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.disks")}</span>
               <EditorInput
-                field={resolveNumberOfMultiField(files, idx, "disk", "of")}
+                field={resolveNumberOfMultiField(
+                  combine,
+                  files,
+                  index,
+                  "disk",
+                  "of",
+                )}
                 updateValue={setDisks}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.genre")}</span>
               <EditorInput
-                field={resolveArrayMultiField(files, idx, "genre")}
+                field={resolveArrayMultiField(combine, files, index, "genre")}
                 updateValue={setGenre}
                 isDisabled={isDisabled}
               />
               <span>{t("modal.metadata.tag.composer")}</span>
               <EditorInput
-                field={resolveArrayMultiField(files, idx, "composer")}
+                field={resolveArrayMultiField(
+                  combine,
+                  files,
+                  index,
+                  "composer",
+                )}
                 updateValue={setComposer}
                 isDisabled={isDisabled}
               />
@@ -314,35 +366,57 @@ const MetadataEditor = ({
               <EditorInput field={getCodecInfo(file)} isDisabled />
               <span>{t("modal.metadata.tag.comment")}</span>
               <EditorTextarea
-                field={resolveArrayMultiField(files, idx, "comment")}
+                field={resolveArrayMultiField(combine, files, index, "comment")}
                 updateValue={setComment}
                 isDisabled={isDisabled}
               />
             </Wrapper>
             <StyledActionsContainer>
-              <Button
-                isSmall
-                isSecondary
-                onClick={previous}
-                disabled={index < 1}
-              >
-                {t("modal.metadata.previousButton")}
-              </Button>
-              <SaveButton
-                onClick={(event: React.MouseEvent) => saveTags(event, file)}
-                isPrimary
-                disabled={files.length > 1 || isUpdating}
-              >
-                {`${t("modal.metadata.saveButton")}${files.length > 1 ? ` (${files.length})` : ""}`}
-              </SaveButton>
-              <Button
-                isSmall
-                isSecondary
-                onClick={next}
-                disabled={index >= files.length - 1}
-              >
-                {t("modal.metadata.nextButton")}
-              </Button>
+              <div></div>
+              <div>
+                <AllDetails>
+                  {/* <span>
+                    <input type="checkbox" id="metadataEditorAllDetails" />
+                    <label htmlFor="metadataEditorAllDetails">
+                      {t("modal.metadata.allDetailsLabel")}
+                    </label>
+                  </span> */}
+                  <span>
+                    <input
+                      type="checkbox"
+                      id="metadataEditorCombine"
+                      checked={combine}
+                      onChange={(event) => setCombine(event.target.checked)}
+                    />
+                    <label htmlFor="metadataEditorCombine">
+                      {t("modal.metadata.combineLabel")}
+                    </label>
+                  </span>
+                </AllDetails>
+                <Button
+                  isSmall
+                  isSecondary
+                  onClick={previous}
+                  disabled={index < 1}
+                >
+                  {t("modal.metadata.previousButton")}
+                </Button>
+                <Button
+                  isSmall
+                  isSecondary
+                  onClick={next}
+                  disabled={index >= files.length - 1}
+                >
+                  {t("modal.metadata.nextButton")}
+                </Button>
+                <SaveButton
+                  onClick={(event: React.MouseEvent) => saveTags(event, file)}
+                  isPrimary
+                  disabled={files.length > 1 || isUpdating}
+                >
+                  {`${t("modal.metadata.saveButton")}${files.length > 1 ? ` (${files.length})` : ""}`}
+                </SaveButton>
+              </div>
             </StyledActionsContainer>
           </div>
         );

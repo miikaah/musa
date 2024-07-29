@@ -26,6 +26,8 @@ export default {
   "modal.metadata.saveButton": "Tallenna",
   "modal.metadata.previousButton": "Edellinen",
   "modal.metadata.nextButton": "Seuraava",
+  "modal.metadata.allDetailsLabel": "Kaikki tiedot",
+  "modal.metadata.combineLabel": "Kokoa",
   "modal.normalization.title": "Normalisaatio",
   "modal.normalization.gain": "Vahvistus",
   "modal.normalization.dynamicRange": "Dynaaminen alue",

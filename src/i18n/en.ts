@@ -26,6 +26,8 @@ export default {
   "modal.metadata.saveButton": "Save",
   "modal.metadata.previousButton": "Previous",
   "modal.metadata.nextButton": "Next",
+  "modal.metadata.allDetailsLabel": "All details",
+  "modal.metadata.combineLabel": "Combine",
   "modal.normalization.title": "Normalization",
   "modal.normalization.gain": "Gain",
   "modal.normalization.dynamicRange": "Dynamic range",

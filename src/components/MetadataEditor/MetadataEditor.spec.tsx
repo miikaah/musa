@@ -106,7 +106,7 @@ describe("MetadataEditor", () => {
     const artistElement = screen.getByDisplayValue(artist);
 
     await userEvent.type(artistElement, " edit");
-    await userEvent.click(screen.getByText(saveButtonText));
+    await userEvent.click(screen.getByText("saveButtonText"));
 
     expect(artistElement).toHaveValue(editedArtist);
     expect(Api.writeTags).toHaveBeenCalledWith(audioFixture.id, {
