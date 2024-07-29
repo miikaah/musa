@@ -467,10 +467,6 @@ const Playlist = ({
     setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
 
-    if (!options.isRightClick) {
-      setIsMouseDown(true);
-    }
-
     if (options.isContextMenuItemClick) {
       return;
     }
@@ -482,6 +478,11 @@ const Playlist = ({
         setSelectedIndexes(new Set([options.index]));
       }
       return;
+    }
+
+    // Must come after context menu checks
+    if (!options.isRightClick) {
+      setIsMouseDown(true);
     }
 
     if (options.isShiftDown || options.isCtrlDown) {
@@ -496,7 +497,7 @@ const Playlist = ({
     }
 
     if (options.isMultiSelect) {
-      if (options.isRightClick) {
+      if (options.isRightClick || contextMenuCoordinates) {
         return;
       }
       const startIdx = Math.min(startIndex, endIndex);
@@ -637,6 +638,7 @@ const Playlist = ({
       clearSelection();
       return;
     }
+    setContextMenuCoordinates(null);
   };
 
   const openContextMenu = (options: PlaylistItemOptions) => {
@@ -648,7 +650,7 @@ const Playlist = ({
   };
 
   const updateEndIndex = (options: PlaylistItemOptions & { index: number }) => {
-    if (!isMouseDown) {
+    if (!isMouseDown || contextMenuCoordinates) {
       return;
     }
     if (isMovingItems) {
