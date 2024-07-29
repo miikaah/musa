@@ -515,7 +515,11 @@ const Playlist = ({
 
     const activeIndex = getActiveIndex();
     const isActiveIndexClick = activeIndex === options.index;
-    if (isActiveIndexClick && startIndex === endIndex) {
+    if (
+      isActiveIndexClick &&
+      startIndex === endIndex &&
+      !options.isRightClick
+    ) {
       setIsMovingItems(true);
       return;
     }
@@ -624,6 +628,10 @@ const Playlist = ({
     }
 
     // Must come after multiselect check
+    if (options.isRightClick) {
+      return;
+    }
+
     const isPointerStartYUnderBound =
       pointerStartY && pointerStartY < playlistRowsStartY;
     const isPointerStartYOverBound =
