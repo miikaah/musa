@@ -456,6 +456,8 @@ const Playlist = ({
     setEndIndex(-1);
     setSelectedIndexes(new Set());
     setIsMovingItems(false);
+    setContextMenuCoordinates(null);
+    setMoveMarkerCoordinates(null);
   };
 
   const onMouseDown = (event: React.MouseEvent<HTMLElement>) => {
@@ -532,18 +534,16 @@ const Playlist = ({
     if (options.isContextMenuButtonClick) {
       return;
     }
-    setContextMenuCoordinates(null);
 
     if (options.isShiftDown) {
       const startIdx = Math.min(startIndex, options.index);
       const endIdx = Math.max(startIndex, options.index);
       const newSelectedIndexes = new Set<number>();
-
       for (let i = startIdx; i <= endIdx; i++) {
         newSelectedIndexes.add(i);
       }
-
       setSelectedIndexes(newSelectedIndexes);
+      setContextMenuCoordinates(null);
       return;
     }
 
@@ -555,10 +555,12 @@ const Playlist = ({
       } else {
         setSelectedIndexes(new Set([...selectedIndexes, options.index]));
       }
+      setContextMenuCoordinates(null);
       return;
     }
 
     if (isMovingItems) {
+      setContextMenuCoordinates(null);
       if (pointerStartX === event.clientX && pointerStartY === event.clientY) {
         // Deselect to one row
         setStartIndex(options.index);
@@ -607,6 +609,7 @@ const Playlist = ({
       if (options.isRightClick) {
         return;
       }
+      setContextMenuCoordinates(null);
       if (startIndex === options.index) {
         // Deselect multiselect to one row
         setStartIndex(options.index);
