@@ -202,9 +202,8 @@ const Playlist = ({
   const [isMovingItems, setIsMovingItems] = useState(false);
   const [pointerStartX, setPointerStartX] = useState<number | null>(null);
   const [pointerStartY, setPointerStartY] = useState<number | null>(null);
-  const [startIndex, setStartIndex] = useState(NaN);
-  const [endIndex, setEndIndex] = useState(NaN);
-  const [activeIndex, setActiveIndex] = useState(NaN);
+  const [startIndex, setStartIndex] = useState(-1);
+  const [endIndex, setEndIndex] = useState(-1);
   const [selectedIndexes, setSelectedIndexes] = useState<Set<number>>(
     new Set(),
   );
@@ -264,25 +263,32 @@ const Playlist = ({
 
   const resolveIndexes = (event: KeyboardEvent, newIndex: number) => {
     if (event.shiftKey) {
-      setSelectedIndexes(new Set([newIndex, ...getSelectedIndexes()]));
+      const startIdx = Math.min(startIndex, newIndex);
+      const endIdx = Math.max(startIndex, newIndex);
+      const newSelectedIndexes = new Set<number>();
+      for (let i = startIdx; i <= endIdx; i++) {
+        newSelectedIndexes.add(i);
+      }
+      setSelectedIndexes(newSelectedIndexes);
+      setEndIndex(newIndex);
+      // Start index is not updated when making a multiselection with keyboard
     } else {
       setSelectedIndexes(new Set([newIndex]));
+      setStartIndex(newIndex);
+      setEndIndex(newIndex);
     }
-    setActiveIndex(newIndex);
-    setStartIndex(getSelectedIndexes()[0]);
-    setEndIndex(getSelectedIndexes().pop()!);
   };
 
   const moveUp = (event: KeyboardEvent) => {
     event.preventDefault();
-    const newIndex = activeIndex > 0 ? activeIndex - 1 : playlist.length - 1;
+    const newIndex = endIndex > 0 ? endIndex - 1 : playlist.length - 1;
     resolveIndexes(event, newIndex);
   };
   useKeyPress(KEYS.Up, moveUp);
 
   const moveDown = (event: KeyboardEvent) => {
     event.preventDefault();
-    const newIndex = activeIndex + 1 < playlist.length ? activeIndex + 1 : 0;
+    const newIndex = endIndex + 1 < playlist.length ? endIndex + 1 : 0;
     resolveIndexes(event, newIndex);
   };
   useKeyPress(KEYS.Down, moveDown);
@@ -446,9 +452,8 @@ const Playlist = ({
 
   const clearSelection = () => {
     setIsMouseDown(false);
-    setStartIndex(NaN);
-    setEndIndex(NaN);
-    setActiveIndex(-1);
+    setStartIndex(-1);
+    setEndIndex(-1);
     setSelectedIndexes(new Set());
     setIsMovingItems(false);
   };
@@ -460,7 +465,6 @@ const Playlist = ({
     setIsMouseDown(true);
     setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
-    setActiveIndex(options.index);
 
     if (options.isContextMenuItemClick) {
       return;
@@ -521,7 +525,6 @@ const Playlist = ({
     setPointerStartY(null);
     setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
-    setActiveIndex(options.index);
 
     if (options.isContextMenuItemClick) {
       return;
@@ -597,7 +600,6 @@ const Playlist = ({
       setStartIndex(arr[0]);
       setEndIndex(arr[arr.length - 1]);
       setSelectedIndexes(newSelectedIndexes);
-      setActiveIndex(arr[arr.length - 1]);
       return;
     }
 
@@ -723,7 +725,7 @@ const Playlist = ({
     const files = getSelectedItems();
     const filesIndex =
       mode === "metadata"
-        ? files.findIndex((file) => file === playlist[activeIndex])
+        ? files.findIndex((file) => file === playlist[startIndex])
         : -1;
 
     toggleModal(mode, filesIndex, files);
