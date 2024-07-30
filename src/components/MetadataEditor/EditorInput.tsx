@@ -3,7 +3,7 @@ import React from "react";
 type EditorInputProps = {
   field: string | number;
   isDisabled: boolean;
-  updateValue?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  updateValue?: (value: string) => void;
 };
 
 const EditorInput = ({ field, isDisabled, updateValue }: EditorInputProps) => {

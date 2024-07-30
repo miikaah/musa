@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React from "react";
 
 type EditorTextareaProps = {
   field: string;
@@ -12,15 +11,13 @@ const EditorTextarea = ({
   isDisabled,
   updateValue,
 }: EditorTextareaProps) => {
-  const [value, setValue] = useState(field || "");
-
-  const update = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    updateValue(event.target.value);
-    setValue(event.target.value);
-  };
-
   return (
-    <textarea value={value} onChange={update} disabled={isDisabled} rows={4} />
+    <textarea
+      value={field}
+      onChange={(event) => updateValue(event.target.value)}
+      disabled={isDisabled}
+      rows={4}
+    />
   );
 };
 

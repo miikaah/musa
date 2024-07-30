@@ -52,6 +52,14 @@ export const pasteToPlaylist = (
   index,
 });
 
+export const UPDATE_MANY_BY_ID = "MUSA/PLAYER/UPDATE_MANY_BY_ID" as const;
+export const updateManyById = (
+  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
+) => ({
+  type: UPDATE_MANY_BY_ID,
+  items,
+});
+
 export const REMOVE_INDEXES_FROM_PLAYLIST =
   "MUSA/PLAYER/REMOVE_INDEXES_FROM_PLAYLIST" as const;
 export const removeIndexesFromPlaylist = (indexes: number[]) => ({
@@ -106,6 +114,7 @@ type PlayerAction =
   | ReturnType<typeof pause>
   | ReturnType<typeof addToPlaylist>
   | ReturnType<typeof pasteToPlaylist>
+  | ReturnType<typeof updateManyById>
   | ReturnType<typeof removeIndexesFromPlaylist>
   | ReturnType<typeof emptyPlaylist>
   | ReturnType<typeof setCoverData>;
@@ -270,6 +279,22 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
       }
 
       return getStateByPlaylistChange(state, newItems, newIndex);
+    }
+    case UPDATE_MANY_BY_ID: {
+      const newItems = [...state.items];
+      for (const item of action.items) {
+        const index = state.items.findIndex((it) => it.id === item.id);
+        if (newItems[index]) {
+          // TODO: Remove any
+          newItems[index] = item as any;
+        }
+      }
+
+      return getStateByPlaylistChange(
+        state,
+        (newItems as any).map(toItemWithId),
+        state.currentIndex,
+      );
     }
     case REMOVE_INDEXES_FROM_PLAYLIST: {
       const newItems = state.items.filter(
