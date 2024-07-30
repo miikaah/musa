@@ -1,16 +1,17 @@
 import { AudioWithMetadata, Tags } from "@miikaah/musa-core";
 import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import EditorInput from "./EditorInput";
 import EditorTextarea from "./EditorTextarea";
 import Button from "../Button";
 import * as Api from "../../apiClient";
-import { dispatchToast } from "../../util";
+import { dispatchToast, formatDuration } from "../../util";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import { ActionsContainer } from "../Modal/ActionsContainer";
 import { getCodecInfo } from "./getCodecInfo";
+import { ellipsisTextOverflow } from "../../common.styles";
 
 const Container = styled.div`
   display: flex;
@@ -20,13 +21,17 @@ const Container = styled.div`
   padding-bottom: 80px;
 `;
 
+const sharedWrapperCss = css`
+  margin: 10px auto 0;
+`;
+
 const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto;
   grid-template-columns: 1fr 9fr;
   font-size: var(--font-size-xs);
-  margin: 10px auto;
   max-width: 600px;
+  ${sharedWrapperCss}
 
   > span {
     align-self: center;
@@ -72,6 +77,43 @@ const Wrapper = styled.div`
   }
 `;
 
+const AllDetailsWrapper = styled.div`
+  color: black;
+  max-width: 96%;
+  padding: 10px 10px 0;
+  height: 55vh;
+  background-color: #f6f6f6;
+  border-radius: 1px;
+  box-shadow:
+    inset 1px 1px 2px rgba(0, 0, 0, 0.1),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.9);
+  overflow: auto;
+  font-size: var(--font-size-xs);
+  display: grid;
+  grid-template-rows: repeat(auto-fill, minmax(24px, 1fr));
+  grid-template-columns: 3fr 17fr;
+  ${sharedWrapperCss}
+
+  > span {
+    padding: 4px 0 0 8px;
+    ${ellipsisTextOverflow}
+  }
+
+  > span:nth-of-type(2n) {
+    font-size: var(--font-size-xxs);
+  }
+
+  > span:nth-of-type(2n + 1),
+  > span:nth-of-type(2n + 2) {
+    background-color: #f6f6f6;
+  }
+
+  > span:nth-of-type(4n + 1),
+  > span:nth-of-type(4n + 2) {
+    background-color: #eee;
+  }
+`;
+
 const StyledActionsContainer = styled(ActionsContainer)`
   > div {
     > button:nth-of-type(1),
@@ -88,23 +130,21 @@ const SaveButton = styled(Button)`
   margin-bottom: 10px;
 `;
 
-const AllDetails = styled.div`
+const DetailsCheckboxWrapper = styled.div`
   color: black;
   margin-bottom: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 10px;
+`;
 
-  > span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+const CheckboxWrapper = styled.div<{ isDisabled?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px 0 0;
 
-  > span:first-of-type {
-    min-width: 140px;
-  }
+  ${({ isDisabled }) => isDisabled && `color: grey;`}
 `;
 
 const getFieldValuesString = (fieldValues: (string | number)[]) =>
@@ -188,6 +228,7 @@ const MetadataEditor = ({
   const [isUpdating, setIsUpdating] = useState(false);
   const [index, setIndex] = useState<number>(activeIndex);
   const [combine, setCombine] = useState(files.length > 1);
+  const [showAllDetails, setShowAllDetails] = useState(false);
   const dispatch = useDispatch();
 
   const saveTags = async (
@@ -269,130 +310,217 @@ const MetadataEditor = ({
         const isDisabled =
           !(file?.metadata?.codec || "").toLowerCase().startsWith("mpeg") &&
           !(file?.metadata?.codec || "").toLowerCase().startsWith("flac");
+        console.log(file);
+        console.log(file.metadata);
 
         return (
           <div key={file.id}>
-            <Wrapper>
-              <span>{t("modal.metadata.tag.artist")}</span>
-              <EditorInput
-                field={resolveMultiField(combine, files, index, "artist")}
-                updateValue={setArtist}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.title")}</span>
-              <EditorInput
-                field={resolveMultiField(combine, files, index, "title")}
-                updateValue={setTitle}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.album")}</span>
-              <EditorInput
-                field={resolveMultiField(combine, files, index, "album")}
-                updateValue={setAlbum}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.year")}</span>
-              <EditorInput
-                field={resolveMultiField(combine, files, index, "year")}
-                updateValue={setYear}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.track")}</span>
-              <EditorInput
-                field={resolveNumberOfMultiField(
-                  combine,
-                  files,
-                  index,
-                  "track",
-                  "no",
-                )}
-                updateValue={setTrack}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.tracks")}</span>
-              <EditorInput
-                field={resolveNumberOfMultiField(
-                  combine,
-                  files,
-                  index,
-                  "track",
-                  "of",
-                )}
-                updateValue={setTracks}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.disk")}</span>
-              <EditorInput
-                field={resolveNumberOfMultiField(
-                  combine,
-                  files,
-                  index,
-                  "disk",
-                  "no",
-                )}
-                updateValue={setDisk}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.disks")}</span>
-              <EditorInput
-                field={resolveNumberOfMultiField(
-                  combine,
-                  files,
-                  index,
-                  "disk",
-                  "of",
-                )}
-                updateValue={setDisks}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.genre")}</span>
-              <EditorInput
-                field={resolveArrayMultiField(combine, files, index, "genre")}
-                updateValue={setGenre}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.composer")}</span>
-              <EditorInput
-                field={resolveArrayMultiField(
-                  combine,
-                  files,
-                  index,
-                  "composer",
-                )}
-                updateValue={setComposer}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.codec")}</span>
-              <EditorInput field={getCodecInfo(file)} isDisabled />
-              <span>{t("modal.metadata.tag.comment")}</span>
-              <EditorTextarea
-                field={resolveArrayMultiField(combine, files, index, "comment")}
-                updateValue={setComment}
-                isDisabled={isDisabled}
-              />
-            </Wrapper>
+            {!showAllDetails ? (
+              <Wrapper>
+                <span>{t("modal.metadata.tag.artist")}</span>
+                <EditorInput
+                  field={resolveMultiField(combine, files, index, "artist")}
+                  updateValue={setArtist}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.title")}</span>
+                <EditorInput
+                  field={resolveMultiField(combine, files, index, "title")}
+                  updateValue={setTitle}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.album")}</span>
+                <EditorInput
+                  field={resolveMultiField(combine, files, index, "album")}
+                  updateValue={setAlbum}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.year")}</span>
+                <EditorInput
+                  field={resolveMultiField(combine, files, index, "year")}
+                  updateValue={setYear}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.track")}</span>
+                <EditorInput
+                  field={resolveNumberOfMultiField(
+                    combine,
+                    files,
+                    index,
+                    "track",
+                    "no",
+                  )}
+                  updateValue={setTrack}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.tracks")}</span>
+                <EditorInput
+                  field={resolveNumberOfMultiField(
+                    combine,
+                    files,
+                    index,
+                    "track",
+                    "of",
+                  )}
+                  updateValue={setTracks}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.disk")}</span>
+                <EditorInput
+                  field={resolveNumberOfMultiField(
+                    combine,
+                    files,
+                    index,
+                    "disk",
+                    "no",
+                  )}
+                  updateValue={setDisk}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.disks")}</span>
+                <EditorInput
+                  field={resolveNumberOfMultiField(
+                    combine,
+                    files,
+                    index,
+                    "disk",
+                    "of",
+                  )}
+                  updateValue={setDisks}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.genre")}</span>
+                <EditorInput
+                  field={resolveArrayMultiField(combine, files, index, "genre")}
+                  updateValue={setGenre}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.composer")}</span>
+                <EditorInput
+                  field={resolveArrayMultiField(
+                    combine,
+                    files,
+                    index,
+                    "composer",
+                  )}
+                  updateValue={setComposer}
+                  isDisabled={isDisabled}
+                />
+                <span>{t("modal.metadata.tag.codec")}</span>
+                <EditorInput
+                  field={getCodecInfo(file).toLowerCase()}
+                  isDisabled
+                />
+                <span>{t("modal.metadata.tag.comment")}</span>
+                <EditorTextarea
+                  field={resolveArrayMultiField(
+                    combine,
+                    files,
+                    index,
+                    "comment",
+                  )}
+                  updateValue={setComment}
+                  isDisabled={isDisabled}
+                />
+              </Wrapper>
+            ) : (
+              <AllDetailsWrapper>
+                <span>File URL</span>
+                <span title={file.fileUrl?.replace("media:", "") ?? ""}>
+                  {file.fileUrl?.replace("media:", "") ?? ""}
+                </span>
+                <span>Cover URL</span>
+                <span title={file.coverUrl?.replace("media:", "") ?? ""}>
+                  {file.coverUrl?.replace("media:", "") ?? ""}
+                </span>
+                <span>Duration</span>
+                <span>{formatDuration(file.metadata.duration)}</span>
+                <span>Sample rate</span>
+                <span>
+                  {file.metadata.sampleRate
+                    ? `${file.metadata.sampleRate} Hz`
+                    : ""}
+                </span>
+                <span>Bit rate</span>
+                <span>
+                  {file.metadata.bitrate
+                    ? `${file.metadata.bitrate / 1000} kbps`
+                    : ""}
+                </span>
+                <span>Channels</span>
+                <span>{file.metadata.numberOfChannels ?? ""}</span>
+                <span title="Codec, profile, container">Codec</span>
+                <span>{getCodecInfo(file)}</span>
+                <span>Tag types</span>
+                <span>
+                  {(file.metadata.tagTypes || []).length
+                    ? file.metadata.tagTypes?.join(", ")
+                    : ""}
+                </span>
+                <span>Encoding</span>
+                <span>{file.metadata.lossless ? "lossless" : "lossy"}</span>
+                <span>Encoder</span>
+                <span>{file.metadata.tool ?? ""}</span>
+                <span>Encoder settings</span>
+                <span title={file.metadata.encoderSettings ?? ""}>
+                  {file.metadata.encoderSettings ?? ""}
+                </span>
+                <span title="Dynamic range track">DR track</span>
+                <span>
+                  {file.metadata.dynamicRange
+                    ? `${file.metadata.dynamicRange} dB`
+                    : ""}
+                </span>
+                <span title="Dynamic range album">DR album</span>
+                <span>
+                  {file.metadata.dynamicRangeAlbum
+                    ? `${file.metadata.dynamicRangeAlbum} dB`
+                    : ""}
+                </span>
+                <span title="Normalization track">N track</span>
+                <span>
+                  {file.metadata.replayGainTrackGain?.dB
+                    ? `${file.metadata.replayGainTrackGain?.dB} dB`
+                    : ""}
+                </span>
+                <span title="Normalization album">N album</span>
+                <span>
+                  {file.metadata.replayGainAlbumGain?.dB
+                    ? `${file.metadata.replayGainAlbumGain?.dB} dB`
+                    : ""}
+                </span>
+              </AllDetailsWrapper>
+            )}
             <StyledActionsContainer>
               <div></div>
               <div>
-                <AllDetails>
-                  {/* <span>
-                    <input type="checkbox" id="metadataEditorAllDetails" />
+                <DetailsCheckboxWrapper>
+                  <CheckboxWrapper>
+                    <input
+                      type="checkbox"
+                      id="metadataEditorAllDetails"
+                      checked={showAllDetails}
+                      onChange={(event) =>
+                        setShowAllDetails(event.target.checked)
+                      }
+                    />
                     <label htmlFor="metadataEditorAllDetails">
                       {t("modal.metadata.allDetailsLabel")}
                     </label>
-                  </span> */}
-                  <span>
+                  </CheckboxWrapper>
+                  <CheckboxWrapper isDisabled={files.length < 2}>
                     <input
                       type="checkbox"
                       id="metadataEditorCombine"
                       checked={combine}
                       onChange={(event) => setCombine(event.target.checked)}
+                      disabled={files.length < 2}
                     />
                     <label htmlFor="metadataEditorCombine">
                       {t("modal.metadata.combineLabel")}
                     </label>
-                  </span>
-                </AllDetails>
+                  </CheckboxWrapper>
+                </DetailsCheckboxWrapper>
                 <Button
                   isSmall
                   isSecondary

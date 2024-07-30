@@ -16,5 +16,5 @@ export const getCodecInfo = (file: AudioWithMetadata) => {
     str += container;
   }
 
-  return str.toLowerCase();
+  return str?.replace("MPEG 1 Layer 3", "MP3");
 };

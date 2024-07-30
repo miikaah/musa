@@ -94,6 +94,7 @@ input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  min-width: 30px;
   width: 30px;
   height: 30px;
   padding: 10px;
