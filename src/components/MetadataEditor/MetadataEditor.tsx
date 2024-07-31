@@ -149,9 +149,8 @@ const CheckboxWrapper = styled.div<{ isDisabled?: boolean }>`
 `;
 
 type MetadataField = {
-  value: string | null;
-  multiValue: (string | number)[];
-  isTouched: boolean;
+  multiValue: string[];
+  isTouched: boolean[];
 };
 
 type MetadataFields = {
@@ -168,13 +167,12 @@ type MetadataFields = {
   comment: MetadataField;
 };
 
-const defaultField = {
-  value: null,
+const defaultField: MetadataField = {
   multiValue: [],
-  isTouched: false,
+  isTouched: [],
 };
 
-const defaultFields = {
+const defaultFields: MetadataFields = {
   artist: defaultField,
   title: defaultField,
   album: defaultField,
@@ -190,90 +188,73 @@ const defaultFields = {
 
 const resolveNumberOfMultiField = (
   files: AudioWithMetadata[],
-  index: number,
   fields: MetadataFields,
   fieldName: "track" | "disk",
   type: "no" | "of",
 ): MetadataField => {
-  const metadata = files[index].metadata;
   const field = type === "of" ? fields[`${fieldName}s`] : fields[fieldName];
 
   return {
-    value: field.value ?? metadata[fieldName]?.[type]?.toString() ?? "",
     multiValue:
-      field.multiValue.length > 1
+      field.multiValue.length > 0
         ? field.multiValue
-        : Array.from(
-            new Set([
-              ...files.map((file) => file.metadata[fieldName]?.[type] ?? ""),
-            ]),
+        : files.map(
+            (file) => file.metadata[fieldName]?.[type]?.toString() ?? "",
           ),
-    isTouched: field.isTouched,
+    isTouched:
+      field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
   };
 };
 
 const resolveArrayMultiField = (
   files: AudioWithMetadata[],
-  index: number,
   fields: MetadataFields,
   fieldName: "genre" | "composer" | "comment",
 ): MetadataField => {
-  const metadata = files[index].metadata;
   const field = fields[fieldName];
 
   return {
-    value: field.value ?? (metadata[fieldName] ?? []).join(", "),
     multiValue:
       field.multiValue.length > 0
         ? field.multiValue
-        : Array.from(
-            new Set([
-              ...files.flatMap((file) =>
-                (file.metadata[fieldName] || []).join(", "),
-              ),
-            ]),
-          ),
-    isTouched: field.isTouched,
+        : files.flatMap((file) => (file.metadata[fieldName] || []).join(", ")),
+    isTouched:
+      field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
   };
 };
 
 const resolveMultiField = (
   files: AudioWithMetadata[],
-  index: number,
   fields: MetadataFields,
   fieldName: "artist" | "title" | "album" | "year",
 ): MetadataField => {
-  const metadata = files[index].metadata;
   const field = fields[fieldName];
 
   return {
-    value: field.value ?? metadata[fieldName]?.toString() ?? "",
     multiValue:
-      field.multiValue.length > 1
+      field.multiValue.length > 0
         ? field.multiValue
-        : Array.from(
-            new Set([...files.map((file) => file.metadata[fieldName] ?? "")]),
-          ),
-    isTouched: field.isTouched,
+        : files.map((file) => file.metadata[fieldName]?.toString() ?? ""),
+    isTouched:
+      field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
   };
 };
 
 const resolveFields = (
   files: AudioWithMetadata[],
-  i: number,
   fields: MetadataFields,
-) => ({
-  artist: resolveMultiField(files, i, fields, "artist"),
-  album: resolveMultiField(files, i, fields, "album"),
-  title: resolveMultiField(files, i, fields, "title"),
-  year: resolveMultiField(files, i, fields, "year"),
-  track: resolveNumberOfMultiField(files, i, fields, "track", "no"),
-  tracks: resolveNumberOfMultiField(files, i, fields, "track", "of"),
-  disk: resolveNumberOfMultiField(files, i, fields, "disk", "no"),
-  disks: resolveNumberOfMultiField(files, i, fields, "disk", "of"),
-  genre: resolveArrayMultiField(files, i, fields, "genre"),
-  composer: resolveArrayMultiField(files, i, fields, "composer"),
-  comment: resolveArrayMultiField(files, i, fields, "comment"),
+): MetadataFields => ({
+  artist: resolveMultiField(files, fields, "artist"),
+  album: resolveMultiField(files, fields, "album"),
+  title: resolveMultiField(files, fields, "title"),
+  year: resolveMultiField(files, fields, "year"),
+  track: resolveNumberOfMultiField(files, fields, "track", "no"),
+  tracks: resolveNumberOfMultiField(files, fields, "track", "of"),
+  disk: resolveNumberOfMultiField(files, fields, "disk", "no"),
+  disks: resolveNumberOfMultiField(files, fields, "disk", "of"),
+  genre: resolveArrayMultiField(files, fields, "genre"),
+  composer: resolveArrayMultiField(files, fields, "composer"),
+  comment: resolveArrayMultiField(files, fields, "comment"),
 });
 
 const fieldKeys: (keyof MetadataFields)[] = [
@@ -302,78 +283,78 @@ const MetadataEditor = ({
 }: MetadataEditorProps) => {
   const [index, setIndex] = useState<number>(activeIndex);
   const [combine, setCombine] = useState(files.length > 1);
-  const [fields, setFields] = useState<MetadataFields[]>(
-    files.map((_, i) => resolveFields(files, i, defaultFields)),
+  const [fields, setFields] = useState<MetadataFields>(
+    resolveFields(files, defaultFields),
   );
   const [isUpdating, setIsUpdating] = useState(false);
   const [showAllDetails, setShowAllDetails] = useState(false);
   const dispatch = useDispatch();
 
   const toUpdatePayload = (file: AudioWithMetadata, idx: number) => {
-    const item = { ...file };
+    const item = JSON.parse(JSON.stringify(file));
     const tags: Partial<Tags> = {};
 
-    if (fields[idx].artist.isTouched) {
-      const value = fields[idx].artist.value ?? "";
+    if (fields.artist.isTouched[idx]) {
+      const value = fields.artist.multiValue[idx] ?? "";
       tags.artist = value;
       item.metadata.artist = value;
     }
-    if (fields[idx].title.isTouched) {
-      const value = fields[idx].title.value ?? "";
+    if (fields.title.isTouched[idx]) {
+      const value = fields.title.multiValue[idx] ?? "";
       tags.title = value;
       item.metadata.title = value;
     }
-    if (fields[idx].album.isTouched) {
-      const value = fields[idx].album.value ?? "";
+    if (fields.album.isTouched[idx]) {
+      const value = fields.album.multiValue[idx] ?? "";
       tags.album = value;
       item.metadata.album = value;
     }
-    if (fields[idx].year.isTouched) {
-      const value = fields[idx].year.value ?? "";
+    if (fields.year.isTouched[idx]) {
+      const value = fields.year.multiValue[idx] ?? "";
       tags.year = value;
       item.metadata.year = value;
     }
-    if (fields[idx].track.isTouched) {
-      const value = fields[idx].track.value ?? "";
+    if (fields.track.isTouched[idx]) {
+      const value = fields.track.multiValue[idx] ?? "";
       tags.trackNumber = value;
       item.metadata.track = { no: value, of: "" };
     }
-    if (fields[idx].tracks.isTouched) {
-      tags.trackNumber = `${tags.trackNumber || ""}/${fields[idx].tracks.value ?? ""}`;
+    if (fields.tracks.isTouched[idx]) {
+      tags.trackNumber = `${tags.trackNumber || ""}/${fields.tracks.multiValue[idx] ?? ""}`;
       item.metadata.track = {
         no: item.metadata.track?.no ? item.metadata.track.no : "",
-        of: fields[idx].tracks.value,
+        of: fields.tracks.multiValue[idx],
       };
     }
-    if (fields[idx].disk.isTouched) {
-      const value = fields[idx].disk.value ?? "";
+    if (fields.disk.isTouched[idx]) {
+      const value = fields.disk.multiValue[idx] ?? "";
       tags.partOfSet = value;
       item.metadata.disk = { no: value, of: "" };
     }
-    if (fields[idx].disks.isTouched) {
+    if (fields.disks.isTouched[idx]) {
       const diskNo = tags.partOfSet || file?.metadata?.disk?.no || "";
-      const diskOf = fields[idx].disks.value
-        ? `/${fields[idx].disks.value}`
+      const diskOf = fields.disks.multiValue[idx]
+        ? `/${fields.disks.multiValue[idx]}`
         : "";
 
       tags.partOfSet = `${diskNo}${diskOf}`;
       item.metadata.disk = {
         no: item.metadata.disk?.no ? item.metadata.disk.no : "",
-        of: fields[idx].disks.value,
+        of: fields.disks.multiValue[idx],
       };
     }
-    if (fields[idx].genre.isTouched) {
-      const value = fields[idx].genre.value ?? "";
+    if (fields.genre.isTouched[idx]) {
+      const value = fields.genre.multiValue[idx] ?? "";
       tags.genre = value;
       item.metadata.genre = value.split(",").map((it) => it.trim());
     }
-    if (fields[idx].composer.isTouched) {
-      const value = fields[idx].composer.value ?? "";
+    if (fields.composer.isTouched[idx]) {
+      const value = fields.composer.multiValue[idx] ?? "";
       tags.composer = value;
       item.metadata.composer = value.split(",").map((it) => it.trim());
     }
-    if (fields[idx].comment.isTouched) {
-      const value = fields[idx].comment.value ?? "";
+    if (fields.comment.isTouched[idx]) {
+      const value = fields.comment.multiValue[idx] ?? "";
       tags.comment = {
         language: "eng",
         text: value,
@@ -390,69 +371,58 @@ const MetadataEditor = ({
       console.log("payload", payload);
       // TODO: Create bulk file tag update API
     } else {
-      const { tags, item } = toUpdatePayload(files[index], index);
-
-      setIsUpdating(true);
-      const err = await Api.writeTags(
-        urlSafeBase64.encode(file.fileUrl?.replace("media:/", "") ?? ""),
-        tags,
-      );
-      setIsUpdating(false);
-      if (err) {
-        // TODO: Show error to user
-        console.error("Failed to update tags", err);
-        return;
-      }
-
-      dispatch(updateManyById([item]));
+      // const { tags, item } = toUpdatePayload(files[index], index);
+      // setIsUpdating(true);
+      // const err = await Api.writeTags(
+      //   urlSafeBase64.encode(file.fileUrl?.replace("media:/", "") ?? ""),
+      //   tags,
+      // );
+      // setIsUpdating(false);
+      // if (err) {
+      //   // TODO: Show error to user
+      //   console.error("Failed to update tags", err);
+      //   return;
+      // }
+      // dispatch(updateManyById([item]));
     }
   };
 
   const toggleCombinedFields = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const combine = event.target.checked;
-    const newFields = fields;
-    newFields[index] = resolveFields(files, index, fields[index]);
-    setCombine(combine);
-    setFields(newFields);
+    setCombine(event.target.checked);
   };
 
   const updateValue = (valueArr: string[], key: keyof MetadataFields) => {
     // Have to do a deep copy here to sever the ref between the objects in the fields array
-    const prevFields: MetadataFields[] = JSON.parse(JSON.stringify(fields));
-    const newFields: MetadataFields[] = JSON.parse(JSON.stringify(fields));
+    const prevFields: MetadataFields = JSON.parse(JSON.stringify(fields));
+    const newFields: MetadataFields = JSON.parse(JSON.stringify(fields));
 
-    for (let i = 0; i < files.length; i++) {
-      const value = valueArr[i];
-      const isTouched =
-        prevFields[i][key].isTouched || prevFields[i][key].value !== value;
-
-      if (combine) {
-        newFields[i][key].value = value ?? "";
-        newFields[i][key].multiValue = valueArr;
-        newFields[i][key].isTouched = isTouched;
-      } else if (value) {
-        newFields[i][key].value = value;
-        newFields[i][key].multiValue[i] = value;
-        newFields[i][key].isTouched = isTouched;
+    if (combine) {
+      newFields[key].multiValue = valueArr;
+      for (let i = 0; i < files.length; i++) {
+        const value = valueArr[i];
+        const isTouched =
+          prevFields[key].isTouched[i] ||
+          prevFields[key].multiValue[i] !== value;
+        newFields[key].isTouched[i] = isTouched;
       }
+    } else {
+      const value = valueArr[index];
+      const isTouched =
+        prevFields[key].isTouched[index] ||
+        prevFields[key].multiValue[index] !== value;
+      newFields[key].multiValue[index] = value;
+      newFields[key].isTouched[index] = isTouched;
     }
+
     setFields(newFields);
   };
 
   const previous = () => {
-    const newIndex = index - 1;
-    const newFields: MetadataFields[] = JSON.parse(JSON.stringify(fields));
-    newFields[newIndex] = resolveFields(files, newIndex, newFields[newIndex]);
-    setFields(newFields);
-    setIndex(newIndex);
+    setIndex(index - 1);
   };
 
   const next = () => {
-    const newIndex = index + 1;
-    const newFields: MetadataFields[] = JSON.parse(JSON.stringify(fields));
-    newFields[newIndex] = resolveFields(files, newIndex, newFields[newIndex]);
-    setFields(newFields);
-    setIndex(newIndex);
+    setIndex(index + 1);
   };
 
   return (
@@ -467,14 +437,16 @@ const MetadataEditor = ({
             {!showAllDetails ? (
               <Wrapper>
                 {fieldKeys.map((key) => {
-                  const field = { ...fields[index][key] };
+                  const field = { ...fields[key] };
 
                   return (
                     <React.Fragment key={key}>
                       <span>{t(`modal.metadata.tag.${key}`)}</span>
                       <EditorInput
-                        field={(combine ? field.multiValue : field.value) ?? ""}
+                        field={field.multiValue}
+                        index={index}
                         updateValue={(value) => updateValue(value, key)}
+                        isMultiValue={combine}
                         isDisabled={isDisabled}
                       />
                     </React.Fragment>
@@ -482,17 +454,15 @@ const MetadataEditor = ({
                 })}
                 <span>{t("modal.metadata.tag.codec")}</span>
                 <EditorInput
-                  field={getCodecInfo(file).toLowerCase()}
+                  staticField={getCodecInfo(file).toLowerCase()}
                   isDisabled
                 />
                 <span>{t("modal.metadata.tag.comment")}</span>
                 <EditorTextarea
-                  field={
-                    (combine
-                      ? fields[index].comment.multiValue
-                      : fields[index].comment.value) ?? ""
-                  }
+                  field={fields.comment.multiValue}
+                  index={index}
                   updateValue={(value) => updateValue(value, "comment")}
+                  isMultiValue={combine}
                   isDisabled={isDisabled}
                 />
               </Wrapper>

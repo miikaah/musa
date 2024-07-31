@@ -1,15 +1,35 @@
 import React from "react";
 import { separator } from "../../util";
 
-type EditorInputProps = {
-  field: string | number | (string | number)[];
+type StaticProps = {
+  staticField: string;
   isDisabled: boolean;
+  field?: never;
+  index?: never;
+  isMultiValue?: never;
+  updateValue?: never;
+};
+
+type EditorInputProps = {
+  staticField?: never;
+  isDisabled: boolean;
+  field: string[];
+  index: number;
+  isMultiValue: boolean;
   updateValue?: (value: string[]) => void;
 };
 
-const EditorInput = ({ field, isDisabled, updateValue }: EditorInputProps) => {
-  const isArray = Array.isArray(field);
-  const value = isArray ? field.join(separator) : field;
+const EditorInput = ({
+  staticField,
+  field,
+  index,
+  isMultiValue,
+  isDisabled,
+  updateValue,
+}: StaticProps | EditorInputProps) => {
+  const value = isMultiValue
+    ? Array.from(new Set(field)).join(separator)
+    : (staticField ?? field[index]);
 
   return (
     <input

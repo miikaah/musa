@@ -2,18 +2,23 @@ import React from "react";
 import { separator } from "../../util";
 
 type EditorTextareaProps = {
-  field: string | number | (string | number)[];
+  field: string[];
+  index: number;
+  isMultiValue: boolean;
   isDisabled: boolean;
   updateValue: (s: string[]) => void;
 };
 
 const EditorTextarea = ({
   field,
+  index,
+  isMultiValue,
   isDisabled,
   updateValue,
 }: EditorTextareaProps) => {
-  const isArray = Array.isArray(field);
-  const value = isArray ? field.join(separator) : field;
+  const value = isMultiValue
+    ? Array.from(new Set(field)).join(separator)
+    : field[index];
 
   return (
     <textarea
