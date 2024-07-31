@@ -282,6 +282,7 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
     }
     case UPDATE_MANY_BY_ID: {
       const newItems = [...state.items];
+      // TODO: Update id to be filepath
       for (const item of action.items) {
         const index = state.items.findIndex((it) => it.id === item.id);
         if (newItems[index]) {

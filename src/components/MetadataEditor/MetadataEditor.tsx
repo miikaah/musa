@@ -148,93 +148,133 @@ const CheckboxWrapper = styled.div<{ isDisabled?: boolean }>`
   ${({ isDisabled }) => isDisabled && `color: grey;`}
 `;
 
-const getFieldValuesString = (fieldValues: (string | number)[]) =>
-  `${fieldValues.length > 1 ? `(${fieldValues.length}) ` : ""}${fieldValues.join(";")}`;
+type MetadataField = {
+  value: string | null;
+  multiValue: (string | number)[];
+  isTouched: boolean;
+};
+
+type MetadataFields = {
+  artist: MetadataField;
+  title: MetadataField;
+  album: MetadataField;
+  year: MetadataField;
+  track: MetadataField;
+  tracks: MetadataField;
+  disk: MetadataField;
+  disks: MetadataField;
+  genre: MetadataField;
+  composer: MetadataField;
+  comment: MetadataField;
+};
+
+const defaultField = {
+  value: null,
+  multiValue: [],
+  isTouched: false,
+};
+
+const defaultFields = {
+  artist: defaultField,
+  title: defaultField,
+  album: defaultField,
+  year: defaultField,
+  track: defaultField,
+  tracks: defaultField,
+  disk: defaultField,
+  disks: defaultField,
+  genre: defaultField,
+  composer: defaultField,
+  comment: defaultField,
+};
 
 const resolveNumberOfMultiField = (
-  combine: boolean,
   files: AudioWithMetadata[],
   index: number,
+  fields: MetadataFields,
   fieldName: "track" | "disk",
   type: "no" | "of",
-): string => {
+): MetadataField => {
   const metadata = files[index].metadata;
-  if (!combine || files.length === 1) {
-    return String(metadata[fieldName]?.[type] ?? "");
-  }
-  const fieldValues = Array.from(
-    new Set([
-      ...files.flatMap((file) => file.metadata[fieldName]?.[type] ?? ""),
-    ]),
-  );
-  return getFieldValuesString(fieldValues);
+  const field = type === "of" ? fields[`${fieldName}s`] : fields[fieldName];
+
+  return {
+    value: field.value ?? metadata[fieldName]?.[type]?.toString() ?? "",
+    multiValue:
+      field.multiValue.length > 1
+        ? field.multiValue
+        : Array.from(
+            new Set([
+              ...files.map((file) => file.metadata[fieldName]?.[type] ?? ""),
+            ]),
+          ),
+    isTouched: field.isTouched,
+  };
 };
 
 const resolveArrayMultiField = (
-  combine: boolean,
   files: AudioWithMetadata[],
   index: number,
+  fields: MetadataFields,
   fieldName: "genre" | "composer" | "comment",
-): string => {
+): MetadataField => {
   const metadata = files[index].metadata;
-  if (!combine || files.length === 1) {
-    return (metadata[fieldName] ?? []).join(", ");
-  }
-  const fieldValues = Array.from(
-    new Set([
-      ...files.flatMap((file) => (file.metadata[fieldName] ?? []).join(", ")),
-    ]),
-  );
-  return getFieldValuesString(fieldValues);
+  const field = fields[fieldName];
+
+  return {
+    value: field.value ?? (metadata[fieldName] ?? []).join(", "),
+    multiValue:
+      field.multiValue.length > 0
+        ? field.multiValue
+        : Array.from(
+            new Set([
+              ...files.flatMap((file) =>
+                (file.metadata[fieldName] || []).join(", "),
+              ),
+            ]),
+          ),
+    isTouched: field.isTouched,
+  };
 };
 
 const resolveMultiField = (
-  combine: boolean,
   files: AudioWithMetadata[],
   index: number,
+  fields: MetadataFields,
   fieldName: "artist" | "title" | "album" | "year",
-): string => {
+): MetadataField => {
   const metadata = files[index].metadata;
-  if (!combine || files.length === 1) {
-    return metadata[fieldName]?.toString() ?? "";
-  }
-  const fieldValues = Array.from(
-    new Set([...files.map((file) => (file.metadata as any)[fieldName])]),
-  );
-  return getFieldValuesString(fieldValues);
+  const field = fields[fieldName];
+
+  return {
+    value: field.value ?? metadata[fieldName]?.toString() ?? "",
+    multiValue:
+      field.multiValue.length > 1
+        ? field.multiValue
+        : Array.from(
+            new Set([...files.map((file) => file.metadata[fieldName] ?? "")]),
+          ),
+    isTouched: field.isTouched,
+  };
 };
 
 const resolveFields = (
-  combine: boolean,
   files: AudioWithMetadata[],
-  index: number,
+  i: number,
+  fields: MetadataFields,
 ) => ({
-  artist: resolveMultiField(combine, files, index, "artist"),
-  album: resolveMultiField(combine, files, index, "album"),
-  title: resolveMultiField(combine, files, index, "title"),
-  year: resolveMultiField(combine, files, index, "year"),
-  track: resolveNumberOfMultiField(combine, files, index, "track", "no"),
-  tracks: resolveNumberOfMultiField(combine, files, index, "track", "of"),
-  disk: resolveNumberOfMultiField(combine, files, index, "disk", "no"),
-  disks: resolveNumberOfMultiField(combine, files, index, "disk", "of"),
-  genre: resolveArrayMultiField(combine, files, index, "genre"),
-  composer: resolveArrayMultiField(combine, files, index, "composer"),
-  comment: resolveArrayMultiField(combine, files, index, "comment"),
+  artist: resolveMultiField(files, i, fields, "artist"),
+  album: resolveMultiField(files, i, fields, "album"),
+  title: resolveMultiField(files, i, fields, "title"),
+  year: resolveMultiField(files, i, fields, "year"),
+  track: resolveNumberOfMultiField(files, i, fields, "track", "no"),
+  tracks: resolveNumberOfMultiField(files, i, fields, "track", "of"),
+  disk: resolveNumberOfMultiField(files, i, fields, "disk", "no"),
+  disks: resolveNumberOfMultiField(files, i, fields, "disk", "of"),
+  genre: resolveArrayMultiField(files, i, fields, "genre"),
+  composer: resolveArrayMultiField(files, i, fields, "composer"),
+  comment: resolveArrayMultiField(files, i, fields, "comment"),
 });
-
-type MetadataFields = {
-  artist: string;
-  title: string;
-  album: string;
-  year: string;
-  track: string;
-  tracks: string;
-  disk: string;
-  disks: string;
-  genre: string;
-  composer: string;
-  comment: string;
-};
 
 const fieldKeys: (keyof MetadataFields)[] = [
   "artist",
@@ -262,113 +302,157 @@ const MetadataEditor = ({
 }: MetadataEditorProps) => {
   const [index, setIndex] = useState<number>(activeIndex);
   const [combine, setCombine] = useState(files.length > 1);
-  const [fields, setFields] = useState<MetadataFields>(
-    resolveFields(combine, files, index),
+  const [fields, setFields] = useState<MetadataFields[]>(
+    files.map((_, i) => resolveFields(files, i, defaultFields)),
   );
   const [isUpdating, setIsUpdating] = useState(false);
   const [showAllDetails, setShowAllDetails] = useState(false);
   const dispatch = useDispatch();
 
-  const saveTags = async (file: AudioWithMetadata) => {
+  const toUpdatePayload = (file: AudioWithMetadata, idx: number) => {
     const item = { ...file };
     const tags: Partial<Tags> = {};
 
-    if (fields.artist !== undefined) {
-      tags.artist = fields.artist;
-      item.metadata.artist = fields.artist;
+    if (fields[idx].artist.isTouched) {
+      const value = fields[idx].artist.value ?? "";
+      tags.artist = value;
+      item.metadata.artist = value;
     }
-    if (fields.title !== undefined) {
-      tags.title = fields.title;
-      item.metadata.title = fields.title;
+    if (fields[idx].title.isTouched) {
+      const value = fields[idx].title.value ?? "";
+      tags.title = value;
+      item.metadata.title = value;
     }
-    if (fields.album !== undefined) {
-      tags.album = fields.album;
-      item.metadata.album = fields.album;
+    if (fields[idx].album.isTouched) {
+      const value = fields[idx].album.value ?? "";
+      tags.album = value;
+      item.metadata.album = value;
     }
-    if (fields.year !== undefined) {
-      tags.year = fields.year;
-      item.metadata.year = fields.year;
+    if (fields[idx].year.isTouched) {
+      const value = fields[idx].year.value ?? "";
+      tags.year = value;
+      item.metadata.year = value;
     }
-    if (fields.track !== undefined) {
-      tags.trackNumber = fields.track;
-      item.metadata.track = { no: fields.track, of: "" };
+    if (fields[idx].track.isTouched) {
+      const value = fields[idx].track.value ?? "";
+      tags.trackNumber = value;
+      item.metadata.track = { no: value, of: "" };
     }
-    if (fields.tracks !== undefined) {
-      tags.trackNumber = `${tags.trackNumber || ""}/${fields.tracks}`;
+    if (fields[idx].tracks.isTouched) {
+      tags.trackNumber = `${tags.trackNumber || ""}/${fields[idx].tracks.value ?? ""}`;
       item.metadata.track = {
         no: item.metadata.track?.no ? item.metadata.track.no : "",
-        of: fields.tracks,
+        of: fields[idx].tracks.value,
       };
     }
-    if (fields.disk !== undefined) {
-      tags.partOfSet = fields.disk;
-      item.metadata.disk = { no: fields.disk, of: "" };
+    if (fields[idx].disk.isTouched) {
+      const value = fields[idx].disk.value ?? "";
+      tags.partOfSet = value;
+      item.metadata.disk = { no: value, of: "" };
     }
-    if (fields.disks !== undefined) {
+    if (fields[idx].disks.isTouched) {
       const diskNo = tags.partOfSet || file?.metadata?.disk?.no || "";
-      const diskOf = fields.disks ? `/${fields.disks}` : "";
+      const diskOf = fields[idx].disks.value
+        ? `/${fields[idx].disks.value}`
+        : "";
 
       tags.partOfSet = `${diskNo}${diskOf}`;
       item.metadata.disk = {
         no: item.metadata.disk?.no ? item.metadata.disk.no : "",
-        of: fields.disks,
+        of: fields[idx].disks.value,
       };
     }
-    if (fields.genre !== undefined) {
-      tags.genre = fields.genre;
-      item.metadata.genre = fields.genre.split(",").map((it) => it.trim());
+    if (fields[idx].genre.isTouched) {
+      const value = fields[idx].genre.value ?? "";
+      tags.genre = value;
+      item.metadata.genre = value.split(",").map((it) => it.trim());
     }
-    if (fields.composer !== undefined) {
-      tags.composer = fields.composer;
-      item.metadata.composer = fields.composer
-        .split(",")
-        .map((it) => it.trim());
+    if (fields[idx].composer.isTouched) {
+      const value = fields[idx].composer.value ?? "";
+      tags.composer = value;
+      item.metadata.composer = value.split(",").map((it) => it.trim());
     }
-    if (fields.comment !== undefined) {
+    if (fields[idx].comment.isTouched) {
+      const value = fields[idx].comment.value ?? "";
       tags.comment = {
         language: "eng",
-        text: fields.comment,
+        text: value,
       };
-      item.metadata.comment = fields.comment.split(",").map((it) => it.trim());
+      item.metadata.comment = value.split(",").map((it) => it.trim());
     }
 
-    setIsUpdating(true);
-    const err = await Api.writeTags(
-      urlSafeBase64.encode(file.fileUrl?.replace("media:/", "") ?? ""),
-      tags,
-    );
-    setIsUpdating(false);
-
-    if (err) {
-      console.error("Failed to update tags", err);
-      return;
-    }
-
-    dispatch(updateManyById([item]));
+    return { tags, item };
   };
 
-  const resetFields = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const saveTags = async (file: AudioWithMetadata) => {
+    if (combine) {
+      const payload = files.map((file, i) => toUpdatePayload(file, i));
+      console.log("payload", payload);
+      // TODO: Create bulk file tag update API
+    } else {
+      const { tags, item } = toUpdatePayload(files[index], index);
+
+      setIsUpdating(true);
+      const err = await Api.writeTags(
+        urlSafeBase64.encode(file.fileUrl?.replace("media:/", "") ?? ""),
+        tags,
+      );
+      setIsUpdating(false);
+      if (err) {
+        // TODO: Show error to user
+        console.error("Failed to update tags", err);
+        return;
+      }
+
+      dispatch(updateManyById([item]));
+    }
+  };
+
+  const toggleCombinedFields = (event: React.ChangeEvent<HTMLInputElement>) => {
     const combine = event.target.checked;
-    setCombine(event.target.checked);
-    setFields(resolveFields(combine, files, index));
+    const newFields = fields;
+    newFields[index] = resolveFields(files, index, fields[index]);
+    setCombine(combine);
+    setFields(newFields);
   };
 
-  const updateValue = (value: string, key: keyof MetadataFields) => {
-    const newFields = { ...fields };
-    newFields[key] = value;
+  const updateValue = (valueArr: string[], key: keyof MetadataFields) => {
+    // Have to do a deep copy here to sever the ref between the objects in the fields array
+    const prevFields: MetadataFields[] = JSON.parse(JSON.stringify(fields));
+    const newFields: MetadataFields[] = JSON.parse(JSON.stringify(fields));
+
+    for (let i = 0; i < files.length; i++) {
+      const value = valueArr[i];
+      const isTouched =
+        prevFields[i][key].isTouched || prevFields[i][key].value !== value;
+
+      if (combine) {
+        newFields[i][key].value = value ?? "";
+        newFields[i][key].multiValue = valueArr;
+        newFields[i][key].isTouched = isTouched;
+      } else if (value) {
+        newFields[i][key].value = value;
+        newFields[i][key].multiValue[i] = value;
+        newFields[i][key].isTouched = isTouched;
+      }
+    }
     setFields(newFields);
   };
 
   const previous = () => {
     const newIndex = index - 1;
+    const newFields: MetadataFields[] = JSON.parse(JSON.stringify(fields));
+    newFields[newIndex] = resolveFields(files, newIndex, newFields[newIndex]);
+    setFields(newFields);
     setIndex(newIndex);
-    setFields(resolveFields(combine, files, newIndex));
   };
 
   const next = () => {
     const newIndex = index + 1;
+    const newFields: MetadataFields[] = JSON.parse(JSON.stringify(fields));
+    newFields[newIndex] = resolveFields(files, newIndex, newFields[newIndex]);
+    setFields(newFields);
     setIndex(newIndex);
-    setFields(resolveFields(combine, files, newIndex));
   };
 
   return (
@@ -382,16 +466,20 @@ const MetadataEditor = ({
           <div key={file.id}>
             {!showAllDetails ? (
               <Wrapper>
-                {fieldKeys.map((key) => (
-                  <React.Fragment key={key}>
-                    <span>{t(`modal.metadata.tag.${key}`)}</span>
-                    <EditorInput
-                      field={fields[key]}
-                      updateValue={(value) => updateValue(value, key)}
-                      isDisabled={isDisabled}
-                    />
-                  </React.Fragment>
-                ))}
+                {fieldKeys.map((key) => {
+                  const field = { ...fields[index][key] };
+
+                  return (
+                    <React.Fragment key={key}>
+                      <span>{t(`modal.metadata.tag.${key}`)}</span>
+                      <EditorInput
+                        field={(combine ? field.multiValue : field.value) ?? ""}
+                        updateValue={(value) => updateValue(value, key)}
+                        isDisabled={isDisabled}
+                      />
+                    </React.Fragment>
+                  );
+                })}
                 <span>{t("modal.metadata.tag.codec")}</span>
                 <EditorInput
                   field={getCodecInfo(file).toLowerCase()}
@@ -399,7 +487,11 @@ const MetadataEditor = ({
                 />
                 <span>{t("modal.metadata.tag.comment")}</span>
                 <EditorTextarea
-                  field={fields.comment}
+                  field={
+                    (combine
+                      ? fields[index].comment.multiValue
+                      : fields[index].comment.value) ?? ""
+                  }
                   updateValue={(value) => updateValue(value, "comment")}
                   isDisabled={isDisabled}
                 />
@@ -494,7 +586,7 @@ const MetadataEditor = ({
                       type="checkbox"
                       id="metadataEditorCombine"
                       checked={combine}
-                      onChange={resetFields}
+                      onChange={toggleCombinedFields}
                       disabled={files.length < 2}
                     />
                     <label htmlFor="metadataEditorCombine">
@@ -506,7 +598,7 @@ const MetadataEditor = ({
                   isSmall
                   isSecondary
                   onClick={previous}
-                  disabled={index < 1}
+                  disabled={index < 1 || combine}
                 >
                   {t("modal.metadata.previousButton")}
                 </Button>
@@ -514,14 +606,14 @@ const MetadataEditor = ({
                   isSmall
                   isSecondary
                   onClick={next}
-                  disabled={index >= files.length - 1}
+                  disabled={index >= files.length - 1 || combine}
                 >
                   {t("modal.metadata.nextButton")}
                 </Button>
                 <SaveButton
                   onClick={() => saveTags(file)}
                   isPrimary
-                  disabled={combine || isUpdating}
+                  disabled={isUpdating}
                 >
                   {`${t("modal.metadata.saveButton")}${files.length > 1 && combine ? ` (${files.length})` : ""}`}
                 </SaveButton>

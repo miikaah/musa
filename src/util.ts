@@ -175,3 +175,6 @@ export const urlSafeBase64 = {
     return base64ToUtf8(atob(s));
   },
 };
+
+export const noBreakSpaceChar = "\u00A0";
+export const separator = `;${noBreakSpaceChar}`;
