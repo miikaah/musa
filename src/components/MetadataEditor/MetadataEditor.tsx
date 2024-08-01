@@ -292,8 +292,11 @@ const MetadataEditor = ({
   const dispatch = useDispatch();
 
   const toUpdatePayload = (file: AudioWithMetadata, idx: number) => {
-    const item = JSON.parse(JSON.stringify(file));
+    const item: AudioWithMetadata = JSON.parse(JSON.stringify(file));
     const tags: Partial<Tags> = {};
+    const fid = urlSafeBase64.encode(
+      item.fileUrl?.replace("media:/", "") ?? "",
+    );
 
     if (fields.artist.isTouched[idx]) {
       const value = fields.artist.multiValue[idx] ?? "";
@@ -363,27 +366,47 @@ const MetadataEditor = ({
       item.metadata.comment = value.split(",").map((it) => it.trim());
     }
 
-    return { tags, item };
+    return { fid, tags, item };
   };
 
   const saveTags = async (file: AudioWithMetadata) => {
     if (combine) {
-      const payload = files.map((file, i) => toUpdatePayload(file, i));
-      console.log("payload", payload);
-      // TODO: Create bulk file tag update API
-    } else {
-      const { tags, item } = toUpdatePayload(files[index], index);
-      // setIsUpdating(true);
-      // const err = await Api.writeTags(
-      //   urlSafeBase64.encode(file.fileUrl?.replace("media:/", "") ?? ""),
-      //   tags,
-      // );
-      // setIsUpdating(false);
+      const payloads: { fid: string; tags: Partial<Tags> }[] = [];
+      const items: AudioWithMetadata[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const { fid, tags, item } = toUpdatePayload(files[i], i);
+        payloads.push({ fid, tags });
+        items.push(item);
+      }
+      console.log("payloads", payloads);
+      console.log("items", items);
+
+      // setIsLoading(true);
+      // const err = await Api.writeTagsMany(payloads);
+      // setIsLoading(false);
       // if (err) {
-      //   // TODO: Show error to user
-      //   console.error("Failed to update tags", err);
+      //   console.error("Failed to update many tags", err);
+      //   setError(error);
       //   return;
       // }
+
+      // dispatch(updateManyById(items));
+    } else {
+      const { tags, item } = toUpdatePayload(files[index], index);
+
+      setIsLoading(true);
+      const err = await Api.writeTags(
+        urlSafeBase64.encode(file.fileUrl?.replace("media:/", "") ?? ""),
+        tags,
+      );
+      setIsLoading(false);
+      if (err) {
+        console.error("Failed to update tags", err);
+        setError(error);
+        return;
+      }
+
       dispatch(updateManyById([item]));
     }
   };

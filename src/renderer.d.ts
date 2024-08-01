@@ -37,6 +37,9 @@ export type ElectronApi = {
   findRandom: () => Promise<FindResult>;
   findRandomWithLockedSearchTerm: (term: string) => Promise<FindResult>;
   writeTags: (id: string, tags: Partial<Tags>) => Promise<undefined | Error>;
+  writeTagsMany: (
+    files: { fid: string; tags: Partial<Tags> }[],
+  ) => Promise<undefined | Error>;
   onInit: () => Promise<void>;
   addMusicLibraryPath: () => Promise<string>;
   getPlatform: () => Promise<string>;
