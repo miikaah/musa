@@ -737,14 +737,25 @@ const Playlist = ({
       });
   };
 
+  const getUniqueItems = (items: PlaylistProps["playlist"]) => {
+    const uniq = new Map();
+    for (const item of items) {
+      uniq.set(item.fileUrl, item);
+    }
+    return Array.from(uniq.values());
+  };
+
   const handleOpenEditor = (mode: EditorMode) => {
-    const files = getSelectedItems();
+    const items = getSelectedItems();
+    const uniqueItems = getUniqueItems(items);
     const filesIndex =
       mode === "metadata"
-        ? files.findIndex((file) => file === playlist[getActiveIndex()])
+        ? uniqueItems.findIndex(
+            (file) => file.fileUrl === playlist[getActiveIndex()].fileUrl,
+          )
         : -1;
 
-    toggleModal(mode, filesIndex, files);
+    toggleModal(mode, filesIndex, uniqueItems);
     setContextMenuCoordinates(null);
   };
 
