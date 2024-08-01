@@ -92,7 +92,7 @@ const AllDetailsWrapper = styled.div`
   font-size: var(--font-size-xs);
   display: grid;
   grid-template-rows: repeat(auto-fill, minmax(24px, 1fr));
-  grid-template-columns: 3fr 17fr;
+  grid-template-columns: 4fr 16fr;
   ${sharedWrapperCss}
 
   > span {
@@ -286,8 +286,9 @@ const MetadataEditor = ({
   const [fields, setFields] = useState<MetadataFields>(
     resolveFields(files, defaultFields),
   );
-  const [isUpdating, setIsUpdating] = useState(false);
   const [showAllDetails, setShowAllDetails] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
 
   const toUpdatePayload = (file: AudioWithMetadata, idx: number) => {
@@ -468,65 +469,83 @@ const MetadataEditor = ({
               </Wrapper>
             ) : (
               <AllDetailsWrapper>
-                <span>File URL</span>
+                <span>{t("modal.metadata.detail.fileUrl")}</span>
                 <span title={file.fileUrl?.replace("media:", "") ?? ""}>
                   {file.fileUrl?.replace("media:", "") ?? ""}
                 </span>
-                <span>Cover URL</span>
+                <span>{t("modal.metadata.detail.coverUrl")}</span>
                 <span title={file.coverUrl?.replace("media:", "") ?? ""}>
                   {file.coverUrl?.replace("media:", "") ?? ""}
                 </span>
-                <span>Duration</span>
+                <span>{t("modal.metadata.detail.duration")}</span>
                 <span>{formatDuration(file.metadata.duration)}</span>
-                <span>Sample rate</span>
+                <span>{t("modal.metadata.detail.sampleRate")}</span>
                 <span>
                   {file.metadata.sampleRate
                     ? `${file.metadata.sampleRate} Hz`
                     : ""}
                 </span>
-                <span>Bit rate</span>
+                <span>{t("modal.metadata.detail.bitRate")}</span>
                 <span>
                   {file.metadata.bitrate
                     ? `${file.metadata.bitrate / 1000} kbps`
                     : ""}
                 </span>
-                <span>Channels</span>
+                <span>{t("modal.metadata.detail.channels")}</span>
                 <span>{file.metadata.numberOfChannels ?? ""}</span>
-                <span title="Codec, profile, container">Codec</span>
+                <span title={t("modal.metadata.detail.codecDetails")}>
+                  {t("modal.metadata.detail.codec")}
+                </span>
                 <span>{getCodecInfo(file)}</span>
-                <span>Tag types</span>
+                <span>{t("modal.metadata.detail.tagTypes")}</span>
                 <span>
                   {(file.metadata.tagTypes || []).length
                     ? file.metadata.tagTypes?.join(", ")
                     : ""}
                 </span>
-                <span>Encoding</span>
-                <span>{file.metadata.lossless ? "lossless" : "lossy"}</span>
-                <span>Encoder</span>
+                <span>{t("modal.metadata.detail.encoding")}</span>
+                <span>
+                  {file.metadata.lossless
+                    ? t("modal.metadata.detail.encodingLossless")
+                    : t("modal.metadata.detail.encodingLossy")}
+                </span>
+                <span>{t("modal.metadata.detail.encoder")}</span>
                 <span>{file.metadata.tool ?? ""}</span>
-                <span>Encoder settings</span>
+                <span>{t("modal.metadata.detail.encoderSettings")}</span>
                 <span title={file.metadata.encoderSettings ?? ""}>
                   {file.metadata.encoderSettings ?? ""}
                 </span>
-                <span title="Dynamic range track">DR track</span>
+                <span title={t("modal.metadata.detail.drTrackDetails")}>
+                  {t("modal.metadata.detail.drTrack")}
+                </span>
                 <span>
                   {file.metadata.dynamicRange
                     ? `${file.metadata.dynamicRange} dB`
                     : ""}
                 </span>
-                <span title="Dynamic range album">DR album</span>
+                <span title={t("modal.metadata.detail.drAlbumDetails")}>
+                  {t("modal.metadata.detail.drAlbum")}
+                </span>
                 <span>
                   {file.metadata.dynamicRangeAlbum
                     ? `${file.metadata.dynamicRangeAlbum} dB`
                     : ""}
                 </span>
-                <span title="Normalization track">N track</span>
+                <span
+                  title={t("modal.metadata.detail.normalizationTrackDetails")}
+                >
+                  {t("modal.metadata.detail.normalizationTrack")}
+                </span>
                 <span>
                   {file.metadata.replayGainTrackGain?.dB
                     ? `${file.metadata.replayGainTrackGain?.dB} dB`
                     : ""}
                 </span>
-                <span title="Normalization album">N album</span>
+                <span
+                  title={t("modal.metadata.detail.normalizationAlbumDetails")}
+                >
+                  {t("modal.metadata.detail.normalizationAlbum")}
+                </span>
                 <span>
                   {file.metadata.replayGainAlbumGain?.dB
                     ? `${file.metadata.replayGainAlbumGain?.dB} dB`
@@ -535,7 +554,12 @@ const MetadataEditor = ({
               </AllDetailsWrapper>
             )}
             <StyledActionsContainer>
-              <div></div>
+              <div>
+                <span>
+                  {isLoading ? t("modal.metadata.saving") : ""}{" "}
+                  {error ? error : ""}
+                </span>
+              </div>
               <div>
                 <DetailsCheckboxWrapper>
                   <CheckboxWrapper>
@@ -568,7 +592,7 @@ const MetadataEditor = ({
                   isSmall
                   isSecondary
                   onClick={previous}
-                  disabled={index < 1 || combine}
+                  disabled={index < 1 || (combine && !showAllDetails)}
                 >
                   {t("modal.metadata.previousButton")}
                 </Button>
@@ -576,14 +600,16 @@ const MetadataEditor = ({
                   isSmall
                   isSecondary
                   onClick={next}
-                  disabled={index >= files.length - 1 || combine}
+                  disabled={
+                    index >= files.length - 1 || (combine && !showAllDetails)
+                  }
                 >
                   {t("modal.metadata.nextButton")}
                 </Button>
                 <SaveButton
                   onClick={() => saveTags(file)}
                   isPrimary
-                  disabled={isUpdating}
+                  disabled={isLoading}
                 >
                   {`${t("modal.metadata.saveButton")}${files.length > 1 && combine ? ` (${files.length})` : ""}`}
                 </SaveButton>

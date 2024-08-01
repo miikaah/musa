@@ -152,7 +152,7 @@ const CoverInfo = ({ item, isSmall, toggleEdit, t }: CoverInfoProps) => {
             <span>{item?.metadata?.dynamicRangeAlbum} dB</span>
           </div>
           <div>
-            <span>{t("coverInfo.metadata.bitrate")}</span>
+            <span>{t("coverInfo.metadata.bitRate")}</span>
             <span>{bitrate}</span>
           </div>
           <div>

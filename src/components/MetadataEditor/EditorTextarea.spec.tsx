@@ -10,9 +10,11 @@ describe("EditorTextarea", () => {
   it("renders EditorTextarea component", async () => {
     render(
       <EditorTextarea
-        field="mock"
+        field={["mock"]}
         isDisabled={false}
         updateValue={mockUpdateValue}
+        index={0}
+        isMultiValue={false}
       />,
       {},
     );
@@ -23,9 +25,11 @@ describe("EditorTextarea", () => {
   it("calls updateValue change handler", async () => {
     render(
       <EditorTextarea
-        field="mock"
+        field={["mock"]}
         isDisabled={false}
         updateValue={mockUpdateValue}
+        index={0}
+        isMultiValue={false}
       />,
       {},
     );

@@ -8,7 +8,15 @@ const mockUpdateValue = vi.fn();
 
 describe("EditorInput", () => {
   it("renders EditorInput component", async () => {
-    render(<EditorInput field="mock" isDisabled={false} />, {});
+    render(
+      <EditorInput
+        field={["mock"]}
+        isDisabled={false}
+        index={0}
+        isMultiValue={false}
+      />,
+      {},
+    );
 
     expect(screen.getByRole("textbox")).toBeInTheDocument();
   });
@@ -16,9 +24,11 @@ describe("EditorInput", () => {
   it("calls updateValue change handler", async () => {
     render(
       <EditorInput
-        field="mock"
+        field={["mock"]}
         isDisabled={false}
         updateValue={mockUpdateValue}
+        index={0}
+        isMultiValue={false}
       />,
       {},
     );
