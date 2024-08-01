@@ -371,7 +371,7 @@ const MetadataEditor = ({
       console.log("payload", payload);
       // TODO: Create bulk file tag update API
     } else {
-      // const { tags, item } = toUpdatePayload(files[index], index);
+      const { tags, item } = toUpdatePayload(files[index], index);
       // setIsUpdating(true);
       // const err = await Api.writeTags(
       //   urlSafeBase64.encode(file.fileUrl?.replace("media:/", "") ?? ""),
@@ -383,7 +383,7 @@ const MetadataEditor = ({
       //   console.error("Failed to update tags", err);
       //   return;
       // }
-      // dispatch(updateManyById([item]));
+      dispatch(updateManyById([item]));
     }
   };
 

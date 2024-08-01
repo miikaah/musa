@@ -282,17 +282,19 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
     }
     case UPDATE_MANY_BY_ID: {
       const newItems = [...state.items];
-      // TODO: Update id to be filepath
-      for (const item of action.items) {
-        const index = state.items.findIndex((it) => it.id === item.id);
-        if (newItems[index]) {
+      for (let i = 0; i < state.items.length; i++) {
+        const newItem = action.items.find(
+          (it) => it.fileUrl === state.items[i].fileUrl,
+        );
+        if (newItem) {
           // TODO: Remove any
-          newItems[index] = item as any;
+          newItems[i] = newItem as any;
         }
       }
 
       return getStateByPlaylistChange(
         state,
+        // TODO: Remove any
         (newItems as any).map(toItemWithId),
         state.currentIndex,
       );
