@@ -369,23 +369,33 @@ const MetadataEditor = ({
     return { fid, tags, item };
   };
 
-  const saveTags = async (file: AudioWithMetadata) => {
+  const saveTags = async () => {
     const payloads: { fid: string; tags: Partial<Tags> }[] = [];
     const items: AudioWithMetadata[] = [];
 
     for (let i = 0; i < files.length; i++) {
       const { fid, tags, item } = toUpdatePayload(files[i], i);
-      payloads.push({ fid, tags });
-      items.push(item);
+      if (Object.keys(tags).length > 0) {
+        payloads.push({ fid, tags });
+        items.push(item);
+      }
     }
-    // console.log("payloads", payloads);
-    // console.log("items", items);
+
+    if (payloads.length < 1) {
+      setError(t("modal.metadata.noChangesLabel"));
+      return;
+    }
 
     setIsLoading(true);
-    const err = await Api.writeTagsMany(payloads);
+    let err;
+    if (payloads.length > 1) {
+      err = await Api.writeTagsMany(payloads);
+    } else {
+      const { fid, tags } = payloads[0];
+      err = await Api.writeTags(fid, tags);
+    }
     setIsLoading(false);
     if (err) {
-      console.error("Failed to update tags", err);
       setError(err.message);
       return;
     }
@@ -403,13 +413,22 @@ const MetadataEditor = ({
     const newFields: MetadataFields = JSON.parse(JSON.stringify(fields));
 
     if (combine) {
-      newFields[key].multiValue = valueArr;
-      for (let i = 0; i < files.length; i++) {
-        const value = valueArr[i];
-        const isTouched =
-          prevFields[key].isTouched[i] ||
-          prevFields[key].multiValue[i] !== value;
-        newFields[key].isTouched[i] = isTouched;
+      if (valueArr.length === 1) {
+        // Reflect write-to-all to all files
+        for (let i = 0; i < files.length; i++) {
+          const value = valueArr[0];
+          newFields[key].multiValue[i] = value;
+          newFields[key].isTouched[i] = true;
+        }
+      } else {
+        newFields[key].multiValue = valueArr;
+        for (let i = 0; i < files.length; i++) {
+          const value = valueArr[i];
+          const isTouched =
+            prevFields[key].isTouched[i] ||
+            prevFields[key].multiValue[i] !== value;
+          newFields[key].isTouched[i] = isTouched;
+        }
       }
     } else {
       const value = valueArr[index];
@@ -611,11 +630,7 @@ const MetadataEditor = ({
                 >
                   {t("modal.metadata.nextButton")}
                 </Button>
-                <SaveButton
-                  onClick={() => saveTags(file)}
-                  isPrimary
-                  disabled={isLoading}
-                >
+                <SaveButton isPrimary onClick={saveTags} disabled={isLoading}>
                   {`${t("modal.metadata.saveButton")}${files.length > 1 && combine ? ` (${files.length})` : ""}`}
                 </SaveButton>
               </div>

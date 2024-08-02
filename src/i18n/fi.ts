@@ -51,6 +51,7 @@ export default {
   "modal.metadata.nextButton": "Seuraava",
   "modal.metadata.allDetailsLabel": "Kaikki tiedot",
   "modal.metadata.combineLabel": "Kokoa",
+  "modal.metadata.noChangesLabel": "Ei muutoksia",
   "modal.normalization.title": "Normalisaatio",
   "modal.normalization.gain": "Vahvistus",
   "modal.normalization.dynamicRange": "Dynaaminen alue",

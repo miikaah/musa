@@ -51,6 +51,7 @@ export default {
   "modal.metadata.nextButton": "Next",
   "modal.metadata.allDetailsLabel": "All details",
   "modal.metadata.combineLabel": "Combine",
+  "modal.metadata.noChangesLabel": "No changes",
   "modal.normalization.title": "Normalization",
   "modal.normalization.gain": "Gain",
   "modal.normalization.dynamicRange": "Dynamic range",
