@@ -199,7 +199,7 @@ const resolveNumberOfMultiField = (
       field.multiValue.length > 0
         ? field.multiValue
         : files.map(
-            (file) => file.metadata[fieldName]?.[type]?.toString() ?? "",
+            (file) => file.metadata?.[fieldName]?.[type]?.toString() ?? "",
           ),
     isTouched:
       field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
@@ -217,7 +217,9 @@ const resolveArrayMultiField = (
     multiValue:
       field.multiValue.length > 0
         ? field.multiValue
-        : files.flatMap((file) => (file.metadata[fieldName] || []).join(", ")),
+        : files.flatMap((file) =>
+            (file.metadata?.[fieldName] || []).join(", "),
+          ),
     isTouched:
       field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
   };
@@ -234,7 +236,7 @@ const resolveMultiField = (
     multiValue:
       field.multiValue.length > 0
         ? field.multiValue
-        : files.map((file) => file.metadata[fieldName]?.toString() ?? ""),
+        : files.map((file) => file.metadata?.[fieldName]?.toString() ?? ""),
     isTouched:
       field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
   };
@@ -292,10 +294,17 @@ const MetadataEditor = ({
   const dispatch = useDispatch();
 
   const toUpdatePayload = (file: AudioWithMetadata, idx: number) => {
-    const item: AudioWithMetadata = JSON.parse(JSON.stringify(file));
+    const item: AudioWithMetadata = JSON.parse(
+      JSON.stringify({
+        ...file,
+        metadata: {
+          ...file.metadata,
+        },
+      }),
+    );
     const tags: Partial<Tags> = {};
     const fid = urlSafeBase64.encode(
-      item.fileUrl?.replace("media:/", "") ?? "",
+      item.fileUrl?.replace("media:/", "").replace("media:\\", "") ?? "",
     );
 
     if (fields.artist.isTouched[idx]) {
@@ -387,6 +396,7 @@ const MetadataEditor = ({
     }
 
     setIsLoading(true);
+    setError("");
     let err;
     if (payloads.length > 1) {
       err = await Api.writeTagsMany(payloads);
