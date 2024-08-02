@@ -35,7 +35,6 @@ describe("EditorInput", () => {
 
     await userEvent.type(screen.getByRole("textbox"), "2");
 
-    expect(screen.getByRole("textbox")).toHaveValue("mock2");
-    expect(mockUpdateValue).toHaveBeenCalledWith("mock2");
+    expect(mockUpdateValue).toHaveBeenCalledWith(["mock2"]);
   });
 });

@@ -20,6 +20,6 @@ describe("Settings reducer", () => {
     const result = reducer(initialState, updateSettings(settings));
 
     expect(result.language).toEqual("fi");
-    expect(result.t("coverInfo.metadata.bitrate")).toEqual("Bittinopeus");
+    expect(result.t("coverInfo.metadata.bitRate")).toEqual("Bittinopeus");
   });
 });

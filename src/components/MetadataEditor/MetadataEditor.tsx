@@ -370,45 +370,27 @@ const MetadataEditor = ({
   };
 
   const saveTags = async (file: AudioWithMetadata) => {
-    if (combine) {
-      const payloads: { fid: string; tags: Partial<Tags> }[] = [];
-      const items: AudioWithMetadata[] = [];
+    const payloads: { fid: string; tags: Partial<Tags> }[] = [];
+    const items: AudioWithMetadata[] = [];
 
-      for (let i = 0; i < files.length; i++) {
-        const { fid, tags, item } = toUpdatePayload(files[i], i);
-        payloads.push({ fid, tags });
-        items.push(item);
-      }
-      console.log("payloads", payloads);
-      console.log("items", items);
-
-      // setIsLoading(true);
-      // const err = await Api.writeTagsMany(payloads);
-      // setIsLoading(false);
-      // if (err) {
-      //   console.error("Failed to update many tags", err);
-      //   setError(error);
-      //   return;
-      // }
-
-      // dispatch(updateManyById(items));
-    } else {
-      const { tags, item } = toUpdatePayload(files[index], index);
-
-      setIsLoading(true);
-      const err = await Api.writeTags(
-        urlSafeBase64.encode(file.fileUrl?.replace("media:/", "") ?? ""),
-        tags,
-      );
-      setIsLoading(false);
-      if (err) {
-        console.error("Failed to update tags", err);
-        setError(error);
-        return;
-      }
-
-      dispatch(updateManyById([item]));
+    for (let i = 0; i < files.length; i++) {
+      const { fid, tags, item } = toUpdatePayload(files[i], i);
+      payloads.push({ fid, tags });
+      items.push(item);
     }
+    // console.log("payloads", payloads);
+    // console.log("items", items);
+
+    setIsLoading(true);
+    const err = await Api.writeTagsMany(payloads);
+    setIsLoading(false);
+    if (err) {
+      console.error("Failed to update tags", err);
+      setError(err.message);
+      return;
+    }
+
+    dispatch(updateManyById(items));
   };
 
   const toggleCombinedFields = (event: React.ChangeEvent<HTMLInputElement>) => {
