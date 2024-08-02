@@ -1,16 +1,18 @@
 import { AudioWithMetadata, Tags } from "@miikaah/musa-core";
 import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import EditorInput from "./EditorInput";
 import EditorTextarea from "./EditorTextarea";
 import Button from "../Button";
 import * as Api from "../../apiClient";
-import { dispatchToast } from "../../util";
+import { formatDuration, urlSafeBase64 } from "../../util";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import { ActionsContainer } from "../Modal/ActionsContainer";
 import { getCodecInfo } from "./getCodecInfo";
+import { ellipsisTextOverflow } from "../../common.styles";
+import { updateManyById } from "../../reducers/player.reducer";
 
 const Container = styled.div`
   display: flex;
@@ -20,13 +22,17 @@ const Container = styled.div`
   padding-bottom: 80px;
 `;
 
+const sharedWrapperCss = css`
+  margin: 10px auto 0;
+`;
+
 const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto;
   grid-template-columns: 1fr 9fr;
   font-size: var(--font-size-xs);
-  margin: 10px auto;
   max-width: 600px;
+  ${sharedWrapperCss}
 
   > span {
     align-self: center;
@@ -72,74 +78,197 @@ const Wrapper = styled.div`
   }
 `;
 
+const AllDetailsWrapper = styled.div`
+  color: black;
+  max-width: 96%;
+  padding: 10px 10px 0;
+  height: 55vh;
+  background-color: #f6f6f6;
+  border-radius: 1px;
+  box-shadow:
+    inset 1px 1px 2px rgba(0, 0, 0, 0.1),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.9);
+  overflow: auto;
+  font-size: var(--font-size-xs);
+  display: grid;
+  grid-template-rows: repeat(auto-fill, minmax(24px, 1fr));
+  grid-template-columns: 4fr 16fr;
+  ${sharedWrapperCss}
+
+  > span {
+    padding: 4px 0 0 8px;
+    ${ellipsisTextOverflow}
+  }
+
+  > span:nth-of-type(2n) {
+    font-size: var(--font-size-xxs);
+  }
+
+  > span:nth-of-type(2n + 1),
+  > span:nth-of-type(2n + 2) {
+    background-color: #f6f6f6;
+  }
+
+  > span:nth-of-type(4n + 1),
+  > span:nth-of-type(4n + 2) {
+    background-color: #eee;
+  }
+`;
+
 const StyledActionsContainer = styled(ActionsContainer)`
-  > button:first-of-type,
-  > button:last-of-type {
-    padding: 0;
-    max-width: 120px;
-    margin-top: 16px;
-    font-weight: normal;
+  > div {
+    > button:nth-of-type(1),
+    > button:nth-of-type(2) {
+      max-width: 120px;
+      margin: 0 10px 10px 0;
+      font-weight: normal;
+    }
   }
 `;
 
 const SaveButton = styled(Button)`
-  align-self: flex-end;
-  max-width: 170px !important;
-  margin-top: 10px;
+  min-width: 170px !important;
+  margin-bottom: 10px;
 `;
 
-const getFieldValuesString = (fieldValues: (string | number)[]) =>
-  `${fieldValues.length > 1 ? `(${fieldValues.length})` : ""} ${fieldValues.join(";")}`;
+const DetailsCheckboxWrapper = styled.div`
+  color: black;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CheckboxWrapper = styled.div<{ isDisabled?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px 0 0;
+
+  ${({ isDisabled }) => isDisabled && `color: grey;`}
+`;
+
+type MetadataField = {
+  multiValue: string[];
+  isTouched: boolean[];
+};
+
+type MetadataFields = {
+  artist: MetadataField;
+  title: MetadataField;
+  album: MetadataField;
+  year: MetadataField;
+  track: MetadataField;
+  tracks: MetadataField;
+  disk: MetadataField;
+  disks: MetadataField;
+  genre: MetadataField;
+  composer: MetadataField;
+  comment: MetadataField;
+};
+
+const defaultField: MetadataField = {
+  multiValue: [],
+  isTouched: [],
+};
+
+const defaultFields: MetadataFields = {
+  artist: defaultField,
+  title: defaultField,
+  album: defaultField,
+  year: defaultField,
+  track: defaultField,
+  tracks: defaultField,
+  disk: defaultField,
+  disks: defaultField,
+  genre: defaultField,
+  composer: defaultField,
+  comment: defaultField,
+};
 
 const resolveNumberOfMultiField = (
   files: AudioWithMetadata[],
-  index: number,
+  fields: MetadataFields,
   fieldName: "track" | "disk",
   type: "no" | "of",
-) => {
-  const metadata = files[index].metadata;
-  if (files.length === 1) {
-    return metadata[fieldName]?.[type] ?? "";
-  }
-  const fieldValues = Array.from(
-    new Set([
-      ...files.flatMap((file) => file.metadata[fieldName]?.[type] ?? ""),
-    ]),
-  );
-  return getFieldValuesString(fieldValues);
+): MetadataField => {
+  const field = type === "of" ? fields[`${fieldName}s`] : fields[fieldName];
+
+  return {
+    multiValue:
+      field.multiValue.length > 0
+        ? field.multiValue
+        : files.map(
+            (file) => file.metadata[fieldName]?.[type]?.toString() ?? "",
+          ),
+    isTouched:
+      field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
+  };
 };
 
 const resolveArrayMultiField = (
   files: AudioWithMetadata[],
-  index: number,
+  fields: MetadataFields,
   fieldName: "genre" | "composer" | "comment",
-) => {
-  const metadata = files[index].metadata;
-  if (files.length === 1) {
-    return (metadata[fieldName] ?? []).join(", ");
-  }
-  const fieldValues = Array.from(
-    new Set([
-      ...files.flatMap((file) => (file.metadata[fieldName] ?? []).join(", ")),
-    ]),
-  );
-  return getFieldValuesString(fieldValues);
+): MetadataField => {
+  const field = fields[fieldName];
+
+  return {
+    multiValue:
+      field.multiValue.length > 0
+        ? field.multiValue
+        : files.flatMap((file) => (file.metadata[fieldName] || []).join(", ")),
+    isTouched:
+      field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
+  };
 };
 
 const resolveMultiField = (
   files: AudioWithMetadata[],
-  index: number,
+  fields: MetadataFields,
   fieldName: "artist" | "title" | "album" | "year",
-) => {
-  const metadata = files[index].metadata;
-  if (files.length === 1) {
-    return metadata[fieldName]?.toString() ?? "";
-  }
-  const fieldValues = Array.from(
-    new Set([...files.map((file) => (file.metadata as any)[fieldName])]),
-  );
-  return getFieldValuesString(fieldValues);
+): MetadataField => {
+  const field = fields[fieldName];
+
+  return {
+    multiValue:
+      field.multiValue.length > 0
+        ? field.multiValue
+        : files.map((file) => file.metadata[fieldName]?.toString() ?? ""),
+    isTouched:
+      field.isTouched.length > 0 ? field.isTouched : files.map(() => false),
+  };
 };
+
+const resolveFields = (
+  files: AudioWithMetadata[],
+  fields: MetadataFields,
+): MetadataFields => ({
+  artist: resolveMultiField(files, fields, "artist"),
+  album: resolveMultiField(files, fields, "album"),
+  title: resolveMultiField(files, fields, "title"),
+  year: resolveMultiField(files, fields, "year"),
+  track: resolveNumberOfMultiField(files, fields, "track", "no"),
+  tracks: resolveNumberOfMultiField(files, fields, "track", "of"),
+  disk: resolveNumberOfMultiField(files, fields, "disk", "no"),
+  disks: resolveNumberOfMultiField(files, fields, "disk", "of"),
+  genre: resolveArrayMultiField(files, fields, "genre"),
+  composer: resolveArrayMultiField(files, fields, "composer"),
+  comment: resolveArrayMultiField(files, fields, "comment"),
+});
+
+const fieldKeys: (keyof MetadataFields)[] = [
+  "artist",
+  "title",
+  "album",
+  "year",
+  "track",
+  "tracks",
+  "disk",
+  "disks",
+  "genre",
+  "composer",
+];
 
 type MetadataEditorProps = {
   activeIndex: number;
@@ -152,84 +281,165 @@ const MetadataEditor = ({
   files = [],
   t,
 }: MetadataEditorProps) => {
-  const [artist, setArtist] = useState<string>();
-  const [title, setTitle] = useState<string>();
-  const [album, setAlbum] = useState<string>();
-  const [year, setYear] = useState<string>();
-  const [track, setTrack] = useState<string>();
-  const [tracks, setTracks] = useState<string>();
-  const [disk, setDisk] = useState<string>();
-  const [disks, setDisks] = useState<string>();
-  const [genre, setGenre] = useState<string>();
-  const [composer, setComposer] = useState<string>();
-  const [comment, setComment] = useState<string>();
-  const [isUpdating, setIsUpdating] = useState(false);
   const [index, setIndex] = useState<number>(activeIndex);
+  const [combine, setCombine] = useState(files.length > 1);
+  const [fields, setFields] = useState<MetadataFields>(
+    resolveFields(files, defaultFields),
+  );
+  const [showAllDetails, setShowAllDetails] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  const saveTags = async (
-    _event: React.MouseEvent,
-    file: AudioWithMetadata,
-  ) => {
+  const toUpdatePayload = (file: AudioWithMetadata, idx: number) => {
+    const item: AudioWithMetadata = JSON.parse(JSON.stringify(file));
     const tags: Partial<Tags> = {};
+    const fid = urlSafeBase64.encode(
+      item.fileUrl?.replace("media:/", "") ?? "",
+    );
 
-    if (artist !== undefined) {
-      tags.artist = artist;
+    if (fields.artist.isTouched[idx]) {
+      const value = fields.artist.multiValue[idx] ?? "";
+      tags.artist = value;
+      item.metadata.artist = value;
     }
-    if (title !== undefined) {
-      tags.title = title;
+    if (fields.title.isTouched[idx]) {
+      const value = fields.title.multiValue[idx] ?? "";
+      tags.title = value;
+      item.metadata.title = value;
     }
-    if (album !== undefined) {
-      tags.album = album;
+    if (fields.album.isTouched[idx]) {
+      const value = fields.album.multiValue[idx] ?? "";
+      tags.album = value;
+      item.metadata.album = value;
     }
-    if (year !== undefined) {
-      tags.year = year;
+    if (fields.year.isTouched[idx]) {
+      const value = fields.year.multiValue[idx] ?? "";
+      tags.year = value;
+      item.metadata.year = value;
     }
-    if (track !== undefined) {
-      tags.trackNumber = track;
+    if (fields.track.isTouched[idx]) {
+      const value = fields.track.multiValue[idx] ?? "";
+      tags.trackNumber = value;
+      item.metadata.track = { no: value, of: "" };
     }
-    if (tracks !== undefined) {
-      tags.trackNumber = `${tags.trackNumber || ""}/${tracks}`;
-    }
-    if (disk !== undefined) {
-      tags.partOfSet = disk;
-    }
-    if (disks !== undefined) {
-      const diskNo = tags.partOfSet || file?.metadata?.disk?.no || "";
-      const diskOf = disks ? `/${disks}` : "";
-
-      tags.partOfSet = `${diskNo}${diskOf}`;
-    }
-    if (genre !== undefined) {
-      tags.genre = genre;
-    }
-    if (composer !== undefined) {
-      tags.composer = composer;
-    }
-    if (comment !== undefined) {
-      tags.comment = {
-        language: "eng",
-        text: comment,
+    if (fields.tracks.isTouched[idx]) {
+      tags.trackNumber = `${tags.trackNumber || ""}/${fields.tracks.multiValue[idx] ?? ""}`;
+      item.metadata.track = {
+        no: item.metadata.track?.no ? item.metadata.track.no : "",
+        of: fields.tracks.multiValue[idx],
       };
     }
-
-    setIsUpdating(true);
-    const err = await Api.writeTags(file.id, tags);
-    setIsUpdating(false);
-
-    if (err) {
-      dispatchToast(
-        t("toast.failedToUpdateTags"),
-        `tag-update-failure-${Date.now()}`,
-        dispatch,
-      );
-    } else {
-      dispatchToast(
-        t("toast.succeededToUpdateTags"),
-        `tag-update-success-${Date.now()}`,
-        dispatch,
-      );
+    if (fields.disk.isTouched[idx]) {
+      const value = fields.disk.multiValue[idx] ?? "";
+      tags.partOfSet = value;
+      item.metadata.disk = { no: value, of: "" };
     }
+    if (fields.disks.isTouched[idx]) {
+      const diskNo = tags.partOfSet || file?.metadata?.disk?.no || "";
+      const diskOf = fields.disks.multiValue[idx]
+        ? `/${fields.disks.multiValue[idx]}`
+        : "";
+
+      tags.partOfSet = `${diskNo}${diskOf}`;
+      item.metadata.disk = {
+        no: item.metadata.disk?.no ? item.metadata.disk.no : "",
+        of: fields.disks.multiValue[idx],
+      };
+    }
+    if (fields.genre.isTouched[idx]) {
+      const value = fields.genre.multiValue[idx] ?? "";
+      tags.genre = value;
+      item.metadata.genre = value.split(",").map((it) => it.trim());
+    }
+    if (fields.composer.isTouched[idx]) {
+      const value = fields.composer.multiValue[idx] ?? "";
+      tags.composer = value;
+      item.metadata.composer = value.split(",").map((it) => it.trim());
+    }
+    if (fields.comment.isTouched[idx]) {
+      const value = fields.comment.multiValue[idx] ?? "";
+      tags.comment = {
+        language: "eng",
+        text: value,
+      };
+      item.metadata.comment = value.split(",").map((it) => it.trim());
+    }
+
+    return { fid, tags, item };
+  };
+
+  const saveTags = async () => {
+    const payloads: { fid: string; tags: Partial<Tags> }[] = [];
+    const items: AudioWithMetadata[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const { fid, tags, item } = toUpdatePayload(files[i], i);
+      if (Object.keys(tags).length > 0) {
+        payloads.push({ fid, tags });
+        items.push(item);
+      }
+    }
+
+    if (payloads.length < 1) {
+      setError(t("modal.metadata.noChangesLabel"));
+      return;
+    }
+
+    setIsLoading(true);
+    let err;
+    if (payloads.length > 1) {
+      err = await Api.writeTagsMany(payloads);
+    } else {
+      const { fid, tags } = payloads[0];
+      err = await Api.writeTags(fid, tags);
+    }
+    setIsLoading(false);
+    if (err) {
+      setError(err.message);
+      return;
+    }
+
+    dispatch(updateManyById(items));
+  };
+
+  const toggleCombinedFields = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCombine(event.target.checked);
+  };
+
+  const updateValue = (valueArr: string[], key: keyof MetadataFields) => {
+    // Have to do a deep copy here to sever the ref between the objects in the fields array
+    const prevFields: MetadataFields = JSON.parse(JSON.stringify(fields));
+    const newFields: MetadataFields = JSON.parse(JSON.stringify(fields));
+
+    if (combine) {
+      if (valueArr.length === 1) {
+        // Reflect write-to-all to all files
+        for (let i = 0; i < files.length; i++) {
+          const value = valueArr[0];
+          newFields[key].multiValue[i] = value;
+          newFields[key].isTouched[i] = true;
+        }
+      } else {
+        newFields[key].multiValue = valueArr;
+        for (let i = 0; i < files.length; i++) {
+          const value = valueArr[i];
+          const isTouched =
+            prevFields[key].isTouched[i] ||
+            prevFields[key].multiValue[i] !== value;
+          newFields[key].isTouched[i] = isTouched;
+        }
+      }
+    } else {
+      const value = valueArr[index];
+      const isTouched =
+        prevFields[key].isTouched[index] ||
+        prevFields[key].multiValue[index] !== value;
+      newFields[key].multiValue[index] = value;
+      newFields[key].isTouched[index] = isTouched;
+    }
+
+    setFields(newFields);
   };
 
   const previous = () => {
@@ -242,107 +452,188 @@ const MetadataEditor = ({
 
   return (
     <Container>
-      {files.slice(index, index + 1).map((file, idx) => {
+      {files.slice(index, index + 1).map((file) => {
         const isDisabled =
           !(file?.metadata?.codec || "").toLowerCase().startsWith("mpeg") &&
           !(file?.metadata?.codec || "").toLowerCase().startsWith("flac");
 
         return (
           <div key={file.id}>
-            <Wrapper>
-              <span>{t("modal.metadata.tag.artist")}</span>
-              <EditorInput
-                field={resolveMultiField(files, idx, "artist")}
-                updateValue={setArtist}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.title")}</span>
-              <EditorInput
-                field={resolveMultiField(files, idx, "title")}
-                updateValue={setTitle}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.album")}</span>
-              <EditorInput
-                field={resolveMultiField(files, idx, "album")}
-                updateValue={setAlbum}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.year")}</span>
-              <EditorInput
-                field={resolveMultiField(files, idx, "year")}
-                updateValue={setYear}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.track")}</span>
-              <EditorInput
-                field={resolveNumberOfMultiField(files, idx, "track", "no")}
-                updateValue={setTrack}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.tracks")}</span>
-              <EditorInput
-                field={resolveNumberOfMultiField(files, idx, "track", "of")}
-                updateValue={setTracks}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.disk")}</span>
-              <EditorInput
-                field={resolveNumberOfMultiField(files, idx, "disk", "no")}
-                updateValue={setDisk}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.disks")}</span>
-              <EditorInput
-                field={resolveNumberOfMultiField(files, idx, "disk", "of")}
-                updateValue={setDisks}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.genre")}</span>
-              <EditorInput
-                field={resolveArrayMultiField(files, idx, "genre")}
-                updateValue={setGenre}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.composer")}</span>
-              <EditorInput
-                field={resolveArrayMultiField(files, idx, "composer")}
-                updateValue={setComposer}
-                isDisabled={isDisabled}
-              />
-              <span>{t("modal.metadata.tag.codec")}</span>
-              <EditorInput field={getCodecInfo(file)} isDisabled />
-              <span>{t("modal.metadata.tag.comment")}</span>
-              <EditorTextarea
-                field={resolveArrayMultiField(files, idx, "comment")}
-                updateValue={setComment}
-                isDisabled={isDisabled}
-              />
-            </Wrapper>
+            {!showAllDetails ? (
+              <Wrapper>
+                {fieldKeys.map((key) => {
+                  const field = { ...fields[key] };
+
+                  return (
+                    <React.Fragment key={key}>
+                      <span>{t(`modal.metadata.tag.${key}`)}</span>
+                      <EditorInput
+                        field={field.multiValue}
+                        index={index}
+                        updateValue={(value) => updateValue(value, key)}
+                        isMultiValue={combine}
+                        isDisabled={isDisabled}
+                      />
+                    </React.Fragment>
+                  );
+                })}
+                <span>{t("modal.metadata.tag.codec")}</span>
+                <EditorInput
+                  staticField={getCodecInfo(file).toLowerCase()}
+                  isDisabled
+                />
+                <span>{t("modal.metadata.tag.comment")}</span>
+                <EditorTextarea
+                  field={fields.comment.multiValue}
+                  index={index}
+                  updateValue={(value) => updateValue(value, "comment")}
+                  isMultiValue={combine}
+                  isDisabled={isDisabled}
+                />
+              </Wrapper>
+            ) : (
+              <AllDetailsWrapper>
+                <span>{t("modal.metadata.detail.fileUrl")}</span>
+                <span title={file.fileUrl?.replace("media:", "") ?? ""}>
+                  {file.fileUrl?.replace("media:", "") ?? ""}
+                </span>
+                <span>{t("modal.metadata.detail.coverUrl")}</span>
+                <span title={file.coverUrl?.replace("media:", "") ?? ""}>
+                  {file.coverUrl?.replace("media:", "") ?? ""}
+                </span>
+                <span>{t("modal.metadata.detail.duration")}</span>
+                <span>{formatDuration(file.metadata.duration)}</span>
+                <span>{t("modal.metadata.detail.sampleRate")}</span>
+                <span>
+                  {file.metadata.sampleRate
+                    ? `${file.metadata.sampleRate} Hz`
+                    : ""}
+                </span>
+                <span>{t("modal.metadata.detail.bitRate")}</span>
+                <span>
+                  {file.metadata.bitrate
+                    ? `${file.metadata.bitrate / 1000} kbps`
+                    : ""}
+                </span>
+                <span>{t("modal.metadata.detail.channels")}</span>
+                <span>{file.metadata.numberOfChannels ?? ""}</span>
+                <span title={t("modal.metadata.detail.codecDetails")}>
+                  {t("modal.metadata.detail.codec")}
+                </span>
+                <span>{getCodecInfo(file)}</span>
+                <span>{t("modal.metadata.detail.tagTypes")}</span>
+                <span>
+                  {(file.metadata.tagTypes || []).length
+                    ? file.metadata.tagTypes?.join(", ")
+                    : ""}
+                </span>
+                <span>{t("modal.metadata.detail.encoding")}</span>
+                <span>
+                  {file.metadata.lossless
+                    ? t("modal.metadata.detail.encodingLossless")
+                    : t("modal.metadata.detail.encodingLossy")}
+                </span>
+                <span>{t("modal.metadata.detail.encoder")}</span>
+                <span>{file.metadata.tool ?? ""}</span>
+                <span>{t("modal.metadata.detail.encoderSettings")}</span>
+                <span title={file.metadata.encoderSettings ?? ""}>
+                  {file.metadata.encoderSettings ?? ""}
+                </span>
+                <span title={t("modal.metadata.detail.drTrackDetails")}>
+                  {t("modal.metadata.detail.drTrack")}
+                </span>
+                <span>
+                  {file.metadata.dynamicRange
+                    ? `${file.metadata.dynamicRange} dB`
+                    : ""}
+                </span>
+                <span title={t("modal.metadata.detail.drAlbumDetails")}>
+                  {t("modal.metadata.detail.drAlbum")}
+                </span>
+                <span>
+                  {file.metadata.dynamicRangeAlbum
+                    ? `${file.metadata.dynamicRangeAlbum} dB`
+                    : ""}
+                </span>
+                <span
+                  title={t("modal.metadata.detail.normalizationTrackDetails")}
+                >
+                  {t("modal.metadata.detail.normalizationTrack")}
+                </span>
+                <span>
+                  {file.metadata.replayGainTrackGain?.dB
+                    ? `${file.metadata.replayGainTrackGain?.dB} dB`
+                    : ""}
+                </span>
+                <span
+                  title={t("modal.metadata.detail.normalizationAlbumDetails")}
+                >
+                  {t("modal.metadata.detail.normalizationAlbum")}
+                </span>
+                <span>
+                  {file.metadata.replayGainAlbumGain?.dB
+                    ? `${file.metadata.replayGainAlbumGain?.dB} dB`
+                    : ""}
+                </span>
+              </AllDetailsWrapper>
+            )}
             <StyledActionsContainer>
-              <Button
-                isSmall
-                isSecondary
-                onClick={previous}
-                disabled={index < 1}
-              >
-                {t("modal.metadata.previousButton")}
-              </Button>
-              <SaveButton
-                onClick={(event: React.MouseEvent) => saveTags(event, file)}
-                isPrimary
-                disabled={files.length > 1 || isUpdating}
-              >
-                {`${t("modal.metadata.saveButton")}${files.length > 1 ? ` (${files.length})` : ""}`}
-              </SaveButton>
-              <Button
-                isSmall
-                isSecondary
-                onClick={next}
-                disabled={index >= files.length - 1}
-              >
-                {t("modal.metadata.nextButton")}
-              </Button>
+              <div>
+                <span>
+                  {isLoading ? t("modal.metadata.saving") : ""}{" "}
+                  {error ? error : ""}
+                </span>
+              </div>
+              <div>
+                <DetailsCheckboxWrapper>
+                  <CheckboxWrapper>
+                    <input
+                      type="checkbox"
+                      id="metadataEditorAllDetails"
+                      checked={showAllDetails}
+                      onChange={(event) =>
+                        setShowAllDetails(event.target.checked)
+                      }
+                    />
+                    <label htmlFor="metadataEditorAllDetails">
+                      {t("modal.metadata.allDetailsLabel")}
+                    </label>
+                  </CheckboxWrapper>
+                  <CheckboxWrapper isDisabled={files.length < 2}>
+                    <input
+                      type="checkbox"
+                      id="metadataEditorCombine"
+                      checked={combine}
+                      onChange={toggleCombinedFields}
+                      disabled={files.length < 2}
+                    />
+                    <label htmlFor="metadataEditorCombine">
+                      {t("modal.metadata.combineLabel")}
+                    </label>
+                  </CheckboxWrapper>
+                </DetailsCheckboxWrapper>
+                <Button
+                  isSmall
+                  isSecondary
+                  onClick={previous}
+                  disabled={index < 1 || (combine && !showAllDetails)}
+                >
+                  {t("modal.metadata.previousButton")}
+                </Button>
+                <Button
+                  isSmall
+                  isSecondary
+                  onClick={next}
+                  disabled={
+                    index >= files.length - 1 || (combine && !showAllDetails)
+                  }
+                >
+                  {t("modal.metadata.nextButton")}
+                </Button>
+                <SaveButton isPrimary onClick={saveTags} disabled={isLoading}>
+                  {`${t("modal.metadata.saveButton")}${files.length > 1 && combine ? ` (${files.length})` : ""}`}
+                </SaveButton>
+              </div>
             </StyledActionsContainer>
           </div>
         );

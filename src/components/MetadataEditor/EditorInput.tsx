@@ -1,23 +1,47 @@
-import React, { useState } from "react";
+import React from "react";
+import { separator } from "../../util";
 
-type EditorInputProps = {
-  field: string | number;
+type StaticProps = {
+  staticField: string;
   isDisabled: boolean;
-  updateValue?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  field?: never;
+  index?: never;
+  isMultiValue?: never;
+  updateValue?: never;
 };
 
-const EditorInput = ({ field, isDisabled, updateValue }: EditorInputProps) => {
-  const [value, setValue] = useState(field || "");
+type EditorInputProps = {
+  staticField?: never;
+  isDisabled: boolean;
+  field: string[];
+  index: number;
+  isMultiValue: boolean;
+  updateValue?: (value: string[]) => void;
+};
 
-  const update = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+const EditorInput = ({
+  staticField,
+  field,
+  index,
+  isMultiValue,
+  isDisabled,
+  updateValue,
+}: StaticProps | EditorInputProps) => {
+  const value = isMultiValue
+    ? Array.from(new Set(field)).join(separator)
+    : (staticField ?? field[index]);
 
-    if (updateValue) {
-      updateValue(event.target.value);
-    }
-  };
-
-  return <input value={value} onChange={update} disabled={isDisabled} />;
+  return (
+    <input
+      value={value}
+      onChange={(event) => {
+        if (typeof updateValue === "function") {
+          updateValue(event.target.value.split(separator));
+        }
+      }}
+      disabled={isDisabled}
+    />
+  );
 };
 
 export default EditorInput;

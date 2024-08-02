@@ -13,15 +13,6 @@ jpeg, png and webp images.
 
 ## Roadmap
 
-### Tagging
-
-- feat: Bulk album tags editor
-- feat: Update ogg tags
-- feat: Write tags from scratch
-- feat: Deduce tags from filename
-- feat: Make library and tag updates work without refresh
-- feat: View for seeing files with missing tags / covers
-
 ### Search - improvements
 
 - feat: Remove adversarial trash characters like ' from search terms
@@ -45,16 +36,33 @@ jpeg, png and webp images.
 ### Playlist
 
 - feat: Scroll down-up on long press select
+- feat: Add playlist editor
+
+### Tagging
+
+- refactor: Tagging backend (TagLib)
+- feat: Deduce tags from filename
+- feat: View for seeing files with missing tags / covers
 
 ### DSP
 
 - investigate: Script for downloading all impulse responses from AutoEQ repo?
+- refactor: Replace IR selector with dropdown
 - investigate: How hard is it to write a rudimentary multiband compressor?
 - investigate: EQ
+
+### Library
+
+- feat: Reflect library refresh to frontend
 
 ### Cross platform
 
 - feat: Make sure everything works on Linux
+- feat: Make linux builds of native addons
+
+### Misc
+
+- feat: SEO tags for proxy playlists
 
 ## Stuff to know
 

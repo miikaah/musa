@@ -5,7 +5,6 @@ import MetadataEditor from "./MetadataEditor";
 import { audioFixture } from "../../fixtures/audio.fixture";
 import { translate } from "../../i18n";
 import { render } from "../../../test/render";
-import { dispatchToast } from "../../util";
 import * as Api from "../../apiClient";
 import { getCodecInfo } from "./getCodecInfo";
 
@@ -15,10 +14,9 @@ vi.mock("react-redux", async () => ({
   useDispatch: () => mockDispatch,
 }));
 
-vi.mock("../../util");
-
 vi.mock("../../apiClient");
 vi.mocked(Api.writeTags).mockResolvedValue(undefined);
+vi.mocked(Api.writeTagsMany).mockResolvedValue(undefined);
 
 const t = translate("en");
 const artistText = String(t("modal.metadata.tag.artist"));
@@ -46,9 +44,7 @@ const codec = getCodecInfo(audioFixture);
 const commentText = String(t("modal.metadata.tag.comment"));
 const comment = String(audioFixture.metadata?.comment);
 const saveButtonText = String(t("modal.metadata.saveButton"));
-
-const tagUpdateSuccessText = String(t("toast.succeededToUpdateTags"));
-const tagUpdateFailureText = String(t("toast.failedToUpdateTags"));
+const noChangesText = String(t("modal.metadata.noChangesLabel"));
 
 const state = {
   settings: { t },
@@ -91,7 +87,7 @@ describe("MetadataEditor", () => {
     expect(screen.getByDisplayValue(composer)).toBeInTheDocument();
 
     expect(screen.getByText(codecText)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(codec)).toBeInTheDocument();
+    expect(screen.getByDisplayValue(codec.toLowerCase())).toBeInTheDocument();
 
     expect(screen.getByText(commentText)).toBeInTheDocument();
     expect(screen.getByDisplayValue(comment)).toBeInTheDocument();
@@ -99,7 +95,47 @@ describe("MetadataEditor", () => {
     expect(screen.getByText(saveButtonText)).toBeInTheDocument();
   });
 
-  it("calls api with updated tags and dispatches toast on success", async () => {
+  it("calls writeTagsMany api with updated tags", async () => {
+    render(
+      <MetadataEditor activeIndex={0} files={[audioFixture, audioFixture]} />,
+      state,
+    );
+
+    const editedArtist = `${artist} edit`;
+    const artistElement = screen.getByDisplayValue(artist);
+
+    await userEvent.type(artistElement, " edit");
+    await userEvent.click(screen.getByText(`${saveButtonText} (2)`));
+
+    expect(artistElement).toHaveValue(editedArtist);
+    expect(Api.writeTagsMany).toHaveBeenCalledWith([
+      {
+        fid: expect.any(String),
+        tags: {
+          artist: editedArtist,
+        },
+      },
+      {
+        fid: expect.any(String),
+        tags: {
+          artist: editedArtist,
+        },
+      },
+    ]);
+    expect(mockDispatch.mock.calls[0][0].items[0].metadata.artist).toEqual(
+      editedArtist,
+    );
+    expect(mockDispatch.mock.calls[0][0].items[1].metadata.artist).toEqual(
+      editedArtist,
+    );
+    expect(mockDispatch.mock.calls[0][0].type).toMatchInlineSnapshot(
+      `"MUSA/PLAYER/UPDATE_MANY_BY_ID"`,
+    );
+  });
+
+  it("calls writeTags api with updated tags and shows error on failure", async () => {
+    vi.mocked(Api.writeTags).mockResolvedValueOnce(new Error("err"));
+
     render(<MetadataEditor activeIndex={0} files={[audioFixture]} />, state);
 
     const editedArtist = `${artist} edit`;
@@ -108,29 +144,19 @@ describe("MetadataEditor", () => {
     await userEvent.type(artistElement, " edit");
     await userEvent.click(screen.getByText(saveButtonText));
 
-    expect(artistElement).toHaveValue(editedArtist);
-    expect(Api.writeTags).toHaveBeenCalledWith(audioFixture.id, {
+    expect(Api.writeTags).toHaveBeenCalledWith(expect.any(String), {
       artist: editedArtist,
     });
-    expect(dispatchToast).toHaveBeenCalledWith(
-      tagUpdateSuccessText,
-      expect.any(String),
-      expect.any(Function),
-    );
+    expect(screen.getByText("err")).toBeInTheDocument();
   });
 
-  it("calls api with updated tags and dispatches toast on failure", async () => {
-    vi.mocked(Api.writeTags).mockResolvedValueOnce(new Error("err"));
-
+  it("does not call api when there are no changes", async () => {
     render(<MetadataEditor activeIndex={0} files={[audioFixture]} />, state);
 
     await userEvent.click(screen.getByText(saveButtonText));
 
-    expect(Api.writeTags).toHaveBeenCalledWith(audioFixture.id, {});
-    expect(dispatchToast).toHaveBeenCalledWith(
-      tagUpdateFailureText,
-      expect.any(String),
-      expect.any(Function),
-    );
+    expect(Api.writeTags).not.toHaveBeenCalled();
+    expect(Api.writeTagsMany).not.toHaveBeenCalled();
+    expect(screen.getByText(noChangesText)).toBeInTheDocument();
   });
 });

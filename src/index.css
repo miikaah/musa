@@ -89,3 +89,37 @@ td {
   margin: 0;
   border-collapse: collapse;
 }
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  min-width: 30px;
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  position: relative;
+  cursor: pointer;
+  margin: 4px;
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--color-primary-highlight);
+  border-color: var(--color-primary-highlight);
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  display: block;
+  left: 9px;
+  top: 4px;
+  width: 8px;
+  height: 15px;
+  border: solid var(--color-typography-primary);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

@@ -175,6 +175,16 @@ export const writeTags = async (
   }
 };
 
+export const writeTagsMany = async (
+  files: { fid: string; tags: Partial<Tags> }[],
+): Promise<undefined | Error> => {
+  if (isElectron) {
+    return ElectronApi.writeTagsMany(files);
+  } else {
+    console.error("Not implemented");
+  }
+};
+
 // Server specific APIs
 
 export const insertPlaylist = async (pathIds: string[]): Promise<Playlist> => {

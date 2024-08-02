@@ -10,9 +10,11 @@ describe("EditorTextarea", () => {
   it("renders EditorTextarea component", async () => {
     render(
       <EditorTextarea
-        field="mock"
+        field={["mock"]}
         isDisabled={false}
         updateValue={mockUpdateValue}
+        index={0}
+        isMultiValue={false}
       />,
       {},
     );
@@ -23,16 +25,17 @@ describe("EditorTextarea", () => {
   it("calls updateValue change handler", async () => {
     render(
       <EditorTextarea
-        field="mock"
+        field={["mock"]}
         isDisabled={false}
         updateValue={mockUpdateValue}
+        index={0}
+        isMultiValue={false}
       />,
       {},
     );
 
     await userEvent.type(screen.getByRole("textbox"), "2");
 
-    expect(screen.getByRole("textbox")).toHaveValue("mock2");
-    expect(mockUpdateValue).toHaveBeenCalledWith("mock2");
+    expect(mockUpdateValue).toHaveBeenCalledWith(["mock2"]);
   });
 });

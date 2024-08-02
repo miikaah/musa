@@ -109,6 +109,12 @@ export const writeTags = async (
   return window.electron.writeTags(id, tags);
 };
 
+export const writeTagsMany = async (
+  files: { fid: string; tags: Partial<Tags> }[],
+): Promise<undefined | Error> => {
+  return window.electron.writeTagsMany(files);
+};
+
 // Electron specific Apis
 
 export const onInit = async (): Promise<void> => {
