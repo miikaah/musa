@@ -6,7 +6,7 @@ import EditorInput from "./EditorInput";
 import EditorTextarea from "./EditorTextarea";
 import Button from "../Button";
 import * as Api from "../../apiClient";
-import { formatDuration, urlSafeBase64 } from "../../util";
+import { formatDuration, prefixNumber, urlSafeBase64 } from "../../util";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
 import { ActionsContainer } from "../Modal/ActionsContainer";
@@ -328,16 +328,26 @@ const MetadataEditor = ({
       item.metadata.year = value;
     }
     if (fields.track.isTouched[idx]) {
-      const value = fields.track.multiValue[idx] ?? "";
-      tags.trackNumber = value;
-      item.metadata.track = { no: value, of: "" };
+      const noValue = fields.track.multiValue[idx] ?? "";
+      tags.trackNumber = noValue;
+
+      item.metadata.track = { no: noValue, of: "" };
+
+      const diskNo = item.metadata.disk?.no
+        ? Number(item.metadata.disk.no)
+        : "";
+      item.track = `${diskNo}.${noValue ? prefixNumber(Number(noValue)) : ""}`;
     }
     if (fields.tracks.isTouched[idx]) {
       tags.trackNumber = `${tags.trackNumber || ""}/${fields.tracks.multiValue[idx] ?? ""}`;
-      item.metadata.track = {
-        no: item.metadata.track?.no ? item.metadata.track.no : "",
-        of: fields.tracks.multiValue[idx],
-      };
+
+      const noValue = item.metadata.track?.no
+        ? Number(item.metadata.track.no)
+        : "";
+      const ofValue = fields.tracks.multiValue[idx]
+        ? Number(fields.tracks.multiValue[idx])
+        : "";
+      item.metadata.track = { no: noValue, of: ofValue };
     }
     if (fields.disk.isTouched[idx]) {
       const value = fields.disk.multiValue[idx] ?? "";
@@ -355,6 +365,14 @@ const MetadataEditor = ({
         no: item.metadata.disk?.no ? item.metadata.disk.no : "",
         of: fields.disks.multiValue[idx],
       };
+
+      const noValue = item.metadata.track?.no
+        ? Number(item.metadata.track.no)
+        : "";
+      const diskNo2 = item.metadata.disk?.no
+        ? Number(item.metadata.disk.no)
+        : "";
+      item.track = `${diskNo2}.${noValue ? prefixNumber(Number(noValue)) : ""}`;
     }
     if (fields.genre.isTouched[idx]) {
       const value = fields.genre.multiValue[idx] ?? "";
@@ -441,7 +459,7 @@ const MetadataEditor = ({
         }
       }
     } else {
-      const value = valueArr[index];
+      const value = valueArr[0];
       const isTouched =
         prevFields[key].isTouched[index] ||
         prevFields[key].multiValue[index] !== value;

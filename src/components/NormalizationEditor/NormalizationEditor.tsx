@@ -97,8 +97,9 @@ const Header = styled.div`
   }
 `;
 
-const Row = styled.div`
+const Row = styled.div<{ hasError: boolean }>`
   ${sharedCss}
+  ${({ hasError }) => hasError && "color: red;"}
 
   > div {
     font-family: Courier, "Lucida Console", Monaco, Consolas, monospace;
@@ -186,6 +187,7 @@ const resolveFiles = (
   return files.map((file) => {
     const aFile = nAlbumFiles?.find((f) => f.filepath === file.fileUrl);
     return {
+      error: aFile?.error?.message,
       name: file.name,
       track: file.track,
       filepath: file.fileUrl ?? "",
@@ -220,7 +222,6 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
   }));
   const hash = albumsToNormalize.map((a) => a.album).join("");
   const dispatch = useDispatch();
-  // TODO: Handle individual errors in files
 
   const {
     currentData: nAlbums,
@@ -417,7 +418,10 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
                   <div>{t("modal.normalization.name")}</div>
                 </Header>
                 {resolveFiles(files, nAlbums?.[id]?.files).map((file, i) => (
-                  <Row key={`${file.filepath}-${i}`}>
+                  <Row
+                    key={`${file.filepath}-${i}`}
+                    hasError={Boolean(file.error)}
+                  >
                     <div>{file.track ?? ""}</div>
                     <div>{Number(file.gainDb ?? 0).toFixed(2)} dB</div>
                     <div>{file.dynamicRangeDb ?? ""} dB</div>
@@ -427,7 +431,7 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
                         file.samplePeakDb.toString().startsWith("-") ? "" : "+"
                       }${file.samplePeakDb.toFixed(2)} dB)`}</span>
                     </div>
-                    <div>{file.name}</div>
+                    <div>{file.error || file.name}</div>
                   </Row>
                 ))}
               </DataWrapper>
