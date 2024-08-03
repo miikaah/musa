@@ -1,15 +1,21 @@
-import { AudioWithMetadata, NormalizationResults } from "@miikaah/musa-core";
-import React from "react";
+import {
+  AudioWithMetadata,
+  NormalizationResult,
+  NormalizationResults,
+  Tags,
+} from "@miikaah/musa-core";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import Button from "../Button";
 import * as Api from "../../apiClient";
 import AlbumImage from "../AlbumImage";
 import { TranslateFn } from "../../i18n";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { SettingsState } from "../../reducers/settings.reducer";
-import { cleanUrl } from "../../util";
+import { cleanUrl, urlSafeBase64 } from "../../util";
 import { useMemoizedApiCall } from "../../hooks/useMemoizedApiCall";
 import { ActionsContainer } from "../Modal/ActionsContainer";
+import { updateManyById } from "../../reducers/player.reducer";
 
 const Container = styled.div`
   width: 100%;
@@ -117,6 +123,22 @@ const CoverWrapper = styled.div`
   }
 `;
 
+const StyledActionsContainer = styled(ActionsContainer)`
+  > div {
+    > button:nth-of-type(1),
+    > button:nth-of-type(2) {
+      max-width: 120px;
+      margin: 0 10px 10px 0;
+      font-weight: normal;
+    }
+  }
+`;
+
+const SaveButton = styled(Button)`
+  min-width: 170px !important;
+  margin: 0 0 10px 0 !important;
+`;
+
 type AlbumsById = Record<
   string,
   {
@@ -187,6 +209,8 @@ type NormalizationEditorProps = {
 };
 
 const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
+  const [error, setError] = useState("");
+  const [isSavingTags, setIsSavingTags] = useState(false);
   const albums = resolveAlbums(files);
   const albumsToNormalize = albums.map(([id, { files }]) => ({
     album: id,
@@ -195,15 +219,138 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
       .filter((url) => typeof url === "string"),
   }));
   const hash = albumsToNormalize.map((a) => a.album).join("");
+  const dispatch = useDispatch();
+  // TODO: Handle individual errors in files
 
   const {
     currentData: nAlbums,
-    isLoading,
-    error,
+    isLoading: fetchIsLoading,
+    error: fetchError,
     fetchData,
   } = useMemoizedApiCall<NormalizationResults>(hash, async () =>
     Api.normalizeMany(albumsToNormalize),
   );
+  const isLoading = fetchIsLoading || isSavingTags;
+
+  const toUpdatePayload = (result: NormalizationResult) => {
+    return result.files.map((r) => {
+      const tags: Partial<Tags> = {
+        userDefinedText: [
+          {
+            description: "ALBUM DYNAMIC RANGE",
+            value: String(result.albumDynamicRangeDb),
+          },
+          {
+            description: "DYNAMIC RANGE",
+            value: String(r.dynamicRangeDb),
+          },
+          {
+            description: "replaygain_album_gain",
+            value: `${String(result.albumGainDb)} dB`,
+          },
+          {
+            description: "replaygain_album_peak",
+            value: String(result.albumSamplePeak),
+          },
+          {
+            description: "replaygain_track_gain",
+            value: `${String(r.gainDb)} dB`,
+          },
+          {
+            description: "replaygain_track_peak",
+            value: String(r.samplePeak),
+          },
+        ],
+      };
+      const file = files.find((f) => f.fileUrl === r.filepath);
+      const fid = urlSafeBase64.encode(
+        file?.fileUrl?.replace("media:/", "").replace("media:\\", "") ?? "",
+      );
+      const item: AudioWithMetadata = JSON.parse(
+        JSON.stringify({
+          ...file,
+          metadata: {
+            ...file?.metadata,
+          },
+        }),
+      );
+
+      if (item.metadata.replayGainAlbumGain === undefined) {
+        item.metadata.replayGainAlbumGain = { dB: 0, ratio: 0 };
+      }
+      if (result.albumGainDb !== undefined) {
+        const dB = result.albumGainDb;
+        item.metadata.replayGainAlbumGain.dB = dB;
+        item.metadata.replayGainAlbumGain.ratio = Math.pow(10, dB / 10);
+      }
+
+      if (item.metadata.replayGainAlbumPeak === undefined) {
+        item.metadata.replayGainAlbumPeak = { dB: 0, ratio: 0 };
+      }
+      if (result.albumSamplePeak !== undefined) {
+        const ratio = result.albumSamplePeak;
+        item.metadata.replayGainAlbumPeak.dB = 10 * Math.log10(ratio);
+        item.metadata.replayGainAlbumPeak.ratio = ratio;
+      }
+
+      if (item.metadata.replayGainTrackGain === undefined) {
+        item.metadata.replayGainTrackGain = { dB: 0, ratio: 0 };
+      }
+      if (r.gainDb !== undefined) {
+        const dB = r.gainDb;
+        item.metadata.replayGainTrackGain.dB = dB;
+        item.metadata.replayGainTrackGain.ratio = Math.pow(10, dB / 10);
+      }
+
+      if (item.metadata.replayGainTrackPeak === undefined) {
+        item.metadata.replayGainTrackPeak = { dB: 0, ratio: 0 };
+      }
+      if (r.samplePeak !== undefined) {
+        const ratio = r.samplePeak;
+        item.metadata.replayGainTrackPeak.dB = 10 * Math.log10(ratio);
+        item.metadata.replayGainTrackPeak.ratio = ratio;
+      }
+
+      if (result.albumDynamicRangeDb !== undefined) {
+        item.metadata.dynamicRangeAlbum = String(result.albumDynamicRangeDb);
+      }
+      if (r.dynamicRangeDb !== undefined) {
+        item.metadata.dynamicRange = String(r.dynamicRangeDb);
+      }
+
+      return { fid, tags, item };
+    });
+  };
+
+  const saveTags = async () => {
+    const payloads: { fid: string; tags: Partial<Tags> }[] = [];
+    const items: AudioWithMetadata[] = [];
+
+    for (const result of Object.values(nAlbums)) {
+      const mapped = toUpdatePayload(result);
+      mapped.forEach(({ fid, tags, item }) => {
+        payloads.push({ fid, tags });
+        items.push(item);
+      });
+    }
+
+    setIsSavingTags(true);
+    setError("");
+    let err;
+    if (payloads.length > 1) {
+      err = await Api.writeTagsMany(payloads);
+    } else {
+      const { fid, tags } = payloads[0];
+      err = await Api.writeTags(fid, tags);
+    }
+    setIsSavingTags(false);
+    if (err) {
+      setError(err.message);
+      return;
+    }
+
+    dispatch(updateManyById(items));
+  };
 
   return (
     <>
@@ -288,17 +435,26 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
           ),
         )}
       </Container>
-      <ActionsContainer>
+      <StyledActionsContainer>
         <div>
           <span>
             {isLoading ? t("modal.normalization.calculating") : ""}{" "}
-            {error ? error : ""}
+            {error ? error : fetchError ? fetchError : ""}
           </span>
         </div>
-        <Button isPrimary onClick={fetchData}>
-          {t("modal.normalization.normalizeButton")}
-        </Button>
-      </ActionsContainer>
+        <div>
+          <Button isSecondary onClick={fetchData} disabled={isLoading}>
+            {t("modal.normalization.normalizeButton")}
+          </Button>
+          <SaveButton
+            isPrimary
+            onClick={saveTags}
+            disabled={isLoading || !nAlbums}
+          >
+            {`${t("modal.metadata.saveButton")}${files.length > 1 ? ` (${files.length})` : ""}`}
+          </SaveButton>
+        </div>
+      </StyledActionsContainer>
     </>
   );
 };
