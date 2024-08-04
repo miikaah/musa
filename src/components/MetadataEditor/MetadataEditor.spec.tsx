@@ -43,7 +43,7 @@ const codecText = String(t("modal.metadata.tag.codec"));
 const codec = getCodecInfo(audioFixture);
 const commentText = String(t("modal.metadata.tag.comment"));
 const comment = String(audioFixture.metadata?.comment);
-const saveButtonText = String(t("modal.metadata.saveButton"));
+const saveButtonText = String(t("modal.saveButton"));
 const noChangesText = String(t("modal.metadata.noChangesLabel"));
 
 const state = {
