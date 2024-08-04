@@ -383,8 +383,8 @@ const Playlist = ({
     const index = Math.trunc(y / playlistItemMaxHeight);
     const playlistItemIndex = Object.is(index, -0)
       ? 0
-      : index > playlist.length - 1
-        ? playlist.length - 1
+      : index > playlist.length
+        ? playlist.length
         : index;
 
     return playlistItemIndex;
