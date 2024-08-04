@@ -442,7 +442,11 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
       <StyledActionsContainer>
         <div>
           <span>
-            {isLoading ? t("modal.normalization.calculating") : ""}{" "}
+            {isSavingTags
+              ? t("modal.saving")
+              : isLoading
+                ? t("modal.normalization.calculating")
+                : ""}{" "}
             {error ? error : fetchError ? fetchError : ""}
           </span>
         </div>
@@ -455,7 +459,7 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
             onClick={saveTags}
             disabled={isLoading || !nAlbums}
           >
-            {`${t("modal.metadata.saveButton")}${files.length > 1 ? ` (${files.length})` : ""}`}
+            {`${t("modal.saveButton")}${files.length > 1 ? ` (${files.length})` : ""}`}
           </SaveButton>
         </div>
       </StyledActionsContainer>
