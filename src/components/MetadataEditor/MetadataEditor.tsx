@@ -522,12 +522,28 @@ const MetadataEditor = ({
             ) : (
               <AllDetailsWrapper>
                 <span>{t("modal.metadata.detail.fileUrl")}</span>
-                <span title={file.fileUrl?.replace("media:/", "") ?? ""}>
-                  {file.fileUrl?.replace("media:/", "") ?? ""}
+                <span
+                  title={
+                    file.fileUrl
+                      ?.replace("media:/", "")
+                      .replace("media:\\", "") ?? ""
+                  }
+                >
+                  {file.fileUrl
+                    ?.replace("media:/", "")
+                    .replace("media:\\", "") ?? ""}
                 </span>
                 <span>{t("modal.metadata.detail.coverUrl")}</span>
-                <span title={file.coverUrl?.replace("media:/", "") ?? ""}>
-                  {file.coverUrl?.replace("media:/", "") ?? ""}
+                <span
+                  title={
+                    file.coverUrl
+                      ?.replace("media:/", "")
+                      .replace("media:\\", "") ?? ""
+                  }
+                >
+                  {file.coverUrl
+                    ?.replace("media:/", "")
+                    .replace("media:\\", "") ?? ""}
                 </span>
                 <span>{t("modal.metadata.detail.duration")}</span>
                 <span>{formatDuration(file.metadata.duration)}</span>
