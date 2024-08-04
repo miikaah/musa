@@ -198,7 +198,6 @@ const Playlist = ({
   t,
 }: PlaylistProps) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
-  const [isMovingItems, setIsMovingItems] = useState(false);
   const [pointerStartX, setPointerStartX] = useState<number | null>(null);
   const [pointerStartY, setPointerStartY] = useState<number | null>(null);
   const [startIndex, setStartIndex] = useState(-1);
@@ -215,6 +214,8 @@ const Playlist = ({
 
   const playlistRef = useRef<HTMLUListElement | null>(null);
   const isMouseDown = useRef(false);
+  const isMovingItems = useRef(false);
+  const pStartY = useRef(0);
 
   useEffect(() => {
     const onResize = () => {
@@ -236,8 +237,16 @@ const Playlist = ({
     };
     document.addEventListener("mouseup", onDocumentMouseUp);
 
+    const onDocumentMouseMouse = (event: MouseEvent) => {
+      if (isMouseDown.current) {
+        onMouseMove(event as unknown as React.MouseEvent<HTMLElement>);
+      }
+    };
+    document.addEventListener("mousemove", onDocumentMouseMouse);
+
     return () => {
       document.removeEventListener("mouseup", onDocumentMouseUp);
+      document.removeEventListener("mousemove", onDocumentMouseMouse);
     };
   }, []);
 
@@ -465,20 +474,22 @@ const Playlist = ({
 
   const clearSelection = () => {
     isMouseDown.current = false;
+    isMovingItems.current = false;
     setStartIndex(-1);
     setEndIndex(-1);
     setSelectedIndexes(new Set());
-    setIsMovingItems(false);
     setContextMenuCoordinates(null);
     setMoveMarkerCoordinates(null);
   };
 
   const onMouseDown = (event: React.MouseEvent<HTMLElement>) => {
     isMouseDown.current = true;
+    isMovingItems.current = false;
+    pStartY.current = event.clientY;
     const options = resolveMouseOptions(event);
+    setStartIndex(options.index);
     setPointerStartX(event.clientX);
     setPointerStartY(event.clientY);
-    setIsMovingItems(false);
     setMoveMarkerCoordinates(null);
 
     if (options.isContextMenuItemClick) {
@@ -516,7 +527,7 @@ const Playlist = ({
         selectedIndexes.has(options.index);
 
       if (isSelectedIndexClick) {
-        setIsMovingItems(true);
+        isMovingItems.current = true;
         return;
       }
       return;
@@ -529,11 +540,10 @@ const Playlist = ({
       startIndex === endIndex &&
       !options.isRightClick
     ) {
-      setIsMovingItems(true);
+      isMovingItems.current = true;
       return;
     }
 
-    setStartIndex(options.index);
     setEndIndex(options.index);
     setSelectedIndexes(new Set([options.index]));
   };
@@ -576,7 +586,7 @@ const Playlist = ({
       return;
     }
 
-    if (isMovingItems) {
+    if (isMovingItems.current) {
       setContextMenuCoordinates(null);
       if (pointerStartX === event.clientX && pointerStartY === event.clientY) {
         // Deselect to one row
@@ -621,13 +631,14 @@ const Playlist = ({
       setSelectedIndexes(newSelectedIndexes);
       return;
     }
+    isMovingItems.current = false;
 
     if (options.isMultiSelect) {
       if (options.isRightClick) {
         return;
       }
       setContextMenuCoordinates(null);
-      if (startIndex === options.index) {
+      if (resolvePlaylistItemIndex(pStartY.current) === options.index) {
         // Deselect multiselect to one row
         setStartIndex(options.index);
         setEndIndex(options.index);
@@ -670,7 +681,7 @@ const Playlist = ({
     if (!isMouseDown.current || contextMenuCoordinates) {
       return;
     }
-    if (isMovingItems) {
+    if (isMovingItems.current) {
       const playlistItemIndex = resolvePlaylistItemIndex(options.clientY);
       const y =
         playlistItemIndex === playlist.length - 1 &&
@@ -708,12 +719,13 @@ const Playlist = ({
     ) {
       setSelectedIndexes(new Set());
     } else if (options.index > -1) {
-      const startIdx = Math.min(startIndex, options.index);
-      const endIdx = Math.max(startIndex, options.index);
+      const sIdx = resolvePlaylistItemIndex(pStartY.current);
+      const eIdx = resolvePlaylistItemIndex(options.clientY);
+      const startIdx = Math.min(sIdx, eIdx);
+      const endIdx = Math.max(sIdx, eIdx);
       const newSelectedIndexes = new Set<number>();
 
-      let i = startIndex === -1 ? endIdx : startIdx;
-      for (; i <= endIdx; i++) {
+      for (let i = startIdx; i <= endIdx; i++) {
         if (i > -1 && i < playlist.length) {
           newSelectedIndexes.add(i);
         }
@@ -862,7 +874,6 @@ const Playlist = ({
       className={playlistClassName}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
-      onMouseMove={onMouseMove}
       data-testid="PlaylistContainer"
     >
       <Icon index={currentIndex} isSelected={selectedIndexes.has(currentIndex)}>
