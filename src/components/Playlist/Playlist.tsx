@@ -198,7 +198,6 @@ const Playlist = ({
   t,
 }: PlaylistProps) => {
   const [isSmall, setIsSmall] = useState(window.innerWidth < breakpoints.lg);
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const [isMovingItems, setIsMovingItems] = useState(false);
   const [pointerStartX, setPointerStartX] = useState<number | null>(null);
   const [pointerStartY, setPointerStartY] = useState<number | null>(null);
@@ -215,6 +214,7 @@ const Playlist = ({
   const dispatch = useDispatch();
 
   const playlistRef = useRef<HTMLUListElement | null>(null);
+  const isMouseDown = useRef(false);
 
   useEffect(() => {
     const onResize = () => {
@@ -226,6 +226,19 @@ const Playlist = ({
       window.removeEventListener("resize", onResize);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const onDocumentMouseUp = (event: MouseEvent) => {
+      if (isMouseDown.current) {
+        onMouseUp(event as unknown as React.MouseEvent<HTMLElement>);
+      }
+    };
+    document.addEventListener("mouseup", onDocumentMouseUp);
+
+    return () => {
+      document.removeEventListener("mouseup", onDocumentMouseUp);
+    };
   }, []);
 
   useEffect(() => {
@@ -451,7 +464,7 @@ const Playlist = ({
   };
 
   const clearSelection = () => {
-    setIsMouseDown(false);
+    isMouseDown.current = false;
     setStartIndex(-1);
     setEndIndex(-1);
     setSelectedIndexes(new Set());
@@ -461,6 +474,7 @@ const Playlist = ({
   };
 
   const onMouseDown = (event: React.MouseEvent<HTMLElement>) => {
+    isMouseDown.current = true;
     const options = resolveMouseOptions(event);
     setPointerStartX(event.clientX);
     setPointerStartY(event.clientY);
@@ -478,11 +492,6 @@ const Playlist = ({
         setSelectedIndexes(new Set([options.index]));
       }
       return;
-    }
-
-    // Must come after context menu checks
-    if (!options.isRightClick) {
-      setIsMouseDown(true);
     }
 
     if (options.isShiftDown || options.isCtrlDown) {
@@ -530,10 +539,10 @@ const Playlist = ({
   };
 
   const onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+    isMouseDown.current = false;
     const options = resolveMouseOptions(event);
     setPointerStartX(null);
     setPointerStartY(null);
-    setIsMouseDown(false);
     setMoveMarkerCoordinates(null);
 
     if (options.isContextMenuItemClick) {
@@ -658,7 +667,7 @@ const Playlist = ({
   };
 
   const updateEndIndex = (options: PlaylistItemOptions & { index: number }) => {
-    if (!isMouseDown || contextMenuCoordinates) {
+    if (!isMouseDown.current || contextMenuCoordinates) {
       return;
     }
     if (isMovingItems) {
