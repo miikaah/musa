@@ -16,6 +16,7 @@ const Image = styled.img<{ animate: boolean }>`
         `
       : "none"};
   object-fit: scale-down;
+  user-drag: none;
 `;
 
 const hasMetadata = (audio: AlbumItem): audio is AudioWithMetadata => {
@@ -62,12 +63,19 @@ const AlbumImage = ({ item, animate = true }: AlbumImageProps) => {
     ? // HACK: To fix Electron mangling the beginning of the request url
       cleanUrl(item.coverUrl.replace("media:/", "media:///"))
     : isMp3
-    ? "musa-placeholder-icon-mp3.png"
-    : isFlac
-    ? "musa-placeholder-icon-flac.png"
-    : "musa-placeholder-icon-ogg.png";
+      ? "musa-placeholder-icon-mp3.png"
+      : isFlac
+        ? "musa-placeholder-icon-flac.png"
+        : "musa-placeholder-icon-ogg.png";
 
-  return <Image alt="Album image" animate={animate} src={getSrc(src)} />;
+  return (
+    <Image
+      alt="Album image"
+      animate={animate}
+      src={getSrc(src)}
+      draggable={false}
+    />
+  );
 };
 
 export default AlbumImage;
