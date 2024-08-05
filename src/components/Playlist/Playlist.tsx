@@ -26,7 +26,6 @@ import PlaylistItem, {
 import ContextMenu, {
   ContextMenuCoordinates,
   contextMenuId,
-  contextMenuMaxWidth,
 } from "../ContextMenu";
 import { EditorMode } from "../../types";
 
@@ -227,7 +226,6 @@ const Playlist = ({
     return () => {
       window.removeEventListener("resize", onResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -249,6 +247,7 @@ const Playlist = ({
       document.removeEventListener("mouseup", onDocumentMouseUp);
       document.removeEventListener("mousemove", onDocumentMouseMouse);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -261,7 +260,6 @@ const Playlist = ({
       playlistItemEl.scrollIntoView(false); // Scrolls to correct song
       scroll(); // Scrolls a little bit down so current song isn't at bottom of view
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentItem]);
 
   const getSelectedIndexes = () => {
@@ -458,8 +456,13 @@ const Playlist = ({
     const id = playlistItemContextMenuClassName;
     const target = event.target as HTMLElement;
     const isContextMenuButtonClick =
-      target?.className.includes(id) ||
-      target.parentElement?.className.includes(id) ||
+      (typeof target?.className === "string" ? target?.className : "").includes(
+        id,
+      ) ||
+      (typeof target?.parentElement?.className === "string"
+        ? target.parentElement?.className
+        : ""
+      ).includes(id) ||
       false;
 
     return {
@@ -672,14 +675,12 @@ const Playlist = ({
 
   const openContextMenu = (options: PlaylistItemOptions) => {
     const rect = resolvePlaylistBoundingClientRect();
+    const dx = 110;
     const x2 = options.clientX - rect.x;
+    const x3 = rect.right - rect.x - dx;
     const isXUnderLeftBound = x2 < 66;
-    const isXOverRightBound = x2 > 449;
-    const x = isXUnderLeftBound
-      ? 8
-      : isXOverRightBound
-        ? rect.width - contextMenuMaxWidth + 66 - 8
-        : x2 - 60;
+    const isXOverRightBound = x2 > x3;
+    const x = isXUnderLeftBound ? 8 : isXOverRightBound ? x3 - 56 : x2 - 60;
     const y = resolveTrueClientY(options.clientY) - 20;
 
     setContextMenuCoordinates({ x, y });

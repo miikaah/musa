@@ -6,11 +6,10 @@ import { TranslateFn } from "../../i18n";
 import { EditorMode } from "../../types";
 
 export const contextMenuId = "contextMenuId";
-export const contextMenuMaxWidth = 200;
 
 const Container = styled.div<{ coordinates: ContextMenuCoordinates }>`
   background: white;
-  max-width: ${contextMenuMaxWidth}px;
+  max-width: 200px;
   border-radius: var(--border-radius);
   position: absolute;
   left: ${({ coordinates }) => coordinates.x}px;

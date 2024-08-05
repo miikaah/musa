@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "setup": "shx mkdir build && shx mkdir build-server && shx cp .env.electron.ci.example .env.electron.prod && shx cp .env.server.ci.example .env.server.prod",
-    "start:s": "vite --port 3667 --mode server",
-    "start:e": "vite --port 3666 --mode electron",
+    "start:s": "env-cmd -f .env.server.local vite --port 3667 --mode server",
+    "start:e": "env-cmd -f .env.electron.local vite --port 3666 --mode electron",
     "build:s": "shx rm -rf build-server && shx mkdir build-server && shx cp -R public/* build-server && env-cmd -f .env.server.prod node scripts/build.mjs && git rev-parse HEAD > version",
     "build:e": "shx rm -rf build && shx mkdir build && shx cp -R public/* build && env-cmd -f .env.electron.prod node scripts/build.mjs && git rev-parse HEAD > version",
     "tsc": "tsc --noEmit",
