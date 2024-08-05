@@ -13,8 +13,6 @@ jpeg, png and webp images.
 
 ## Roadmap
 
-- fix: Sorting of tracks of insert to playlist when 10 or more disks in album
-
 ### Search - improvements
 
 - feat: Remove adversarial trash characters like ' from search terms
