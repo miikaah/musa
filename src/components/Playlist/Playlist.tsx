@@ -26,6 +26,7 @@ import PlaylistItem, {
 import ContextMenu, {
   ContextMenuCoordinates,
   contextMenuId,
+  contextMenuMaxWidth,
 } from "../ContextMenu";
 import { EditorMode } from "../../types";
 
@@ -671,10 +672,17 @@ const Playlist = ({
 
   const openContextMenu = (options: PlaylistItemOptions) => {
     const rect = resolvePlaylistBoundingClientRect();
-    setContextMenuCoordinates({
-      x: options.clientX - rect.x - 60,
-      y: resolveTrueClientY(options.clientY) - 20,
-    });
+    const x2 = options.clientX - rect.x;
+    const isXUnderLeftBound = x2 < 66;
+    const isXOverRightBound = x2 > 449;
+    const x = isXUnderLeftBound
+      ? 8
+      : isXOverRightBound
+        ? rect.width - contextMenuMaxWidth + 66 - 8
+        : x2 - 60;
+    const y = resolveTrueClientY(options.clientY) - 20;
+
+    setContextMenuCoordinates({ x, y });
   };
 
   const updateEndIndex = (options: PlaylistItemOptions & { index: number }) => {
