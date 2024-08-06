@@ -13,6 +13,8 @@ jpeg, png and webp images.
 
 ## Roadmap
 
+- fix: Duplicate replay
+
 ### Search - improvements
 
 - feat: Remove adversarial trash characters like ' from search terms
