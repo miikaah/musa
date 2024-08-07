@@ -164,7 +164,7 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
       const newItem = state.items[newIndex];
       if (newItem) {
         // This is a duplicate play so need to set replay even though index is moved forward
-        if (state.currentItem?.id === newItem.id) {
+        if (state.currentItem?.fileUrl === newItem.fileUrl) {
           return {
             ...state,
             ...getPlayBase(newItem, newIndex),
