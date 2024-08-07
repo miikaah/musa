@@ -13,6 +13,7 @@ import { ActionsContainer } from "../Modal/ActionsContainer";
 import { getCodecInfo } from "./getCodecInfo";
 import { ellipsisTextOverflow } from "../../common.styles";
 import { updateManyById } from "../../reducers/player.reducer";
+import { isElectron } from "../../config";
 
 const Container = styled.div`
   display: flex;
@@ -673,7 +674,11 @@ const MetadataEditor = ({
                 >
                   {t("modal.metadata.nextButton")}
                 </Button>
-                <SaveButton isPrimary onClick={saveTags} disabled={isLoading}>
+                <SaveButton
+                  isPrimary
+                  onClick={saveTags}
+                  disabled={!isElectron || isLoading}
+                >
                   {`${t("modal.saveButton")}${files.length > 1 && combine ? ` (${files.length})` : ""}`}
                 </SaveButton>
               </div>

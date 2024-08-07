@@ -16,6 +16,7 @@ import { cleanUrl, urlSafeBase64 } from "../../util";
 import { useMemoizedApiCall } from "../../hooks/useMemoizedApiCall";
 import { ActionsContainer } from "../Modal/ActionsContainer";
 import { updateManyById } from "../../reducers/player.reducer";
+import { isElectron } from "../../config";
 
 const Container = styled.div`
   width: 100%;
@@ -457,7 +458,7 @@ const NormalizationEditor = ({ files, t }: NormalizationEditorProps) => {
           <SaveButton
             isPrimary
             onClick={saveTags}
-            disabled={isLoading || !nAlbums}
+            disabled={!isElectron || isLoading || !nAlbums}
           >
             {`${t("modal.saveButton")}${files.length > 1 ? ` (${files.length})` : ""}`}
           </SaveButton>
