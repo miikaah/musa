@@ -1,9 +1,9 @@
-import { AudioWithMetadata } from "@miikaah/musa-core";
 import React from "react";
 import styled, { css } from "styled-components";
 import AlbumImage from "../AlbumImage";
 import { ellipsisTextOverflow } from "../../common.styles";
 import { fadeIn } from "../../animations";
+import { AudioItem } from "../../types";
 
 const commonImageCss = css`
   width: 50px;
@@ -59,7 +59,7 @@ const PlaceholderLine = styled.div<{ isFirst?: boolean }>`
   opacity: 0.666;
 `;
 
-type PlayerCurrentlyPlayingProps = { currentItem?: AudioWithMetadata };
+type PlayerCurrentlyPlayingProps = { currentItem?: AudioItem };
 
 const PlayerCurrentlyPlaying = React.memo(
   ({ currentItem }: PlayerCurrentlyPlayingProps) => {

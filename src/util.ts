@@ -1,7 +1,7 @@
-import { AudioWithMetadata, Colors } from "@miikaah/musa-core";
+import { Colors } from "@miikaah/musa-core";
 import { Dispatch } from "redux";
 import { addToast, removeToast } from "./reducers/toaster.reducer";
-import { ReplaygainType } from "./types";
+import { AudioItem, ReplaygainType } from "./types";
 import {
   REPLAYGAIN_TYPE,
   hardcodedBaseUrl,
@@ -12,7 +12,7 @@ import {
 
 export const getReplaygainDb = (
   replaygainType: ReplaygainType,
-  currentItem: AudioWithMetadata,
+  currentItem: AudioItem,
 ) => {
   const hasTrackGain = currentItem?.metadata?.replayGainTrackGain;
   const trackGain = currentItem?.metadata?.replayGainTrackGain?.dB;

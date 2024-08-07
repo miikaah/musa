@@ -1,3 +1,7 @@
+import { AudioWithMetadata } from "@miikaah/musa-core";
+
+export type AudioItem = Omit<AudioWithMetadata, "artistName" | "artistUrl">;
+
 export type CoverData = {
   isCoverLoaded: boolean;
   scaleDownImage: boolean;

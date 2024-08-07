@@ -160,7 +160,6 @@ const LibraryItem = ({
         hasAlbum={hasAlbum}
         draggable
         onDragStart={onDragStart}
-        onDoubleClick={() => dispatch(addToPlaylist(item))}
         isFirstOfDisk={hasMultipleDisks && isFirstOfDisk}
       >
         {title}

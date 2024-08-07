@@ -19,6 +19,7 @@ import {
 } from "../../animations";
 import { pasteToPlaylist } from "../../reducers/player.reducer";
 import { breakpoints } from "../../breakpoints";
+import { AudioItem } from "../../types";
 
 const getExpandTiming = (len: number) => {
   if (len < 2) {
@@ -261,11 +262,16 @@ const LibraryList = ({
 
     if (isArtist) {
       const artist = await Api.getArtistAlbums(item.id);
-      const songs = artist.albums.map((a) => a.files).flat(Infinity);
+      const songs = artist.albums
+        .map((a) => a.files)
+        .flat(Infinity) as EnrichedAlbumFile[];
+      const artistFiles: AudioItem[] = artist.files.map((file) => ({
+        ...file,
+        track: file.track ?? "",
+        metadata: file.metadata ?? {},
+      }));
 
-      dispatch(
-        pasteToPlaylist([...songs, ...artist.files] as EnrichedAlbumFile[]),
-      );
+      dispatch(pasteToPlaylist([...songs, ...artistFiles]));
     } else if (isAlbum) {
       const album = await Api.getAlbumById(getId(item));
 

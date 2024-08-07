@@ -1,4 +1,3 @@
-import { AudioWithMetadata } from "@miikaah/musa-core";
 import React, { useEffect, useRef, useState } from "react";
 import isEqual from "lodash.isequal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,6 +6,7 @@ import { formatDuration } from "../../util";
 import { ellipsisTextOverflow } from "../../common.styles";
 import AlbumImage from "../AlbumImage";
 import { breakpoints } from "../../breakpoints";
+import { AudioItem } from "../../types";
 
 export const playlistItemContextMenuClassName =
   "playlistItemContextMenuClassName";
@@ -183,7 +183,7 @@ export type PlaylistItemOptions = {
 };
 
 type PlaylistItemProps = {
-  item: AudioWithMetadata;
+  item: AudioItem;
   isSelected: boolean;
   onDoubleClick: () => void;
   onContextMenu: (options: PlaylistItemOptions) => void;
@@ -237,8 +237,8 @@ const PlaylistItem = ({
     setLastTouchTime(now);
   };
 
-  const artist = item?.metadata?.artist || item.artistName || "";
-  const album = item?.metadata?.album || item.albumName || "";
+  const artist = item?.metadata?.artist || "";
+  const album = item?.metadata?.album || "";
   const title = item?.metadata?.title || item.name || "";
   const track = item.track || "";
   const duration = formatDuration(item?.metadata?.duration || "0:00");

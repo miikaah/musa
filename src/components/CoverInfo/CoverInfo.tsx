@@ -1,4 +1,3 @@
-import { AudioWithMetadata } from "@miikaah/musa-core";
 import React from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,6 +5,7 @@ import styled from "styled-components";
 import { ellipsisTextOverflow } from "../../common.styles";
 import { SettingsState } from "../../reducers/settings.reducer";
 import { TranslateFn } from "../../i18n";
+import { AudioItem } from "../../types";
 
 const Container = styled.div<{ isSmall: boolean }>`
   padding: ${({ isSmall }) =>
@@ -95,7 +95,7 @@ const getSampleRate = (sampleRate: number) => {
 };
 
 type CoverInfoProps = {
-  item: AudioWithMetadata | undefined;
+  item: AudioItem | undefined;
   isSmall: boolean;
   toggleEdit: () => void;
   t: TranslateFn;
@@ -106,7 +106,7 @@ const CoverInfo = ({ item, isSmall, toggleEdit, t }: CoverInfoProps) => {
     return null;
   }
 
-  const artist = item?.metadata?.artist || item?.artistName || "";
+  const artist = item?.metadata?.artist || "";
   const album = item?.metadata?.album || item?.albumName || "";
   const title = item?.metadata?.title || item?.name || "";
   const year = item?.metadata?.year || "";

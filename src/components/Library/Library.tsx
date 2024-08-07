@@ -184,7 +184,7 @@ const Library = ({
                 <Label>
                   <span>{key}</span>
                 </Label>
-                {artist.map((item, index) => (
+                {artist.map((item) => (
                   <LibraryList key={item.id} item={item} isArtist />
                 ))}
               </div>

@@ -117,12 +117,8 @@ const Album = ({ item, t }: AlbumProps) => {
   };
 
   const artist =
-    item?.metadata?.artist ||
-    item.artistName ||
-    (item?.files || [])[0]?.metadata?.artist ||
-    "";
+    item?.metadata?.artist || (item?.files || [])[0]?.metadata?.artist || "";
   const album = item?.metadata?.album || item.name || "";
-  // TODO: Check why item?.year was here
   const year = item?.metadata?.year || "";
 
   return (

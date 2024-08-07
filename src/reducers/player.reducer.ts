@@ -1,11 +1,6 @@
-import {
-  Artist,
-  AudioWithMetadata,
-  File as MusaFile,
-  EnrichedAlbumFile,
-} from "@miikaah/musa-core";
+import { AudioWithMetadata } from "@miikaah/musa-core";
 import { cleanUrl } from "../util";
-import { CoverData } from "../types";
+import { AudioItem, CoverData } from "../types";
 
 export const PLAY = "MUSA/PLAYER/PLAY" as const;
 export const play = () => ({
@@ -35,27 +30,20 @@ export const pause = () => ({
 });
 
 export const ADD_TO_PLAYLIST = "MUSA/PLAYER/ADD" as const;
-export const addToPlaylist = (
-  item: AudioWithMetadata | EnrichedAlbumFile | Artist["albums"][number],
-) => ({
+export const addToPlaylist = (item: AudioItem) => ({
   type: ADD_TO_PLAYLIST,
   item,
 });
 
 export const PASTE_TO_PLAYLIST = "MUSA/PLAYER/PASTE_TO_PLAYLIST" as const;
-export const pasteToPlaylist = (
-  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
-  index?: number,
-) => ({
+export const pasteToPlaylist = (items: AudioItem[], index?: number) => ({
   type: PASTE_TO_PLAYLIST,
   items,
   index,
 });
 
 export const UPDATE_MANY_BY_ID = "MUSA/PLAYER/UPDATE_MANY_BY_ID" as const;
-export const updateManyById = (
-  items: AudioWithMetadata[] | EnrichedAlbumFile[] | MusaFile[],
-) => ({
+export const updateManyById = (items: AudioItem[]) => ({
   type: UPDATE_MANY_BY_ID,
   items,
 });
@@ -79,8 +67,8 @@ export const setCoverData = (coverData: CoverData) => ({
 });
 
 export type PlayerState = {
-  items: (AudioWithMetadata & { id: string })[];
-  currentItem: AudioWithMetadata | undefined;
+  items: AudioItem[];
+  currentItem: AudioItem | undefined;
   currentIndex: number;
   src: string;
   coverUrl: string;
@@ -207,39 +195,33 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
         isPlaying: false,
       };
     case ADD_TO_PLAYLIST:
-      // TODO: Remove any
       return {
         ...state,
-        items: [...state.items, toItemWithId(action.item)] as any,
+        items: [...state.items, toItemWithId(action.item)],
       };
     case PASTE_TO_PLAYLIST: {
       // prepend
       if (action.index === -1) {
-        // TODO: Remove any
         const curItemIndex = action.items.findIndex(
           (it) => it.id === state.currentItem?.id,
         );
-        const newItems = [
-          ...action.items.map(toItemWithId),
-          ...state.items,
-        ] as any;
+        const newItems = [...action.items.map(toItemWithId), ...state.items];
         const newIndex =
           curItemIndex > -1
             ? curItemIndex
             : state.currentIndex > -1
               ? state.currentIndex + action.items.length
               : -1;
-        newItems[newIndex] = state.currentItem;
+        // Edge case: currentItem does not need to be updated if it doesn't yet exist
+        if (newIndex > -1) {
+          newItems[newIndex] = state.currentItem as AudioWithMetadata;
+        }
 
         return getStateByPlaylistChange(state, newItems, newIndex);
       }
       // append: only use this to append items without the current item
       if (action.index === undefined) {
-        // TODO: Remove any
-        const newItems = [
-          ...state.items,
-          ...action.items.map(toItemWithId),
-        ] as any;
+        const newItems = [...state.items, ...action.items.map(toItemWithId)];
 
         return getStateByPlaylistChange(state, newItems, state.currentIndex);
       }
@@ -252,24 +234,25 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
       const curItemIndex = action.items.findIndex(
         (it) => it.id === state.currentItem?.id,
       );
-      // TODO: Remove any
+
       const newItems = [
         ...playlistStart,
         ...action.items.map(toItemWithId),
         ...playlistEnd,
-      ] as any;
+      ];
 
       let newIndex = state.currentIndex;
       if (curItemIndex > -1) {
         const isCurrentItemInPlaylist =
-          newItems.findIndex((it: any) => it.id === state.currentItem?.id) > -1;
+          newItems.findIndex((it) => it.id === state.currentItem?.id) > -1;
 
         if (!isCurrentItemInPlaylist) {
           newIndex =
             curItemIndex > -1
               ? playlistStart.length - 1 + curItemIndex + 1
               : state.currentIndex;
-          newItems[newIndex] = state.currentItem;
+          // Edge case: User is cut and pasting currentItem to playlist
+          newItems[newIndex] = state.currentItem as AudioWithMetadata;
         }
       } else {
         newIndex =
@@ -287,15 +270,14 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
           (it) => it.fileUrl === state.items[i].fileUrl,
         );
         if (newItem) {
-          // TODO: Remove any
-          newItems[i] = newItem as any;
+          newItems[i] = newItem;
         }
       }
 
       return getStateByPlaylistChange(
         state,
-        // TODO: Remove any
-        (newItems as any).map(toItemWithId),
+
+        newItems.map(toItemWithId),
         state.currentIndex,
       );
     }
@@ -336,7 +318,7 @@ const player = (state = initialState, action: PlayerAction): PlayerState => {
   }
 };
 
-function getPlayBase(newItem: AudioWithMetadata, newIndex: number) {
+function getPlayBase(newItem: AudioItem, newIndex: number) {
   return {
     currentItem: newItem,
     currentIndex: newIndex,
@@ -348,7 +330,7 @@ function getPlayBase(newItem: AudioWithMetadata, newIndex: number) {
 
 function getStateByPlaylistChange(
   state: PlayerState,
-  newItems: AudioWithMetadata[],
+  newItems: AudioItem[],
   currentIndex: number,
 ) {
   return {
@@ -358,8 +340,7 @@ function getStateByPlaylistChange(
   };
 }
 
-// TODO: Remove any
-function toItemWithId(item: any) {
+function toItemWithId(item: AudioItem) {
   return { ...item, id: genId() };
 }
 

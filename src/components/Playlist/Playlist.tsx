@@ -27,7 +27,7 @@ import ContextMenu, {
   ContextMenuCoordinates,
   contextMenuId,
 } from "../ContextMenu";
-import { EditorMode } from "../../types";
+import { AudioItem, EditorMode } from "../../types";
 
 const titleBarHeight = 36;
 const playlistPaddingTop = 14;
@@ -205,7 +205,7 @@ const Playlist = ({
   const [selectedIndexes, setSelectedIndexes] = useState<Set<number>>(
     new Set(),
   );
-  const [clipboard, setClipboard] = useState<AudioWithMetadata[]>([]);
+  const [clipboard, setClipboard] = useState<AudioItem[]>([]);
   const [contextMenuCoordinates, setContextMenuCoordinates] =
     useState<ContextMenuCoordinates | null>(null);
   const [moveMarkerCoordinates, setMoveMarkerCoordinates] =
