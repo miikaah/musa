@@ -8,6 +8,11 @@ import { render } from "../../../test/render";
 import * as Api from "../../apiClient";
 import { getCodecInfo } from "./getCodecInfo";
 
+vi.mock("../../config", async () => ({
+  ...(await vi.importActual<Record<string, unknown>>("../../config")),
+  isElectron: true,
+}));
+
 const mockDispatch = vi.fn();
 vi.mock("react-redux", async () => ({
   ...(await vi.importActual<Record<string, unknown>>("react-redux")),
