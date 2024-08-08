@@ -2,6 +2,7 @@ import React from "react";
 import { separator } from "../../util";
 
 type EditorTextareaProps = {
+  id?: string;
   field: string[];
   index: number;
   isMultiValue: boolean;
@@ -10,6 +11,7 @@ type EditorTextareaProps = {
 };
 
 const EditorTextarea = ({
+  id,
   field,
   index,
   isMultiValue,
@@ -22,6 +24,7 @@ const EditorTextarea = ({
 
   return (
     <textarea
+      id={id}
       value={value}
       onChange={(event) => {
         if (typeof updateValue === "function") {

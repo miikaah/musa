@@ -35,13 +35,13 @@ const Wrapper = styled.div`
   max-width: 600px;
   ${sharedWrapperCss}
 
-  > span {
+  > label {
     align-self: center;
     padding: 0 20px;
     color: black;
   }
 
-  > span:nth-of-type(1) {
+  > label:nth-of-type(1) {
     grid-row: 1;
   }
 
@@ -490,13 +490,17 @@ const MetadataEditor = ({
           <div key={file.id}>
             {!showAllDetails ? (
               <Wrapper>
-                {fieldKeys.map((key) => {
+                {fieldKeys.map((key, i) => {
+                  const id = `editorInputLabel-${i}`;
                   const field = { ...fields[key] };
 
                   return (
                     <React.Fragment key={key}>
-                      <span>{t(`modal.metadata.tag.${key}`)}</span>
+                      <label htmlFor={id}>
+                        {t(`modal.metadata.tag.${key}`)}
+                      </label>
                       <EditorInput
+                        id={id}
                         field={field.multiValue}
                         index={index}
                         updateValue={(value) => updateValue(value, key)}
@@ -506,13 +510,13 @@ const MetadataEditor = ({
                     </React.Fragment>
                   );
                 })}
-                <span>{t("modal.metadata.tag.codec")}</span>
-                <EditorInput
-                  staticField={getCodecInfo(file).toLowerCase()}
-                  isDisabled
-                />
-                <span>{t("modal.metadata.tag.comment")}</span>
+                <label>{t("modal.metadata.tag.codec")}</label>
+                <EditorInput staticField={getCodecInfo(file).toLowerCase()} />
+                <label htmlFor="editorTextArea-1">
+                  {t("modal.metadata.tag.comment")}
+                </label>
                 <EditorTextarea
+                  id="editorTextArea-1"
                   field={fields.comment.multiValue}
                   index={index}
                   updateValue={(value) => updateValue(value, "comment")}

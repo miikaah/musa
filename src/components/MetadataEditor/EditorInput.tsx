@@ -3,24 +3,27 @@ import { separator } from "../../util";
 
 type StaticProps = {
   staticField: string;
-  isDisabled: boolean;
+  id?: never;
   field?: never;
   index?: never;
   isMultiValue?: never;
+  isDisabled?: never;
   updateValue?: never;
 };
 
 type EditorInputProps = {
   staticField?: never;
-  isDisabled: boolean;
+  id?: string;
   field: string[];
   index: number;
   isMultiValue: boolean;
+  isDisabled: boolean;
   updateValue?: (value: string[]) => void;
 };
 
 const EditorInput = ({
   staticField,
+  id,
   field,
   index,
   isMultiValue,
@@ -33,13 +36,14 @@ const EditorInput = ({
 
   return (
     <input
+      id={id}
       value={value}
       onChange={(event) => {
         if (typeof updateValue === "function") {
           updateValue(event.target.value.split(separator));
         }
       }}
-      disabled={isDisabled}
+      disabled={!!staticField || isDisabled}
     />
   );
 };
