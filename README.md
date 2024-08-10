@@ -13,10 +13,6 @@ jpeg, png and webp images.
 
 ## Roadmap
 
-### Search - improvements
-
-- feat: Remove adversarial trash characters like ' from search terms
-
 ### Search - new features
 
 - feat: in year search only return artists who have albums or songs in that year
@@ -62,7 +58,7 @@ jpeg, png and webp images.
 
 ### Misc
 
-- feat: SEO tags for proxy playlists
+- feat: metadata tags for proxy playlists
 
 ## Stuff to know
 
