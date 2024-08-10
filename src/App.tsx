@@ -159,6 +159,7 @@ const App = ({ isInit, t, dispatch }: AppProps) => {
     Api.addScanCompleteListener(() => {
       dispatchToast(t("toast.updateComplete"), "update-complete", dispatch);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInit]);
 
   useEffect(() => {
