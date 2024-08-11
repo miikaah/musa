@@ -21,7 +21,6 @@ jpeg, png and webp images.
 
 ### Native + Perf + DX + a11y
 
-- fix: Native drag and drop
 - feat: Improve colors for blue slider track (The Future cover)
 - fix: Prevent popping when changing FIR eq
 - feat: Open mp3, flac and ogg files from filesystem

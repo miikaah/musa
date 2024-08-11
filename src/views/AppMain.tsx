@@ -75,6 +75,7 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
     event.preventDefault();
 
   const onDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
     if (!event.dataTransfer) {
       return;
     }
