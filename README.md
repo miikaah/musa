@@ -13,6 +13,7 @@ jpeg, png and webp images.
 
 ## Roadmap
 
+- fix: Bug at least in browser after mouse move in playlist can't select last item in multiselect
 - fix: a11y of white highlight for editor and context menu
 
 ### Search - new features
@@ -20,6 +21,7 @@ jpeg, png and webp images.
 - feat: in year search only return artists who have albums or songs in that year
 - feat: year dropdown in search bar
 - feat: artist-album-song tree filtering via backend
+- feat: year..year search
 
 ### Native + Perf + DX + a11y
 
