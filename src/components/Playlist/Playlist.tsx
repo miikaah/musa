@@ -236,16 +236,16 @@ const Playlist = ({
     };
     document.addEventListener("mouseup", onDocumentMouseUp);
 
-    const onDocumentMouseMouse = (event: MouseEvent) => {
+    const onDocumentMouseMove = (event: MouseEvent) => {
       if (isMouseDown.current) {
         onMouseMove(event as unknown as React.MouseEvent<HTMLElement>);
       }
     };
-    document.addEventListener("mousemove", onDocumentMouseMouse);
+    document.addEventListener("mousemove", onDocumentMouseMove);
 
     return () => {
       document.removeEventListener("mouseup", onDocumentMouseUp);
-      document.removeEventListener("mousemove", onDocumentMouseMouse);
+      document.removeEventListener("mousemove", onDocumentMouseMove);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
