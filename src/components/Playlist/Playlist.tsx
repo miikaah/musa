@@ -314,8 +314,8 @@ const Playlist = ({
   };
   useKeyPress(KEYS.Down, moveDown);
 
-  const playOrReplay = () => {
-    const activeIndex = getActiveIndex();
+  const playOrReplay = (aIndex?: number) => {
+    const activeIndex = aIndex ?? getActiveIndex();
     const shouldReplay =
       activeIndex === currentIndex &&
       isEqual(currentItem, playlist[activeIndex]);
@@ -326,7 +326,7 @@ const Playlist = ({
       dispatch(playIndex(activeIndex));
     }
   };
-  useKeyPress(KEYS.Enter, playOrReplay);
+  useKeyPress(KEYS.Enter, () => playOrReplay());
 
   const removeItems = () => {
     setClipboard(getSelectedItems());
@@ -789,6 +789,10 @@ const Playlist = ({
     setContextMenuCoordinates(null);
   };
 
+  const handlePlayOrReplay = (options: PlaylistItemOptions) => {
+    playOrReplay(resolvePlaylistItemIndex(options.clientY));
+  };
+
   if (playlist.length < 1) {
     return (
       <Instructions isSmall={isSmall}>
@@ -908,7 +912,7 @@ const Playlist = ({
               key={item.id}
               item={item}
               isSelected={selectedIndexes.has(index)}
-              onDoubleClick={playOrReplay}
+              onDoubleClick={handlePlayOrReplay}
               onContextMenu={openContextMenu}
               onScrollPlaylist={scroll}
               onRemoveItems={removeItems}

@@ -185,7 +185,7 @@ export type PlaylistItemOptions = {
 type PlaylistItemProps = {
   item: AudioItem;
   isSelected: boolean;
-  onDoubleClick: () => void;
+  onDoubleClick: (options: PlaylistItemOptions) => void;
   onContextMenu: (options: PlaylistItemOptions) => void;
   onScrollPlaylist: () => void;
   onRemoveItems: () => void;
@@ -215,6 +215,17 @@ const PlaylistItem = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleDoubleClick = (
+    event: React.MouseEvent<HTMLLIElement | HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onDoubleClick({
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+  };
+
   const handleContextMenu = (
     event: React.MouseEvent<HTMLLIElement | HTMLButtonElement>,
   ) => {
@@ -226,11 +237,19 @@ const PlaylistItem = ({
     });
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (
+    event: React.TouchEvent<HTMLLIElement | HTMLButtonElement>,
+  ) => {
     const now = Date.now();
+    const touch = event.changedTouches[0];
     if (now - lastTouchTime < 500) {
       clearTimeout(touchTimeout);
-      onDoubleClick();
+      handleDoubleClick({
+        preventDefault: event.preventDefault,
+        stopPropagation: event.stopPropagation,
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+      } as any);
     } else {
       touchTimeout = setTimeout(() => {}, 500);
     }
@@ -248,7 +267,7 @@ const PlaylistItem = ({
       id={item.id}
       ref={playlistItemRef}
       isSelected={isSelected}
-      onDoubleClick={onDoubleClick}
+      onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
       onTouchEnd={handleTouchEnd}
       data-testid="PlaylistItemContainer"
