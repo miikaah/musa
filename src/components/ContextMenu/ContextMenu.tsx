@@ -15,6 +15,7 @@ const Container = styled.div<{ coordinates: ContextMenuCoordinates }>`
   left: ${({ coordinates }) => coordinates.x}px;
   top: ${({ coordinates }) => coordinates.y}px;
   z-index: 2;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 30%);
 `;
 
 const RowButton = styled.button`
