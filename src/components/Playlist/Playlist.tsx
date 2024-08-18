@@ -248,7 +248,7 @@ const Playlist = ({
       document.removeEventListener("mousemove", onDocumentMouseMove);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [playlist]);
 
   useEffect(() => {
     const playlistItemEl = document.getElementById(currentItem?.id ?? "");

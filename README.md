@@ -13,7 +13,6 @@ jpeg, png and webp images.
 
 ## Roadmap
 
-- fix: Bug at least in browser after mouse move in playlist can't select last item in multiselect
 - fix: a11y of white highlight for editor and context menu
 
 ### Search - new features
