@@ -13,8 +13,6 @@ jpeg, png and webp images.
 
 ## Roadmap
 
-- fix: a11y of white highlight for editor and context menu
-
 ### Search - new features
 
 - feat: in year search only return artists who have albums or songs in that year
