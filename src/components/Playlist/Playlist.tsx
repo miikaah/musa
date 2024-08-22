@@ -216,6 +216,9 @@ const Playlist = ({
   const isMouseDown = useRef(false);
   const isMovingItems = useRef(false);
   const pStartY = useRef(0);
+  const scrollIntervalRef = useRef<number | null>(null);
+  const speedIncreaseIntervalRef = useRef<number | null>(null);
+  const scrollSpeedRef = useRef<number>(5);
 
   useEffect(() => {
     const onResize = () => {
@@ -248,7 +251,7 @@ const Playlist = ({
       document.removeEventListener("mousemove", onDocumentMouseMove);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playlist]);
+  }, [playlist, startIndex]);
 
   useEffect(() => {
     const playlistItemEl = document.getElementById(currentItem?.id ?? "");
@@ -553,6 +556,7 @@ const Playlist = ({
   };
 
   const onMouseUp = (event: React.MouseEvent<HTMLElement>) => {
+    stopScrolling();
     isMouseDown.current = false;
     const options = resolveMouseOptions(event);
     setPointerStartX(null);
@@ -686,6 +690,48 @@ const Playlist = ({
     setContextMenuCoordinates({ x, y });
   };
 
+  const startScrolling = (direction: "up" | "down") => {
+    if (scrollIntervalRef.current) return;
+
+    scrollIntervalRef.current = window.setInterval(() => {
+      if (playlistRef.current) {
+        if (direction === "up") {
+          playlistRef.current.scrollBy({ top: -scrollSpeedRef.current });
+        } else if (direction === "down") {
+          playlistRef.current.scrollBy({ top: scrollSpeedRef.current });
+        }
+      }
+    }, 27);
+
+    speedIncreaseIntervalRef.current = window.setInterval(() => {
+      scrollSpeedRef.current = Math.min(scrollSpeedRef.current + 1, 27);
+    }, 27);
+  };
+
+  const stopScrolling = () => {
+    if (scrollIntervalRef.current) {
+      window.clearInterval(scrollIntervalRef.current);
+      scrollIntervalRef.current = null;
+    }
+    if (speedIncreaseIntervalRef.current) {
+      window.clearInterval(speedIncreaseIntervalRef.current);
+      speedIncreaseIntervalRef.current = null;
+    }
+    scrollSpeedRef.current = 5;
+  };
+
+  const scrollIfNecessary = (options: PlaylistItemOptions) => {
+    const { top, bottom } = resolvePlaylistBoundingClientRect();
+
+    if (options.clientY < top + 150) {
+      startScrolling("up");
+    } else if (options.clientY > bottom - 150) {
+      startScrolling("down");
+    } else {
+      stopScrolling();
+    }
+  };
+
   const updateEndIndex = (options: PlaylistItemOptions & { index: number }) => {
     if (!isMouseDown.current || contextMenuCoordinates) {
       return;
@@ -728,10 +774,9 @@ const Playlist = ({
     ) {
       setSelectedIndexes(new Set());
     } else if (options.index > -1) {
-      const sIdx = resolvePlaylistItemIndex(pStartY.current);
       const eIdx = resolvePlaylistItemIndex(options.clientY);
-      const startIdx = Math.min(sIdx, eIdx);
-      const endIdx = Math.max(sIdx, eIdx);
+      const startIdx = Math.min(startIndex, eIdx);
+      const endIdx = Math.max(startIndex, eIdx);
       const newSelectedIndexes = new Set<number>();
 
       for (let i = startIdx; i <= endIdx; i++) {
@@ -740,6 +785,7 @@ const Playlist = ({
         }
       }
       setSelectedIndexes(newSelectedIndexes);
+      scrollIfNecessary(options);
     }
   };
 

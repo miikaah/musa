@@ -31,7 +31,6 @@ jpeg, png and webp images.
 
 ### Playlist
 
-- feat: Scroll down-up on long press select
 - feat: Add playlist editor
 
 ### Tagging
