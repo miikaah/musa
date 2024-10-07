@@ -48,7 +48,7 @@
     "@vitejs/plugin-react-swc": "3.7.1",
     "@vitest/coverage-v8": "2.1.2",
     "env-cmd": "10.1.0",
-    "esbuild": "0.23.1",
+    "esbuild": "0.24.0",
     "esbuild-plugin-inline-image": "0.0.9",
     "eslint": "8.57.0",
     "eslint-config-react-app": "7.0.1",
