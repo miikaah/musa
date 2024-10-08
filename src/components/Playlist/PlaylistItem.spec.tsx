@@ -1,12 +1,10 @@
 import React from "react";
-import { fireEvent, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import PlaylistItem, { playlistItemContextMenuClassName } from "./PlaylistItem";
 import { audioFixture } from "../../fixtures/audio.fixture";
-import { albumFixture } from "../../fixtures/album.fixture";
 import { render } from "../../../test/render";
 import { formatDuration } from "../../util";
-import { playIndex } from "../../reducers/player.reducer";
 
 const mockDispatch = vi.fn();
 vi.mock("react-redux", async () => ({
@@ -14,11 +12,7 @@ vi.mock("react-redux", async () => ({
   useDispatch: () => mockDispatch,
 }));
 
-const mockOnSetActiveIndex = vi.fn();
 const mockRemoveItems = vi.fn();
-const mockOnMouseOverItem = vi.fn();
-const mockOnMouseDownItem = vi.fn();
-const mockOnMouseUpItem = vi.fn();
 
 const artist = String(audioFixture.metadata.artist);
 const album = String(audioFixture.metadata.album);
@@ -31,14 +25,6 @@ const state = {
     currentItem: audioFixture,
     currentIndex: 0,
     isPlaying: false,
-  },
-};
-
-const state2 = {
-  player: {
-    currentItem: audioFixture,
-    currentIndex: 0,
-    isPlaying: true,
   },
 };
 

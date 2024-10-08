@@ -281,7 +281,6 @@ const Search = ({
         }),
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryToBackend]);
 
   useEffect(() => {
@@ -294,12 +293,10 @@ const Search = ({
     if (audioListRef.current) {
       audioListRef.current.scrollTop = scrollPos.audios;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     Api.getAllGenres().then(setGenres);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const findRandom = () => {
@@ -453,7 +450,6 @@ const Search = ({
                       return <Album key={i} item={a} />;
                     })
                   ),
-                // eslint-disable-next-line react-hooks/exhaustive-deps
                 [albums, isFetchingRandomFirstTime],
               )}
             </SearchBlockWrapper>
@@ -480,7 +476,6 @@ const Search = ({
                       return <Song key={i} item={a} />;
                     })
                   ),
-                // eslint-disable-next-line react-hooks/exhaustive-deps
                 [audios, isFetchingRandomFirstTime],
               )}
             </SearchBlockWrapper>

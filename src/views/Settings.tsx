@@ -59,7 +59,6 @@ const Settings = ({ musicLibraryPath, currentProfile, t }: SettingsProps) => {
       .then(setThemes)
       .then(() => setHasFetchedThemes(true))
       .catch(() => setHasFetchedThemes(true));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const runInitialScan = () => {

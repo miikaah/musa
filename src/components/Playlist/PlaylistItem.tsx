@@ -212,7 +212,6 @@ const PlaylistItem = ({
     return () => {
       window.removeEventListener("resize", onResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDoubleClick = (

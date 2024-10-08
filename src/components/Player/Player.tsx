@@ -219,12 +219,10 @@ const Player = ({
         splitter.connect(analyzerR, 1);
       })
       .catch(console.error);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setVolumeForPlayer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preAmpDb, firMakeUpGainDb, firFile]);
 
   useEffect(() => {
@@ -249,7 +247,6 @@ const Player = ({
     } catch (e) {
       console.error(e);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firFile]);
 
   useAnimationFrame(() => {
@@ -352,7 +349,6 @@ const Player = ({
       document.title = metadata.title || name || "Musa";
     };
     store.subscribe(handleStoreChange);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -373,12 +369,10 @@ const Player = ({
 
     audioEl.addEventListener("loadeddata", handleLoadedData);
     audioEl.addEventListener("ended", dispatchPlayNext);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setVolumeForPlayer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, volume, replaygainType, currentItem]);
 
   useEffect(() => {

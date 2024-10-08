@@ -250,7 +250,6 @@ const Playlist = ({
       document.removeEventListener("mouseup", onDocumentMouseUp);
       document.removeEventListener("mousemove", onDocumentMouseMove);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playlist, startIndex]);
 
   useEffect(() => {
@@ -459,11 +458,12 @@ const Playlist = ({
     const id = playlistItemContextMenuClassName;
     const target = event.target as HTMLElement;
     const isContextMenuButtonClick =
-      (typeof target?.className === "string" ? target?.className : "").includes(
-        id,
-      ) ||
+      (typeof target?.className === "string"
+        ? (target?.className ?? "")
+        : ""
+      ).includes(id) ||
       (typeof target?.parentElement?.className === "string"
-        ? target.parentElement?.className
+        ? (target.parentElement?.className ?? "")
         : ""
       ).includes(id) ||
       false;

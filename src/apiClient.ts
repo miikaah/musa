@@ -199,6 +199,7 @@ export const getPlaylist = async (
   id: string,
 ): Promise<Playlist | undefined> => {
   if (isElectron) {
+    //
   } else {
     return ServerApi.getPlaylist({ id });
   }

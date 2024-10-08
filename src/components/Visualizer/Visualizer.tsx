@@ -63,6 +63,7 @@ type VisualizerProps = {
 
 const Visualizer = ({
   isVisible,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update, // Triggers update
   dataArray,
   dataArrayL,

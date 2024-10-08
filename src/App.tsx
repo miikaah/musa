@@ -138,7 +138,6 @@ const App = ({ isInit, t, dispatch }: AppProps) => {
     Api.addScanEndListener(() => {
       dispatch(setScanProps({ reset: true }));
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -159,7 +158,6 @@ const App = ({ isInit, t, dispatch }: AppProps) => {
     Api.addScanCompleteListener(() => {
       dispatchToast(t("toast.updateComplete"), "update-complete", dispatch);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInit]);
 
   useEffect(() => {
@@ -197,12 +195,10 @@ const App = ({ isInit, t, dispatch }: AppProps) => {
           );
         }
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     Api.getArtists().then((artists) => dispatch(setListingWithLabels(artists)));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -218,7 +214,6 @@ const App = ({ isInit, t, dispatch }: AppProps) => {
         );
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!isReady) {

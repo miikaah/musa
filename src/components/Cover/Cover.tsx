@@ -371,7 +371,6 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
     return () => {
       ref.removeEventListener("load", onLoadCover);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -409,7 +408,6 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
     return () => {
       window.removeEventListener("resize", onResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (
@@ -568,7 +566,6 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
               )}
             </>
           );
-          // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [
           currentItem?.coverUrl,
           coverData,

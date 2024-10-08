@@ -219,7 +219,6 @@ const Titlebar = ({ playlist, t }: TitleBarProps) => {
     return () => {
       window.removeEventListener("resize", onResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const libraryRef = useRef<HTMLDivElement | null>(null);

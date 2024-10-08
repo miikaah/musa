@@ -332,7 +332,7 @@ const LibraryList = ({
       {showAlbums &&
         Array.isArray(albums) &&
         albums.length > 0 &&
-        albums.map((album, i) => (
+        albums.map((album) => (
           <LibraryList key={album.id} item={album} isAlbum />
         ))}
       {showSongs &&

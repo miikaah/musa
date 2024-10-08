@@ -125,7 +125,6 @@ const Library = ({
     setFilteredListing({
       [firstChar]: strictArtists,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, listingWithLabels]);
 
   useEffect(() => {
@@ -137,7 +136,6 @@ const Library = ({
     return () => {
       window.removeEventListener("resize", onResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const clearArtistFilter = () => {
