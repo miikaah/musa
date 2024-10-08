@@ -16,5 +16,11 @@
     ],
     "skipLibCheck": true
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./test/**/*.tsx"]
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./test/**/*.tsx",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ]
 }

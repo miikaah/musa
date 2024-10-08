@@ -8,7 +8,20 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./.vitest/setup.ts"],
     coverage: {
-      exclude: ["src/img-palette", "src/apiClient*"],
+      exclude: [
+        "src/img-palette",
+        "src/apiClient*",
+        "src/**/index.ts",
+        "src/*.d.ts",
+        "src/store.ts",
+        "src/types.ts",
+        "*.config.mjs",
+        "*.config.ts",
+        "build/**/*",
+        "build-server/**/*",
+        "scripts/**/*",
+        "test/**/*",
+      ],
     },
   },
 });
