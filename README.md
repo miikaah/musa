@@ -26,7 +26,6 @@ jpeg, png and webp images.
 - fix: Prevent popping when changing FIR eq
 - feat: Open mp3, flac and ogg files from filesystem
 - feat: Create srcset of album covers
-- chore: Update eslint to v9
 - feat: Make navigation work with keyboard
 
 ### Playlist
