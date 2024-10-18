@@ -14,7 +14,7 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["eslint", "react-redux", "redux"],
+      "matchPackageNames": ["react-redux", "redux"],
       "enabled": false
     },
     {
