@@ -1,6 +1,6 @@
 # The app
 
-Musa is a user interface for musa-electron and musa-server made with Create React App.
+Musa is a user interface for musa-electron and musa-server made with React.
 It is an exploration into how to create a cross-platform music player
 utilising Electron and React. It supports mp3, flac and ogg files and
 jpeg, png and webp images.
