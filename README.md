@@ -13,7 +13,9 @@ jpeg, png and webp images.
 
 ## Known issues
 
-- On Linux it is possible for bluetooth to stop working in the Electron version. I suspect this might be because the AudioContext gets directed to another output like speakers and for whatever reason does not get directed back to the bluetooth headphones. Closing the bluetooth headphones and reconnecting them should fix the problem, at least after reopening the app.
+- On (Debian) Linux it is possible for bluetooth to stop working in the Electron version. I suspect this might be because the AudioContext gets directed to another output like speakers and for whatever reason does not get directed back to the bluetooth headphones. Closing the bluetooth headphones and reconnecting them should fix the problem, at least after reopening the app.
+
+- On (Debian) Linux it is possible for bluetooth headphones to request the awful monophonic "mic on mode" even though the app does not have any API calls to connect to a microphone.
 
 ## Roadmap
 
