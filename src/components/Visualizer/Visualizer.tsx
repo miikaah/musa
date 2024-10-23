@@ -1,5 +1,5 @@
 import { RgbColor } from "@miikaah/musa-core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -50,14 +50,20 @@ const parseRgb = (rgb: string): RgbColor =>
 
 let lockSpectroGraph = false;
 
-document.addEventListener("visibilitychange", function () {
-  if (!document.hidden) {
-    tempCanvas = document.createElement("canvas");
-    tempCanvas.width = spectroWidth;
-    tempCanvas.height = spectroHeight;
-    tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
-  }
-});
+// let lastTime = Date.now();
+// const checkInterval = 1000; // Check every second
+
+// setInterval(() => {
+//   const currentTime = performance.now();
+//   if (currentTime - lastTime > 2 * checkInterval) {
+//     console.log("System resumed from suspend");
+//     tempCanvas = document.createElement("canvas");
+//     tempCanvas.width = spectroWidth;
+//     tempCanvas.height = spectroHeight;
+//     tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
+//   }
+//   lastTime = currentTime;
+// }, checkInterval);
 
 type VisualizerProps = {
   isVisible: boolean;
@@ -273,6 +279,14 @@ const Visualizer = ({
       document.body.style.getPropertyValue("--color-primary-highlight"),
     );
     const [h, s] = rgb2hsl(...rgb);
+
+    // HACK: On Linux the temp canvas stops working after suspend,
+    //       so wasting CPU here to actually get the spectrograph working at least
+    //       until I can figure out a better solution, which may be never.
+    tempCanvas = document.createElement("canvas");
+    tempCanvas.width = spectroWidth;
+    tempCanvas.height = spectroHeight;
+    tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
 
     // Copy the current canvas onto the temp canvas
     tempCtx.drawImage(spectroCanvas, 0, 0, spectroWidth, spectroHeight);
