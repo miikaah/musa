@@ -50,6 +50,15 @@ const parseRgb = (rgb: string): RgbColor =>
 
 let lockSpectroGraph = false;
 
+document.addEventListener("visibilitychange", function () {
+  if (!document.hidden) {
+    tempCanvas = document.createElement("canvas");
+    tempCanvas.width = spectroWidth;
+    tempCanvas.height = spectroHeight;
+    tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
+  }
+});
+
 type VisualizerProps = {
   isVisible: boolean;
   update: 0 | 1;
