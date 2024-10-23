@@ -563,37 +563,6 @@ const Playlist = ({
     setPointerStartY(null);
     setMoveMarkerCoordinates(null);
 
-    if (options.isContextMenuItemClick) {
-      return;
-    }
-    if (options.isContextMenuButtonClick) {
-      return;
-    }
-
-    if (options.isShiftDown) {
-      const startIdx = Math.min(startIndex, options.index);
-      const endIdx = Math.max(startIndex, options.index);
-      const newSelectedIndexes = new Set<number>();
-      for (let i = startIdx; i <= endIdx; i++) {
-        newSelectedIndexes.add(i);
-      }
-      setSelectedIndexes(newSelectedIndexes);
-      setContextMenuCoordinates(null);
-      return;
-    }
-
-    if (options.isCtrlDown) {
-      if (selectedIndexes.has(options.index)) {
-        setSelectedIndexes(
-          new Set([...selectedIndexes].filter((i) => i !== options.index)),
-        );
-      } else {
-        setSelectedIndexes(new Set([...selectedIndexes, options.index]));
-      }
-      setContextMenuCoordinates(null);
-      return;
-    }
-
     if (isMovingItems.current) {
       setContextMenuCoordinates(null);
       if (pointerStartX === event.clientX && pointerStartY === event.clientY) {
@@ -601,6 +570,13 @@ const Playlist = ({
         setStartIndex(options.index);
         setEndIndex(options.index);
         setSelectedIndexes(new Set([options.index]));
+        // IMPORTANT: Bug fix on Linux where double clicking on a row to start playing it
+        //            sets isMoving to true and when clicking on sound menu in the tray
+        //            and changing the volume, causes an extra mouseup event to be fired
+        //            when next time clicking on the playlist, which causes mouse move ops
+        //            to fire, moving the selected track to the end of the playlist.
+        //            Setting isMoving to false here fixes the issue.
+        isMovingItems.current = false;
         return;
       }
       const selectedIdx = getSelectedIndexes();
@@ -640,6 +616,37 @@ const Playlist = ({
       return;
     }
     isMovingItems.current = false;
+
+    if (options.isContextMenuItemClick) {
+      return;
+    }
+    if (options.isContextMenuButtonClick) {
+      return;
+    }
+
+    if (options.isShiftDown) {
+      const startIdx = Math.min(startIndex, options.index);
+      const endIdx = Math.max(startIndex, options.index);
+      const newSelectedIndexes = new Set<number>();
+      for (let i = startIdx; i <= endIdx; i++) {
+        newSelectedIndexes.add(i);
+      }
+      setSelectedIndexes(newSelectedIndexes);
+      setContextMenuCoordinates(null);
+      return;
+    }
+
+    if (options.isCtrlDown) {
+      if (selectedIndexes.has(options.index)) {
+        setSelectedIndexes(
+          new Set([...selectedIndexes].filter((i) => i !== options.index)),
+        );
+      } else {
+        setSelectedIndexes(new Set([...selectedIndexes, options.index]));
+      }
+      setContextMenuCoordinates(null);
+      return;
+    }
 
     if (options.isMultiSelect) {
       if (options.isRightClick) {

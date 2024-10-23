@@ -17,7 +17,7 @@ jpeg, png and webp images.
 
 - On (Debian) Linux it is possible for bluetooth headphones to request the awful monophonic "mic on mode" even though the app does not have any API calls to connect to a microphone.
 
-- On Linux there is a bug where the currently playing song is moved to the last item after going to a taskbar menu like sound and coming back. Really weird.
+- On (Debian) Linux the spectrograph may stop printing the spectrum when coming back from suspend mode. Refreshing the app fixes it. This has also been seen on Windows as a rare bug.
 
 ## Roadmap
 
