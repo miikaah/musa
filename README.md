@@ -3,7 +3,7 @@
 Musa is a user interface for musa-electron and musa-server made with React.
 It is an exploration into how to create a cross-platform music player
 utilising Electron and React. It supports mp3, flac and ogg files and
-jpeg, png and webp images.
+jpeg, png and webp images. It works on Linux, MacOS and Windows.
 
 ## Development
 
@@ -54,11 +54,6 @@ jpeg, png and webp images.
 ### Library
 
 - feat: Reflect library refresh to frontend
-
-### Cross platform
-
-- feat: Make sure everything works on Linux
-- feat: Make linux builds of native addons
 
 ### Misc
 
