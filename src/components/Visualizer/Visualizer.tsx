@@ -1,11 +1,12 @@
 import { RgbColor } from "@miikaah/musa-core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { rgb2hsl, hsl2rgb } from "../../colors";
 import { VisualizerState } from "../../reducers/visualizer.reducer";
 import { PlayerState } from "../../reducers/player.reducer";
+import * as Api from "../../apiClient";
 
 /*
  * Square is a good shape for seeing the relative power differences
@@ -50,21 +51,6 @@ const parseRgb = (rgb: string): RgbColor =>
 
 let lockSpectroGraph = false;
 
-// let lastTime = Date.now();
-// const checkInterval = 1000; // Check every second
-
-// setInterval(() => {
-//   const currentTime = performance.now();
-//   if (currentTime - lastTime > 2 * checkInterval) {
-//     console.log("System resumed from suspend");
-//     tempCanvas = document.createElement("canvas");
-//     tempCanvas.width = spectroWidth;
-//     tempCanvas.height = spectroHeight;
-//     tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
-//   }
-//   lastTime = currentTime;
-// }, checkInterval);
-
 type VisualizerProps = {
   isVisible: boolean;
   update: 0 | 1;
@@ -74,6 +60,7 @@ type VisualizerProps = {
   peakMeterBufferL: VisualizerState["peakMeterBufferL"];
   peakMeterBufferR: VisualizerState["peakMeterBufferR"];
   currentItem: PlayerState["currentItem"];
+  isPlaying: boolean;
 };
 
 const Visualizer = ({
@@ -86,10 +73,13 @@ const Visualizer = ({
   peakMeterBufferL,
   peakMeterBufferR,
   currentItem,
+  isPlaying,
 }: VisualizerProps) => {
   const location = useLocation();
   const shouldDraw =
     isVisible && location.pathname === "/" && Date.now() - lastDrawAt > 16;
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const barCanvas = document.getElementById("barCanvas") as HTMLCanvasElement;
@@ -107,6 +97,42 @@ const Visualizer = ({
     tempCanvas.height = spectroHeight;
     tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
   }, []);
+
+  // HACK: On Linux the temp canvas stops working after suspend,
+  //       so wasting CPU here to actually get the spectrograph working at least.
+  useEffect(() => {
+    if (isPlaying) {
+      Api.getPlatform()
+        .then((platform) => {
+          if (platform !== "linux") return;
+
+          tempCanvas = document.createElement("canvas");
+          tempCanvas.width = spectroWidth;
+          tempCanvas.height = spectroHeight;
+          tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
+
+          intervalRef.current = setInterval(() => {
+            tempCanvas = document.createElement("canvas");
+            tempCanvas.width = spectroWidth;
+            tempCanvas.height = spectroHeight;
+            tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
+          }, 5000);
+        })
+        .catch(console.error);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isPlaying]);
 
   useEffect(() => {
     if (!spectroCtx) {
@@ -280,14 +306,6 @@ const Visualizer = ({
     );
     const [h, s] = rgb2hsl(...rgb);
 
-    // HACK: On Linux the temp canvas stops working after suspend,
-    //       so wasting CPU here to actually get the spectrograph working at least
-    //       until I can figure out a better solution, which may be never.
-    tempCanvas = document.createElement("canvas");
-    tempCanvas.width = spectroWidth;
-    tempCanvas.height = spectroHeight;
-    tempCtx = tempCanvas.getContext("2d") as CanvasRenderingContext2D;
-
     // Copy the current canvas onto the temp canvas
     tempCtx.drawImage(spectroCanvas, 0, 0, spectroWidth, spectroHeight);
 
@@ -378,5 +396,6 @@ export default connect(
     peakMeterBufferL: state.visualizer.peakMeterBufferL,
     peakMeterBufferR: state.visualizer.peakMeterBufferR,
     currentItem: state.player.currentItem,
+    isPlaying: state.player.isPlaying,
   }),
 )(Visualizer);
