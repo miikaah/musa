@@ -13,10 +13,10 @@ import * as Api from "../../apiClient";
  * of different parts of the spectrum.
  */
 const width = 500;
-const spectroWidth = 460;
-const peakWidth = 40;
 const height = width;
+const spectroWidth = 460;
 const spectroHeight = height - 100;
+const peakWidth = 40;
 const peakHeight = spectroHeight;
 
 let spectroCanvas: HTMLCanvasElement;
@@ -50,6 +50,51 @@ const parseRgb = (rgb: string): RgbColor =>
   rgb.replace("rgb(", "").replace(")", "").split(",").map(Number) as RgbColor;
 
 let lockSpectroGraph = false;
+
+function downsample(data: any, bucketSize: number) {
+  const downsampledData = [];
+
+  for (let i = 0; i < data.length; i += bucketSize) {
+    let sum = 0;
+    let count = 0;
+
+    for (let j = i; j < i + bucketSize && j < data.length; j++) {
+      sum += data[j];
+      count++;
+    }
+
+    const avg = sum / count;
+    downsampledData.push(avg);
+  }
+
+  return downsampledData;
+}
+
+function linearInterpolate(data: any) {
+  const interpolatedData = [];
+
+  for (let i = 0; i < 120; i++) {
+    interpolatedData.push(data[i]);
+    const midPoint = (data[i] + data[i + 1]) / 2;
+    if (i < 12) {
+      const b = (data[i] + midPoint) / 2;
+      const a = (data[i] + b) / 2;
+      const c = (b + midPoint) / 2;
+      const f = (midPoint + data[i + 1]) / 2;
+      const e = (midPoint + f) / 2;
+      const g = (f + data[i + 1]) / 2;
+      interpolatedData.push(a, b, c, midPoint, e, f, g);
+    } else if (i < 33) {
+      const leftMidPoint = (data[i] + midPoint) / 2;
+      const rightMidPoint = (midPoint + data[i + 1]) / 2;
+      interpolatedData.push(leftMidPoint, midPoint, rightMidPoint);
+    } else {
+      interpolatedData.push(midPoint);
+    }
+  }
+
+  return [...interpolatedData, ...downsample(data.slice(120), 11)];
+}
 
 type VisualizerProps = {
   isVisible: boolean;
@@ -158,6 +203,7 @@ const Visualizer = ({
     barCtx.fillStyle = document.body.style.getPropertyValue("--color-bg");
     barCtx.fillRect(0, 0, width, height);
 
+    const interpolated = linearInterpolate(dataArray);
     const blen = dataArray.length;
 
     /*
@@ -166,34 +212,9 @@ const Visualizer = ({
      * is roughly in the first 100+ entries.
      */
     let x = 0;
-    for (
-      let i = 0;
-      i < blen;
-      /*
-       * First ~1200 Hz = take all
-       * Above ~1200 Hz = take 1 in 10
-       *
-       * Why? The point is to skip redundant information in the higher registers
-       * so that an estimation of it fits in the graph.
-       */
-      i += i < 120 ? 1 : 10
-    ) {
-      /*
-       *   First ~50  Hz            = 50px
-       * Between ~51  Hz - ~150 Hz  = 50px
-       * Between ~151 Hz - ~330 Hz  = 54px
-       * Between ~331 Hz - ~1200 Hz = 106px
-       *                            = 260px
-       * Above ~1200 Hz             = 240px
-       * Total                      = 500px
-       *
-       * Why? Most of the power in the signal is below 1.2 kHz.
-       * That is what is interesting to see so we give it more pixels.
-       * This gives us a rough "squarish" estimation of the real shape
-       * without having to do interpolation.
-       */
-      const barWidth = i < 5 ? 10 : i < 15 ? 5 : i < 33 ? 3 : i < 120 ? 2 : 1;
-      const barHeight = dataArray[i] * 2.3;
+    for (let i = 0; i < blen; i++) {
+      const barWidth = 1;
+      const barHeight = interpolated[i] * 2.3; // The magic number just works, trust me bro
 
       barCtx.fillStyle = document.body.style.getPropertyValue(
         "--color-primary-highlight",
