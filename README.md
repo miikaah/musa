@@ -19,6 +19,8 @@ jpeg, png and webp images. It works on Linux, MacOS and Windows.
 
 ## Roadmap
 
+- feat: drop files from filesystem in Linux
+
 ### Search - new features
 
 - feat: in year search only return artists who have albums or songs in that year
