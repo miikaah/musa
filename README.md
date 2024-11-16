@@ -19,7 +19,7 @@ jpeg, png and webp images. It works on Linux, MacOS and Windows.
 
 ## Roadmap
 
-- feat: drop files from filesystem in Linux
+- feat: drop files from filesystem in Linux BLOCKED: https://github.com/electron/electron/issues/44460
 
 ### Search - new features
 
