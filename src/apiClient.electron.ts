@@ -174,7 +174,7 @@ export const addScanCompleteListener = (
 };
 
 export const getAudiosByFilepaths = async (
-  paths: string[],
+  paths: FileList,
 ): Promise<AudioWithMetadata[]> => {
   return window.electron.getAudiosByFilepaths(paths);
 };

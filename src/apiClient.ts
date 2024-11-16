@@ -342,7 +342,7 @@ export const addScanCompleteListener = (
 };
 
 export const getAudiosByFilepaths = (
-  paths: string[],
+  paths: FileList,
 ): Promise<AudioWithMetadata[]> => {
   if (!isElectron) {
     throw new Error("Not implemented");

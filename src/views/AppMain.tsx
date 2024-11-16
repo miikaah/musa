@@ -18,8 +18,6 @@ import { EditorMode } from "../types";
 const Container = styled.div`
   padding: 0;
   width: 100%;
-  display: flex;
-  flex-direction: row;
   margin-top: var(--titlebar-height);
 
   ${({ theme }) => theme.breakpoints.down("md")} {
@@ -81,11 +79,8 @@ const AppMain = ({ isInit, musicLibraryPath, dispatch }: AppMainProps) => {
     }
 
     if (event.dataTransfer.files.length > 0) {
-      const paths = Array.from(
-        event.dataTransfer.files as unknown as CustomFile[],
-      ).map(({ path }) => path);
-
-      const files = await Api.getAudiosByFilepaths(paths);
+      const files = await Api.getAudiosByFilepaths(event.dataTransfer.files);
+      console.log("files", files);
 
       dispatch(pasteToPlaylist(files));
 
