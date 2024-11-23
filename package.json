@@ -63,7 +63,7 @@
     "jsdom": "25.0.1",
     "prettier": "3.3.3",
     "shx": "0.3.4",
-    "typescript": "5.6.3",
+    "typescript": "5.7.2",
     "vite": "5.4.11",
     "vitest": "2.1.5",
     "vitest-dom": "0.1.1"
