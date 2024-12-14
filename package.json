@@ -61,7 +61,7 @@
     "@vitest/eslint-plugin": "1.1.16",
     "handlebars": "4.7.8",
     "jsdom": "25.0.1",
-    "prettier": "3.3.3",
+    "prettier": "3.4.2",
     "shx": "0.3.4",
     "typescript": "5.7.2",
     "vite": "5.4.11",
