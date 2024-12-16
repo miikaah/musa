@@ -15,8 +15,6 @@ jpeg, png and webp images. It works on Linux, MacOS and Windows.
 
 - On (Debian) Linux it is possible for bluetooth to stop working in the Electron version. I suspect this might be because the AudioContext gets directed to another output like speakers and for whatever reason does not get directed back to the bluetooth headphones. Closing the bluetooth headphones and reconnecting them should fix the problem, at least after reopening the app.
 
-- On (Debian) Linux it is possible for bluetooth headphones to request the awful monophonic "mic on mode" even though the app does not have any API calls to connect to a microphone.
-
 ## Roadmap
 
 - feat: drop files from filesystem in Linux BLOCKED: https://github.com/electron/electron/issues/44460
