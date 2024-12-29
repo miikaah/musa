@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  test:
+  Install:
     runs-on: ubuntu-latest
     permissions:
       packages: read
@@ -23,8 +23,24 @@ jobs:
       - run: npm ci
         env:
           MUSA_GITHUB_PAT: ${{ secrets.MUSA_GITHUB_PAT }}
+
+  Test:
+    needs: Install
+    runs-on: ubuntu-latest
+    steps:
       - run: npm run test
+
+  Build:
+    needs: Install
+    runs-on: ubuntu-latest
+    steps:
       - run: npm run setup
       - run: npm run build:e
       - run: npm run build:s
+      - run: npm run tsc
+
+  Typecheck:
+    needs: Install
+    runs-on: ubuntu-latest
+    steps:
       - run: npm run tsc
