@@ -14,7 +14,12 @@
       "automerge": true
     },
     {
-      "matchPackageNames": ["react-redux", "redux"],
+      "matchPackageNames": [
+        "react-redux",
+        "redux",
+        "react-router",
+        "react-router-dom"
+      ],
       "enabled": false
     },
     {
