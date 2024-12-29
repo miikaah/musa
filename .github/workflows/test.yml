@@ -33,6 +33,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.4.1
+      - run: npm ci
+        env:
+          MUSA_GITHUB_PAT: ${{ secrets.MUSA_GITHUB_PAT }}
       - run: npm run test
 
   Build:
@@ -43,6 +46,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.4.1
+      - run: npm ci
+        env:
+          MUSA_GITHUB_PAT: ${{ secrets.MUSA_GITHUB_PAT }}
       - run: npm run setup
       - run: npm run build:e
       - run: npm run build:s
@@ -56,4 +62,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.4.1
+      - run: npm ci
+        env:
+          MUSA_GITHUB_PAT: ${{ secrets.MUSA_GITHUB_PAT }}
       - run: npm run tsc
