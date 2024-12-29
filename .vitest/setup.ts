@@ -1,6 +1,6 @@
 import { beforeEach, afterEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
-import "vitest-dom/extend-expect";
+import "@testing-library/jest-dom/vitest";
 
 beforeEach(() => {
   vi.clearAllMocks();
