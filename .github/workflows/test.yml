@@ -19,24 +19,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.4.1
+          cache: "npm"
           registry-url: https://npm.pkg.github.com/
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       - run: npm ci
         env:
           MUSA_GITHUB_PAT: ${{ secrets.MUSA_GITHUB_PAT }}
-      - name: Upload Node Modules
-        uses: actions/upload-artifact@v3
-        with:
-          name: node-modules
-          path: node_modules
 
   Test:
     needs: Install
@@ -46,10 +33,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.4.1
-      - name: Download Node Modules
-        uses: actions/download-artifact@v3
-        with:
-          name: node-modules
       - run: npm run test
 
   Build:
@@ -60,10 +43,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.4.1
-      - name: Download Node Modules
-        uses: actions/download-artifact@v3
-        with:
-          name: node-modules
       - run: npm run setup
       - run: npm run build:e
       - run: npm run build:s
@@ -77,8 +56,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.4.1
-      - name: Download Node Modules
-        uses: actions/download-artifact@v3
-        with:
-          name: node-modules
       - run: npm run tsc
