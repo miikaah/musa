@@ -58,7 +58,7 @@
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.3",
     "eslint-plugin-react": "7.37.4",
-    "@vitest/eslint-plugin": "1.1.26",
+    "@vitest/eslint-plugin": "1.1.31",
     "handlebars": "4.7.8",
     "jsdom": "25.0.1",
     "prettier": "3.4.2",
