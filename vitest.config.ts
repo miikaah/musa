@@ -2,7 +2,6 @@ import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  // @ts-expect-error Vitest needs to release v3 to get vite v6 support
   plugins: [react()],
   test: {
     globals: true,
