@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 22.14.0
           registry-url: https://npm.pkg.github.com/
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
         env:
           MUSA_GITHUB_PAT: ${{ secrets.MUSA_GITHUB_PAT }}
       - run: npm run test
