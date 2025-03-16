@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 export const useAnimationFrame = (callback: () => void) => {
-  const requestRef = useRef<number>();
+  const requestRef = useRef<number>(null);
 
   useEffect(() => {
     const animate = () => {
@@ -10,7 +10,10 @@ export const useAnimationFrame = (callback: () => void) => {
     };
 
     requestRef.current = requestAnimationFrame(animate);
-    // @ts-expect-error it can not be undefined
-    return () => cancelAnimationFrame(requestRef.current);
+    return () => {
+      if (requestRef && requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    };
   }, [callback]);
 };

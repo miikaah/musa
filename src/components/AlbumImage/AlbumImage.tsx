@@ -72,7 +72,7 @@ const AlbumImage = ({ item, animate = true }: AlbumImageProps) => {
     <Image
       alt="Album image"
       animate={animate}
-      src={getSrc(src)}
+      src={getSrc(src) || undefined}
       draggable={false}
     />
   );

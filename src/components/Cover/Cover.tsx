@@ -81,7 +81,7 @@ const Wrapper = styled.div`
 const Image = styled.img.attrs<{
   maxHeight: number;
   isCoverLoaded: boolean;
-  src: string;
+  src: string | undefined;
   scaleDownImage: boolean;
   isMobile: boolean;
 }>(({ maxHeight, isCoverLoaded, src, scaleDownImage, isMobile }) => ({
@@ -546,7 +546,7 @@ const Cover = ({ currentItem, coverData, currentTheme }: CoverProps) => {
             <>
               <Image
                 id="albumCover"
-                src={cleanUrl(src)}
+                src={cleanUrl(src) || undefined}
                 ref={coverRef}
                 crossOrigin=""
                 maxHeight={coverData.maxHeight}
