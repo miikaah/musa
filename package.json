@@ -42,7 +42,7 @@
     "@testing-library/user-event": "14.6.1",
     "@types/lodash.isequal": "4.5.8",
     "@types/lodash.sortby": "4.7.9",
-    "@types/node": "22.13.12",
+    "@types/node": "22.13.14",
     "@types/quantize": "1.0.2",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
